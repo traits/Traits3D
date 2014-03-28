@@ -1,0 +1,11 @@
+# get list of sub-directories
+macro(PROTEAN3D_SUBDIRLIST result srcdir)
+  file(GLOB children RELATIVE ${srcdir} ${srcdir}/*)
+  set(dirlist "")
+  foreach(child ${children})
+    if(IS_DIRECTORY ${srcdir}/${child})
+        SET(dirlist ${dirlist} ${child})
+    endif()
+  endforeach()
+  set(${result} ${dirlist})
+endmacro()
