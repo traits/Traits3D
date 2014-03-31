@@ -1,4 +1,4 @@
-#include "protean3d/coordsys.h"
+#include "coordinatesystem.h"
 
 using namespace std;
 using namespace Protean3D;
@@ -18,9 +18,9 @@ CoordinateSystem::CoordinateSystem(Protean3D::Triple first, Protean3D::Triple se
 
 	setAxesColor(RGBA(0,0,0,1));
 	setGridLinesColor(RGBA(0.2,0.2,0.2,1));
-	setNumberFont(Protean3D::Label::Font("Courier", 12));
+	//setNumberFont(Protean3D::Label::Font("Courier", 12));
 	setNumberColor(RGBA(0,0,0));
-	setLabelFont(Protean3D::Label::Font("Courier", 14, Protean3D::Label::Font::Bold));
+	//setLabelFont(Protean3D::Label::Font("Courier", 14, Protean3D::Label::Font::Bold));
 	setGridLines(false, false);
 }
 
@@ -31,8 +31,9 @@ CoordinateSystem::~CoordinateSystem()
 
 void CoordinateSystem::destroy()
 {
-	for (unsigned i=0; i!=axes.size(); ++i)
-		axes[i].setLabelString("");
+  //MB todo
+	//for (unsigned i=0; i!=axes.size(); ++i)
+	//	axes[i].setLabelString("");
 
 	detachAll();
 }
@@ -442,11 +443,11 @@ void CoordinateSystem::recalculateAxesTics()
 		axes[i].recalculateTics();
 }
 
-void CoordinateSystem::setNumberFont(Protean3D::Label::Font const& font)
-{
-	for (unsigned i=0; i!=axes.size(); ++i)
-		axes[i].setNumberFont(font);
-}
+//void CoordinateSystem::setNumberFont(Protean3D::Label::Font const& font)
+//{
+//	for (unsigned i=0; i!=axes.size(); ++i)
+//		axes[i].setNumberFont(font);
+//}
 
 void CoordinateSystem::setNumberColor(RGBA val)
 {
@@ -460,11 +461,11 @@ void CoordinateSystem::setStandardScale()
     axes[i].setScale(LINEARSCALE);
 }
 
-void CoordinateSystem::setLabelFont(Protean3D::Label::Font const& font)
-{
-	for (unsigned i=0; i!=axes.size(); ++i)
-		axes[i].setLabelFont(font);
-}
+//void CoordinateSystem::setLabelFont(Protean3D::Label::Font const& font)
+//{
+//	for (unsigned i=0; i!=axes.size(); ++i)
+//		axes[i].setLabelFont(font);
+//}
 
 void CoordinateSystem::setLabelColor(RGBA val)
 {

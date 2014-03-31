@@ -1,14 +1,14 @@
 #pragma once
 
 #include <list>
-#include "protean3d/axis.h"
-#include "protean3d/colorlegend.h"
+#include "axis.h"
+//#include "colorlegend.h"
 
 namespace Protean3D
 {
 
 //! A coordinate system with different styles (BOX, FRAME)
-class PROTEAN3D_EXPORT CoordinateSystem : public Drawable
+class PROTEAN3D_EXPORT CoordinateSystem
 {
 
 public:
@@ -25,7 +25,7 @@ public:
 	
 	void setAxesColor(Protean3D::RGBA val); //!< Set common color for all axes
 	//! Set common font for all axis numberings
-	void setNumberFont(Protean3D::Label::Font const& font);
+	//void setNumberFont(Protean3D::Label::Font const& font);
 	//! Set common color for all axis numberings
 	void setNumberColor(Protean3D::RGBA val);
   void setStandardScale(); //!< Sets an linear axis with real number items
@@ -37,7 +37,7 @@ public:
   void setGridLinesColor(Protean3D::RGBA val) {gridlinecolor_ = val;}
 	
 	//! Set common font for all axis labels
-	void setLabelFont(Protean3D::Label::Font const& font);
+	//void setLabelFont(Protean3D::Label::Font const& font);
 	//! Set common color for all axis labels
 	void setLabelColor(Protean3D::RGBA val);
 
