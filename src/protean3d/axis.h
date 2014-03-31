@@ -32,7 +32,7 @@ public:
   Protean3D::Triple ticOrientation() const { return orientation_;} //!< Returns tic orientation
   void setSymmetricTics( bool b) { symtics_ = b;} //!< Sets two-sided tics (default is false) 
   void setScale(Protean3D::SCALETYPE);
-  void setScale(Scale* item);
+  void setScale(std::shared_ptr<Protean3D::Scale> scale){ scale_ = scale; } //!< This variant sets a user-defined scale object.
   void setAutoScale(bool val = true) {autoscale_ = val;} //!< Turns Autoscaling on or off
   bool autoScale() const { return autoscale_;} //!< actual Autoscaling mode
 

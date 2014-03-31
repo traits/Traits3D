@@ -119,16 +119,6 @@ void Axis::recalculateTics()
   }
 }
 
-/*! 
-  This variant sets a user-defined scale object.
-  Use with a heap based initialized pointer only.
-  The axis adopts ownership. 
-*/
-void Axis::setScale(Protean3D::Scale* val)
-{
-  scale_ = std::shared_ptr<Scale>(val); 
-}
-
 /*!
   Sets one of the predefined scaling types.
   \warning Too small intervals in logarithmic scales lead to  
@@ -139,10 +129,10 @@ void Axis::setScale(Protean3D::SCALETYPE val)
 {
   switch(val) {
   case Protean3D::LINEARSCALE:
-    setScale(new LinearScale);
+    setScale(std::shared_ptr<Protean3D::Scale>(new LinearScale));
     break;
   case Protean3D::LOG10SCALE:
-    setScale(new LogScale);
+    setScale(std::shared_ptr<Protean3D::Scale>(new LogScale));
     setMinors(9);
     break;
   default:
