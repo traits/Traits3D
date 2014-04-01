@@ -34,11 +34,11 @@ enum SHADINGSTYLE
 };
 
 //! Style of Coordinate system
-enum COORDSTYLE
+enum COORDINATESTYLE
 {
-	NOCOORD, //!< Coordinate system is not visible 
-	BOX,     //!< Boxed
-	FRAME		 //!< Frame - 3 visible axes
+	NOCOORDINATES,  //!< Coordinate system is not visible 
+	BOX,            //!< Boxed
+	FRAME		        //!< Frame - 3 visible axes
 };
 
 //! Different types of axis scales
