@@ -7,7 +7,7 @@ list(APPEND ALL_LIBS ${OPENGL_LIBRARY})
 add_subdirectory(3rdparty)
 # Unresolved stuff from '3rdparty' dir
 # A nuisance, having to do this here 
-include_directories(3rdparty/glm)
+include_directories(3rdparty)
 SOURCE_GROUP(GL FILES ${PROTEAN3D_GL_SOURCES})
 if ("${PROTEAN3D_VARIANT_GLVARIANT}"  STREQUAL "glload")
   include_directories(3rdparty/opengl/glload)
