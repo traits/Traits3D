@@ -20,7 +20,11 @@ set_property(CACHE PROTEAN3D_VARIANT_OS PROPERTY STRINGS "Windows" "Linux" "Andr
 
 # OpenGL Context Provider
 set(PROTEAN3D_VARIANT_CONTEXT "GLFW" CACHE STRING "OpenGL Context Provider")
-set_property(CACHE PROTEAN3D_VARIANT_CONTEXT PROPERTY STRINGS "Qt" "GLFW" "Angle")
+set_property(CACHE PROTEAN3D_VARIANT_CONTEXT PROPERTY STRINGS "Qt" "GLFW")
+
+# OpenGL Variant Provider
+set(PROTEAN3D_VARIANT_GLVARIANT "glload" CACHE STRING "OpenGL Version Provider")
+set_property(CACHE PROTEAN3D_VARIANT_GLVARIANT PROPERTY STRINGS "glload" "glew")
 
 # Font Provider
 set(PROTEAN3D_VARIANT_TEXT "Core" CACHE STRING "Font/String Provider")
