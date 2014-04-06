@@ -1,28 +1,3 @@
-//========================================================================
-// Heightmap example program using OpenGL 3 core profile
-// Copyright (c) 2010 Olivier Delannoy
-//
-// This software is provided 'as-is', without any express or implied
-// warranty. In no event will the authors be held liable for any damages
-// arising from the use of this software.
-//
-// Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it
-// freely, subject to the following restrictions:
-//
-// 1. The origin of this software must not be misrepresented; you must not
-//    claim that you wrote the original software. If you use this software
-//    in a product, an acknowledgment in the product documentation would
-//    be appreciated but is not required.
-//
-// 2. Altered source versions must be plainly marked as such, and must not
-//    be misrepresented as being the original software.
-//
-// 3. This notice may not be removed or altered from any source
-//    distribution.
-//
-//========================================================================
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -82,7 +57,7 @@ static const char* default_fragment_shader =
 "out vec4 gl_FragColor;\n"
 "void main()\n"
 "{\n"
-"    gl_FragColor = vec4(0.2, 1.0, 0.2, 1.0); \n"
+"    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); \n"
 "}\n";
 
 /**********************************************************************
@@ -601,14 +576,14 @@ int main(int argc, char** argv)
         glfwPollEvents();
         /* Check the frame rate and update the heightmap if needed */
         dt = glfwGetTime();
-        if ((dt - last_update_time) > 0.2)
+        if ((dt - last_update_time) > 0.001)
         {
             /* generate the next iteration of the heightmap */
-            if (iter < MAX_ITER)
+            //if (iter < MAX_ITER)
             {
                 update_map(NUM_ITER_AT_A_TIME);
                 update_mesh();
-                iter += NUM_ITER_AT_A_TIME;
+                //iter += NUM_ITER_AT_A_TIME;
             }
             last_update_time = dt;
             frame = 0;

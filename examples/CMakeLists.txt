@@ -41,10 +41,8 @@ foreach(subdir ${SUBDIRS})
   file(GLOB  ${subdir}_PROTEAN3D_EXAMPLE_HEADERS ${subdir}/*.h)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/3rdparty)
-if ("${PROTEAN3D_VARIANT_GLVARIANT}"  STREQUAL "glload")
-  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/3rdparty/opengl/glload)
-elseif ("${PROTEAN3D_VARIANT_GLVARIANT}"  STREQUAL "glew") 
-  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/3rdparty/opengl/glew)
+if ("${PROTEAN3D_VARIANT_GLVARIANT}"  STREQUAL "glew") 
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/3rdparty/glew)
 endif()
 
   include_directories(${CMAKE_SOURCE_DIR}/src)
