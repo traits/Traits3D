@@ -64,6 +64,9 @@ HeightMap::HeightMap()
   
   for (auto i = 0; i != 3; ++i)
     map_vertices.push_back(std::vector<GLfloat>(MAP_NUM_TOTAL_VERTICES));
+
+  initMatrices();
+  init_map();
 }
 
 HeightMap::~HeightMap()
@@ -319,4 +322,18 @@ GLsizei HeightMap::numLines() const
   return MAP_NUM_LINES;
 }
 
+void HeightMap::initMatrices()
+{
+  /* Compute the projection matrix */
+  float f = 1.0f / tanf(view_angle / 2.0f);
+  projection_matrix[0] = f / aspect_ratio;
+  projection_matrix[5] = f;
+  projection_matrix[10] = (z_far + z_near) / (z_near - z_far);
+  projection_matrix[11] = -1.0f;
+  projection_matrix[14] = 2.0f * (z_far * z_near) / (z_near - z_far);
 
+  /* Set the camera position */
+  modelview_matrix[12] = -5.0f;
+  modelview_matrix[13] = -5.0f;
+  modelview_matrix[14] = -20.0f;
+}

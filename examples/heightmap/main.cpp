@@ -21,7 +21,6 @@ int main()
   double dt;
   double last_update_time;
   int frame;
-  float f;
   GLint uloc_modelview;
   GLint uloc_project;
 
@@ -76,23 +75,10 @@ int main()
   uloc_project = glGetUniformLocation(shader_program, "project");
   uloc_modelview = glGetUniformLocation(shader_program, "modelview");
 
-  /* Compute the projection matrix */
-  f = 1.0f / tanf(hm.view_angle / 2.0f);
-  hm.projection_matrix[0] = f / hm.aspect_ratio;
-  hm.projection_matrix[5] = f;
-  hm.projection_matrix[10] = (hm.z_far + hm.z_near) / (hm.z_near - hm.z_far);
-  hm.projection_matrix[11] = -1.0f;
-  hm.projection_matrix[14] = 2.0f * (hm.z_far * hm.z_near) / (hm.z_near - hm.z_far);
   glUniformMatrix4fv(uloc_project, 1, GL_FALSE, &hm.projection_matrix[0]);
-
-  /* Set the camera position */
-  hm.modelview_matrix[12] = -5.0f;
-  hm.modelview_matrix[13] = -5.0f;
-  hm.modelview_matrix[14] = -20.0f;
   glUniformMatrix4fv(uloc_modelview, 1, GL_FALSE, &hm.modelview_matrix[0]);
 
   /* Create mesh data */
-  hm.init_map();
   hm.make_mesh(shader_program);
 
   /* Create vao + vbo to store the mesh */
