@@ -23,7 +23,7 @@ set(PROTEAN3D_VARIANT_CONTEXT "GLFW" CACHE STRING "OpenGL Context Provider")
 set_property(CACHE PROTEAN3D_VARIANT_CONTEXT PROPERTY STRINGS "Qt" "GLFW")
 
 # OpenGL Variant Provider
-set(PROTEAN3D_VARIANT_GLVARIANT "glload" CACHE STRING "OpenGL Version Provider")
+set(PROTEAN3D_VARIANT_GLVARIANT "glew" CACHE STRING "OpenGL Version Provider")
 set_property(CACHE PROTEAN3D_VARIANT_GLVARIANT PROPERTY STRINGS "glload" "glew")
 
 # Font Provider

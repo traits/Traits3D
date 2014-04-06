@@ -27,6 +27,7 @@ endif()
 
 # real examples
 
+#add_definitions(-DGLFW_DLL)
 add_definitions(-DPROTEAN3D_DLL)
 
 PROTEAN3D_SUBDIRLIST(SUBDIRS ${CMAKE_CURRENT_SOURCE_DIR})
@@ -36,7 +37,7 @@ list(REMOVE_ITEM SUBDIRS glfw-3.0.4)
 
 # create single project for every example
 foreach(subdir ${SUBDIRS})
-  file(GLOB  ${subdir}_PROTEAN3D_EXAMPLE_SOURCES ${subdir}/*.cpp)
+  file(GLOB  ${subdir}_PROTEAN3D_EXAMPLE_SOURCES ${subdir}/*.c*)
   file(GLOB  ${subdir}_PROTEAN3D_EXAMPLE_HEADERS ${subdir}/*.h)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/3rdparty)
@@ -46,9 +47,11 @@ elseif ("${PROTEAN3D_VARIANT_GLVARIANT}"  STREQUAL "glew")
   include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/3rdparty/opengl/glew)
 endif()
 
+  include_directories(${CMAKE_SOURCE_DIR}/src)
   add_executable(${subdir}  ${${subdir}_PROTEAN3D_EXAMPLE_SOURCES} ${${subdir}_PROTEAN3D_EXAMPLE_HEADERS})
   target_link_libraries(${subdir} protean3d ${OPENGL_LIBRARIES})
-  set_target_properties(${subdir} PROPERTIES WIN32_EXECUTABLE true)
+  target_link_libraries(${subdir} glfw ${GLFW_LIBRARIES})
+  set_target_properties(${subdir} PROPERTIES WIN32_EXECUTABLE false)
 endforeach()
 
 
