@@ -281,8 +281,6 @@ void HeightMap::update_map(int num_iter)
  */
 void HeightMap::make_mesh(GLuint program)
 {
-    GLuint attrloc;
-
     glGenVertexArrays(1, &mesh);
     glGenBuffers(4, mesh_vbo);
     glBindVertexArray(mesh);
@@ -291,7 +289,7 @@ void HeightMap::make_mesh(GLuint program)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)* MAP_NUM_LINES * 2, &map_line_indices[0], GL_STATIC_DRAW);
 
     /* Prepare the attributes for rendering */
-    attrloc = glGetAttribLocation(program, "x");
+    GLuint attrloc = glGetAttribLocation(program, "x");
     glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[0]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * MAP_NUM_TOTAL_VERTICES, &map_vertices[0][0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(attrloc);
@@ -310,18 +308,6 @@ void HeightMap::make_mesh(GLuint program)
     glVertexAttribPointer(attrloc, 1, GL_FLOAT, GL_FALSE, 0, 0);
 }
 
-/* Update VBO vertices from source data
- */
-void HeightMap::update_mesh(void)
-{
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * MAP_NUM_TOTAL_VERTICES, &map_vertices[1][0]);
-}
-
-GLsizei HeightMap::numLines() const
-{
-  return MAP_NUM_LINES;
-}
-
 void HeightMap::initMatrices()
 {
   /* Compute the projection matrix */
@@ -336,4 +322,40 @@ void HeightMap::initMatrices()
   modelview_matrix[12] = -5.0f;
   modelview_matrix[13] = -5.0f;
   modelview_matrix[14] = -20.0f;
+}
+
+void HeightMap::prepareNextDraw()
+{
+  update_map(10);
+
+  // Update VBO vertices from source data
+  glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[1][0]);
+}
+
+bool HeightMap::prepareDraw()
+{
+  /* Prepare opengl resources for rendering */
+  GLuint shader_program = make_shader_program();
+
+  if (shader_program == 0)
+     return false;
+
+  glUseProgram(shader_program);
+  GLint uloc_project = glGetUniformLocation(shader_program, "project");
+  GLint uloc_modelview = glGetUniformLocation(shader_program, "modelview");
+
+  glUniformMatrix4fv(uloc_project, 1, GL_FALSE, &projection_matrix[0]);
+  glUniformMatrix4fv(uloc_modelview, 1, GL_FALSE, &modelview_matrix[0]);
+
+  /* Create mesh data */
+  make_mesh(shader_program); 
+
+  return true;
+}
+
+void HeightMap::draw()
+{
+  /* render the next frame */
+  glClear(GL_COLOR_BUFFER_BIT);
+  glDrawElements(GL_LINES, 2 * MAP_NUM_LINES, GL_UNSIGNED_INT, 0);
 }

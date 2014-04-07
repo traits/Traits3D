@@ -11,20 +11,17 @@ class HeightMap
 public:
   HeightMap();
   virtual ~HeightMap();
-  GLuint make_shader_program();
 
-  void update_map(int num_iter);
-  void make_mesh(GLuint program);
-  void update_mesh(void);
+  bool prepareDraw();
+  void draw();
+  void prepareNextDraw();
 
-  GLsizei numLines() const;
-  
+private:
   std::vector<GLfloat> projection_matrix;
   std::vector<GLfloat> modelview_matrix;
   std::string default_vertex_shader;
   std::string default_fragment_shader;
 
-private:
   /* Store uniform location for the shaders
   * Those values are setup as part of the process of creating
   * the shader program. They should not be used before creating
@@ -47,6 +44,9 @@ private:
   GLfloat z_near;
   GLfloat z_far;
   void initMatrices();
-  void init_map(void);
+  void init_map();
   void generate_heightmap__circle(float* center_x, float* center_y, float* size, float* displacement);
+  void update_map(int num_iter);
+  GLuint make_shader_program();
+  void make_mesh(GLuint program);
 };
