@@ -193,8 +193,9 @@ void HeightMap::update_map(size_t num_iter)
 /* Create VBO, IBO and VAO objects for the heightmap geometry and bind them to
  * the specified program object
  */
-void HeightMap::make_mesh(GLuint program)
+void HeightMap::createBuffers(GLuint program)
 {
+//  GLuint program = shader_.
     glGenVertexArrays(1, &mesh);
     glGenBuffers(4, mesh_vbo);
     glBindVertexArray(mesh);
@@ -203,21 +204,23 @@ void HeightMap::make_mesh(GLuint program)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)* MAP_NUM_LINES * 2, &map_line_indices[0], GL_STATIC_DRAW);
 
     /* Prepare the attributes for rendering */
-    GLuint attrloc = glGetAttribLocation(program, "x");
+    GLuint attrloc;
+        
+    attrloc = glGetAttribLocation(program, "x");
     glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * MAP_NUM_TOTAL_VERTICES, &map_vertices[0][0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[0][0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(attrloc);
+    glVertexAttribPointer(attrloc, 1, GL_FLOAT, GL_FALSE, 0, 0);
+    
+    attrloc = glGetAttribLocation(program, "y");
+    glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[1]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[1][0], GL_DYNAMIC_DRAW);
     glEnableVertexAttribArray(attrloc);
     glVertexAttribPointer(attrloc, 1, GL_FLOAT, GL_FALSE, 0, 0);
 
     attrloc = glGetAttribLocation(program, "z");
     glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[2]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * MAP_NUM_TOTAL_VERTICES, &map_vertices[2][0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(attrloc);
-    glVertexAttribPointer(attrloc, 1, GL_FLOAT, GL_FALSE, 0, 0);
-
-    attrloc = glGetAttribLocation(program, "y");
-    glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * MAP_NUM_TOTAL_VERTICES, &map_vertices[1][0], GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[2][0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(attrloc);
     glVertexAttribPointer(attrloc, 1, GL_FLOAT, GL_FALSE, 0, 0);
 }
@@ -243,26 +246,26 @@ void HeightMap::prepareNextDraw()
   update_map(10);
 
   // Update VBO vertices from source data
+  glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[1]); // otherwise, the current bound buffer would be replaced
   glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[1][0]);
 }
 
 bool HeightMap::prepareDraw()
 {
   /* Prepare opengl resources for rendering */
-  GLuint shader_program;
 
-  if (!shader_.create(shader_program, default_vertex_shader, default_fragment_shader))
+  if (!shader_.create(default_vertex_shader, default_fragment_shader))
     return false;
 
-  glUseProgram(shader_program);
-  GLint uloc_project = glGetUniformLocation(shader_program, "project");
-  GLint uloc_modelview = glGetUniformLocation(shader_program, "modelview");
+  glUseProgram(shader_.programId());
+  GLint uloc_project = glGetUniformLocation(shader_.programId(), "project");
+  GLint uloc_modelview = glGetUniformLocation(shader_.programId(), "modelview");
 
   glUniformMatrix4fv(uloc_project, 1, GL_FALSE, &projection_matrix[0]);
   glUniformMatrix4fv(uloc_modelview, 1, GL_FALSE, &modelview_matrix[0]);
 
   /* Create mesh data */
-  make_mesh(shader_program); 
+  createBuffers(shader_.programId());
 
   return true;
 }

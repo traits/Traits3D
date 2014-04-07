@@ -4,7 +4,7 @@
 #include "shader.h"
 
 Protean3D::GL::Shader::Shader()
-  : initialized_(false)
+  : initialized_(false), program_id_(0)
 {
 }
 
@@ -47,30 +47,33 @@ bool Protean3D::GL::Shader::compile(GLuint shader_id, const std::string& shader_
   return (GL_TRUE == result) ? true : false;
 }
 
-bool Protean3D::GL::Shader::link(GLuint& program_id, GLuint vertex_shader_id, GLuint fragment_shader_id)
+bool Protean3D::GL::Shader::link(GLuint vertex_shader_id, GLuint fragment_shader_id)
 {
   GLint result = GL_FALSE;
-  int infolog_size;
 
   // Link the program
   printf("Linking program\n");
-  program_id = glCreateProgram();
-  glAttachShader(program_id, vertex_shader_id);
-  glAttachShader(program_id, fragment_shader_id);
-  glLinkProgram(program_id);
+  program_id_ = glCreateProgram();
+  glAttachShader(program_id_, vertex_shader_id);
+  glAttachShader(program_id_, fragment_shader_id);
+  glLinkProgram(program_id_);
 
   // Check the program
-  glGetProgramiv(program_id, GL_LINK_STATUS, &result);
-  glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &infolog_size);
-  if ( infolog_size > 0 ){
-    std::vector<char> program_error(infolog_size+1);
-    glGetProgramInfoLog(program_id, infolog_size, NULL, &program_error[0]);
-    printf("%s\n", &program_error[0]);
-  }
+  glGetProgramiv(program_id_, GL_LINK_STATUS, &result);
+  //if (GL_FALSE == result)
+  //{
+  //  int infolog_size;
+  //  glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &infolog_size);
+  //  if (infolog_size > 0){
+  //    std::vector<char> program_error(infolog_size + 1);
+  //    glGetProgramInfoLog(program_id, infolog_size, NULL, &program_error[0]);
+  //    printf("%s\n", &program_error[0]);
+  //  }
+  //}
   return (result == GL_TRUE) ? true : false;
 }
 
-bool Protean3D::GL::Shader::create(GLuint& program_id, const std::string& vertex_code, const std::string& fragment_code)
+bool Protean3D::GL::Shader::create(const std::string& vertex_code, const std::string& fragment_code)
 {
   initialized_ = false;
 
@@ -79,7 +82,7 @@ bool Protean3D::GL::Shader::create(GLuint& program_id, const std::string& vertex
 
   if (!compile(vid, vertex_code)
     || !compile(fid, fragment_code)
-    || !link(program_id, vid, fid)
+    || !link(vid, fid)
     )
   {
     glDeleteShader(vid);
@@ -94,7 +97,7 @@ bool Protean3D::GL::Shader::create(GLuint& program_id, const std::string& vertex
   return true;
 }
 
-bool Protean3D::GL::Shader::create(GLuint& program_id)
+bool Protean3D::GL::Shader::create()
 {
   const char* vsrc =
     "attribute highp vec4 vertex;\n"
@@ -115,10 +118,10 @@ bool Protean3D::GL::Shader::create(GLuint& program_id)
     "    gl_FragColor = texture2D(texture, texc.st);\n"
     "}\n";
 
-  return  create(program_id, vsrc, fsrc);
+  return  create(vsrc, fsrc);
 }
 
-bool Protean3D::GL::Shader::createFromFile(GLuint& program_id, const std::string& vertex_file_path, const std::string& fragment_file_path)
+bool Protean3D::GL::Shader::createFromFile(const std::string& vertex_file_path, const std::string& fragment_file_path)
 {
   std::string vertex_code;
   if (!load(vertex_code, vertex_file_path))
@@ -128,6 +131,6 @@ bool Protean3D::GL::Shader::createFromFile(GLuint& program_id, const std::string
   if (!load(fragment_code, fragment_file_path))
     return false;
 
-  return create(program_id, vertex_code, fragment_code);
+  return create(vertex_code, fragment_code);
 }
 

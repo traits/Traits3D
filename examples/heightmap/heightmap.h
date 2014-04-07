@@ -47,5 +47,5 @@ private:
   void init_map();
   void generate_heightmap__circle(float* center_x, float* center_y, float* size, float* displacement);
   void update_map(size_t num_iter);
-  void make_mesh(GLuint program);
+  void createBuffers(GLuint program);
 };
