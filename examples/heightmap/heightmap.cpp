@@ -1,9 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include <assert.h>
-#include <stddef.h>
-
 #include "heightmap.h"
 
 /* Map height updates */
@@ -78,85 +72,6 @@ HeightMap::~HeightMap()
 /**********************************************************************
  * OpenGL helper functions
  *********************************************************************/
-
-/* Creates a shader object of the specified type using the specified text
- */
-GLuint HeightMap::make_shader(GLenum type, const char* shader_src)
-{
-    GLuint shader;
-    GLint shader_ok;
-    GLsizei log_length;
-    char info_log[8192];
-
-    shader = glCreateShader(type);
-    if (shader != 0)
-    {
-        glShaderSource(shader, 1, (const GLchar**)&shader_src, NULL);
-        glCompileShader(shader);
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &shader_ok);
-        if (shader_ok != GL_TRUE)
-        {
-            fprintf(stderr, "ERROR: Failed to compile %s shader\n", (type == GL_FRAGMENT_SHADER) ? "fragment" : "vertex" );
-            glGetShaderInfoLog(shader, 8192, &log_length,info_log);
-            fprintf(stderr, "ERROR: \n%s\n\n", info_log);
-            glDeleteShader(shader);
-            shader = 0;
-        }
-    }
-    return shader;
-}
-
-/* Creates a program object using the specified vertex and fragment text
- */
-GLuint HeightMap::make_shader_program()
-{
-    GLuint program = 0u;
-    GLint program_ok;
-    GLuint vertex_shader = 0u;
-    GLuint fragment_shader = 0u;
-    GLsizei log_length;
-    char info_log[8192];
-
-    vertex_shader = make_shader(GL_VERTEX_SHADER, default_vertex_shader.c_str());
-    if (vertex_shader != 0u)
-    {
-        fragment_shader = make_shader(GL_FRAGMENT_SHADER, default_fragment_shader.c_str());
-        if (fragment_shader != 0u)
-        {
-            /* make the program that connect the two shader and link it */
-            program = glCreateProgram();
-            if (program != 0u)
-            {
-                /* attach both shader and link */
-                glAttachShader(program, vertex_shader);
-                glAttachShader(program, fragment_shader);
-                glLinkProgram(program);
-                glGetProgramiv(program, GL_LINK_STATUS, &program_ok);
-
-                if (program_ok != GL_TRUE)
-                {
-                    fprintf(stderr, "ERROR, failed to link shader program\n");
-                    glGetProgramInfoLog(program, 8192, &log_length, info_log);
-                    fprintf(stderr, "ERROR: \n%s\n\n", info_log);
-                    glDeleteProgram(program);
-                    glDeleteShader(fragment_shader);
-                    glDeleteShader(vertex_shader);
-                    program = 0u;
-                }
-            }
-        }
-        else
-        {
-            fprintf(stderr, "ERROR: Unable to load fragment shader\n");
-            glDeleteShader(vertex_shader);
-        }
-    }
-    else
-    {
-        fprintf(stderr, "ERROR: Unable to load vertex shader\n");
-    }
-    return program;
-}
 
 /**********************************************************************
  * Geometry creation functions
@@ -243,9 +158,8 @@ void HeightMap::generate_heightmap__circle(float* center_x, float* center_y,
 /* Run the specified number of iterations of the generation process for the
  * heightmap
  */
-void HeightMap::update_map(int num_iter)
+void HeightMap::update_map(size_t num_iter)
 {
-    assert(num_iter > 0);
     while(num_iter)
     {
         /* center of the circle */
@@ -284,7 +198,7 @@ void HeightMap::make_mesh(GLuint program)
     glGenVertexArrays(1, &mesh);
     glGenBuffers(4, mesh_vbo);
     glBindVertexArray(mesh);
-    /* Prepare the data for drawing through a buffer inidices */
+    /* Prepare the data for drawing through a buffer indices */
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh_vbo[3]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)* MAP_NUM_LINES * 2, &map_line_indices[0], GL_STATIC_DRAW);
 
@@ -335,10 +249,10 @@ void HeightMap::prepareNextDraw()
 bool HeightMap::prepareDraw()
 {
   /* Prepare opengl resources for rendering */
-  GLuint shader_program = make_shader_program();
+  GLuint shader_program;
 
-  if (shader_program == 0)
-     return false;
+  if (!shader_.create(shader_program, default_vertex_shader, default_fragment_shader))
+    return false;
 
   glUseProgram(shader_program);
   GLint uloc_project = glGetUniformLocation(shader_program, "project");
