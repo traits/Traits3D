@@ -15,20 +15,20 @@ set(EXECUTABLE_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
 set(LIBRARY_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
 
 # Target OS
-set(PROTEAN3D_VARIANT_OS "Windows" CACHE STRING "Target OS")
-set_property(CACHE PROTEAN3D_VARIANT_OS PROPERTY STRINGS "Windows" "Linux" "Android" "iOS" "emscripten")
+set(PROTEAN3D_OS "Windows" CACHE STRING "Target OS")
+set_property(CACHE PROTEAN3D_OS PROPERTY STRINGS "Windows" "Linux" "Android" "iOS" "emscripten")
 
 # OpenGL Context Provider
-set(PROTEAN3D_VARIANT_CONTEXT "GLFW" CACHE STRING "OpenGL Context Provider")
-set_property(CACHE PROTEAN3D_VARIANT_CONTEXT PROPERTY STRINGS "Qt" "GLFW")
+set(PROTEAN3D_GL_CONTEXT "GLFW" CACHE STRING "OpenGL Context Provider")
+set_property(CACHE PROTEAN3D_GL_CONTEXT PROPERTY STRINGS "Qt" "GLFW")
 
 # OpenGL Variant Provider
-set(PROTEAN3D_VARIANT_GLVARIANT "glew" CACHE STRING "OpenGL Version Provider")
-set_property(CACHE PROTEAN3D_VARIANT_GLVARIANT PROPERTY STRINGS "glload" "glew")
+set(PROTEAN3D_GL_VERSION "GL3" CACHE STRING "OpenGL (ES) Version")
+set_property(CACHE PROTEAN3D_GL_VERSION PROPERTY STRINGS "GL3" "GL4" "ES2" "ES3")
 
 # Font Provider
-set(PROTEAN3D_VARIANT_TEXT "Core" CACHE STRING "Font/String Provider")
-set_property(CACHE PROTEAN3D_VARIANT_TEXT PROPERTY STRINGS "Core" "Qt" "WPF")
+set(PROTEAN3D_TEXT "Core" CACHE STRING "Font/String Provider")
+set_property(CACHE PROTEAN3D_TEXT PROPERTY STRINGS "Core" "freetype" "Qt")
 
 add_subdirectory(src)
 

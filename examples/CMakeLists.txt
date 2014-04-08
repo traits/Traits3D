@@ -40,10 +40,8 @@ foreach(subdir ${SUBDIRS})
   file(GLOB  ${subdir}_PROTEAN3D_EXAMPLE_SOURCES ${subdir}/*.c*)
   file(GLOB  ${subdir}_PROTEAN3D_EXAMPLE_HEADERS ${subdir}/*.h)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/3rdparty)
-if ("${PROTEAN3D_VARIANT_GLVARIANT}"  STREQUAL "glew") 
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/3rdparty)
   include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/3rdparty/glew)
-endif()
 
   include_directories(${CMAKE_SOURCE_DIR}/src)
   add_executable(${subdir}  ${${subdir}_PROTEAN3D_EXAMPLE_SOURCES} ${${subdir}_PROTEAN3D_EXAMPLE_HEADERS})

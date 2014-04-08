@@ -9,9 +9,7 @@ add_subdirectory(3rdparty)
 # A nuisance, having to do this here 
 include_directories(3rdparty)
 SOURCE_GROUP(GL FILES ${PROTEAN3D_GL_SOURCES})
-if ("${PROTEAN3D_VARIANT_GLVARIANT}"  STREQUAL "glew") 
-  include_directories(3rdparty/glew)
-endif()
+include_directories(3rdparty/glew)
 
 # adding core sources
 add_subdirectory(protean3d)
