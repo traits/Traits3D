@@ -33,7 +33,7 @@ set_property(CACHE PROTEAN3D_TEXT PROPERTY STRINGS "Core" "freetype" "Qt")
 add_subdirectory(src)
 
 option(PROTEAN3D_EXAMPLES "Build examples" ON)
-# CMAKE_DEPENDENT_OPTION(PROTEAN3D_EXAMPLES "Build examples" ON "\"\${PROTEAN3D_VARIANT_CONTEXT}\"  STREQUAL \"Qt\"" OFF)
+# CMAKE_DEPENDENT_OPTION(PROTEAN3D_EXAMPLES "Build examples" ON "\"\${PROTEAN3D_GL_CONTEXT}\"  STREQUAL \"Qt\"" OFF)
 
 if (PROTEAN3D_EXAMPLES)
   add_subdirectory(examples)
