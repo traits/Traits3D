@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <string>
-#include <GL/glew.h>
 
 #include "protean3d/shader.h"
 

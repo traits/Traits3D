@@ -1,6 +1,6 @@
 #pragma once
 
-#include <GL/glew.h>
+#include "gl_layer.h"
 #include "types.h"
 
 namespace Protean3D

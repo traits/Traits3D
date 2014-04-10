@@ -44,13 +44,13 @@ int main()
   glfwSetKeyCallback(window, key_callback);
 
   glfwMakeContextCurrent(window);
-  glewExperimental = GL_TRUE;
-  if (GLEW_OK != glewInit())
-  {
-    fprintf(stderr, "ERROR: unable to resolve OpenGL function pointers\n");
-    glfwTerminate();
-    exit(EXIT_FAILURE);
-  }
+  //glewExperimental = GL_TRUE;
+  //if (GLEW_OK != glewInit())
+  //{
+  //  fprintf(stderr, "ERROR: unable to resolve OpenGL function pointers\n");
+  //  glfwTerminate();
+  //  exit(EXIT_FAILURE);
+  //}
 
   HeightMap hm;
 
