@@ -13,15 +13,7 @@ add_subdirectory(3rdparty)
 include_directories(3rdparty)
 SOURCE_GROUP(GL FILES ${PROTEAN3D_GL_SOURCES})
 
-if ("${PROTEAN3D_GL_VARIANT}"  STREQUAL "GL")
-  if ("${PROTEAN3D_GL_VERSION_MAJOR}" EQUAL 3)
-    include_directories(3rdparty/glloadgen/GL_3_3)
-  elseif ("${PROTEAN3D_GL_VERSION_MAJOR}"  EQUAL 4)
-    include_directories(3rdparty/glloadgen/GL_4_2)
-  endif()
-elseif ("${PROTEAN3D_GL_VARIANT}"  STREQUAL "ES")
-  # ES header  
-endif()
+include_directories(${PROTEAN3D_GL_DIR})
 
 # adding core sources
 add_subdirectory(protean3d)
