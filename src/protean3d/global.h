@@ -8,11 +8,7 @@
 // Create DLL if PROTEAN3D_DLL is defined (Windows only)
 //
 
-#if defined(_WIN32) || defined(_WIN64)
-  
-  //MB todo remove this, but we still must include windows.h before GL.GL.h on Windows OS-es later on
-  #include <windows.h>
-  
+#if defined(_WIN32) || defined(_WIN64)  
   #if defined(_MSC_VER) /* MSVC Compiler */
     #pragma warning(disable: 4251) // dll interface required for stl templates
 	   //pragma warning(disable: 4244) // 'conversion' conversion from 'type1' to 'type2', possible loss of data

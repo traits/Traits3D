@@ -10,6 +10,7 @@ if ("${PROTEAN3D_GL_CONTEXT}"  STREQUAL "Qt")
 elseif ("${PROTEAN3D_GL_CONTEXT}"  STREQUAL "GLFW") 
   add_subdirectory(glfw-3.0.4)
   include_directories(glfw-3.0.4/include)
+  add_definitions(-DGLFW_INCLUDE_NONE)
 #    set(EXTERNAL_INCLUDE_PATH "V:/include")
 #    set(EXTERNAL_LIBRARY_PATH "V:/lib")
 
@@ -35,6 +36,10 @@ PROTEAN3D_SUBDIRLIST(SUBDIRS ${CMAKE_CURRENT_SOURCE_DIR})
 # no executables to create here
 list(REMOVE_ITEM SUBDIRS glfw-3.0.4)
 
+
+file(GLOB PROTEAN3D_GL_DIR_SOURCES ${PROTEAN3D_GL_DIR}/*.*)
+add_library(glloader STATIC ${PROTEAN3D_GL_DIR_SOURCES})
+
 # create single project for every example
 foreach(subdir ${SUBDIRS})
   file(GLOB  ${subdir}_PROTEAN3D_EXAMPLE_SOURCES ${subdir}/*.c*)
@@ -46,6 +51,7 @@ foreach(subdir ${SUBDIRS})
   include_directories(${CMAKE_SOURCE_DIR}/src)
   add_executable(${subdir}  ${${subdir}_PROTEAN3D_EXAMPLE_SOURCES} ${${subdir}_PROTEAN3D_EXAMPLE_HEADERS})
   target_link_libraries(${subdir} protean3d ${OPENGL_LIBRARIES})
+  target_link_libraries(${subdir} glloader)
   target_link_libraries(${subdir} glfw ${GLFW_LIBRARIES})
   set_target_properties(${subdir} PROPERTIES WIN32_EXECUTABLE false)
 endforeach()

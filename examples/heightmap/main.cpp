@@ -1,6 +1,6 @@
-#include "heightmap.h"
-
 #include <GLFW/glfw3.h> 
+
+#include "heightmap.h"
 
 
 /**********************************************************************
