@@ -1,18 +1,11 @@
 #pragma once
 
 #include <memory>
-#include <math.h>
-#include <float.h>
+#include <limits>
+#include <cmath>
 #include <vector>
 #include <algorithm>
 
-namespace
-{
-	inline double Min_(double a, double b)
-	{
-		return (a<b) ? a : b;
-	}
-}
 
 namespace Protean3D
 {
@@ -20,14 +13,10 @@ namespace Protean3D
 inline bool isPracticallyZero(double a, double b = 0)
 {
   if (!b)
-		return (fabs (a) <=  DBL_MIN);	
+    return (std::abs(a) <= std::numeric_limits<double>::min());
 
-	return (fabs (a - b) <= Min_(fabs(a), fabs(b))*DBL_EPSILON);	
-}
- 
-inline int round(double d)
-{
-	return (d>0) ? int(d+0.5) : int(d-0.5);
+  return (std::abs(a - b) <= 
+    std::fmin(std::abs(a), std::abs(b)) * std::numeric_limits<double>::epsilon());
 }
 
 template <typename TARGET, typename SOURCE>
