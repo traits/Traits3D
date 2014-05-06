@@ -16,21 +16,16 @@ set(LIBRARY_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
 
 # Target OS
 set(PROTEAN3D_OS "Windows" CACHE STRING "Target OS")
-set_property(CACHE PROTEAN3D_OS PROPERTY STRINGS "Windows" "Linux" "Android" "iOS" "emscripten")
+set_property(CACHE PROTEAN3D_OS PROPERTY STRINGS "Windows")
+#MB todo set_property(CACHE PROTEAN3D_OS PROPERTY STRINGS "Windows" "Linux" "Android" "iOS" "emscripten")
 
 # OpenGL Context Provider
-set(PROTEAN3D_GL_CONTEXT "GLFW" CACHE STRING "OpenGL Context Provider")
-set_property(CACHE PROTEAN3D_GL_CONTEXT PROPERTY STRINGS "Qt" "GLFW")
+set(PROTEAN3D_EXAMPLES_GL_CONTEXT "GLFW" CACHE STRING "OpenGL Context Provider")
+set_property(CACHE PROTEAN3D_EXAMPLES_GL_CONTEXT PROPERTY STRINGS "Qt" "GLFW")
 
 # OpenGL Version Provider
 set(PROTEAN3D_GL_VARIANT "OPENGL" CACHE STRING "OpenGL Variant (OpenGL, OpenGL ES, WebGL)")
 set_property(CACHE PROTEAN3D_GL_VARIANT PROPERTY STRINGS "OPENGL" "OPENGL_ES" "WEBGL")
-
-set(PROTEAN3D_GL_VERSION_MAJOR "3" CACHE STRING "OpenGL Major Version")
-set_property(CACHE PROTEAN3D_GL_VERSION_MAJOR PROPERTY STRINGS "3" "4")
-
-set(PROTEAN3D_GL_VERSION_MINOR "3" CACHE STRING "OpenGL Minor Version")
-set_property(CACHE PROTEAN3D_GL_VERSION_MINOR PROPERTY STRINGS "0" "1" "2" "3" "4")
 
 # Font Provider
 set(PROTEAN3D_TEXT "Core" CACHE STRING "Font/String Provider")
@@ -39,7 +34,15 @@ set_property(CACHE PROTEAN3D_TEXT PROPERTY STRINGS "Core" "freetype" "Qt")
 add_subdirectory(src)
 
 option(PROTEAN3D_EXAMPLES "Build examples" ON)
-# CMAKE_DEPENDENT_OPTION(PROTEAN3D_EXAMPLES "Build examples" ON "\"\${PROTEAN3D_GL_CONTEXT}\"  STREQUAL \"Qt\"" OFF)
+# CMAKE_DEPENDENT_OPTION(PROTEAN3D_EXAMPLES "Build examples" ON "\"\${PROTEAN3D_EXAMPLES_GL_CONTEXT}\"  STREQUAL \"Qt\"" OFF)
+
+#MB todo
+# set(PROTEAN3D_GL_HEADER_PATH "" CACHE PATH "OpenGL header root")
+# set(PROTEAN3D_GL_HEADERS "EGL/h0.h" "h1.h" CACHE STRING "OpenGL headers")
+# set(PROTEAN3D_GL_SOURCES "" CACHE FILEPATH "OpenGL sources")
+# set(PROTEAN3D_GL_LIBRARIES "h0.lib" "h1.lib" CACHE STRING "OpenGL libraries")
+# set(PROTEAN3D_GL_LIBRARY_PATH "" CACHE PATH "OpenGL library root")
+# PROTEAN3D_WRITE_GL_CONFIGURATION("${PROTEAN3D_GL_HEADERS}")
 
 if (PROTEAN3D_EXAMPLES)
   add_subdirectory(examples)

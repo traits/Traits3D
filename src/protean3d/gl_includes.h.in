@@ -1,6 +1,0 @@
-#pragma once
-
-// CMake generated file, don't touch
-
-#include "@PROTEAN3D_TEXT@.h"
-
