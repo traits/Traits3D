@@ -27,12 +27,15 @@
 
 #include "internal.h"
 
-// Internal key state used for sticky keys
+/** Internal key state used for sticky keys. */
 #define _GLFW_STICK 3
 
+/**
+ Sets the cursor mode for the specified window.
 
-// Sets the cursor mode for the specified window
-//
+ \param [in,out]  window  If non-null, the window.
+ \param newMode           The new mode.
+ */
 static void setCursorMode(_GLFWwindow* window, int newMode)
 {
     const int oldMode = window->cursorMode;
@@ -74,8 +77,12 @@ static void setCursorMode(_GLFWwindow* window, int newMode)
     }
 }
 
-// Set sticky keys mode for the specified window
-//
+/**
+ Set sticky keys mode for the specified window.
+
+ \param [in,out]  window  If non-null, the window.
+ \param enabled           The enabled.
+ */
 static void setStickyKeys(_GLFWwindow* window, int enabled)
 {
     if (window->stickyKeys == enabled)
@@ -96,8 +103,12 @@ static void setStickyKeys(_GLFWwindow* window, int enabled)
     window->stickyKeys = enabled;
 }
 
-// Set sticky mouse buttons mode for the specified window
-//
+/**
+ Set sticky mouse buttons mode for the specified window.
+
+ \param [in,out]  window  If non-null, the window.
+ \param enabled           The enabled.
+ */
 static void setStickyMouseButtons(_GLFWwindow* window, int enabled)
 {
     if (window->stickyMouseButtons == enabled)
@@ -118,11 +129,17 @@ static void setStickyMouseButtons(_GLFWwindow* window, int enabled)
     window->stickyMouseButtons = enabled;
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW event API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                         GLFW event API                       //////
-//////////////////////////////////////////////////////////////////////////
-
+ \param [in,out]  window  If non-null, the window.
+ \param key               The key.
+ \param scancode          The scancode.
+ \param action            The action.
+ \param mods              The mods.
+ */
 void _glfwInputKey(_GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     GLboolean repeated = GL_FALSE;
@@ -148,6 +165,12 @@ void _glfwInputKey(_GLFWwindow* window, int key, int scancode, int action, int m
         window->callbacks.key((GLFWwindow*) window, key, scancode, action, mods);
 }
 
+/**
+ Glfw input character.
+
+ \param [in,out]  window  If non-null, the window.
+ \param codepoint         The codepoint.
+ */
 void _glfwInputChar(_GLFWwindow* window, unsigned int codepoint)
 {
     if (codepoint < 32 || (codepoint > 126 && codepoint < 160))
@@ -157,12 +180,27 @@ void _glfwInputChar(_GLFWwindow* window, unsigned int codepoint)
         window->callbacks.character((GLFWwindow*) window, codepoint);
 }
 
+/**
+ Glfw input scroll.
+
+ \param [in,out]  window  If non-null, the window.
+ \param xoffset           The xoffset.
+ \param yoffset           The yoffset.
+ */
 void _glfwInputScroll(_GLFWwindow* window, double xoffset, double yoffset)
 {
     if (window->callbacks.scroll)
         window->callbacks.scroll((GLFWwindow*) window, xoffset, yoffset);
 }
 
+/**
+ Glfw input mouse click.
+
+ \param [in,out]  window  If non-null, the window.
+ \param button            The button.
+ \param action            The action.
+ \param mods              The mods.
+ */
 void _glfwInputMouseClick(_GLFWwindow* window, int button, int action, int mods)
 {
     if (button < 0 || button > GLFW_MOUSE_BUTTON_LAST)
@@ -178,6 +216,13 @@ void _glfwInputMouseClick(_GLFWwindow* window, int button, int action, int mods)
         window->callbacks.mouseButton((GLFWwindow*) window, button, action, mods);
 }
 
+/**
+ Glfw input cursor motion.
+
+ \param [in,out]  window  If non-null, the window.
+ \param x                 The x coordinate.
+ \param y                 The y coordinate.
+ */
 void _glfwInputCursorMotion(_GLFWwindow* window, double x, double y)
 {
     if (window->cursorMode == GLFW_CURSOR_DISABLED)
@@ -205,17 +250,28 @@ void _glfwInputCursorMotion(_GLFWwindow* window, double x, double y)
     }
 }
 
+/**
+ Glfw input cursor enter.
+
+ \param [in,out]  window  If non-null, the window.
+ \param entered           The entered.
+ */
 void _glfwInputCursorEnter(_GLFWwindow* window, int entered)
 {
     if (window->callbacks.cursorEnter)
         window->callbacks.cursorEnter((GLFWwindow*) window, entered);
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW public API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                        GLFW public API                       //////
-//////////////////////////////////////////////////////////////////////////
+ \param [in,out]  handle  If non-null, the handle.
+ \param mode              The mode.
 
+ \return  An int.
+ */
 GLFWAPI int glfwGetInputMode(GLFWwindow* handle, int mode)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -236,6 +292,13 @@ GLFWAPI int glfwGetInputMode(GLFWwindow* handle, int mode)
     }
 }
 
+/**
+ Glfw set input mode.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param mode              The mode.
+ \param value             The value.
+ */
 GLFWAPI void glfwSetInputMode(GLFWwindow* handle, int mode, int value)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -259,6 +322,14 @@ GLFWAPI void glfwSetInputMode(GLFWwindow* handle, int mode, int value)
     }
 }
 
+/**
+ Glfw get key.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param key               The key.
+
+ \return  An int.
+ */
 GLFWAPI int glfwGetKey(GLFWwindow* handle, int key)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -281,6 +352,14 @@ GLFWAPI int glfwGetKey(GLFWwindow* handle, int key)
     return (int) window->key[key];
 }
 
+/**
+ Glfw get mouse button.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param button            The button.
+
+ \return  An int.
+ */
 GLFWAPI int glfwGetMouseButton(GLFWwindow* handle, int button)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -304,6 +383,13 @@ GLFWAPI int glfwGetMouseButton(GLFWwindow* handle, int button)
     return (int) window->mouseButton[button];
 }
 
+/**
+ Glfw get cursor position.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param [in,out]  xpos    If non-null, the xpos.
+ \param [in,out]  ypos    If non-null, the ypos.
+ */
 GLFWAPI void glfwGetCursorPos(GLFWwindow* handle, double* xpos, double* ypos)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -317,6 +403,13 @@ GLFWAPI void glfwGetCursorPos(GLFWwindow* handle, double* xpos, double* ypos)
         *ypos = window->cursorPosY;
 }
 
+/**
+ Glfw set cursor position.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param xpos              The xpos.
+ \param ypos              The ypos.
+ */
 GLFWAPI void glfwSetCursorPos(GLFWwindow* handle, double xpos, double ypos)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -342,6 +435,14 @@ GLFWAPI void glfwSetCursorPos(GLFWwindow* handle, double xpos, double ypos)
     _glfwPlatformSetCursorPos(window, xpos, ypos);
 }
 
+/**
+ Callback, called when the glfw set key.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param cbfun             The cbfun.
+
+ \return  A GLFWkeyfun.
+ */
 GLFWAPI GLFWkeyfun glfwSetKeyCallback(GLFWwindow* handle, GLFWkeyfun cbfun)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -350,6 +451,14 @@ GLFWAPI GLFWkeyfun glfwSetKeyCallback(GLFWwindow* handle, GLFWkeyfun cbfun)
     return cbfun;
 }
 
+/**
+ Callback, called when the glfw set character.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param cbfun             The cbfun.
+
+ \return  A GLFWcharfun.
+ */
 GLFWAPI GLFWcharfun glfwSetCharCallback(GLFWwindow* handle, GLFWcharfun cbfun)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -358,6 +467,14 @@ GLFWAPI GLFWcharfun glfwSetCharCallback(GLFWwindow* handle, GLFWcharfun cbfun)
     return cbfun;
 }
 
+/**
+ Callback, called when the glfw set mouse button.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param cbfun             The cbfun.
+
+ \return  A GLFWmousebuttonfun.
+ */
 GLFWAPI GLFWmousebuttonfun glfwSetMouseButtonCallback(GLFWwindow* handle,
                                                       GLFWmousebuttonfun cbfun)
 {
@@ -367,6 +484,14 @@ GLFWAPI GLFWmousebuttonfun glfwSetMouseButtonCallback(GLFWwindow* handle,
     return cbfun;
 }
 
+/**
+ Callback, called when the glfw set cursor position.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param cbfun             The cbfun.
+
+ \return  A GLFWcursorposfun.
+ */
 GLFWAPI GLFWcursorposfun glfwSetCursorPosCallback(GLFWwindow* handle,
                                                   GLFWcursorposfun cbfun)
 {
@@ -376,6 +501,14 @@ GLFWAPI GLFWcursorposfun glfwSetCursorPosCallback(GLFWwindow* handle,
     return cbfun;
 }
 
+/**
+ Callback, called when the glfw set cursor enter.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param cbfun             The cbfun.
+
+ \return  A GLFWcursorenterfun.
+ */
 GLFWAPI GLFWcursorenterfun glfwSetCursorEnterCallback(GLFWwindow* handle,
                                                       GLFWcursorenterfun cbfun)
 {
@@ -385,6 +518,14 @@ GLFWAPI GLFWcursorenterfun glfwSetCursorEnterCallback(GLFWwindow* handle,
     return cbfun;
 }
 
+/**
+ Callback, called when the glfw set scroll.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param cbfun             The cbfun.
+
+ \return  A GLFWscrollfun.
+ */
 GLFWAPI GLFWscrollfun glfwSetScrollCallback(GLFWwindow* handle,
                                             GLFWscrollfun cbfun)
 {

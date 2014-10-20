@@ -32,9 +32,16 @@
 #include <limits.h>
 #include <stdio.h>
 
+/**
+ Parses the client API version string and extracts the version number.
 
-// Parses the client API version string and extracts the version number
-//
+ \param [in,out]  api   If non-null, the API.
+ \param [in,out]  major If non-null, the major.
+ \param [in,out]  minor If non-null, the minor.
+ \param [in,out]  rev   If non-null, the reverse.
+
+ \return  A GLboolean.
+ */
 static GLboolean parseGLVersion(int* api, int* major, int* minor, int* rev)
 {
     int i, _api = GLFW_OPENGL_API, _major, _minor = 0, _rev = 0;
@@ -82,11 +89,15 @@ static GLboolean parseGLVersion(int* api, int* major, int* minor, int* rev)
     return GL_TRUE;
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW internal API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                       GLFW internal API                      //////
-//////////////////////////////////////////////////////////////////////////
+ \param [in,out]  wndconfig If non-null, the wndconfig.
 
+ \return  A GLboolean.
+ */
 GLboolean _glfwIsValidContextConfig(_GLFWwndconfig* wndconfig)
 {
     if (wndconfig->clientAPI != GLFW_OPENGL_API &&
@@ -201,6 +212,15 @@ GLboolean _glfwIsValidContextConfig(_GLFWwndconfig* wndconfig)
     return GL_TRUE;
 }
 
+/**
+ Glfw choose fb configuration.
+
+ \param desired       The desired.
+ \param alternatives  The alternatives.
+ \param count         Number of.
+
+ \return  A const.
+ */
 const _GLFWfbconfig* _glfwChooseFBConfig(const _GLFWfbconfig* desired,
                                          const _GLFWfbconfig* alternatives,
                                          unsigned int count)
@@ -358,6 +378,11 @@ const _GLFWfbconfig* _glfwChooseFBConfig(const _GLFWfbconfig* desired,
     return closest;
 }
 
+/**
+ Glfw refresh context attributes.
+
+ \return  A GLboolean.
+ */
 GLboolean _glfwRefreshContextAttribs(void)
 {
     _GLFWwindow* window = _glfwPlatformGetCurrentContext();
@@ -466,6 +491,13 @@ GLboolean _glfwRefreshContextAttribs(void)
     return GL_TRUE;
 }
 
+/**
+ Glfw is valid context.
+
+ \param [in,out]  wndconfig If non-null, the wndconfig.
+
+ \return  A GLboolean.
+ */
 GLboolean _glfwIsValidContext(_GLFWwndconfig* wndconfig)
 {
     _GLFWwindow* window = _glfwPlatformGetCurrentContext();
@@ -488,6 +520,14 @@ GLboolean _glfwIsValidContext(_GLFWwndconfig* wndconfig)
     return GL_TRUE;
 }
 
+/**
+ Glfw string in extension string.
+
+ \param string      The string.
+ \param extensions  The extensions.
+
+ \return  An int.
+ */
 int _glfwStringInExtensionString(const char* string, const GLubyte* extensions)
 {
     const GLubyte* start;
@@ -517,11 +557,13 @@ int _glfwStringInExtensionString(const char* string, const GLubyte* extensions)
     return GL_TRUE;
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW public API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                        GLFW public API                       //////
-//////////////////////////////////////////////////////////////////////////
-
+ \param [in,out]  handle  If non-null, the handle.
+ */
 GLFWAPI void glfwMakeContextCurrent(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -534,12 +576,22 @@ GLFWAPI void glfwMakeContextCurrent(GLFWwindow* handle)
     _glfwPlatformMakeContextCurrent(window);
 }
 
+/**
+ Glfw get current context.
+
+ \return  null if it fails, else a GLFWwindow*.
+ */
 GLFWAPI GLFWwindow* glfwGetCurrentContext(void)
 {
     _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
     return (GLFWwindow*) _glfwPlatformGetCurrentContext();
 }
 
+/**
+ Glfw swap buffers.
+
+ \param [in,out]  handle  If non-null, the handle.
+ */
 GLFWAPI void glfwSwapBuffers(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -547,6 +599,11 @@ GLFWAPI void glfwSwapBuffers(GLFWwindow* handle)
     _glfwPlatformSwapBuffers(window);
 }
 
+/**
+ Glfw swap interval.
+
+ \param interval  The interval.
+ */
 GLFWAPI void glfwSwapInterval(int interval)
 {
     _GLFW_REQUIRE_INIT();
@@ -560,6 +617,13 @@ GLFWAPI void glfwSwapInterval(int interval)
     _glfwPlatformSwapInterval(interval);
 }
 
+/**
+ Glfw extension supported.
+
+ \param extension The extension.
+
+ \return  An int.
+ */
 GLFWAPI int glfwExtensionSupported(const char* extension)
 {
     const GLubyte* extensions;
@@ -625,6 +689,13 @@ GLFWAPI int glfwExtensionSupported(const char* extension)
     return _glfwPlatformExtensionSupported(extension);
 }
 
+/**
+ Glfw get proc address.
+
+ \param procname  The procname.
+
+ \return  A GLFWglproc.
+ */
 GLFWAPI GLFWglproc glfwGetProcAddress(const char* procname)
 {
     _GLFW_REQUIRE_INIT_OR_RETURN(NULL);

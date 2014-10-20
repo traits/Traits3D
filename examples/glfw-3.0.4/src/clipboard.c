@@ -29,11 +29,14 @@
 #include <math.h>
 #include <string.h>
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW public API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                        GLFW public API                       //////
-//////////////////////////////////////////////////////////////////////////
-
+ \param [in,out]  handle  If non-null, the handle.
+ \param string            The string.
+ */
 GLFWAPI void glfwSetClipboardString(GLFWwindow* handle, const char* string)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -41,6 +44,13 @@ GLFWAPI void glfwSetClipboardString(GLFWwindow* handle, const char* string)
     _glfwPlatformSetClipboardString(window, string);
 }
 
+/**
+ Glfw get clipboard string.
+
+ \param [in,out]  handle  If non-null, the handle.
+
+ \return  null if it fails, else a char*.
+ */
 GLFWAPI const char* glfwGetClipboardString(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;

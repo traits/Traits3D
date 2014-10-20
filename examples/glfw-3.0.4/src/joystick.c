@@ -27,11 +27,15 @@
 
 #include "internal.h"
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW public API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                        GLFW public API                       //////
-//////////////////////////////////////////////////////////////////////////
+ \param joy The joy.
 
+ \return  An int.
+ */
 GLFWAPI int glfwJoystickPresent(int joy)
 {
     _GLFW_REQUIRE_INIT_OR_RETURN(0);
@@ -45,6 +49,14 @@ GLFWAPI int glfwJoystickPresent(int joy)
     return _glfwPlatformJoystickPresent(joy);
 }
 
+/**
+ Glfw get joystick axes.
+
+ \param joy             The joy.
+ \param [in,out]  count If non-null, number of.
+
+ \return  null if it fails, else a float*.
+ */
 GLFWAPI const float* glfwGetJoystickAxes(int joy, int* count)
 {
     *count = 0;
@@ -60,6 +72,14 @@ GLFWAPI const float* glfwGetJoystickAxes(int joy, int* count)
     return _glfwPlatformGetJoystickAxes(joy, count);
 }
 
+/**
+ Glfw get joystick buttons.
+
+ \param joy             The joy.
+ \param [in,out]  count If non-null, number of.
+
+ \return  null if it fails, else a char*.
+ */
 GLFWAPI const unsigned char* glfwGetJoystickButtons(int joy, int* count)
 {
     *count = 0;
@@ -75,6 +95,13 @@ GLFWAPI const unsigned char* glfwGetJoystickButtons(int joy, int* count)
     return _glfwPlatformGetJoystickButtons(joy, count);
 }
 
+/**
+ Glfw get joystick name.
+
+ \param joy The joy.
+
+ \return  null if it fails, else a char*.
+ */
 GLFWAPI const char* glfwGetJoystickName(int joy)
 {
     _GLFW_REQUIRE_INIT_OR_RETURN(NULL);

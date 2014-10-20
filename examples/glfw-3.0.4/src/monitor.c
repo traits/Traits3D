@@ -33,12 +33,18 @@
 
 #if defined(_MSC_VER)
  #include <malloc.h>
+ /** A macro that defines strdup. */
  #define strdup _strdup
 #endif
 
+/**
+ Lexical comparison function for GLFW video modes, used by qsort.
 
-// Lexical comparison function for GLFW video modes, used by qsort
-//
+ \param firstPtr  The first pointer.
+ \param secondPtr The second pointer.
+
+ \return  An int.
+ */
 static int compareVideoModes(const void* firstPtr, const void* secondPtr)
 {
     int firstBPP, secondBPP, firstSize, secondSize;
@@ -70,8 +76,13 @@ static int compareVideoModes(const void* firstPtr, const void* secondPtr)
     return first->refreshRate - second->refreshRate;
 }
 
-// Retrieves the available modes for the specified monitor
-//
+/**
+ Retrieves the available modes for the specified monitor.
+
+ \param [in,out]  monitor If non-null, the monitor.
+
+ \return  An int.
+ */
 static int refreshVideoModes(_GLFWmonitor* monitor)
 {
     int modeCount;
@@ -93,11 +104,11 @@ static int refreshVideoModes(_GLFWmonitor* monitor)
     return GL_TRUE;
 }
 
-
-//////////////////////////////////////////////////////////////////////////
-//////                         GLFW event API                       //////
-//////////////////////////////////////////////////////////////////////////
-
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW event API
+ /////////////////////////////////////////////////////////////////////////////.
+ */
 void _glfwInputMonitorChange(void)
 {
     int i, j, monitorCount = _glfw.monitorCount;
@@ -170,11 +181,15 @@ void _glfwInputMonitorChange(void)
     _glfwDestroyMonitors(monitors, monitorCount);
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW internal API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                       GLFW internal API                      //////
-//////////////////////////////////////////////////////////////////////////
-
+ \param name      The name.
+ \param widthMM   The width millimetres.
+ \param heightMM  The height millimetres.
+ */
 _GLFWmonitor* _glfwCreateMonitor(const char* name, int widthMM, int heightMM)
 {
     _GLFWmonitor* monitor = calloc(1, sizeof(_GLFWmonitor));
@@ -185,6 +200,11 @@ _GLFWmonitor* _glfwCreateMonitor(const char* name, int widthMM, int heightMM)
     return monitor;
 }
 
+/**
+ Glfw destroy monitor.
+
+ \param [in,out]  monitor If non-null, the monitor.
+ */
 void _glfwDestroyMonitor(_GLFWmonitor* monitor)
 {
     if (monitor == NULL)
@@ -198,6 +218,12 @@ void _glfwDestroyMonitor(_GLFWmonitor* monitor)
     free(monitor);
 }
 
+/**
+ Glfw destroy monitors.
+
+ \param [in,out]  monitors  If non-null, the monitors.
+ \param count               Number of.
+ */
 void _glfwDestroyMonitors(_GLFWmonitor** monitors, int count)
 {
     int i;
@@ -208,6 +234,14 @@ void _glfwDestroyMonitors(_GLFWmonitor** monitors, int count)
     free(monitors);
 }
 
+/**
+ Glfw choose video mode.
+
+ \param [in,out]  monitor If non-null, the monitor.
+ \param desired           The desired.
+
+ \return  null if it fails, else a GLFWvidmode*.
+ */
 const GLFWvidmode* _glfwChooseVideoMode(_GLFWmonitor* monitor,
                                         const GLFWvidmode* desired)
 {
@@ -252,11 +286,27 @@ const GLFWvidmode* _glfwChooseVideoMode(_GLFWmonitor* monitor,
     return closest;
 }
 
+/**
+ Glfw compare video modes.
+
+ \param first   The first.
+ \param second  The second.
+
+ \return  An int.
+ */
 int _glfwCompareVideoModes(const GLFWvidmode* first, const GLFWvidmode* second)
 {
     return compareVideoModes(first, second);
 }
 
+/**
+ Glfw split bits per pixel.
+
+ \param bpp             The bits per pixel.
+ \param [in,out]  red   If non-null, the red.
+ \param [in,out]  green If non-null, the green.
+ \param [in,out]  blue  If non-null, the blue.
+ */
 void _glfwSplitBPP(int bpp, int* red, int* green, int* blue)
 {
     int delta;
@@ -276,11 +326,15 @@ void _glfwSplitBPP(int bpp, int* red, int* green, int* blue)
         *red = *red + 1;
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW public API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                        GLFW public API                       //////
-//////////////////////////////////////////////////////////////////////////
+ \param [in,out]  count If non-null, number of.
 
+ \return  null if it fails, else a GLFWmonitor**.
+ */
 GLFWAPI GLFWmonitor** glfwGetMonitors(int* count)
 {
     *count = 0;
@@ -291,12 +345,24 @@ GLFWAPI GLFWmonitor** glfwGetMonitors(int* count)
     return (GLFWmonitor**) _glfw.monitors;
 }
 
+/**
+ Glfw get primary monitor.
+
+ \return  null if it fails, else a GLFWmonitor*.
+ */
 GLFWAPI GLFWmonitor* glfwGetPrimaryMonitor(void)
 {
     _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
     return (GLFWmonitor*) _glfw.monitors[0];
 }
 
+/**
+ Glfw get monitor position.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param [in,out]  xpos    If non-null, the xpos.
+ \param [in,out]  ypos    If non-null, the ypos.
+ */
 GLFWAPI void glfwGetMonitorPos(GLFWmonitor* handle, int* xpos, int* ypos)
 {
     _GLFWmonitor* monitor = (_GLFWmonitor*) handle;
@@ -304,6 +370,13 @@ GLFWAPI void glfwGetMonitorPos(GLFWmonitor* handle, int* xpos, int* ypos)
     _glfwPlatformGetMonitorPos(monitor, xpos, ypos);
 }
 
+/**
+ Glfw get monitor physical size.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param [in,out]  width   If non-null, the width.
+ \param [in,out]  height  If non-null, the height.
+ */
 GLFWAPI void glfwGetMonitorPhysicalSize(GLFWmonitor* handle, int* width, int* height)
 {
     _GLFWmonitor* monitor = (_GLFWmonitor*) handle;
@@ -316,6 +389,13 @@ GLFWAPI void glfwGetMonitorPhysicalSize(GLFWmonitor* handle, int* width, int* he
         *height = monitor->heightMM;
 }
 
+/**
+ Glfw get monitor name.
+
+ \param [in,out]  handle  If non-null, the handle.
+
+ \return  null if it fails, else a char*.
+ */
 GLFWAPI const char* glfwGetMonitorName(GLFWmonitor* handle)
 {
     _GLFWmonitor* monitor = (_GLFWmonitor*) handle;
@@ -323,6 +403,13 @@ GLFWAPI const char* glfwGetMonitorName(GLFWmonitor* handle)
     return monitor->name;
 }
 
+/**
+ Callback, called when the glfw set monitor.
+
+ \param cbfun The cbfun.
+
+ \return  A GLFWmonitorfun.
+ */
 GLFWAPI GLFWmonitorfun glfwSetMonitorCallback(GLFWmonitorfun cbfun)
 {
     _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
@@ -330,6 +417,14 @@ GLFWAPI GLFWmonitorfun glfwSetMonitorCallback(GLFWmonitorfun cbfun)
     return cbfun;
 }
 
+/**
+ Glfw get video modes.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param [in,out]  count   If non-null, number of.
+
+ \return  null if it fails, else a GLFWvidmode*.
+ */
 GLFWAPI const GLFWvidmode* glfwGetVideoModes(GLFWmonitor* handle, int* count)
 {
     _GLFWmonitor* monitor = (_GLFWmonitor*) handle;
@@ -345,6 +440,13 @@ GLFWAPI const GLFWvidmode* glfwGetVideoModes(GLFWmonitor* handle, int* count)
     return monitor->modes;
 }
 
+/**
+ Glfw get video mode.
+
+ \param [in,out]  handle  If non-null, the handle.
+
+ \return  null if it fails, else a GLFWvidmode*.
+ */
 GLFWAPI const GLFWvidmode* glfwGetVideoMode(GLFWmonitor* handle)
 {
     _GLFWmonitor* monitor = (_GLFWmonitor*) handle;

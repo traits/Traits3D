@@ -34,19 +34,27 @@
  #include <malloc.h>
 #endif
 
+/**
+ Return the maxiumum of the specified values.
 
-// Return the maxiumum of the specified values
-//
+ \param a The int to process.
+ \param b The int to process.
+
+ \return  The maximum value.
+ */
 static int Max(int a, int b)
 {
     return (a > b) ? a : b;
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW event API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                         GLFW event API                       //////
-//////////////////////////////////////////////////////////////////////////
-
+ \param [in,out]  window  If non-null, the window.
+ \param focused           The focused.
+ */
 void _glfwInputWindowFocus(_GLFWwindow* window, GLboolean focused)
 {
     if (focused)
@@ -87,18 +95,38 @@ void _glfwInputWindowFocus(_GLFWwindow* window, GLboolean focused)
     }
 }
 
+/**
+ Glfw input window position.
+
+ \param [in,out]  window  If non-null, the window.
+ \param x                 The x coordinate.
+ \param y                 The y coordinate.
+ */
 void _glfwInputWindowPos(_GLFWwindow* window, int x, int y)
 {
     if (window->callbacks.pos)
         window->callbacks.pos((GLFWwindow*) window, x, y);
 }
 
+/**
+ Glfw input window size.
+
+ \param [in,out]  window  If non-null, the window.
+ \param width             The width.
+ \param height            The height.
+ */
 void _glfwInputWindowSize(_GLFWwindow* window, int width, int height)
 {
     if (window->callbacks.size)
         window->callbacks.size((GLFWwindow*) window, width, height);
 }
 
+/**
+ Glfw input window iconify.
+
+ \param [in,out]  window  If non-null, the window.
+ \param iconified         The iconified.
+ */
 void _glfwInputWindowIconify(_GLFWwindow* window, int iconified)
 {
     if (window->iconified == iconified)
@@ -110,23 +138,46 @@ void _glfwInputWindowIconify(_GLFWwindow* window, int iconified)
         window->callbacks.iconify((GLFWwindow*) window, iconified);
 }
 
+/**
+ Glfw input framebuffer size.
+
+ \param [in,out]  window  If non-null, the window.
+ \param width             The width.
+ \param height            The height.
+ */
 void _glfwInputFramebufferSize(_GLFWwindow* window, int width, int height)
 {
     if (window->callbacks.fbsize)
         window->callbacks.fbsize((GLFWwindow*) window, width, height);
 }
 
+/**
+ Glfw input window visibility.
+
+ \param [in,out]  window  If non-null, the window.
+ \param visible           The visible.
+ */
 void _glfwInputWindowVisibility(_GLFWwindow* window, int visible)
 {
     window->visible = visible;
 }
 
+/**
+ Glfw input window damage.
+
+ \param [in,out]  window  If non-null, the window.
+ */
 void _glfwInputWindowDamage(_GLFWwindow* window)
 {
     if (window->callbacks.refresh)
         window->callbacks.refresh((GLFWwindow*) window);
 }
 
+/**
+ Glfw input window close request.
+
+ \param [in,out]  window  If non-null, the window.
+ */
 void _glfwInputWindowCloseRequest(_GLFWwindow* window)
 {
     window->closed = GL_TRUE;
@@ -135,11 +186,19 @@ void _glfwInputWindowCloseRequest(_GLFWwindow* window)
         window->callbacks.close((GLFWwindow*) window);
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW public API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                        GLFW public API                       //////
-//////////////////////////////////////////////////////////////////////////
+ \param width             The width.
+ \param height            The height.
+ \param title             The title.
+ \param [in,out]  monitor If non-null, the monitor.
+ \param [in,out]  share   If non-null, the share.
 
+ \return  null if it fails, else a GLFWwindow*.
+ */
 GLFWAPI GLFWwindow* glfwCreateWindow(int width, int height,
                                      const char* title,
                                      GLFWmonitor* monitor,
@@ -261,6 +320,7 @@ GLFWAPI GLFWwindow* glfwCreateWindow(int width, int height,
     return (GLFWwindow*) window;
 }
 
+/** Glfw default window hints. */
 void glfwDefaultWindowHints(void)
 {
     _GLFW_REQUIRE_INIT();
@@ -286,6 +346,12 @@ void glfwDefaultWindowHints(void)
     _glfw.hints.stencilBits = 8;
 }
 
+/**
+ Glfw window hint.
+
+ \param target  Target for the.
+ \param hint    The hint.
+ */
 GLFWAPI void glfwWindowHint(int target, int hint)
 {
     _GLFW_REQUIRE_INIT();
@@ -373,6 +439,11 @@ GLFWAPI void glfwWindowHint(int target, int hint)
     }
 }
 
+/**
+ Glfw destroy window.
+
+ \param [in,out]  handle  If non-null, the handle.
+ */
 GLFWAPI void glfwDestroyWindow(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -410,6 +481,13 @@ GLFWAPI void glfwDestroyWindow(GLFWwindow* handle)
     free(window);
 }
 
+/**
+ Glfw window should close.
+
+ \param [in,out]  handle  If non-null, the handle.
+
+ \return  An int.
+ */
 GLFWAPI int glfwWindowShouldClose(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -417,6 +495,12 @@ GLFWAPI int glfwWindowShouldClose(GLFWwindow* handle)
     return window->closed;
 }
 
+/**
+ Glfw set window should close.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param value             The value.
+ */
 GLFWAPI void glfwSetWindowShouldClose(GLFWwindow* handle, int value)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -424,6 +508,12 @@ GLFWAPI void glfwSetWindowShouldClose(GLFWwindow* handle, int value)
     window->closed = value;
 }
 
+/**
+ Glfw set window title.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param title             The title.
+ */
 GLFWAPI void glfwSetWindowTitle(GLFWwindow* handle, const char* title)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -431,6 +521,13 @@ GLFWAPI void glfwSetWindowTitle(GLFWwindow* handle, const char* title)
     _glfwPlatformSetWindowTitle(window, title);
 }
 
+/**
+ Glfw get window position.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param [in,out]  xpos    If non-null, the xpos.
+ \param [in,out]  ypos    If non-null, the ypos.
+ */
 GLFWAPI void glfwGetWindowPos(GLFWwindow* handle, int* xpos, int* ypos)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -438,6 +535,13 @@ GLFWAPI void glfwGetWindowPos(GLFWwindow* handle, int* xpos, int* ypos)
     _glfwPlatformGetWindowPos(window, xpos, ypos);
 }
 
+/**
+ Glfw set window position.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param xpos              The xpos.
+ \param ypos              The ypos.
+ */
 GLFWAPI void glfwSetWindowPos(GLFWwindow* handle, int xpos, int ypos)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -454,6 +558,13 @@ GLFWAPI void glfwSetWindowPos(GLFWwindow* handle, int xpos, int ypos)
     _glfwPlatformSetWindowPos(window, xpos, ypos);
 }
 
+/**
+ Glfw get window size.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param [in,out]  width   If non-null, the width.
+ \param [in,out]  height  If non-null, the height.
+ */
 GLFWAPI void glfwGetWindowSize(GLFWwindow* handle, int* width, int* height)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -461,6 +572,13 @@ GLFWAPI void glfwGetWindowSize(GLFWwindow* handle, int* width, int* height)
     _glfwPlatformGetWindowSize(window, width, height);
 }
 
+/**
+ Glfw set window size.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param width             The width.
+ \param height            The height.
+ */
 GLFWAPI void glfwSetWindowSize(GLFWwindow* handle, int width, int height)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -479,6 +597,13 @@ GLFWAPI void glfwSetWindowSize(GLFWwindow* handle, int width, int height)
     _glfwPlatformSetWindowSize(window, width, height);
 }
 
+/**
+ Glfw get framebuffer size.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param [in,out]  width   If non-null, the width.
+ \param [in,out]  height  If non-null, the height.
+ */
 GLFWAPI void glfwGetFramebufferSize(GLFWwindow* handle, int* width, int* height)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -488,6 +613,11 @@ GLFWAPI void glfwGetFramebufferSize(GLFWwindow* handle, int* width, int* height)
     _glfwPlatformGetFramebufferSize(window, width, height);
 }
 
+/**
+ Glfw iconify window.
+
+ \param [in,out]  handle  If non-null, the handle.
+ */
 GLFWAPI void glfwIconifyWindow(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -500,6 +630,11 @@ GLFWAPI void glfwIconifyWindow(GLFWwindow* handle)
     _glfwPlatformIconifyWindow(window);
 }
 
+/**
+ Glfw restore window.
+
+ \param [in,out]  handle  If non-null, the handle.
+ */
 GLFWAPI void glfwRestoreWindow(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -512,6 +647,11 @@ GLFWAPI void glfwRestoreWindow(GLFWwindow* handle)
     _glfwPlatformRestoreWindow(window);
 }
 
+/**
+ Glfw show window.
+
+ \param [in,out]  handle  If non-null, the handle.
+ */
 GLFWAPI void glfwShowWindow(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -524,6 +664,11 @@ GLFWAPI void glfwShowWindow(GLFWwindow* handle)
     _glfwPlatformShowWindow(window);
 }
 
+/**
+ Glfw hide window.
+
+ \param [in,out]  handle  If non-null, the handle.
+ */
 GLFWAPI void glfwHideWindow(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -536,6 +681,14 @@ GLFWAPI void glfwHideWindow(GLFWwindow* handle)
     _glfwPlatformHideWindow(window);
 }
 
+/**
+ Glfw get window attribute.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param attrib            The attribute.
+
+ \return  An int.
+ */
 GLFWAPI int glfwGetWindowAttrib(GLFWwindow* handle, int attrib)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -576,6 +729,13 @@ GLFWAPI int glfwGetWindowAttrib(GLFWwindow* handle, int attrib)
     return 0;
 }
 
+/**
+ Glfw get window monitor.
+
+ \param [in,out]  handle  If non-null, the handle.
+
+ \return  null if it fails, else a GLFWmonitor*.
+ */
 GLFWAPI GLFWmonitor* glfwGetWindowMonitor(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -583,6 +743,12 @@ GLFWAPI GLFWmonitor* glfwGetWindowMonitor(GLFWwindow* handle)
     return (GLFWmonitor*) window->monitor;
 }
 
+/**
+ Glfw set window user pointer.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param [in,out]  pointer If non-null, the pointer.
+ */
 GLFWAPI void glfwSetWindowUserPointer(GLFWwindow* handle, void* pointer)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -590,6 +756,13 @@ GLFWAPI void glfwSetWindowUserPointer(GLFWwindow* handle, void* pointer)
     window->userPointer = pointer;
 }
 
+/**
+ Glfw get window user pointer.
+
+ \param [in,out]  handle  If non-null, the handle.
+
+ \return  null if it fails, else a void*.
+ */
 GLFWAPI void* glfwGetWindowUserPointer(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
@@ -597,6 +770,14 @@ GLFWAPI void* glfwGetWindowUserPointer(GLFWwindow* handle)
     return window->userPointer;
 }
 
+/**
+ Callback, called when the glfw set window position.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param cbfun             The cbfun.
+
+ \return  A GLFWwindowposfun.
+ */
 GLFWAPI GLFWwindowposfun glfwSetWindowPosCallback(GLFWwindow* handle,
                                                   GLFWwindowposfun cbfun)
 {
@@ -606,6 +787,14 @@ GLFWAPI GLFWwindowposfun glfwSetWindowPosCallback(GLFWwindow* handle,
     return cbfun;
 }
 
+/**
+ Callback, called when the glfw set window size.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param cbfun             The cbfun.
+
+ \return  A GLFWwindowsizefun.
+ */
 GLFWAPI GLFWwindowsizefun glfwSetWindowSizeCallback(GLFWwindow* handle,
                                                     GLFWwindowsizefun cbfun)
 {
@@ -615,6 +804,14 @@ GLFWAPI GLFWwindowsizefun glfwSetWindowSizeCallback(GLFWwindow* handle,
     return cbfun;
 }
 
+/**
+ Callback, called when the glfw set window close.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param cbfun             The cbfun.
+
+ \return  A GLFWwindowclosefun.
+ */
 GLFWAPI GLFWwindowclosefun glfwSetWindowCloseCallback(GLFWwindow* handle,
                                                       GLFWwindowclosefun cbfun)
 {
@@ -624,6 +821,14 @@ GLFWAPI GLFWwindowclosefun glfwSetWindowCloseCallback(GLFWwindow* handle,
     return cbfun;
 }
 
+/**
+ Callback, called when the glfw set window refresh.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param cbfun             The cbfun.
+
+ \return  A GLFWwindowrefreshfun.
+ */
 GLFWAPI GLFWwindowrefreshfun glfwSetWindowRefreshCallback(GLFWwindow* handle,
                                                           GLFWwindowrefreshfun cbfun)
 {
@@ -633,6 +838,14 @@ GLFWAPI GLFWwindowrefreshfun glfwSetWindowRefreshCallback(GLFWwindow* handle,
     return cbfun;
 }
 
+/**
+ Callback, called when the glfw set window focus.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param cbfun             The cbfun.
+
+ \return  A GLFWwindowfocusfun.
+ */
 GLFWAPI GLFWwindowfocusfun glfwSetWindowFocusCallback(GLFWwindow* handle,
                                                       GLFWwindowfocusfun cbfun)
 {
@@ -642,6 +855,14 @@ GLFWAPI GLFWwindowfocusfun glfwSetWindowFocusCallback(GLFWwindow* handle,
     return cbfun;
 }
 
+/**
+ Callback, called when the glfw set window iconify.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param cbfun             The cbfun.
+
+ \return  A GLFWwindowiconifyfun.
+ */
 GLFWAPI GLFWwindowiconifyfun glfwSetWindowIconifyCallback(GLFWwindow* handle,
                                                           GLFWwindowiconifyfun cbfun)
 {
@@ -651,6 +872,14 @@ GLFWAPI GLFWwindowiconifyfun glfwSetWindowIconifyCallback(GLFWwindow* handle,
     return cbfun;
 }
 
+/**
+ Callback, called when the glfw set framebuffer size.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param cbfun             The cbfun.
+
+ \return  A GLFWframebuffersizefun.
+ */
 GLFWAPI GLFWframebuffersizefun glfwSetFramebufferSizeCallback(GLFWwindow* handle,
                                                               GLFWframebuffersizefun cbfun)
 {
@@ -660,12 +889,14 @@ GLFWAPI GLFWframebuffersizefun glfwSetFramebufferSizeCallback(GLFWwindow* handle
     return cbfun;
 }
 
+/** Glfw poll events. */
 GLFWAPI void glfwPollEvents(void)
 {
     _GLFW_REQUIRE_INIT();
     _glfwPlatformPollEvents();
 }
 
+/** Glfw wait events. */
 GLFWAPI void glfwWaitEvents(void)
 {
     _GLFW_REQUIRE_INIT();

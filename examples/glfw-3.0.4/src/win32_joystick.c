@@ -34,8 +34,15 @@
 //////                       GLFW internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-// Calculate normalized joystick position
-//
+/**
+ Calculate normalized joystick position.
+
+ \param pos The position.
+ \param min The minimum.
+ \param max The maximum.
+
+ \return  The calculated joystick position.
+ */
 static float calcJoystickPos(DWORD pos, DWORD min, DWORD max)
 {
     float fpos = (float) pos;
@@ -50,14 +57,12 @@ static float calcJoystickPos(DWORD pos, DWORD min, DWORD max)
 //////                       GLFW internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-// Initialize joystick interface
-//
+/** Initialize joystick interface. */
 void _glfwInitJoysticks(void)
 {
 }
 
-// Close all opened joystick handles
-//
+/** Close all opened joystick handles. */
 void _glfwTerminateJoysticks(void)
 {
     int i;
@@ -66,11 +71,15 @@ void _glfwTerminateJoysticks(void)
         free(_glfw.win32.joystick[i].name);
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW platform API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
-//////////////////////////////////////////////////////////////////////////
+ \param joy The joy.
 
+ \return  An int.
+ */
 int _glfwPlatformJoystickPresent(int joy)
 {
     JOYINFO ji;
@@ -81,6 +90,14 @@ int _glfwPlatformJoystickPresent(int joy)
     return GL_TRUE;
 }
 
+/**
+ Glfw platform get joystick axes.
+
+ \param joy             The joy.
+ \param [in,out]  count If non-null, number of.
+
+ \return  null if it fails, else a float*.
+ */
 const float* _glfwPlatformGetJoystickAxes(int joy, int* count)
 {
     JOYCAPS jc;
@@ -114,6 +131,14 @@ const float* _glfwPlatformGetJoystickAxes(int joy, int* count)
     return axes;
 }
 
+/**
+ Glfw platform get joystick buttons.
+
+ \param joy             The joy.
+ \param [in,out]  count If non-null, number of.
+
+ \return  null if it fails, else a char*.
+ */
 const unsigned char* _glfwPlatformGetJoystickButtons(int joy, int* count)
 {
     JOYCAPS jc;
@@ -162,6 +187,13 @@ const unsigned char* _glfwPlatformGetJoystickButtons(int joy, int* count)
     return buttons;
 }
 
+/**
+ Glfw platform get joystick name.
+
+ \param joy The joy.
+
+ \return  null if it fails, else a char*.
+ */
 const char* _glfwPlatformGetJoystickName(int joy)
 {
     JOYCAPS jc;

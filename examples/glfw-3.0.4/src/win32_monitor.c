@@ -34,9 +34,11 @@
 
 // These constants are missing on MinGW
 #ifndef EDS_ROTATEDMODE
+ /** A macro that defines eds rotatedmode. */
  #define EDS_ROTATEDMODE 0x00000004
 #endif
 #ifndef DISPLAY_DEVICE_ACTIVE
+ /** A macro that defines display device active. */
  #define DISPLAY_DEVICE_ACTIVE 0x00000001
 #endif
 
@@ -45,8 +47,14 @@
 //////                       GLFW internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-// Change the current video mode
-//
+/**
+ Change the current video mode.
+
+ \param [in,out]  monitor If non-null, the monitor.
+ \param desired           The desired.
+
+ \return  A GLboolean.
+ */
 GLboolean _glfwSetVideoMode(_GLFWmonitor* monitor, const GLFWvidmode* desired)
 {
     GLFWvidmode current;
@@ -84,19 +92,24 @@ GLboolean _glfwSetVideoMode(_GLFWmonitor* monitor, const GLFWvidmode* desired)
     return GL_TRUE;
 }
 
-// Restore the previously saved (original) video mode
-//
+/**
+ Restore the previously saved (original) video mode.
+
+ \param [in,out]  monitor If non-null, the monitor.
+ */
 void _glfwRestoreVideoMode(_GLFWmonitor* monitor)
 {
     ChangeDisplaySettingsEx(monitor->win32.name,
                             NULL, NULL, CDS_FULLSCREEN, NULL);
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW platform API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
-//////////////////////////////////////////////////////////////////////////
-
+ \param [in,out]  count If non-null, number of.
+ */
 _GLFWmonitor** _glfwPlatformGetMonitors(int* count)
 {
     int size = 0, found = 0;
@@ -178,11 +191,26 @@ _GLFWmonitor** _glfwPlatformGetMonitors(int* count)
     return monitors;
 }
 
+/**
+ Glfw platform is same monitor.
+
+ \param [in,out]  first   If non-null, the first.
+ \param [in,out]  second  If non-null, the second.
+
+ \return  A GLboolean.
+ */
 GLboolean _glfwPlatformIsSameMonitor(_GLFWmonitor* first, _GLFWmonitor* second)
 {
     return wcscmp(first->win32.name, second->win32.name) == 0;
 }
 
+/**
+ Glfw platform get monitor position.
+
+ \param [in,out]  monitor If non-null, the monitor.
+ \param [in,out]  xpos    If non-null, the xpos.
+ \param [in,out]  ypos    If non-null, the ypos.
+ */
 void _glfwPlatformGetMonitorPos(_GLFWmonitor* monitor, int* xpos, int* ypos)
 {
     DEVMODE settings;
@@ -200,6 +228,14 @@ void _glfwPlatformGetMonitorPos(_GLFWmonitor* monitor, int* xpos, int* ypos)
         *ypos = settings.dmPosition.y;
 }
 
+/**
+ Glfw platform get video modes.
+
+ \param [in,out]  monitor If non-null, the monitor.
+ \param [in,out]  found   If non-null, the found.
+
+ \return  null if it fails, else a GLFWvidmode*.
+ */
 GLFWvidmode* _glfwPlatformGetVideoModes(_GLFWmonitor* monitor, int* found)
 {
     int modeIndex = 0, count = 0;
@@ -264,6 +300,12 @@ GLFWvidmode* _glfwPlatformGetVideoModes(_GLFWmonitor* monitor, int* found)
     return result;
 }
 
+/**
+ Glfw platform get video mode.
+
+ \param [in,out]  monitor If non-null, the monitor.
+ \param [in,out]  mode    If non-null, the mode.
+ */
 void _glfwPlatformGetVideoMode(_GLFWmonitor* monitor, GLFWvidmode* mode)
 {
     DEVMODE dm;

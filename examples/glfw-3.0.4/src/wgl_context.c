@@ -31,13 +31,14 @@
 #include <malloc.h>
 #include <assert.h>
 
+/**
+ Initialize WGL-specific extensions This function is called once before initial context creation,
+ i.e. before any WGL extensions could be present.  This is done in order to have both extension
+ variable clearing and loading in the same place, hopefully decreasing the possibility of
+ forgetting to add one without the other.
 
-// Initialize WGL-specific extensions
-// This function is called once before initial context creation, i.e. before
-// any WGL extensions could be present.  This is done in order to have both
-// extension variable clearing and loading in the same place, hopefully
-// decreasing the possibility of forgetting to add one without the other.
-//
+ \param [in,out]  window  If non-null, the window.
+ */
 static void initWGLExtensions(_GLFWwindow* window)
 {
     // This needs to include every function pointer loaded below
@@ -121,9 +122,16 @@ static void initWGLExtensions(_GLFWwindow* window)
     }
 }
 
-// Returns the specified attribute of the specified pixel format
-// NOTE: Do not call this unless we have found WGL_ARB_pixel_format
-//
+/**
+ Returns the specified attribute of the specified pixel format NOTE: Do not call this unless we
+ have found WGL_ARB_pixel_format.
+
+ \param [in,out]  window  If non-null, the window.
+ \param pixelFormat       The pixel format.
+ \param attrib            The attribute.
+
+ \return  The pixel format attribute.
+ */
 static int getPixelFormatAttrib(_GLFWwindow* window, int pixelFormat, int attrib)
 {
     int value = 0;
@@ -139,8 +147,15 @@ static int getPixelFormatAttrib(_GLFWwindow* window, int pixelFormat, int attrib
     return value;
 }
 
-// Return a list of available and usable framebuffer configs
-//
+/**
+ Return a list of available and usable framebuffer configs.
+
+ \param [in,out]  window  If non-null, the window.
+ \param desired           The desired.
+ \param [out] result      If non-null, the result.
+
+ \return  A GLboolean.
+ */
 static GLboolean choosePixelFormat(_GLFWwindow* window,
                                    const _GLFWfbconfig* desired,
                                    int* result)
@@ -302,8 +317,11 @@ static GLboolean choosePixelFormat(_GLFWwindow* window,
 //////                       GLFW internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-// Initialize WGL
-//
+/**
+ Initialize WGL.
+
+ \return  An int.
+ */
 int _glfwInitContextAPI(void)
 {
     _glfw.wgl.opengl32.instance = LoadLibrary(L"opengl32.dll");
@@ -326,8 +344,7 @@ int _glfwInitContextAPI(void)
     return GL_TRUE;
 }
 
-// Terminate WGL
-//
+/** Terminate WGL. */
 void _glfwTerminateContextAPI(void)
 {
     if (_glfw.wgl.hasTLS)
@@ -337,6 +354,12 @@ void _glfwTerminateContextAPI(void)
         FreeLibrary(_glfw.wgl.opengl32.instance);
 }
 
+/**
+ A macro that defines set wg lattrib.
+
+ \param attribName  Name of the attribute.
+ \param attribValue The attribute value.
+ */
 #define setWGLattrib(attribName, attribValue) \
 { \
     attribs[index++] = attribName; \
@@ -344,8 +367,15 @@ void _glfwTerminateContextAPI(void)
     assert((size_t) index < sizeof(attribs) / sizeof(attribs[0])); \
 }
 
-// Prepare for creation of the OpenGL context
-//
+/**
+ Prepare for creation of the OpenGL context.
+
+ \param [in,out]  window  If non-null, the window.
+ \param wndconfig         The wndconfig.
+ \param fbconfig          The fbconfig.
+
+ \return  An int.
+ */
 int _glfwCreateContext(_GLFWwindow* window,
                        const _GLFWwndconfig* wndconfig,
                        const _GLFWfbconfig* fbconfig)
@@ -477,8 +507,11 @@ int _glfwCreateContext(_GLFWwindow* window,
 
 #undef setWGLattrib
 
-// Destroy the OpenGL context
-//
+/**
+ Destroy the OpenGL context.
+
+ \param [in,out]  window  If non-null, the window.
+ */
 void _glfwDestroyContext(_GLFWwindow* window)
 {
     if (window->wgl.context)
@@ -494,8 +527,15 @@ void _glfwDestroyContext(_GLFWwindow* window)
     }
 }
 
-// Analyzes the specified context for possible recreation
-//
+/**
+ Analyzes the specified context for possible recreation.
+
+ \param window    The window.
+ \param wndconfig The wndconfig.
+ \param fbconfig  The fbconfig.
+
+ \return  An int.
+ */
 int _glfwAnalyzeContext(const _GLFWwindow* window,
                         const _GLFWwndconfig* wndconfig,
                         const _GLFWfbconfig* fbconfig)
@@ -576,11 +616,13 @@ int _glfwAnalyzeContext(const _GLFWwindow* window,
     return _GLFW_RECREATION_NOT_NEEDED;
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW platform API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
-//////////////////////////////////////////////////////////////////////////
-
+ \param [in,out]  window  If non-null, the window.
+ */
 void _glfwPlatformMakeContextCurrent(_GLFWwindow* window)
 {
     if (window)
@@ -591,16 +633,27 @@ void _glfwPlatformMakeContextCurrent(_GLFWwindow* window)
     TlsSetValue(_glfw.wgl.current, window);
 }
 
+/** Default constructor. */
 _GLFWwindow* _glfwPlatformGetCurrentContext(void)
 {
     return TlsGetValue(_glfw.wgl.current);
 }
 
+/**
+ Glfw platform swap buffers.
+
+ \param [in,out]  window  If non-null, the window.
+ */
 void _glfwPlatformSwapBuffers(_GLFWwindow* window)
 {
     SwapBuffers(window->wgl.dc);
 }
 
+/**
+ Glfw platform swap interval.
+
+ \param interval  The interval.
+ */
 void _glfwPlatformSwapInterval(int interval)
 {
     _GLFWwindow* window = _glfwPlatformGetCurrentContext();
@@ -618,6 +671,13 @@ void _glfwPlatformSwapInterval(int interval)
         window->wgl.SwapIntervalEXT(interval);
 }
 
+/**
+ Glfw platform extension supported.
+
+ \param extension The extension.
+
+ \return  An int.
+ */
 int _glfwPlatformExtensionSupported(const char* extension)
 {
     const GLubyte* extensions;
@@ -647,6 +707,13 @@ int _glfwPlatformExtensionSupported(const char* extension)
     return GL_FALSE;
 }
 
+/**
+ Glfw platform get proc address.
+
+ \param procname  The procname.
+
+ \return  A GLFWglproc.
+ */
 GLFWglproc _glfwPlatformGetProcAddress(const char* procname)
 {
     const GLFWglproc proc = (GLFWglproc) wglGetProcAddress(procname);
@@ -656,11 +723,15 @@ GLFWglproc _glfwPlatformGetProcAddress(const char* procname)
     return (GLFWglproc) GetProcAddress(_glfw.wgl.opengl32.instance, procname);
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW native API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                        GLFW native API                       //////
-//////////////////////////////////////////////////////////////////////////
+ \param [in,out]  handle  If non-null, the handle.
 
+ \return  A HGLRC.
+ */
 GLFWAPI HGLRC glfwGetWGLContext(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;

@@ -46,9 +46,13 @@ _GLFWlibrary _glfw;
 //
 static GLFWerrorfun _glfwErrorCallback = NULL;
 
+/**
+ Returns a generic string representation of the specified error.
 
-// Returns a generic string representation of the specified error
-//
+ \param error The error.
+
+ \return  null if it fails, else the error string.
+ */
 static const char* getErrorString(int error)
 {
     switch (error)
@@ -76,11 +80,14 @@ static const char* getErrorString(int error)
     return "ERROR: UNKNOWN ERROR TOKEN PASSED TO glfwErrorString";
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW event API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                         GLFW event API                       //////
-//////////////////////////////////////////////////////////////////////////
-
+ \param error   The error.
+ \param format  Describes the format to use.
+ */
 void _glfwInputError(int error, const char* format, ...)
 {
     if (_glfwErrorCallback)
@@ -109,11 +116,13 @@ void _glfwInputError(int error, const char* format, ...)
     }
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW public API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                        GLFW public API                       //////
-//////////////////////////////////////////////////////////////////////////
-
+ \return  An int.
+ */
 GLFWAPI int glfwInit(void)
 {
     if (_glfwInitialized)
@@ -143,6 +152,7 @@ GLFWAPI int glfwInit(void)
     return GL_TRUE;
 }
 
+/** Glfw terminate. */
 GLFWAPI void glfwTerminate(void)
 {
     int i;
@@ -172,6 +182,13 @@ GLFWAPI void glfwTerminate(void)
     _glfwInitialized = GL_FALSE;
 }
 
+/**
+ Glfw get version.
+
+ \param [in,out]  major If non-null, the major.
+ \param [in,out]  minor If non-null, the minor.
+ \param [in,out]  rev   If non-null, the reverse.
+ */
 GLFWAPI void glfwGetVersion(int* major, int* minor, int* rev)
 {
     if (major != NULL)
@@ -184,11 +201,23 @@ GLFWAPI void glfwGetVersion(int* major, int* minor, int* rev)
         *rev = GLFW_VERSION_REVISION;
 }
 
+/**
+ Glfw get version string.
+
+ \return  null if it fails, else a char*.
+ */
 GLFWAPI const char* glfwGetVersionString(void)
 {
     return _glfwPlatformGetVersionString();
 }
 
+/**
+ Callback, called when the glfw set error.
+
+ \param cbfun The cbfun.
+
+ \return  A GLFWerrorfun.
+ */
 GLFWAPI GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun)
 {
     _GLFW_SWAP_POINTERS(_glfwErrorCallback, cbfun);

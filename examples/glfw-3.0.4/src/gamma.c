@@ -34,11 +34,14 @@
  #include <malloc.h>
 #endif
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW internal API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                       GLFW internal API                      //////
-//////////////////////////////////////////////////////////////////////////
-
+ \param [in,out]  ramp  If non-null, the ramp.
+ \param size            The size.
+ */
 void _glfwAllocGammaArrays(GLFWgammaramp* ramp, unsigned int size)
 {
     ramp->red = calloc(size, sizeof(unsigned short));
@@ -47,6 +50,11 @@ void _glfwAllocGammaArrays(GLFWgammaramp* ramp, unsigned int size)
     ramp->size = size;
 }
 
+/**
+ Glfw free gamma arrays.
+
+ \param [in,out]  ramp  If non-null, the ramp.
+ */
 void _glfwFreeGammaArrays(GLFWgammaramp* ramp)
 {
     free(ramp->red);
@@ -56,11 +64,14 @@ void _glfwFreeGammaArrays(GLFWgammaramp* ramp)
     memset(ramp, 0, sizeof(GLFWgammaramp));
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW public API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                        GLFW public API                       //////
-//////////////////////////////////////////////////////////////////////////
-
+ \param [in,out]  handle  If non-null, the handle.
+ \param gamma             The gamma.
+ */
 GLFWAPI void glfwSetGamma(GLFWmonitor* handle, float gamma)
 {
     int i;
@@ -100,6 +111,13 @@ GLFWAPI void glfwSetGamma(GLFWmonitor* handle, float gamma)
     glfwSetGammaRamp(handle, &ramp);
 }
 
+/**
+ Glfw get gamma ramp.
+
+ \param [in,out]  handle  If non-null, the handle.
+
+ \return  null if it fails, else a GLFWgammaramp*.
+ */
 GLFWAPI const GLFWgammaramp* glfwGetGammaRamp(GLFWmonitor* handle)
 {
     _GLFWmonitor* monitor = (_GLFWmonitor*) handle;
@@ -112,6 +130,12 @@ GLFWAPI const GLFWgammaramp* glfwGetGammaRamp(GLFWmonitor* handle)
     return &monitor->currentRamp;
 }
 
+/**
+ Glfw set gamma ramp.
+
+ \param [in,out]  handle  If non-null, the handle.
+ \param ramp              The ramp.
+ */
 GLFWAPI void glfwSetGammaRamp(GLFWmonitor* handle, const GLFWgammaramp* ramp)
 {
     _GLFWmonitor* monitor = (_GLFWmonitor*) handle;

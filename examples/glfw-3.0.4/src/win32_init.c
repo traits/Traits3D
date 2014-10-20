@@ -47,8 +47,15 @@ GLFWAPI DWORD NvOptimusEnablement = 0x00000001;
 
 #if defined(_GLFW_BUILD_DLL)
 
-// GLFW DLL entry point
-//
+/**
+ GLFW DLL entry point.
+
+ \param instance  The instance.
+ \param reason    The reason.
+ \param reserved  The reserved.
+
+ \return  A WINAPI.
+ */
 BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
 {
     return TRUE;
@@ -56,8 +63,11 @@ BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
 
 #endif // _GLFW_BUILD_DLL
 
-// Load necessary libraries (DLLs)
-//
+/**
+ Load necessary libraries (DLLs)
+
+ \return  A GLboolean.
+ */
 static GLboolean initLibraries(void)
 {
 #ifndef _GLFW_NO_DLOAD_WINMM
@@ -102,8 +112,7 @@ static GLboolean initLibraries(void)
     return GL_TRUE;
 }
 
-// Unload used libraries (DLLs)
-//
+/** Unload used libraries (DLLs) */
 static void terminateLibraries(void)
 {
 #ifndef _GLFW_NO_DLOAD_WINMM
@@ -126,8 +135,11 @@ static void terminateLibraries(void)
 //////                       GLFW internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-// Returns whether desktop compositing is enabled
-//
+/**
+ Returns whether desktop compositing is enabled.
+
+ \return  true if it succeeds, false if it fails.
+ */
 BOOL _glfwIsCompositionEnabled(void)
 {
     BOOL enabled;
@@ -141,8 +153,13 @@ BOOL _glfwIsCompositionEnabled(void)
     return enabled;
 }
 
-// Returns a wide string version of the specified UTF-8 string
-//
+/**
+ Returns a wide string version of the specified UTF-8 string.
+
+ \param source  Source for the.
+
+ \return  null if it fails, else a WCHAR*.
+ */
 WCHAR* _glfwCreateWideStringFromUTF8(const char* source)
 {
     WCHAR* target;
@@ -163,8 +180,13 @@ WCHAR* _glfwCreateWideStringFromUTF8(const char* source)
     return target;
 }
 
-// Returns a UTF-8 string version of the specified wide string
-//
+/**
+ Returns a UTF-8 string version of the specified wide string.
+
+ \param source  Source for the.
+
+ \return  null if it fails, else a char*.
+ */
 char* _glfwCreateUTF8FromWideString(const WCHAR* source)
 {
     char* target;
@@ -185,11 +207,13 @@ char* _glfwCreateUTF8FromWideString(const WCHAR* source)
     return target;
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW platform API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
-//////////////////////////////////////////////////////////////////////////
-
+ \return  An int.
+ */
 int _glfwPlatformInit(void)
 {
     // To make SetForegroundWindow work as we want, we need to fiddle
@@ -221,6 +245,7 @@ int _glfwPlatformInit(void)
     return GL_TRUE;
 }
 
+/** Glfw platform terminate. */
 void _glfwPlatformTerminate(void)
 {
     if (_glfw.win32.classAtom)
@@ -241,6 +266,11 @@ void _glfwPlatformTerminate(void)
     terminateLibraries();
 }
 
+/**
+ Glfw platform get version string.
+
+ \return  null if it fails, else a char*.
+ */
 const char* _glfwPlatformGetVersionString(void)
 {
     const char* version = _GLFW_VERSION_NUMBER " Win32"

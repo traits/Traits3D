@@ -28,11 +28,14 @@
 
 #include <limits.h>
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW platform API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
-//////////////////////////////////////////////////////////////////////////
-
+ \param [in,out]  monitor If non-null, the monitor.
+ \param [in,out]  ramp    If non-null, the ramp.
+ */
 void _glfwPlatformGetGammaRamp(_GLFWmonitor* monitor, GLFWgammaramp* ramp)
 {
     HDC dc;
@@ -54,6 +57,12 @@ void _glfwPlatformGetGammaRamp(_GLFWmonitor* monitor, GLFWgammaramp* ramp)
     memcpy(ramp->blue,  values + 512, 256 * sizeof(unsigned short));
 }
 
+/**
+ Glfw platform set gamma ramp.
+
+ \param [in,out]  monitor If non-null, the monitor.
+ \param ramp              The ramp.
+ */
 void _glfwPlatformSetGammaRamp(_GLFWmonitor* monitor, const GLFWgammaramp* ramp)
 {
     HDC dc;

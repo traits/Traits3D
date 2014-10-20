@@ -27,9 +27,11 @@
 
 #include "internal.h"
 
+/**
+ Return raw time.
 
-// Return raw time
-//
+ \return  The raw time.
+ */
 static unsigned __int64 getRawTime(void)
 {
     if (_glfw.win32.timer.hasPC)
@@ -47,8 +49,7 @@ static unsigned __int64 getRawTime(void)
 //////                       GLFW internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-// Initialise timer
-//
+/** Initialise timer. */
 void _glfwInitTimer(void)
 {
     unsigned __int64 frequency;
@@ -67,17 +68,24 @@ void _glfwInitTimer(void)
     _glfw.win32.timer.base = getRawTime();
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW platform API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
-//////////////////////////////////////////////////////////////////////////
-
+ \return  A double.
+ */
 double _glfwPlatformGetTime(void)
 {
     return (double) (getRawTime() - _glfw.win32.timer.base) *
         _glfw.win32.timer.resolution;
 }
 
+/**
+ Glfw platform set time.
+
+ \param time  The time.
+ */
 void _glfwPlatformSetTime(double time)
 {
     _glfw.win32.timer.base = getRawTime() -

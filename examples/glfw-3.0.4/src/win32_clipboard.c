@@ -31,11 +31,14 @@
 #include <stdlib.h>
 #include <malloc.h>
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW platform API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
-//////////////////////////////////////////////////////////////////////////
-
+ \param [in,out]  window  If non-null, the window.
+ \param string            The string.
+ */
 void _glfwPlatformSetClipboardString(_GLFWwindow* window, const char* string)
 {
     WCHAR* wideString;
@@ -82,6 +85,13 @@ void _glfwPlatformSetClipboardString(_GLFWwindow* window, const char* string)
     free(wideString);
 }
 
+/**
+ Glfw platform get clipboard string.
+
+ \param [in,out]  window  If non-null, the window.
+
+ \return  null if it fails, else a char*.
+ */
 const char* _glfwPlatformGetClipboardString(_GLFWwindow* window)
 {
     HANDLE stringHandle;

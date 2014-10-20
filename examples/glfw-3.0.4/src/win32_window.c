@@ -31,11 +31,14 @@
 #include <malloc.h>
 #include <windowsx.h>
 
+/** A macro that defines glfw key invalid. */
 #define _GLFW_KEY_INVALID -2
 
+/**
+ Updates the cursor clip rect.
 
-// Updates the cursor clip rect
-//
+ \param [in,out]  window  If non-null, the window.
+ */
 static void updateClipRect(_GLFWwindow* window)
 {
     RECT clipRect;
@@ -45,8 +48,11 @@ static void updateClipRect(_GLFWwindow* window)
     ClipCursor(&clipRect);
 }
 
-// Hide mouse cursor
-//
+/**
+ Hide mouse cursor.
+
+ \param [in,out]  window  If non-null, the window.
+ */
 static void hideCursor(_GLFWwindow* window)
 {
     POINT pos;
@@ -67,8 +73,11 @@ static void hideCursor(_GLFWwindow* window)
     }
 }
 
-// Capture mouse cursor
-//
+/**
+ Capture mouse cursor.
+
+ \param [in,out]  window  If non-null, the window.
+ */
 static void captureCursor(_GLFWwindow* window)
 {
     if (!window->win32.cursorHidden)
@@ -81,8 +90,11 @@ static void captureCursor(_GLFWwindow* window)
     SetCapture(window->win32.handle);
 }
 
-// Show mouse cursor
-//
+/**
+ Show mouse cursor.
+
+ \param [in,out]  window  If non-null, the window.
+ */
 static void showCursor(_GLFWwindow* window)
 {
     POINT pos;
@@ -103,8 +115,11 @@ static void showCursor(_GLFWwindow* window)
     }
 }
 
-// Retrieves and translates modifier keys
-//
+/**
+ Retrieves and translates modifier keys.
+
+ \return  The key mods.
+ */
 static int getKeyMods(void)
 {
     int mods = 0;
@@ -121,8 +136,11 @@ static int getKeyMods(void)
     return mods;
 }
 
-// Retrieves and translates modifier keys
-//
+/**
+ Retrieves and translates modifier keys.
+
+ \return  The asynchronous key mods.
+ */
 static int getAsyncKeyMods(void)
 {
     int mods = 0;
@@ -139,8 +157,14 @@ static int getAsyncKeyMods(void)
     return mods;
 }
 
-// Translates a Windows key to the corresponding GLFW key
-//
+/**
+ Translates a Windows key to the corresponding GLFW key.
+
+ \param wParam  The wParam field of the message.
+ \param lParam  The lParam field of the message.
+
+ \return  An int.
+ */
 static int translateKey(WPARAM wParam, LPARAM lParam)
 {
     // Check for numeric keypad keys
@@ -363,8 +387,16 @@ static int translateKey(WPARAM wParam, LPARAM lParam)
     return GLFW_KEY_UNKNOWN;
 }
 
-// Window callback function (handles window events)
-//
+/**
+ Window callback function (handles window events)
+
+ \param hWnd    Handle of the window.
+ \param uMsg    The message.
+ \param wParam  The wParam field of the message.
+ \param lParam  The lParam field of the message.
+
+ \return  A CALLBACK.
+ */
 static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
                                    WPARAM wParam, LPARAM lParam)
 {
@@ -752,8 +784,15 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
     return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
-// Translate client window size to full window size (including window borders)
-//
+/**
+ Translate client window size to full window size (including window borders)
+
+ \param [in,out]  window      If non-null, the window.
+ \param clientWidth           Width of the client.
+ \param clientHeight          Height of the client.
+ \param [in,out]  fullWidth   If non-null, width of the full.
+ \param [in,out]  fullHeight  If non-null, height of the full.
+ */
 static void getFullWindowSize(_GLFWwindow* window,
                               int clientWidth, int clientHeight,
                               int* fullWidth, int* fullHeight)
@@ -765,8 +804,11 @@ static void getFullWindowSize(_GLFWwindow* window,
     *fullHeight = rect.bottom - rect.top;
 }
 
-// Registers the GLFW window class
-//
+/**
+ Registers the GLFW window class.
+
+ \return  An ATOM.
+ */
 static ATOM registerWindowClass(void)
 {
     WNDCLASS wc;
@@ -802,8 +844,15 @@ static ATOM registerWindowClass(void)
     return classAtom;
 }
 
-// Creates the GLFW window and rendering context
-//
+/**
+ Creates the GLFW window and rendering context.
+
+ \param [in,out]  window  If non-null, the window.
+ \param wndconfig         The wndconfig.
+ \param fbconfig          The fbconfig.
+
+ \return  The new window.
+ */
 static int createWindow(_GLFWwindow* window,
                         const _GLFWwndconfig* wndconfig,
                         const _GLFWfbconfig* fbconfig)
@@ -878,8 +927,11 @@ static int createWindow(_GLFWwindow* window,
     return GL_TRUE;
 }
 
-// Destroys the GLFW window and rendering context
-//
+/**
+ Destroys the GLFW window and rendering context.
+
+ \param [in,out]  window  If non-null, the window.
+ */
 static void destroyWindow(_GLFWwindow* window)
 {
     _glfwDestroyContext(window);
@@ -891,11 +943,17 @@ static void destroyWindow(_GLFWwindow* window)
     }
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW platform API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
-//////////////////////////////////////////////////////////////////////////
+ \param [in,out]  window  If non-null, the window.
+ \param wndconfig         The wndconfig.
+ \param fbconfig          The fbconfig.
 
+ \return  An int.
+ */
 int _glfwPlatformCreateWindow(_GLFWwindow* window,
                               const _GLFWwndconfig* wndconfig,
                               const _GLFWfbconfig* fbconfig)
@@ -962,6 +1020,11 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
     return GL_TRUE;
 }
 
+/**
+ Glfw platform destroy window.
+
+ \param [in,out]  window  If non-null, the window.
+ */
 void _glfwPlatformDestroyWindow(_GLFWwindow* window)
 {
     destroyWindow(window);
@@ -970,6 +1033,12 @@ void _glfwPlatformDestroyWindow(_GLFWwindow* window)
         _glfwRestoreVideoMode(window->monitor);
 }
 
+/**
+ Glfw platform set window title.
+
+ \param [in,out]  window  If non-null, the window.
+ \param title             The title.
+ */
 void _glfwPlatformSetWindowTitle(_GLFWwindow* window, const char* title)
 {
     WCHAR* wideTitle = _glfwCreateWideStringFromUTF8(title);
@@ -984,6 +1053,13 @@ void _glfwPlatformSetWindowTitle(_GLFWwindow* window, const char* title)
     free(wideTitle);
 }
 
+/**
+ Glfw platform get window position.
+
+ \param [in,out]  window  If non-null, the window.
+ \param [in,out]  xpos    If non-null, the xpos.
+ \param [in,out]  ypos    If non-null, the ypos.
+ */
 void _glfwPlatformGetWindowPos(_GLFWwindow* window, int* xpos, int* ypos)
 {
     POINT pos = { 0, 0 };
@@ -995,6 +1071,13 @@ void _glfwPlatformGetWindowPos(_GLFWwindow* window, int* xpos, int* ypos)
         *ypos = pos.y;
 }
 
+/**
+ Glfw platform set window position.
+
+ \param [in,out]  window  If non-null, the window.
+ \param xpos              The xpos.
+ \param ypos              The ypos.
+ */
 void _glfwPlatformSetWindowPos(_GLFWwindow* window, int xpos, int ypos)
 {
     RECT rect = { xpos, ypos, xpos, ypos };
@@ -1004,6 +1087,13 @@ void _glfwPlatformSetWindowPos(_GLFWwindow* window, int xpos, int ypos)
                  SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOSIZE);
 }
 
+/**
+ Glfw platform get window size.
+
+ \param [in,out]  window  If non-null, the window.
+ \param [in,out]  width   If non-null, the width.
+ \param [in,out]  height  If non-null, the height.
+ */
 void _glfwPlatformGetWindowSize(_GLFWwindow* window, int* width, int* height)
 {
     RECT area;
@@ -1015,6 +1105,13 @@ void _glfwPlatformGetWindowSize(_GLFWwindow* window, int* width, int* height)
         *height = area.bottom;
 }
 
+/**
+ Glfw platform set window size.
+
+ \param [in,out]  window  If non-null, the window.
+ \param width             The width.
+ \param height            The height.
+ */
 void _glfwPlatformSetWindowSize(_GLFWwindow* window, int width, int height)
 {
     if (window->monitor)
@@ -1038,21 +1135,43 @@ void _glfwPlatformSetWindowSize(_GLFWwindow* window, int width, int height)
     }
 }
 
+/**
+ Glfw platform get framebuffer size.
+
+ \param [in,out]  window  If non-null, the window.
+ \param [in,out]  width   If non-null, the width.
+ \param [in,out]  height  If non-null, the height.
+ */
 void _glfwPlatformGetFramebufferSize(_GLFWwindow* window, int* width, int* height)
 {
     _glfwPlatformGetWindowSize(window, width, height);
 }
 
+/**
+ Glfw platform iconify window.
+
+ \param [in,out]  window  If non-null, the window.
+ */
 void _glfwPlatformIconifyWindow(_GLFWwindow* window)
 {
     ShowWindow(window->win32.handle, SW_MINIMIZE);
 }
 
+/**
+ Glfw platform restore window.
+
+ \param [in,out]  window  If non-null, the window.
+ */
 void _glfwPlatformRestoreWindow(_GLFWwindow* window)
 {
     ShowWindow(window->win32.handle, SW_RESTORE);
 }
 
+/**
+ Glfw platform show window.
+
+ \param [in,out]  window  If non-null, the window.
+ */
 void _glfwPlatformShowWindow(_GLFWwindow* window)
 {
     ShowWindow(window->win32.handle, SW_SHOWNORMAL);
@@ -1061,11 +1180,17 @@ void _glfwPlatformShowWindow(_GLFWwindow* window)
     SetFocus(window->win32.handle);
 }
 
+/**
+ Glfw platform hide window.
+
+ \param [in,out]  window  If non-null, the window.
+ */
 void _glfwPlatformHideWindow(_GLFWwindow* window)
 {
     ShowWindow(window->win32.handle, SW_HIDE);
 }
 
+/** Glfw platform poll events. */
 void _glfwPlatformPollEvents(void)
 {
     MSG msg;
@@ -1125,6 +1250,7 @@ void _glfwPlatformPollEvents(void)
     }
 }
 
+/** Glfw platform wait events. */
 void _glfwPlatformWaitEvents(void)
 {
     WaitMessage();
@@ -1132,6 +1258,13 @@ void _glfwPlatformWaitEvents(void)
     _glfwPlatformPollEvents();
 }
 
+/**
+ Glfw platform set cursor position.
+
+ \param [in,out]  window  If non-null, the window.
+ \param xpos              The xpos.
+ \param ypos              The ypos.
+ */
 void _glfwPlatformSetCursorPos(_GLFWwindow* window, double xpos, double ypos)
 {
     POINT pos = { (int) xpos, (int) ypos };
@@ -1142,6 +1275,12 @@ void _glfwPlatformSetCursorPos(_GLFWwindow* window, double xpos, double ypos)
     window->win32.oldCursorY = (int) ypos;
 }
 
+/**
+ Glfw platform set cursor mode.
+
+ \param [in,out]  window  If non-null, the window.
+ \param mode              The mode.
+ */
 void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
 {
     switch (mode)
@@ -1158,11 +1297,15 @@ void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
     }
 }
 
+/**
+ //////////////////////////////////////////////////////////////////////////
+ GLFW native API
+ /////////////////////////////////////////////////////////////////////////////.
 
-//////////////////////////////////////////////////////////////////////////
-//////                        GLFW native API                       //////
-//////////////////////////////////////////////////////////////////////////
+ \param [in,out]  handle  If non-null, the handle.
 
+ \return  The handle of the window.
+ */
 GLFWAPI HWND glfwGetWin32Window(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
