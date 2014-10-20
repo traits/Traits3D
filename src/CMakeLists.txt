@@ -29,3 +29,8 @@ add_subdirectory(protean3d)
 add_library(protean3d SHARED ${PROTEAN3D_GL_SOURCES} ${PROTEAN3D_CORE_SOURCES} ${PROTEAN3D_CORE_HEADERS})
 target_link_libraries(protean3d ${ALL_LIBS})
 
+install(TARGETS protean3d 
+    RUNTIME DESTINATION bin 
+    LIBRARY DESTINATION bin 
+    ARCHIVE DESTINATION lib
+    )

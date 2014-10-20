@@ -54,6 +54,11 @@ foreach(subdir ${SUBDIRS})
   target_link_libraries(${subdir} glloader)
   target_link_libraries(${subdir} glfw ${GLFW_LIBRARIES})
   set_target_properties(${subdir} PROPERTIES WIN32_EXECUTABLE false)
+  install(TARGETS ${subdir} 
+    RUNTIME DESTINATION bin 
+    LIBRARY DESTINATION bin 
+    ARCHIVE DESTINATION lib
+    )
 endforeach()
 
 

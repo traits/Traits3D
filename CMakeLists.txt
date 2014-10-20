@@ -1,18 +1,16 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.11)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
 PROJECT("Protean3D")
 set(CMAKE_DEBUG_POSTFIX "D")
 
-# include("CMakeDependentOption")
+include("CMakeDependentOption")
 include("cmake/macros.cmake")
 
 # search local cmake stuff
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Build & Install directories
-set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/../protean3d_install CACHE PATH "Install directory" FORCE)
-set(dir ${CMAKE_CURRENT_SOURCE_DIR}/../protean3d_build)
-set(EXECUTABLE_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
-set(LIBRARY_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
+set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/../install CACHE PATH "Install directory" FORCE)
+set(dir ${CMAKE_SOURCE_DIR}/../build)
 
 # Target OS
 set(PROTEAN3D_OS "Windows" CACHE STRING "Target OS")
@@ -32,6 +30,12 @@ set(PROTEAN3D_TEXT "Core" CACHE STRING "Font/String Provider")
 set_property(CACHE PROTEAN3D_TEXT PROPERTY STRINGS "Core" "freetype" "Qt")
 
 add_subdirectory(src)
+
+option(TARGET_GLES "Build for OpenGL ES instead of desktop OpenGL" OFF)
+CMAKE_DEPENDENT_OPTION(TARGET_GLES2 "Build for OpenGL ES 2" ON "TARGET_GLES" OFF)
+CMAKE_DEPENDENT_OPTION(TARGET_DESKTOP_GLES "Build for OpenGL ES on desktop" OFF "TARGET_GLES" OFF)
+
+
 
 option(PROTEAN3D_EXAMPLES "Build examples" ON)
 # CMAKE_DEPENDENT_OPTION(PROTEAN3D_EXAMPLES "Build examples" ON "\"\${PROTEAN3D_EXAMPLES_GL_CONTEXT}\"  STREQUAL \"Qt\"" OFF)
