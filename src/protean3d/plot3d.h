@@ -53,7 +53,7 @@ namespace Protean3D
     GLfloat z_far;
     void initMatrices();
     void init_map();
-    void generate_heightmap__circle(float* center_x, float* center_y, float* size, float* displacement);
+    void generate_heightmap_circle(float& center_x, float& center_y, float& size, float& displacement);
     void update_map(size_t num_iter);
     void createBuffers(GLuint program);
   };

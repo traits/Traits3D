@@ -82,17 +82,14 @@ Protean3D::Plot3D::~Plot3D()
 */
 void Protean3D::Plot3D::init_map(void)
 {
-  int i;
-  int j;
-  int k;
   GLfloat step = MAP_SIZE / (MAP_NUM_VERTICES - 1);
   GLfloat x = 0.0f;
   GLfloat z = 0.0f;
   /* Create a flat grid */
-  k = 0;
-  for (i = 0; i < MAP_NUM_VERTICES; ++i)
+  auto k = 0;
+  for (auto i = 0; i < MAP_NUM_VERTICES; ++i)
   {
-    for (j = 0; j < MAP_NUM_VERTICES; ++j)
+    for (auto j = 0; j < MAP_NUM_VERTICES; ++j)
     {
       map_vertices[0][k] = x;
       map_vertices[1][k] = 0.0f;
@@ -114,21 +111,21 @@ void Protean3D::Plot3D::init_map(void)
 
   /* close the top of the square */
   k = 0;
-  for (i = 0; i < MAP_NUM_VERTICES - 1; ++i)
+  for (auto i = 0; i < MAP_NUM_VERTICES - 1; ++i)
   {
     map_line_indices[k++] = (i + 1) * MAP_NUM_VERTICES - 1;
     map_line_indices[k++] = (i + 2) * MAP_NUM_VERTICES - 1;
   }
   /* close the right of the square */
-  for (i = 0; i < MAP_NUM_VERTICES - 1; ++i)
+  for (auto i = 0; i < MAP_NUM_VERTICES - 1; ++i)
   {
     map_line_indices[k++] = (MAP_NUM_VERTICES - 1) * MAP_NUM_VERTICES + i;
     map_line_indices[k++] = (MAP_NUM_VERTICES - 1) * MAP_NUM_VERTICES + i + 1;
   }
 
-  for (i = 0; i < (MAP_NUM_VERTICES - 1); ++i)
+  for (auto i = 0; i < (MAP_NUM_VERTICES - 1); ++i)
   {
-    for (j = 0; j < (MAP_NUM_VERTICES - 1); ++j)
+    for (auto j = 0; j < (MAP_NUM_VERTICES - 1); ++j)
     {
       int ref = i * (MAP_NUM_VERTICES)+j;
       map_line_indices[k++] = ref;
@@ -143,17 +140,17 @@ void Protean3D::Plot3D::init_map(void)
   }
 }
 
-void Protean3D::Plot3D::generate_heightmap__circle(float* center_x, float* center_y,
-  float* size, float* displacement)
+void Protean3D::Plot3D::generate_heightmap_circle(float& center_x, float& center_y,
+  float& size, float& displacement)
 {
   float sign;
   /* random value for element in between [0-1.0] */
-  *center_x = (MAP_SIZE * rand()) / (1.0f * RAND_MAX);
-  *center_y = (MAP_SIZE * rand()) / (1.0f * RAND_MAX);
-  *size = (MAX_CIRCLE_SIZE * rand()) / (1.0f * RAND_MAX);
+  center_x = (MAP_SIZE * rand()) / (1.0f * RAND_MAX);
+  center_y = (MAP_SIZE * rand()) / (1.0f * RAND_MAX);
+  size = (MAX_CIRCLE_SIZE * rand()) / (1.0f * RAND_MAX);
   sign = (1.0f * rand()) / (1.0f * RAND_MAX);
   sign = (sign < DISPLACEMENT_SIGN_LIMIT) ? -1.0f : 1.0f;
-  *displacement = (sign * (MAX_DISPLACEMENT * rand())) / (1.0f * RAND_MAX);
+  displacement = (sign * (MAX_DISPLACEMENT * rand())) / (1.0f * RAND_MAX);
 }
 
 /* Run the specified number of iterations of the generation process for the
@@ -168,19 +165,18 @@ void Protean3D::Plot3D::update_map(size_t num_iter)
     float center_z;
     float circle_size;
     float disp;
-    size_t ii;
-    generate_heightmap__circle(&center_x, &center_z, &circle_size, &disp);
+    generate_heightmap_circle(center_x, center_z, circle_size, disp);
     disp = disp / 2.0f;
-    for (ii = 0u; ii < MAP_NUM_TOTAL_VERTICES; ++ii)
+    for (auto i = 0; i < MAP_NUM_TOTAL_VERTICES; ++i)
     {
-      GLfloat dx = center_x - map_vertices[0][ii];
-      GLfloat dz = center_z - map_vertices[2][ii];
+      GLfloat dx = center_x - map_vertices[0][i];
+      GLfloat dz = center_z - map_vertices[2][i];
       GLfloat pd = (2.0f * sqrtf((dx * dx) + (dz * dz))) / circle_size;
       if (fabs(pd) <= 1.0f)
       {
         /* tx,tz is within the circle */
         GLfloat new_height = disp + (float)(cos(pd*3.14f)*disp);
-        map_vertices[1][ii] += new_height;
+        map_vertices[1][i] += new_height;
       }
     }
     --num_iter;
@@ -244,7 +240,7 @@ void Protean3D::Plot3D::initMatrices()
 
 void Protean3D::Plot3D::prepareNextDraw()
 {
-  update_map(10);
+  update_map(1);
 
   // Update VBO vertices from source data
   glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[1]); // otherwise, the current bound buffer would be replaced
