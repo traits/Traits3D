@@ -9,8 +9,10 @@ include("cmake/macros.cmake")
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Build & Install directories
-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/../install CACHE PATH "Install directory" FORCE)
-set(dir ${CMAKE_SOURCE_DIR}/../build)
+set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/../install CACHE PATH "Install directory" FORCE)
+
+# Set dedicated output directory, so we have all the libs/dll's and executables gathered at one place for debugging
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Target OS
 set(PROTEAN3D_OS "Windows" CACHE STRING "Target OS")
