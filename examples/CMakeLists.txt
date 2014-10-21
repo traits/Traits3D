@@ -1,39 +1,6 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.11)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
 
-if ("${PROTEAN3D_EXAMPLES_GL_CONTEXT}"  STREQUAL "Qt")
-  # add_subdirectory(src/platform/qt)
-  set(QT_USE_QTOPENGL TRUE)
-  find_package(Qt4 4.8 REQUIRED)
-  include(UseQt4)
-  include_directories(${CMAKE_CURRENT_BINARY_DIR})
-  # add_definitions(-DPROTEAN3D_QT_LABEL)
-elseif ("${PROTEAN3D_EXAMPLES_GL_CONTEXT}"  STREQUAL "GLFW") 
-  add_subdirectory(glfw-3.0.4)
-  include_directories(glfw-3.0.4/include)
-  add_definitions(-DGLFW_INCLUDE_NONE)
-  
-  # set and hide some GLFW specific variables
-  set(USE_MSVC_RUNTIME_LIBRARY_DLL ON)
-  mark_as_advanced(USE_MSVC_RUNTIME_LIBRARY_DLL)
-  set(GLFW_INSTALL OFF)
-  mark_as_advanced(GLFW_INSTALL)
-  mark_as_advanced(GLFW_USE_DWM_SWAP_INTERVAL )
-  mark_as_advanced(GLFW_USE_OPTIMUS_HPG)
-  mark_as_advanced(GLFW_USE_EGL)
-#    set(EXTERNAL_INCLUDE_PATH "V:/include")
-#    set(EXTERNAL_LIBRARY_PATH "V:/lib")
-
-#    # for find_package
-#    list(APPEND CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} ${EXTERNAL_INCLUDE_PATH}/glfw)
-#    list(APPEND CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${EXTERNAL_LIBRARY_PATH}/glfw)
-
-#    find_package(GLFW REQUIRED)
-#    if (GLFW_FOUND)
-#      include_directories(${GLFW_INCLUDE_DIRS})
-#      list(APPEND ALL_LIBS ${GLFW_LIBRARIES})
-#    endif (GLFW_FOUND) 
-endif()
-
+add_subdirectory(_common)
 
 # real examples
 
@@ -43,8 +10,7 @@ add_definitions(-DPROTEAN3D_DLL)
 PROTEAN3D_SUBDIRLIST(SUBDIRS ${CMAKE_CURRENT_SOURCE_DIR})
 
 # no executables to create here
-list(REMOVE_ITEM SUBDIRS glfw-3.0.4)
-
+list(REMOVE_ITEM SUBDIRS _common)
 
 file(GLOB PROTEAN3D_GL_DIR_SOURCES ${PROTEAN3D_GL_DIR}/*.*)
 add_library(glloader STATIC ${PROTEAN3D_GL_DIR_SOURCES})
@@ -54,6 +20,8 @@ foreach(subdir ${SUBDIRS})
   file(GLOB  ${subdir}_PROTEAN3D_EXAMPLE_SOURCES ${subdir}/*.c*)
   file(GLOB  ${subdir}_PROTEAN3D_EXAMPLE_HEADERS ${subdir}/*.h)
 
+  add_definitions(-DGLFW_INCLUDE_NONE)
+  include_directories(_common/glfw-3.0.4/include)
   include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/3rdparty)
   #include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/3rdparty/glloadgen/${PROTEAN3D_GL_VERSION})
 
