@@ -11,6 +11,15 @@ elseif ("${PROTEAN3D_EXAMPLES_GL_CONTEXT}"  STREQUAL "GLFW")
   add_subdirectory(glfw-3.0.4)
   include_directories(glfw-3.0.4/include)
   add_definitions(-DGLFW_INCLUDE_NONE)
+  
+  # set and hide some GLFW specific variables
+  set(USE_MSVC_RUNTIME_LIBRARY_DLL ON)
+  mark_as_advanced(USE_MSVC_RUNTIME_LIBRARY_DLL)
+  set(GLFW_INSTALL OFF)
+  mark_as_advanced(GLFW_INSTALL)
+  mark_as_advanced(GLFW_USE_DWM_SWAP_INTERVAL )
+  mark_as_advanced(GLFW_USE_OPTIMUS_HPG)
+  mark_as_advanced(GLFW_USE_EGL)
 #    set(EXTERNAL_INCLUDE_PATH "V:/include")
 #    set(EXTERNAL_LIBRARY_PATH "V:/lib")
 

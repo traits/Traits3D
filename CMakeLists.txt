@@ -14,6 +14,10 @@ set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/../install CACHE PATH "Install dire
 # Set dedicated output directory, so we have all the libs/dll's and executables gathered at one place for debugging
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# initialize with true
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+
+
 # Target OS
 set(PROTEAN3D_OS "Windows" CACHE STRING "Target OS")
 set_property(CACHE PROTEAN3D_OS PROPERTY STRINGS "Windows")
