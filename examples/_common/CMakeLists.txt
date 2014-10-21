@@ -31,5 +31,7 @@ elseif ("${PROTEAN3D_EXAMPLES_GL_CONTEXT}"  STREQUAL "GLFW")
 #      list(APPEND ALL_LIBS ${GLFW_LIBRARIES})
 #    endif (GLFW_FOUND) 
 endif()
+add_subdirectory(Window)
+
 
 
