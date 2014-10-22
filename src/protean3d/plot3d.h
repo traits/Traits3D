@@ -27,10 +27,10 @@ namespace Protean3D
     Protean3D::CoordinateSystem coordinate_system_;
     Protean3D::GL::Shader shader_;
 
-    std::vector<GLfloat> projection_matrix;
-    std::vector<GLfloat> modelview_matrix;
-    std::string default_vertex_shader;
-    std::string default_fragment_shader;
+    std::vector<GLfloat> projection_matrix_;
+    std::vector<GLfloat> modelview_matrix_;
+    std::string vertex_shader_src_;
+    std::string fragment_shader_src_;
 
     /* Store uniform location for the shaders
     * Those values are setup as part of the process of creating

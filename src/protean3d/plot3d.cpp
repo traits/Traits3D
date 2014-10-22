@@ -15,14 +15,14 @@
 
 Protean3D::Plot3D::Plot3D()
 {
-  modelview_matrix =
+  modelview_matrix_ =
   {
     1.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 1.0f
   };
-  projection_matrix =
+  projection_matrix_ =
   {
     1.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f,
@@ -30,8 +30,12 @@ Protean3D::Plot3D::Plot3D()
     0.0f, 0.0f, 0.0f, 1.0f
   };
 
-  default_vertex_shader =
+  vertex_shader_src_ =
+#ifdef GL_ES_VERSION_2_0
+    "#version 100\n"
+#else
     "#version 150\n"
+#endif
     "uniform mat4 project;\n"
     "uniform mat4 modelview;\n"
     "in float x;\n"
@@ -43,8 +47,12 @@ Protean3D::Plot3D::Plot3D()
     "   gl_Position = project * modelview * vec4(x, y, z, 1.0);\n"
     "}\n";
 
-  default_fragment_shader =
+  fragment_shader_src_ =
+#ifdef GL_ES_VERSION_2_0
+    "#version 100\n"
+#else
     "#version 150\n"
+#endif
     "out vec4 gl_FragColor;\n"
     "void main()\n"
     "{\n"
@@ -226,16 +234,16 @@ void Protean3D::Plot3D::initMatrices()
 {
   /* Compute the projection matrix */
   float f = 1.0f / tanf(view_angle / 2.0f);
-  projection_matrix[0] = f / aspect_ratio;
-  projection_matrix[5] = f;
-  projection_matrix[10] = (z_far + z_near) / (z_near - z_far);
-  projection_matrix[11] = -1.0f;
-  projection_matrix[14] = 2.0f * (z_far * z_near) / (z_near - z_far);
+  projection_matrix_[0] = f / aspect_ratio;
+  projection_matrix_[5] = f;
+  projection_matrix_[10] = (z_far + z_near) / (z_near - z_far);
+  projection_matrix_[11] = -1.0f;
+  projection_matrix_[14] = 2.0f * (z_far * z_near) / (z_near - z_far);
 
   /* Set the camera position */
-  modelview_matrix[12] = -5.0f;
-  modelview_matrix[13] = -5.0f;
-  modelview_matrix[14] = -20.0f;
+  modelview_matrix_[12] = -5.0f;
+  modelview_matrix_[13] = -5.0f;
+  modelview_matrix_[14] = -20.0f;
 }
 
 void Protean3D::Plot3D::prepareNextDraw()
@@ -251,15 +259,15 @@ bool Protean3D::Plot3D::prepareDraw()
 {
   /* Prepare opengl resources for rendering */
 
-  if (!shader_.create(default_vertex_shader, default_fragment_shader))
+  if (!shader_.create(vertex_shader_src_, fragment_shader_src_))
     return false;
 
   glUseProgram(shader_.programId());
   GLint uloc_project = glGetUniformLocation(shader_.programId(), "project");
   GLint uloc_modelview = glGetUniformLocation(shader_.programId(), "modelview");
 
-  glUniformMatrix4fv(uloc_project, 1, GL_FALSE, &projection_matrix[0]);
-  glUniformMatrix4fv(uloc_modelview, 1, GL_FALSE, &modelview_matrix[0]);
+  glUniformMatrix4fv(uloc_project, 1, GL_FALSE, &projection_matrix_[0]);
+  glUniformMatrix4fv(uloc_modelview, 1, GL_FALSE, &modelview_matrix_[0]);
 
   /* Create mesh data */
   createBuffers(shader_.programId());

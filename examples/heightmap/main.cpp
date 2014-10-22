@@ -7,32 +7,21 @@
 
 int main()
 {
-  Example::Window w;
+  Example::Window w("GLFW OpenGL3 Heightmap Demo");
 
   HeightMap hm;
 
   if (!hm.prepareDraw())
-  {
-    fprintf(stderr, "ERROR: during creation of the shader program\n");
-
-    glfwTerminate();
-    exit(EXIT_FAILURE);
-  }
-
-  /* setup the scene ready for rendering */
-  glViewport(0, 0, 1024, 768);
-  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    return -1;
 
   /* main loop */
   double last_update_time = glfwGetTime();
 
-  while (!glfwWindowShouldClose(w.window))
+  while (!w.onClose())
   {
     hm.draw();
+    w.update();
 
-    /* display and process events through callbacks */
-    glfwSwapBuffers(w.window);
-    glfwPollEvents();
     /* Check the frame rate and update the heightmap if needed */
     double dt = glfwGetTime();
     if ((dt - last_update_time) > 0.001)
