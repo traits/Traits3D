@@ -211,23 +211,25 @@ void Protean3D::Plot3D::createBuffers(GLuint program)
   /* Prepare the attributes for rendering */
   GLuint attrloc;
 
-  attrloc = glGetAttribLocation(program, "x");
   glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[0]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[0][0], GL_STATIC_DRAW);
-  glEnableVertexAttribArray(attrloc);
+  attrloc = glGetAttribLocation(program, "x");
   glVertexAttribPointer(attrloc, 1, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(attrloc);
 
-  attrloc = glGetAttribLocation(program, "y");
   glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[1]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[1][0], GL_DYNAMIC_DRAW);
-  glEnableVertexAttribArray(attrloc);
+  attrloc = glGetAttribLocation(program, "y");
   glVertexAttribPointer(attrloc, 1, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(attrloc);
 
-  attrloc = glGetAttribLocation(program, "z");
   glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[2]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[2][0], GL_STATIC_DRAW);
-  glEnableVertexAttribArray(attrloc);
+  attrloc = glGetAttribLocation(program, "z");
   glVertexAttribPointer(attrloc, 1, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(attrloc);
+
+  glBindVertexArray(0);
 }
 
 void Protean3D::Plot3D::initMatrices()
@@ -279,5 +281,6 @@ void Protean3D::Plot3D::draw()
 {
   /* render the next frame */
   glClear(GL_COLOR_BUFFER_BIT);
+  glBindVertexArray(mesh);
   glDrawElements(GL_LINES, 2 * MAP_NUM_LINES, GL_UNSIGNED_INT, 0);
 }

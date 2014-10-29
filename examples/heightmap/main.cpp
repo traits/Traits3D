@@ -9,7 +9,8 @@ int main()
 {
   Example::Window w("GLFW OpenGL3 Heightmap Demo");
 
-  HeightMap hm;
+  // has to be placed after window creation (OpenGL initialization) at this moment
+  HeightMap hm; 
 
   if (!hm.prepareDraw())
     return -1;
