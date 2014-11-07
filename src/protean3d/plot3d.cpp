@@ -15,20 +15,20 @@
 
 Protean3D::Plot3D::Plot3D()
 {
-  modelview_matrix_ =
-  {
+  modelview_matrix_ = glm::mat4
+  (
     1.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 1.0f
-  };
-  projection_matrix_ =
-  {
+  );
+  projection_matrix_ = glm::mat4
+  (  
     1.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 1.0f
-  };
+  );
 
   vertex_shader_src_ =
 #ifdef GL_ES_VERSION_2_0
@@ -236,23 +236,23 @@ void Protean3D::Plot3D::initMatrices()
 {
   /* Compute the projection matrix */
   float f = 1.0f / tanf(view_angle / 2.0f);
-  projection_matrix_[0] = f / aspect_ratio;
-  projection_matrix_[5] = f;
-  projection_matrix_[10] = (z_far + z_near) / (z_near - z_far);
-  projection_matrix_[11] = -1.0f;
-  projection_matrix_[14] = 2.0f * (z_far * z_near) / (z_near - z_far);
+  projection_matrix_[0][0] = f / aspect_ratio;
+  projection_matrix_[1][1] = f;
+  projection_matrix_[2][2] = (z_far + z_near) / (z_near - z_far);
+  projection_matrix_[2][3] = -1.0f;
+  projection_matrix_[3][2] = 2.0f * (z_far * z_near) / (z_near - z_far);
 
   /* Set the camera position */
-  modelview_matrix_[12] = -5.0f;
-  modelview_matrix_[13] = -5.0f;
-  modelview_matrix_[14] = -20.0f;
+  modelview_matrix_[3][0] = -5.0f;
+  modelview_matrix_[3][1] = -5.0f;
+  modelview_matrix_[3][2] = -20.0f;
 }
 
 void Protean3D::Plot3D::prepareNextDraw()
 {
   update_map(1);
 
-  // Update VBO vertices from source data
+  // Update IBO vertices from source data
   glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[1]); // otherwise, the current bound buffer would be replaced
   glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[1][0]);
 }
@@ -268,8 +268,8 @@ bool Protean3D::Plot3D::prepareDraw()
   GLint uloc_project = glGetUniformLocation(shader_.programId(), "project");
   GLint uloc_modelview = glGetUniformLocation(shader_.programId(), "modelview");
 
-  glUniformMatrix4fv(uloc_project, 1, GL_FALSE, &projection_matrix_[0]);
-  glUniformMatrix4fv(uloc_modelview, 1, GL_FALSE, &modelview_matrix_[0]);
+  glUniformMatrix4fv(uloc_project, 1, GL_FALSE, &projection_matrix_[0][0]);
+  glUniformMatrix4fv(uloc_modelview, 1, GL_FALSE, &modelview_matrix_[0][0]);
 
   /* Create mesh data */
   createBuffers(shader_.programId());

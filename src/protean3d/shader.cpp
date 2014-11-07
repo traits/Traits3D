@@ -52,7 +52,7 @@ bool Protean3D::GL::Shader::link(GLuint vertex_shader_id, GLuint fragment_shader
   GLint result = GL_FALSE;
 
   // Link the program
-  printf("Linking program\n");
+  //printf("Linking program\n");
   program_id_ = glCreateProgram();
   glAttachShader(program_id_, vertex_shader_id);
   glAttachShader(program_id_, fragment_shader_id);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "glm/glm.hpp"
+
 #include "coordinatesystem.h"
 #include "shader.h"
 
@@ -27,8 +29,8 @@ namespace Protean3D
     Protean3D::CoordinateSystem coordinate_system_;
     Protean3D::GL::Shader shader_;
 
-    std::vector<GLfloat> projection_matrix_;
-    std::vector<GLfloat> modelview_matrix_;
+    glm::mat4 projection_matrix_;
+    glm::mat4  modelview_matrix_;
     std::string vertex_shader_src_;
     std::string fragment_shader_src_;
 
