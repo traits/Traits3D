@@ -1,5 +1,6 @@
 #include "Window/Window.h"
 
+#include "protean3d/vao.h"
 #include "heightmap.h"
 
 
@@ -8,6 +9,11 @@
 int main()
 {
   Example::Window w("GLFW OpenGL3 Heightmap Demo");
+
+  Protean3D::GL::VAO vao;
+
+  std::vector<GLfloat> testvec;
+  vao.appendVBO(testvec, Protean3D::GL::VBO::PrimitiveLayout(1, GL_FLOAT));
 
   // has to be placed after window creation (OpenGL initialization) at this moment
   HeightMap hm; 
