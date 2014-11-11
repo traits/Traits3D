@@ -18,12 +18,24 @@ namespace Protean3D
       VAO();
       virtual ~VAO();
 
+      void bind() { glBindVertexArray(idx_); }
+      void unbind() { glBindVertexArray(0); }
+
+      //! Returns index of new element or std::numeric_limits<size_t>::max() in case of errors
       template<typename PRIMITIVE>
-      bool appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr, bool dynamic = false);
-      bool appendIBO(std::vector<GLuint> const& data, bool dynamic = false);
+      size_t appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr, GLuint program, const char* attr_name, bool dynamic = false);
+
+      //! Returns index of new element or std::numeric_limits<size_t>::max() in case of errors
+      size_t appendIBO(std::vector<GLuint> const& data, bool dynamic = false);
+
+      template<typename PRIMITIVE>
+      bool updateVBO(size_t idx, std::vector<PRIMITIVE> const& data);
+
+      size_t vboCount() const { return vbos_.size(); }
+      size_t iboCount() const { return ibos_.size(); }
 
     private:
-      GLuint vao_;
+      GLuint idx_;
 
       std::vector<VBO> vbos_;
       std::vector<IBO> ibos_;
@@ -32,18 +44,27 @@ namespace Protean3D
     // implementation
 
     template<typename PRIMITIVE>
-    bool Protean3D::GL::VAO::appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr, bool dynamic /*= false*/)
+    size_t Protean3D::GL::VAO::appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr
+      ,GLuint program, const char* attr_name, bool dynamic /*= false*/)
     {
       //static_assert(std::is_same<PRIMITIVE, GLfloat>::value, "Incorrect buffer type!");
       VBO buffer;
-      if (buffer.create(descr, dynamic))
+      if (buffer.create(descr, dynamic, program, attr_name))
       {
         vbos_.push_back(buffer);
-        return true;
+        return vbos_.size()-1;
       }
-      return false;
+      return std::numeric_limits<size_t>::max();
     }
 
+    template<typename PRIMITIVE>
+    bool Protean3D::GL::VAO::updateVBO(size_t idx, std::vector<PRIMITIVE> const& data)
+    {
+      if (idx >= vboCount())
+        return false;
+
+      return vbos_[idx].update(data);
+    }
 
   } // ns
 } // ns

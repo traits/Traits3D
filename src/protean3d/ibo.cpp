@@ -8,14 +8,13 @@ bool Protean3D::GL::IBO::create(std::vector<GLuint> const& data, GLenum drawtype
     return false;
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_);
-  size_t bsize = sizeof(GLuint) * data.size();
+  size_t size = data.size();
 
-  if (!bsize_ || bsize_ != bsize)
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, bsize, bsize ? &data[0] : nullptr, draw_type_);
+  if (!size_ || size_ != size)
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * size, size ? &data[0] : nullptr, draw_type_);
   else
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, bsize, bsize ? &data[0] : nullptr);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint) * size, size ? &data[0] : nullptr);
 
-  bsize_ = bsize;
 
   GLenum err = glGetError();
   switch (err)
@@ -25,6 +24,7 @@ bool Protean3D::GL::IBO::create(std::vector<GLuint> const& data, GLenum drawtype
   case GL_OUT_OF_MEMORY:
     return false;
   default:
+    size_ = size;
     return true;
   }
 }

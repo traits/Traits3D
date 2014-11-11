@@ -184,7 +184,7 @@ void Protean3D::Plot3D::update_map(size_t num_iter)
       {
         /* tx,tz is within the circle */
         GLfloat new_height = disp + (float)(cos(pd*3.14f)*disp);
-        map_vertices[1][i] += new_height;
+        map_vertices[1][i] = new_height;
       }
     }
     --num_iter;

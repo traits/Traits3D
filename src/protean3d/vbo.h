@@ -29,10 +29,10 @@ namespace Protean3D
       virtual ~VBO() = default;
       GLuint id() const { return id_; } //!< VBO index
 
-      bool create(PrimitiveLayout const& descr, GLenum drawtype = GL_STATIC_DRAW);
+      bool create(PrimitiveLayout const& descr, GLuint program, const char* attr_name, GLenum drawtype = GL_STATIC_DRAW);
 
       template <typename PRIMITIVE>
-      bool update(std::vector<PRIMITIVE> const& data, GLuint program, const char* attr_name);
+      bool update(std::vector<PRIMITIVE> const& data);
 
       
     private:
@@ -40,11 +40,18 @@ namespace Protean3D
       GLenum draw_type_;
       PrimitiveLayout description_;
       size_t bsize_; //buffer size in byte
+      GLuint program_;
+      std::string attr_name_;
     };
 
     template <typename PRIMITIVE>
-    bool Protean3D::GL::VBO::update(std::vector<PRIMITIVE> const& data, GLuint program, const char* attr_name)
+    bool Protean3D::GL::VBO::update(std::vector<PRIMITIVE> const& data)
     {
+      GLuint attrloc = glGetAttribLocation(program_, attr_name_);
+      err = glGetError();
+      if (attr_name_.empty() || GL_INVALID_OPERATION == err)
+        return false;
+
       glBindBuffer(GL_ARRAY_BUFFER, id_);
 
       size_t bsize = sizeof(PRIMITIVE) * data.size();
@@ -54,8 +61,6 @@ namespace Protean3D
       else
         glBufferSubData(GL_ARRAY_BUFFER, 0, bsize, bsize ? &data[0] : nullptr);
 
-      bsize_ = bsize;
-
       GLenum err = glGetError();
       switch (err)
       {
@@ -64,13 +69,17 @@ namespace Protean3D
       case GL_OUT_OF_MEMORY:
         return false;
       default:
+        bsize_ = bsize;
         break;
       }
 
-      GLuint attrloc;
-      attrloc = glGetAttribLocation(program, attr_name);
       glVertexAttribPointer(attrloc, description_.components, description_.type, GL_FALSE, description_.stride, description_.offset);
+      if (GL_NO_ERROR != glGetError())
+        return false;
+
       glEnableVertexAttribArray(attrloc);
+      if (GL_NO_ERROR != glGetError())
+        return false;
 
       return true;
     }

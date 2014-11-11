@@ -4,6 +4,7 @@
 
 #include "coordinatesystem.h"
 #include "shader.h"
+#include "vao.h"
 
 namespace Protean3D
 {
@@ -25,9 +26,10 @@ namespace Protean3D
     void prepareNextDraw();
 
   private:
-    Protean3D::Box hull_;
-    Protean3D::CoordinateSystem coordinate_system_;
-    Protean3D::GL::Shader shader_;
+    Box hull_;
+    CoordinateSystem coordinate_system_;
+    GL::Shader shader_;
+    GL::VAO vao_;
 
     glm::mat4 projection_matrix_;
     glm::mat4  modelview_matrix_;
