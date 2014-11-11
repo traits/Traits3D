@@ -8,7 +8,7 @@ Protean3D::GL::Shader::Shader()
 {
 }
 
-bool Protean3D::GL::Shader::load(std::string& result, const std::string& path)
+bool Protean3D::GL::Shader::load(std::string& result, std::string const& path)
 {
   result.clear();
   std::ifstream shader_stream(path, std::ios::in);
@@ -23,7 +23,7 @@ bool Protean3D::GL::Shader::load(std::string& result, const std::string& path)
   return false;
 }
 
-bool Protean3D::GL::Shader::compile(GLuint shader_id, const std::string& shader_code)
+bool Protean3D::GL::Shader::compile(GLuint shader_id, std::string const& shader_code)
 {
   GLint result = GL_FALSE;
 
@@ -73,7 +73,7 @@ bool Protean3D::GL::Shader::link(GLuint vertex_shader_id, GLuint fragment_shader
   return (result == GL_TRUE) ? true : false;
 }
 
-bool Protean3D::GL::Shader::create(const std::string& vertex_code, const std::string& fragment_code)
+bool Protean3D::GL::Shader::create(std::string const& vertex_code, std::string const& fragment_code)
 {
   initialized_ = false;
 
@@ -121,7 +121,7 @@ bool Protean3D::GL::Shader::create()
   return  create(vsrc, fsrc);
 }
 
-bool Protean3D::GL::Shader::createFromFile(const std::string& vertex_file_path, const std::string& fragment_file_path)
+bool Protean3D::GL::Shader::createFromFile(std::string const& vertex_file_path, std::string const& fragment_file_path)
 {
   std::string vertex_code;
   if (!load(vertex_code, vertex_file_path))
@@ -132,5 +132,21 @@ bool Protean3D::GL::Shader::createFromFile(const std::string& vertex_file_path, 
     return false;
 
   return create(vertex_code, fragment_code);
+}
+
+bool Protean3D::GL::Shader::setUniformMatrix(glm::mat4 const& mat, std::string const& name)
+{
+  if (name.empty())
+    return false;
+
+  GLint loc = glGetUniformLocation(program_id_, name.c_str());
+  if (-1 == loc || GL_NO_ERROR != glGetError())
+    return false;
+
+  glUniformMatrix4fv(loc, 1, GL_FALSE, &mat[0][0]);
+  if (GL_NO_ERROR != glGetError())
+    return false;
+
+  return true;
 }
 

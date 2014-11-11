@@ -1,7 +1,9 @@
 #pragma once
 
+#include "glm/glm.hpp"
 #include "glhelper.h"
 #include "types.h"
+
 
 namespace Protean3D
 {
@@ -17,10 +19,10 @@ namespace Protean3D
       bool create();
 
       //! Create complete shader program from string
-      bool create(const std::string& vertex_code, const std::string& fragment_code);
+      bool create(std::string const& vertex_code, std::string const& fragment_code);
       
       //! Create complete shader program from file sources
-      bool createFromFile(const std::string& vertex_file_path, const std::string& fragment_file_path);
+      bool createFromFile(std::string const& vertex_file_path, std::string const& fragment_file_path);
       
       //! Shader contains a valid fragment- and vertex-shader 
       bool initialized() const {return initialized_;}
@@ -28,10 +30,12 @@ namespace Protean3D
       //! For initialized()==true, the function returns a valid shader program id
       GLuint programId() const { return program_id_; }
 
+      bool setUniformMatrix(glm::mat4 const& mat, std::string const& name);
+
     private:  
       bool initialized_;
-      bool load(std::string& result, const std::string& path);
-      bool compile(GLuint shader_id, const std::string& shader_code);
+      bool load(std::string& result, std::string const& path);
+      bool compile(GLuint shader_id, std::string const& shader_code);
       bool link(GLuint vertex_shader_id, GLuint fragment_shader_id);
 
       GLuint program_id_;

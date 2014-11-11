@@ -253,15 +253,13 @@ bool Protean3D::Plot3D::prepareDraw()
   if (!shader_.create(vertex_shader_src_, fragment_shader_src_))
     return false;
 
-  glUseProgram(shader_.programId());
-  GLint uloc_project = glGetUniformLocation(shader_.programId(), "project");
-  GLint uloc_modelview = glGetUniformLocation(shader_.programId(), "modelview");
-
-  glUniformMatrix4fv(uloc_project, 1, GL_FALSE, &projection_matrix_[0][0]);
-  glUniformMatrix4fv(uloc_modelview, 1, GL_FALSE, &modelview_matrix_[0][0]);
-
   /* Create mesh data */
   createBuffers(shader_.programId());
+
+  glUseProgram(shader_.programId());
+
+  shader_.setUniformMatrix(projection_matrix_, "project");
+  shader_.setUniformMatrix(modelview_matrix_, "modelview");
 
   return true;
 }

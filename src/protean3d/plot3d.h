@@ -36,14 +36,6 @@ namespace Protean3D
     std::string vertex_shader_src_;
     std::string fragment_shader_src_;
 
-    /* Store uniform location for the shaders
-    * Those values are setup as part of the process of creating
-    * the shader program. They should not be used before creating
-    * the program.
-    */
-    //GLuint mesh;
-    //GLuint mesh_vbo[4];
-
     /**********************************************************************
     * Heightmap vertex and index data
     *********************************************************************/
