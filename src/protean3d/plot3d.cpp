@@ -200,36 +200,21 @@ void Protean3D::Plot3D::update_map(size_t num_iter)
 */
 void Protean3D::Plot3D::createBuffers(GLuint program)
 {
-  //  GLuint program = shader_.
-  glGenVertexArrays(1, &mesh);
-  glGenBuffers(4, mesh_vbo);
-  glBindVertexArray(mesh);
-  /* Prepare the data for drawing through a buffer indices */
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh_vbo[3]);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)* MAP_NUM_LINES * 2, &map_line_indices[0], GL_STATIC_DRAW);
+  vao_.bind();
 
-  /* Prepare the attributes for rendering */
-  GLuint attrloc;
+  size_t t = vao_.appendIBO(map_line_indices);
 
-  glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[0]);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[0][0], GL_STATIC_DRAW);
-  attrloc = glGetAttribLocation(program, "x");
-  glVertexAttribPointer(attrloc, 1, GL_FLOAT, GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(attrloc);
+  GL::VBO::PrimitiveLayout datalayout;
+  datalayout.components = 1;
+  datalayout.type = GL_FLOAT;
+  datalayout.stride = 0;
+  datalayout.offset = 0;
 
-  glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[1]);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[1][0], GL_DYNAMIC_DRAW);
-  attrloc = glGetAttribLocation(program, "y");
-  glVertexAttribPointer(attrloc, 1, GL_FLOAT, GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(attrloc);
+  t = vao_.appendVBO(map_vertices[0], datalayout, program, "x");
+  t = vao_.appendVBO(map_vertices[1], datalayout, program, "y", GL_DYNAMIC_DRAW);
+  t = vao_.appendVBO(map_vertices[2], datalayout, program, "z");
 
-  glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[2]);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[2][0], GL_STATIC_DRAW);
-  attrloc = glGetAttribLocation(program, "z");
-  glVertexAttribPointer(attrloc, 1, GL_FLOAT, GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(attrloc);
-
-  glBindVertexArray(0);
+  vao_.unbind();
 }
 
 void Protean3D::Plot3D::initMatrices()
@@ -253,8 +238,12 @@ void Protean3D::Plot3D::prepareNextDraw()
   update_map(1);
 
   // Update IBO vertices from source data
-  glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[1]); // otherwise, the current bound buffer would be replaced
-  glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[1][0]);
+  
+  bool b = vao_.updateVBO(1, map_vertices[1]);
+
+  int x = 42;
+  //glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[1]); // otherwise, the current bound buffer would be replaced
+  //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[1][0]);
 }
 
 bool Protean3D::Plot3D::prepareDraw()
@@ -281,6 +270,8 @@ void Protean3D::Plot3D::draw()
 {
   /* render the next frame */
   glClear(GL_COLOR_BUFFER_BIT);
-  glBindVertexArray(mesh);
+
+  vao_.bind();
   glDrawElements(GL_LINES, 2 * MAP_NUM_LINES, GL_UNSIGNED_INT, 0);
+  vao_.unbind();
 }

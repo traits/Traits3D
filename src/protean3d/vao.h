@@ -23,10 +23,10 @@ namespace Protean3D
 
       //! Returns index of new element or std::numeric_limits<size_t>::max() in case of errors
       template<typename PRIMITIVE>
-      size_t appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr, GLuint program, const char* attr_name, bool dynamic = false);
+      size_t appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr, GLuint program, const char* attr_name, GLenum draw_type = GL_STATIC_DRAW);
 
       //! Returns index of new element or std::numeric_limits<size_t>::max() in case of errors
-      size_t appendIBO(std::vector<GLuint> const& data, bool dynamic = false);
+      size_t appendIBO(std::vector<GLuint> const& data, GLenum draw_type = GL_STATIC_DRAW);
 
       template<typename PRIMITIVE>
       bool updateVBO(size_t idx, std::vector<PRIMITIVE> const& data);
@@ -45,12 +45,15 @@ namespace Protean3D
 
     template<typename PRIMITIVE>
     size_t Protean3D::GL::VAO::appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr
-      ,GLuint program, const char* attr_name, bool dynamic /*= false*/)
+      ,GLuint program, const char* attr_name, GLenum draw_type /*= GL_STATIC_DRAW*/)
     {
       //static_assert(std::is_same<PRIMITIVE, GLfloat>::value, "Incorrect buffer type!");
       VBO buffer;
-      if (buffer.create(descr, dynamic, program, attr_name))
+      if (buffer.create(descr, program, attr_name, draw_type ))
       {
+        if (!data.empty() && !buffer.update(data))
+          return std::numeric_limits<size_t>::max();
+
         vbos_.push_back(buffer);
         return vbos_.size()-1;
       }

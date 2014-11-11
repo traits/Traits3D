@@ -41,8 +41,8 @@ namespace Protean3D
     * the shader program. They should not be used before creating
     * the program.
     */
-    GLuint mesh;
-    GLuint mesh_vbo[4];
+    //GLuint mesh;
+    //GLuint mesh_vbo[4];
 
     /**********************************************************************
     * Heightmap vertex and index data

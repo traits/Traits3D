@@ -22,7 +22,7 @@ namespace Protean3D
         char components; // 1..4
         GLenum type; // GL_BYTE, GL_UNSIGNED_BYTE, GL_FLOAT //TODO GL_HALF_FLOAT 
         GLsizei stride;
-        unsigned offset; // offset in byte 
+        size_t offset; // offset in byte 
       };
 
       VBO() : id_(0), draw_type_(GL_STATIC_DRAW), bsize_(0) {}
@@ -47,8 +47,8 @@ namespace Protean3D
     template <typename PRIMITIVE>
     bool Protean3D::GL::VBO::update(std::vector<PRIMITIVE> const& data)
     {
-      GLuint attrloc = glGetAttribLocation(program_, attr_name_);
-      err = glGetError();
+      GLuint attrloc = glGetAttribLocation(program_, attr_name_.c_str());
+      GLenum err = glGetError();
       if (attr_name_.empty() || GL_INVALID_OPERATION == err)
         return false;
 
@@ -61,7 +61,7 @@ namespace Protean3D
       else
         glBufferSubData(GL_ARRAY_BUFFER, 0, bsize, bsize ? &data[0] : nullptr);
 
-      GLenum err = glGetError();
+      err = glGetError();
       switch (err)
       {
       case GL_INVALID_ENUM:
@@ -73,7 +73,9 @@ namespace Protean3D
         break;
       }
 
-      glVertexAttribPointer(attrloc, description_.components, description_.type, GL_FALSE, description_.stride, description_.offset);
+      char* ptr = nullptr;
+      ptr += description_.offset;
+      glVertexAttribPointer(attrloc, description_.components, description_.type, GL_FALSE, description_.stride, ptr);
       if (GL_NO_ERROR != glGetError())
         return false;
 
