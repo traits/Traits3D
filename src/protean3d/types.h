@@ -4,6 +4,9 @@
   #pragma warning ( disable : 4786 )
 #endif
 
+#include "glm/vec2.hpp"
+#include "glm/vec3.hpp"
+
 #include "global.h"
 #include "helper.h"
 //#include "protean3d/gl/helper.h"
@@ -104,131 +107,16 @@ enum ANCHOR
 };
 
 
-//! Tuple <tt>[x,y]</tt>
-struct PROTEAN3D_EXPORT Tuple
-{
-	Tuple() : x(0), y(0) {} //!< Calls Tuple(0,0)
-	Tuple(double X, double Y) : x(X), y(Y) {} //!< Initialize Tuple with x and y
-	//! Tuple coordinates
-  double x,y; 
-};
+typedef glm::dvec2 Tuple;
+typedef glm::dvec3 Triple;
 
-//! Triple <tt>[x,y,z]</tt>
-/**
-Consider Triples also as vectors in R^3
-*/
-struct PROTEAN3D_EXPORT Triple
-{
-	//! Initialize Triple with x,y and z
-	explicit Triple(double xv = 0,double yv = 0,double zv = 0) 
-		: x(xv), y(yv), z(zv)
-	{
-	}
-  
-	//! Triple coordinates
-	double x,y,z; 
-
-	Triple& operator+=(Triple t)
-	{
-		x += t.x;
-		y += t.y;
-		z += t.z;
-
-		return *this;
-	}
-	
-	Triple& operator-=(Triple t)
-	{
-		x -= t.x;
-		y -= t.y;
-		z -= t.z;
-
-		return *this;
-	}
-	Triple& operator*=(double d)
-	{
-		x *= d;
-		y *= d;
-		z *= d;
-
-		return *this;
-	}
-	Triple& operator/=(double d)
-	{
-		x /= d;
-		y /= d;
-		z /= d;
-
-		return *this;
-	}
-	Triple& operator*=(Triple t) // scale
-	{
-		x *= t.x;
-		y *= t.y;
-		z *= t.z;
-
-		return *this;
-	}
-
-	bool operator!=(Triple t) const
-	{
-		return !isPracticallyZero(x,t.x) || !isPracticallyZero(y,t.y) || !isPracticallyZero(z,t.z);
-	}
-	
-	bool operator==(Triple t) const
-	{
-		return !operator!=(t);
-	}
-
-	double length() const
-	{
-		double l2 = x*x + y*y + z*z;
-		return (isPracticallyZero(l2)) ? 0 :sqrt(l2);
-	}
-	
-	void normalize()
-	{
-		double l = length();
-		if (l)
-			*this /= l;
-	}
-};
-
-inline const Triple operator+(const Triple& t, const Triple& t2)
-{
-	return Triple(t) += t2;
-}
-inline const Triple operator-(const Triple& t, const Triple& t2)
-{
-	return Triple(t) -= t2;
-}
-inline const Triple operator*(double d, const Triple& t)
-{
-	return Triple(t) *= d;
-}
-inline const Triple operator*(const Triple& t, double d)
-{
-	return Triple(t) *= d;
-}
-inline const Triple operator/(double d, const Triple& t)
-{
-	return Triple(t) /= d;
-}
-inline const Triple operator/(const Triple& t, double d)
-{
-	return Triple(t) /= d;
-}
-inline const Triple operator*(const Triple& t, const Triple& t2)
-{
-	return Triple(t) *= t2;
-}
 
 //! Box spanned by 2 Triples
 /**
 Please use \em normalized boxes:\n\n
-minVertex.x <= maxVertex.x\n
-minVertex.y <= maxVertex.y\n
-minVertex.z <= maxVertex.z\n
+minVertex[0] <= maxVertex[0]\n
+minVertex[1] <= maxVertex[1]\n
+minVertex[2] <= maxVertex[2]\n
 */
 struct PROTEAN3D_EXPORT Box
 {
@@ -254,14 +142,14 @@ struct PROTEAN3D_EXPORT Box
 inline Box sum(const Box& a, const Box& b)
 {
   Triple mi = a.minVertex - b.minVertex;
-  mi.x = (mi.x<0) ? a.minVertex.x : b.minVertex.x; 
-  mi.y = (mi.y<0) ? a.minVertex.y : b.minVertex.y; 
-  mi.z = (mi.z<0) ? a.minVertex.z : b.minVertex.z; 
+  mi[0] = (mi[0]<0) ? a.minVertex[0] : b.minVertex[0]; 
+  mi[1] = (mi[1]<0) ? a.minVertex[1] : b.minVertex[1]; 
+  mi[2] = (mi[2]<0) ? a.minVertex[2] : b.minVertex[2]; 
   
   Triple ma = a.maxVertex - b.maxVertex;
-  ma.x = (ma.x>0) ? a.maxVertex.x : b.maxVertex.x; 
-  ma.y = (ma.y>0) ? a.maxVertex.y : b.maxVertex.y; 
-  ma.z = (ma.z>0) ? a.maxVertex.z : b.maxVertex.z; 
+  ma[0] = (ma[0]>0) ? a.maxVertex[0] : b.maxVertex[0]; 
+  ma[1] = (ma[1]>0) ? a.maxVertex[1] : b.maxVertex[1]; 
+  ma[2] = (ma[2]>0) ? a.maxVertex[2] : b.maxVertex[2]; 
 
   return Box(mi, ma);
 }
@@ -330,7 +218,7 @@ typedef std::vector<RGBA> ColorVector;
 //inline Triple ViewPort2World(Triple win, bool* err = 0)
 //{
 //  Triple ret;
-//  bool retb = GL::ViewPort2World(ret.x, ret.y, ret.z, win.x, win.y, win.z);
+//  bool retb = GL::ViewPort2World(ret.x, ret[1], ret[2], win.x, win[1], win[2]);
 //  if (err)
 //    *err = retb;
 //
@@ -344,7 +232,7 @@ typedef std::vector<RGBA> ColorVector;
 //inline Triple World2ViewPort(Triple obj,	bool* err = 0)
 //{
 //  Triple ret;
-//  bool retb = GL::World2ViewPort(ret.x, ret.y, ret.z, obj.x, obj.y, obj.z);
+//  bool retb = GL::World2ViewPort(ret.x, ret[1], ret[2], obj.x, obj[1], obj[2]);
 //  if (err)
 //    *err = retb;
 //
@@ -358,9 +246,9 @@ inline Triple normalizedCross(Triple const& u, Triple const& v)
 	Triple n;
 
   /* compute the cross product (u x v for right-handed [ccw]) */
-  n.x = u.y * v.z - u.z * v.y;
-  n.y = u.z * v.x - u.x * v.z;
-  n.z = u.x * v.y - u.y * v.x;
+  n[0] = u[1] * v[2] - u[2] * v[1];
+  n[1] = u[2] * v[0] - u[0] * v[2];
+  n[2] = u[0] * v[1] - u[1] * v[0];
 
   /* normalize */
   double l = n.length();
@@ -385,7 +273,7 @@ inline Triple normalizedCross(Triple const& center,
 
 inline double dotProduct(Triple const& u, Triple const& v)
 {
-	return u.x*v.x + u.y*v.y + u.z*v.z;
+	return u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
 }
 
 //! rad to degree

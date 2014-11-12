@@ -1,7 +1,5 @@
 #pragma once
 
-#include "glm/glm.hpp"
-
 #include "coordinatesystem.h"
 #include "shader.h"
 #include "vao.h"
