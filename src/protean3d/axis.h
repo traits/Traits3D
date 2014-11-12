@@ -1,5 +1,6 @@
 #pragma once
 
+#include "glhelper.h"
 //#include "protean3d/label.h"
 #include "scale.h"
 #include "autoscaler.h"
@@ -36,10 +37,10 @@ public:
   void setAutoScale(bool val = true) {autoscale_ = val;} //!< Turns Autoscaling on or off
   bool autoScale() const { return autoscale_;} //!< actual Autoscaling mode
 
-  void setMajors(int val); //!< Requests major intervals (maybe changed, if autoscaling is present)
-  void setMinors(int val); //!< Requests minor intervals
-  int majors() const { return majorintervals_; } //!< Returns number of major intervals
-  int minors() const { return minorintervals_; } //!< Returns number of minor intervals
+  void setMajors(size_t val); //!< Requests major intervals (maybe changed, if autoscaling is present)
+  void setMinors(size_t val); //!< Requests minor intervals
+  size_t majors() const { return majorintervals_; } //!< Returns number of major intervals
+  size_t minors() const { return minorintervals_; } //!< Returns number of minor intervals
   Protean3D::TripleVector const& majorPositions() const {return majorpos_;} //!< Returns positions for actual major tics (also if invisible)
   Protean3D::TripleVector const& minorPositions() const {return minorpos_;} //!< Returns positions for actual minor tics (also if invisible)
   
@@ -61,7 +62,7 @@ private:
   double start_, stop_, autostart_, autostop_;
   Protean3D::Triple orientation_;
 
-  int majorintervals_, minorintervals_;
+  size_t majorintervals_, minorintervals_;
 
   bool symtics_;
   bool autoscale_;

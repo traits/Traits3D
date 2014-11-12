@@ -40,23 +40,23 @@ void Axis::setPosition(const Triple& beg, const Triple& end)
   end_ = end;
 }
 
-void Axis::setMajors(int val)
+void Axis::setMajors(size_t val)
 {
   if (val == majorintervals_)
     return;
   
-  majorintervals_ = (val<=0) ? 1 : val; // always >= 1
+  majorintervals_ = (!val) ? 1 : val; // always >= 1
 }
 
 /*!
 \see LogScale::setMinors().
 */
-void Axis::setMinors(int val)
+void Axis::setMinors(size_t val)
 {
   if (val == minorintervals_)
     return;
 
-  minorintervals_ = (val<=0) ? 1 : val; // always >= 1
+  minorintervals_ = (!val) ? 1 : val; // always >= 1
 }
 
 void Axis::setTicOrientation(double tx, double ty, double tz)
@@ -66,8 +66,7 @@ void Axis::setTicOrientation(double tx, double ty, double tz)
 
 void Axis::setTicOrientation(const Triple& val)
 {
-  orientation_ = val;
-  orientation_.normalize();
+  orientation_ = glm::normalize(val);
 }
 
 bool Axis::prepTicCalculation(Triple& startpoint)

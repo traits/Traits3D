@@ -62,7 +62,7 @@ void Scale::setMajorLimits(double start, double stop)
   
   The default implementation sets a=start, b=stop and returns ivals.
 */
-int Scale::autoscale(double& a, double& b, double start, double stop, int ivals)
+size_t Scale::autoscale(double& a, double& b, double start, double stop, size_t ivals)
 {
   a = start;
   b = stop;
@@ -77,7 +77,7 @@ int Scale::autoscale(double& a, double& b, double start, double stop, int ivals)
 
 
 //! Applies LinearAutoScaler::execute()
-int LinearScale::autoscale(double& a, double& b, double start, double stop, int ivals)
+size_t LinearScale::autoscale(double& a, double& b, double start, double stop, size_t ivals)
 {
   return autoscaler_p.execute(a, b, start, stop, ivals);
 }
@@ -281,7 +281,7 @@ Sets the minor intervals for the logarithmic scale. Only values of 9,5,3 or 2
 are accepted as arguments. They will produce mantissa sets of {2,3,4,5,6,7,8,9}, 
 {2,4,6,8}, {2,5} or {5} respectively.
 */
-void LogScale::setMinors(int val)
+void LogScale::setMinors(size_t val)
 {
   if ((val == 2) || (val == 3) || (val == 5) || (val == 9))
     minorintervals_p = val;

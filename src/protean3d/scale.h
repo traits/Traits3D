@@ -28,20 +28,20 @@ protected:
     //virtual Protean3D::Label::String ticLabel(unsigned int idx) const;
 
     virtual void setLimits(double start, double stop); 
-    virtual void setMajors(int val) {majorintervals_p=val;} //!< Sets number of major intervals
-    virtual void setMinors(int val) {minorintervals_p=val;} //!< Sets number of minor intervals per major interval
+    virtual void setMajors(size_t val) {majorintervals_p=val;} //!< Sets number of major intervals
+    virtual void setMinors(size_t val) {minorintervals_p=val;} //!< Sets number of minor intervals per major interval
     virtual void setMajorLimits(double start, double stop);
 
-    int majors() const {return majorintervals_p;} //!< Returns major intervals
-    int minors() const {return minorintervals_p;} //!< Returns minor intervals
+    size_t majors() const {return majorintervals_p;} //!< Returns major intervals
+    size_t minors() const {return minorintervals_p;} //!< Returns minor intervals
 
     //! This function should setup the 2 vectors for major and minor positions;
     virtual void calculate() = 0;
-    virtual int autoscale(double& a, double& b, double start, double stop, int ivals);
+    virtual size_t autoscale(double& a, double& b, double start, double stop, size_t ivals);
 
     std::vector<double> majors_p, minors_p; 
     double start_p, stop_p;
-    int majorintervals_p, minorintervals_p;
+    size_t majorintervals_p, minorintervals_p;
     double mstart_p, mstop_p;
 };
 
@@ -51,8 +51,8 @@ class PROTEAN3D_EXPORT LinearScale : public Scale
   friend class Axis;
   //friend struct ValuePtrTraits<Scale>;
   protected:
-    int autoscale(double& a, double& b, double start, double stop, int ivals);
-    void calculate();
+    size_t autoscale(double& a, double& b, double start, double stop, size_t ivals) override;
+    void calculate() override;
     LinearAutoScaler autoscaler_p;
 };
 
@@ -63,10 +63,10 @@ class PROTEAN3D_EXPORT LogScale : public Scale
   //friend struct ValuePtrTraits<Scale>;
   protected:
     //Protean3D::Label::String ticLabel(unsigned int idx) const;
-    void setMinors(int val);
+    void setMinors(size_t val) override;
     //! Standard ctor
     LogScale();
-    void calculate();
+    void calculate() override;
   private:
     void setupCounter(double& k, int& step);
 };
