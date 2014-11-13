@@ -17,7 +17,7 @@ HeightMap::HeightMap()
   map_line_indices.resize(2 * MAP_NUM_LINES);
 
   for (auto i = 0; i != 3; ++i)
-    map_vertices[i] = std::vector<GLfloat>(MAP_NUM_TOTAL_VERTICES);
+    map_vertices[i].resize(MAP_NUM_TOTAL_VERTICES);
 
   init_map();
 }
@@ -62,44 +62,7 @@ void HeightMap::init_map()
     x += step;
     z = 0.0f;
   }
-  /* create indices */
-  /* line fan based on i
-  * i+1
-  * |  / i + n + 1
-  * | /
-  * |/
-  * i --- i + n
-  */
-
-  /* close the top of the square */
-  k = 0;
-  for (auto i = 0; i < MAP_NUM_VERTICES - 1; ++i)
-  {
-    map_line_indices[k++] = (i + 1) * MAP_NUM_VERTICES - 1;
-    map_line_indices[k++] = (i + 2) * MAP_NUM_VERTICES - 1;
-  }
-  /* close the right of the square */
-  for (auto i = 0; i < MAP_NUM_VERTICES - 1; ++i)
-  {
-    map_line_indices[k++] = (MAP_NUM_VERTICES - 1) * MAP_NUM_VERTICES + i;
-    map_line_indices[k++] = (MAP_NUM_VERTICES - 1) * MAP_NUM_VERTICES + i + 1;
-  }
-
-  for (auto i = 0; i < (MAP_NUM_VERTICES - 1); ++i)
-  {
-    for (auto j = 0; j < (MAP_NUM_VERTICES - 1); ++j)
-    {
-      int ref = i * (MAP_NUM_VERTICES)+j;
-      map_line_indices[k++] = ref;
-      map_line_indices[k++] = ref + 1;
-
-      map_line_indices[k++] = ref;
-      map_line_indices[k++] = ref + MAP_NUM_VERTICES;
-
-      map_line_indices[k++] = ref;
-      map_line_indices[k++] = ref + MAP_NUM_VERTICES + 1;
-    }
-  }
+  createIndexes();
 }
 
 void HeightMap::generate_heightmap_circle(float& center_x, float& center_y,
@@ -142,5 +105,47 @@ void HeightMap::update_map(size_t num_iter)
       }
     }
     --num_iter;
+  }
+}
+
+void HeightMap::createIndexes()
+{
+  /* create indices */
+  /* line fan based on i
+  * i+1
+  * |  / i + n + 1
+  * | /
+  * |/
+  * i --- i + n
+  */
+
+  /* close the top of the square */
+  size_t k = 0;
+  for (auto i = 0; i < MAP_NUM_VERTICES - 1; ++i)
+  {
+    map_line_indices[k++] = (i + 1) * MAP_NUM_VERTICES - 1;
+    map_line_indices[k++] = (i + 2) * MAP_NUM_VERTICES - 1;
+  }
+  /* close the right of the square */
+  for (auto i = 0; i < MAP_NUM_VERTICES - 1; ++i)
+  {
+    map_line_indices[k++] = (MAP_NUM_VERTICES - 1) * MAP_NUM_VERTICES + i;
+    map_line_indices[k++] = (MAP_NUM_VERTICES - 1) * MAP_NUM_VERTICES + i + 1;
+  }
+
+  for (auto i = 0; i < (MAP_NUM_VERTICES - 1); ++i)
+  {
+    for (auto j = 0; j < (MAP_NUM_VERTICES - 1); ++j)
+    {
+      int ref = i * (MAP_NUM_VERTICES)+j;
+      map_line_indices[k++] = ref;
+      map_line_indices[k++] = ref + 1;
+
+      map_line_indices[k++] = ref;
+      map_line_indices[k++] = ref + MAP_NUM_VERTICES;
+
+      map_line_indices[k++] = ref;
+      map_line_indices[k++] = ref + MAP_NUM_VERTICES + 1;
+    }
   }
 }
