@@ -1,19 +1,8 @@
 #include "plot3d.h"
 
 
-/* Map height updates */
-#define MAX_CIRCLE_SIZE (5.0f)
-#define MAX_DISPLACEMENT (1.0f)
-#define DISPLACEMENT_SIGN_LIMIT (0.3f)
-
-/* Map general information */
-#define MAP_SIZE (10.0f)
-#define MAP_NUM_VERTICES (80)
-#define MAP_NUM_TOTAL_VERTICES (MAP_NUM_VERTICES*MAP_NUM_VERTICES)
-#define MAP_NUM_LINES (3* (MAP_NUM_VERTICES - 1) * (MAP_NUM_VERTICES - 1) + \
-  2 * (MAP_NUM_VERTICES - 1))
-
 Protean3D::Plot3D::Plot3D()
+  :drawmode_(GL_POINTS)
 {
   modelview_matrix_ = glm::mat4
   (
@@ -30,6 +19,7 @@ Protean3D::Plot3D::Plot3D()
     0.0f, 0.0f, 0.0f, 1.0f
   );
 
+//todo color
   vertex_shader_src_ =
 #ifdef GL_ES_VERSION_2_0
     "#version 100\n"
@@ -41,10 +31,12 @@ Protean3D::Plot3D::Plot3D()
     "in float x;\n"
     "in float y;\n"
     "in float z;\n"
+    "out vec4 vcolor;\n"
     "\n"
     "void main()\n"
     "{\n"
     "   gl_Position = project * modelview * vec4(x, y, z, 1.0);\n"
+    "   vcolor = vec4(y, y, y, 1.0);\n"
     "}\n";
 
   fragment_shader_src_ =
@@ -53,23 +45,19 @@ Protean3D::Plot3D::Plot3D()
 #else
     "#version 150\n"
 #endif
+    "in vec4 vcolor; \n"
     "out vec4 gl_FragColor;\n"
     "void main()\n"
     "{\n"
-    "    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); \n"
+    "    gl_FragColor = vcolor; \n"
     "}\n";
 
   view_angle = 45.0f;
   aspect_ratio = 4.0f / 3.0f;
   z_near = 1.0f;
   z_far = 100.f;
-  map_line_indices.resize(2 * MAP_NUM_LINES);
-
-  for (auto i = 0; i != 3; ++i)
-    map_vertices.push_back(std::vector<GLfloat>(MAP_NUM_TOTAL_VERTICES));
 
   initMatrices();
-  init_map();
 }
 
 Protean3D::Plot3D::~Plot3D()
@@ -86,136 +74,9 @@ Protean3D::Plot3D::~Plot3D()
 * Geometry creation functions
 *********************************************************************/
 
-/* Generate vertices and indices for the heightmap
-*/
-void Protean3D::Plot3D::init_map(void)
-{
-  GLfloat step = MAP_SIZE / (MAP_NUM_VERTICES - 1);
-  GLfloat x = 0.0f;
-  GLfloat z = 0.0f;
-  /* Create a flat grid */
-  auto k = 0;
-  for (auto i = 0; i < MAP_NUM_VERTICES; ++i)
-  {
-    for (auto j = 0; j < MAP_NUM_VERTICES; ++j)
-    {
-      map_vertices[0][k] = x;
-      map_vertices[1][k] = 0.0f;
-      map_vertices[2][k] = z;
-      z += step;
-      ++k;
-    }
-    x += step;
-    z = 0.0f;
-  }
-  /* create indices */
-  /* line fan based on i
-  * i+1
-  * |  / i + n + 1
-  * | /
-  * |/
-  * i --- i + n
-  */
-
-  /* close the top of the square */
-  k = 0;
-  for (auto i = 0; i < MAP_NUM_VERTICES - 1; ++i)
-  {
-    map_line_indices[k++] = (i + 1) * MAP_NUM_VERTICES - 1;
-    map_line_indices[k++] = (i + 2) * MAP_NUM_VERTICES - 1;
-  }
-  /* close the right of the square */
-  for (auto i = 0; i < MAP_NUM_VERTICES - 1; ++i)
-  {
-    map_line_indices[k++] = (MAP_NUM_VERTICES - 1) * MAP_NUM_VERTICES + i;
-    map_line_indices[k++] = (MAP_NUM_VERTICES - 1) * MAP_NUM_VERTICES + i + 1;
-  }
-
-  for (auto i = 0; i < (MAP_NUM_VERTICES - 1); ++i)
-  {
-    for (auto j = 0; j < (MAP_NUM_VERTICES - 1); ++j)
-    {
-      int ref = i * (MAP_NUM_VERTICES)+j;
-      map_line_indices[k++] = ref;
-      map_line_indices[k++] = ref + 1;
-
-      map_line_indices[k++] = ref;
-      map_line_indices[k++] = ref + MAP_NUM_VERTICES;
-
-      map_line_indices[k++] = ref;
-      map_line_indices[k++] = ref + MAP_NUM_VERTICES + 1;
-    }
-  }
-}
-
-void Protean3D::Plot3D::generate_heightmap_circle(float& center_x, float& center_y,
-  float& size, float& displacement)
-{
-  float sign;
-  /* random value for element in between [0-1.0] */
-  center_x = (MAP_SIZE * rand()) / (1.0f * RAND_MAX);
-  center_y = (MAP_SIZE * rand()) / (1.0f * RAND_MAX);
-  size = (MAX_CIRCLE_SIZE * rand()) / (1.0f * RAND_MAX);
-  sign = (1.0f * rand()) / (1.0f * RAND_MAX);
-  sign = (sign < DISPLACEMENT_SIGN_LIMIT) ? -1.0f : 1.0f;
-  displacement = (sign * (MAX_DISPLACEMENT * rand())) / (1.0f * RAND_MAX);
-}
-
-/* Run the specified number of iterations of the generation process for the
-* heightmap
-*/
-void Protean3D::Plot3D::update_map(size_t num_iter)
-{
-  while (num_iter)
-  {
-    /* center of the circle */
-    float center_x;
-    float center_z;
-    float circle_size;
-    float disp;
-    generate_heightmap_circle(center_x, center_z, circle_size, disp);
-    disp = disp / 2.0f;
-    for (auto i = 0; i < MAP_NUM_TOTAL_VERTICES; ++i)
-    {
-      GLfloat dx = center_x - map_vertices[0][i];
-      GLfloat dz = center_z - map_vertices[2][i];
-      GLfloat pd = (2.0f * sqrtf((dx * dx) + (dz * dz))) / circle_size;
-      if (fabs(pd) <= 1.0f)
-      {
-        /* tx,tz is within the circle */
-        GLfloat new_height = disp + (float)(cos(pd*3.14f)*disp);
-        map_vertices[1][i] = new_height;
-      }
-    }
-    --num_iter;
-  }
-}
-
 /**********************************************************************
 * OpenGL helper functions
 *********************************************************************/
-
-/* Create VBO, IBO and VAO objects for the heightmap geometry and bind them to
-* the specified program object
-*/
-void Protean3D::Plot3D::createBuffers(GLuint program)
-{
-  vao_.bind();
-
-  size_t t = vao_.appendIBO(map_line_indices);
-
-  GL::VBO::PrimitiveLayout datalayout;
-  datalayout.components = 1;
-  datalayout.type = GL_FLOAT;
-  datalayout.stride = 0;
-  datalayout.offset = 0;
-
-  t = vao_.appendVBO(map_vertices[0], datalayout, program, "x");
-  t = vao_.appendVBO(map_vertices[1], datalayout, program, "y", GL_DYNAMIC_DRAW);
-  t = vao_.appendVBO(map_vertices[2], datalayout, program, "z");
-
-  vao_.unbind();
-}
 
 void Protean3D::Plot3D::initMatrices()
 {
@@ -233,28 +94,50 @@ void Protean3D::Plot3D::initMatrices()
   modelview_matrix_[3][2] = -20.0f;
 }
 
-void Protean3D::Plot3D::prepareNextDraw()
+void Protean3D::Plot3D::draw()
 {
-  update_map(1);
+  /* render the next frame */
+  glClear(GL_COLOR_BUFFER_BIT);
+  glDrawElements(drawmode_, vao_.iboSize(0), GL_UNSIGNED_INT, 0); //todo ibo indexing
 
-  // Update IBO vertices from source data
-  
-  bool b = vao_.updateVBO(1, map_vertices[1]);
-
-  int x = 42;
-  //glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[1]); // otherwise, the current bound buffer would be replaced
-  //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[1][0]);
+  this->updateAfter();
 }
 
-bool Protean3D::Plot3D::prepareDraw()
+bool Protean3D::Plot3D::addPositionData(std::vector<glm::vec3> const& data, std::vector<GLuint> indexes, GLenum drawmode)
 {
-  /* Prepare opengl resources for rendering */
+  return false;
+}
 
-  if (!shader_.create(vertex_shader_src_, fragment_shader_src_))
+/* Create VBO, IBO and VAO objects for the heightmap geometry and bind them to
+* the specified program object
+*/
+bool Protean3D::Plot3D::addPositionData(std::array<std::vector<float>, 3> const& data, std::vector<GLuint> indexes, GLenum drawmode,
+  GLenum xdrawtype /*= GL_STATIC_DRAW*/, 
+  GLenum ydrawtype /*= GL_STATIC_DRAW*/, 
+  GLenum zdrawtype /*= GL_STATIC_DRAW*/)
+{
+  if (!shader_.initialized())
+    if (!shader_.create(vertex_shader_src_, fragment_shader_src_))
+      return false;
+
+  drawmode_ = drawmode;
+
+  vao_.bind();
+
+  if (! (data[0].size() == data[1].size() && data[1].size()  == data[2].size()) )
     return false;
 
-  /* Create mesh data */
-  createBuffers(shader_.programId());
+  vao_.appendIBO(indexes);
+
+  GL::VBO::PrimitiveLayout datalayout;
+  datalayout.components = 1;
+  datalayout.type = GL_FLOAT;
+  datalayout.stride = 0;
+  datalayout.offset = 0;
+
+  vao_.appendVBO(data[0], datalayout, shader_.programId(), "x", xdrawtype);
+  vao_.appendVBO(data[1], datalayout, shader_.programId(), "y", ydrawtype);
+  vao_.appendVBO(data[2], datalayout, shader_.programId(), "z", zdrawtype);
 
   glUseProgram(shader_.programId());
 
@@ -264,12 +147,12 @@ bool Protean3D::Plot3D::prepareDraw()
   return true;
 }
 
-void Protean3D::Plot3D::draw()
+bool Protean3D::Plot3D::addColorData(std::vector<glm::vec3> const& data)
 {
-  /* render the next frame */
-  glClear(GL_COLOR_BUFFER_BIT);
+  return false;
+}
 
-  vao_.bind();
-  glDrawElements(GL_LINES, 2 * MAP_NUM_LINES, GL_UNSIGNED_INT, 0);
-  vao_.unbind();
+bool Protean3D::Plot3D::updatePositionData(short index, std::vector<float> const& data)
+{
+  return vao_.updateVBO(index, data); //todo (index hard-wired in VAO)
 }

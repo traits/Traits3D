@@ -76,7 +76,8 @@ namespace Protean3D
       char* ptr = nullptr;
       ptr += description_.offset;
       glVertexAttribPointer(attrloc, description_.components, description_.type, GL_FALSE, description_.stride, ptr);
-      if (GL_NO_ERROR != glGetError())
+      err = glGetError();
+      if (GL_NO_ERROR != err)
         return false;
 
       glEnableVertexAttribArray(attrloc);

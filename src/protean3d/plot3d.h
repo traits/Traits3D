@@ -1,5 +1,7 @@
 #pragma once
 
+
+#include <array>
 #include "coordinatesystem.h"
 #include "shader.h"
 #include "vao.h"
@@ -19,15 +21,28 @@ namespace Protean3D
     Plot3D();
     virtual ~Plot3D();
 
-    bool prepareDraw();
-    void draw();
-    void prepareNextDraw();
 
+    void draw();
+    virtual bool updateAfter(){ return true; }
+
+    bool addPositionData(std::vector<glm::vec3> const& data, std::vector<GLuint> indexes, GLenum drawmode);
+
+    bool addPositionData(std::array<std::vector<float>, 3> const& data, std::vector<GLuint> indexes, GLenum drawmode,
+      GLenum xdrawtype = GL_STATIC_DRAW,
+      GLenum ydrawtype = GL_STATIC_DRAW,
+      GLenum zdrawtype = GL_STATIC_DRAW);
+
+    // index in [0..2] and only for 2nd variant of addPositionData
+    bool updatePositionData(short index, std::vector<float> const& data);
+
+    bool addColorData(std::vector<glm::vec3> const& data);
+    
   private:
     Box hull_;
     CoordinateSystem coordinate_system_;
     GL::Shader shader_;
     GL::VAO vao_;
+    GLenum drawmode_; // triangles, lines etc.
 
     glm::mat4 projection_matrix_;
     glm::mat4  modelview_matrix_;
@@ -37,8 +52,6 @@ namespace Protean3D
     /**********************************************************************
     * Heightmap vertex and index data
     *********************************************************************/
-    std::vector<GLuint> map_line_indices;
-    std::vector<std::vector<GLfloat>> map_vertices;
 
     /* Frustum configuration */
     GLfloat view_angle;
@@ -46,9 +59,5 @@ namespace Protean3D
     GLfloat z_near;
     GLfloat z_far;
     void initMatrices();
-    void init_map();
-    void generate_heightmap_circle(float& center_x, float& center_y, float& size, float& displacement);
-    void update_map(size_t num_iter);
-    void createBuffers(GLuint program);
   };
 } // ns

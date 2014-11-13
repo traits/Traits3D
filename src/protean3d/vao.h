@@ -30,6 +30,7 @@ namespace Protean3D
 
       template<typename PRIMITIVE>
       bool updateVBO(size_t idx, std::vector<PRIMITIVE> const& data);
+      size_t iboSize(short index) const { return (index < iboCount()) ? ibos_[index].size() : 0; }
 
       size_t vboCount() const { return vbos_.size(); }
       size_t iboCount() const { return ibos_.size(); }
