@@ -1,8 +1,8 @@
+#include "indexmaker.h"
 #include "plot3d.h"
 
 
 Protean3D::Plot3D::Plot3D()
-  :drawmode_(GL_POINTS)
 {
   modelview_matrix_ = glm::mat4
   (
@@ -52,7 +52,7 @@ Protean3D::Plot3D::Plot3D()
     "    gl_FragColor = vcolor; \n"
     "}\n";
 
-  view_angle = 45.0f;
+  view_angle = 65.0f * Protean3D::PI / 180;
   aspect_ratio = 4.0f / 3.0f;
   z_near = 1.0f;
   z_far = 100.f;
@@ -85,25 +85,40 @@ void Protean3D::Plot3D::initMatrices()
   projection_matrix_[0][0] = f / aspect_ratio;
   projection_matrix_[1][1] = f;
   projection_matrix_[2][2] = (z_far + z_near) / (z_near - z_far);
-  projection_matrix_[2][3] = -1.0f;
-  projection_matrix_[3][2] = 2.0f * (z_far * z_near) / (z_near - z_far);
+  projection_matrix_[2][3] = 2.0f * (z_far * z_near) / (z_near - z_far);
+  projection_matrix_[3][2] = -1.0f;
 
   /* Set the camera position */
   modelview_matrix_[3][0] = -5.0f;
   modelview_matrix_[3][1] = -5.0f;
-  modelview_matrix_[3][2] = -20.0f;
+  modelview_matrix_[3][2] = -5.0f;
+
+  modelview_matrix_[0][0] = 1;
+  modelview_matrix_[0][1] = 0;
+  modelview_matrix_[0][2] = 0;
+  modelview_matrix_[1][0] = 0;
+  modelview_matrix_[1][1] = cosf(view_angle);
+  modelview_matrix_[1][2] = -sinf(view_angle);
+  modelview_matrix_[2][0] = 0;
+  modelview_matrix_[2][1] = sinf(view_angle);
+  modelview_matrix_[2][2] = cosf(view_angle);
+
 }
 
 void Protean3D::Plot3D::draw()
 {
   /* render the next frame */
   glClear(GL_COLOR_BUFFER_BIT);
-  glDrawElements(drawmode_, vao_.iboSize(0), GL_UNSIGNED_INT, 0); //todo ibo indexing
 
+  glEnable(GL_PRIMITIVE_RESTART);
+  glPrimitiveRestartIndex(std::numeric_limits<GLuint>::max()); //todo not available in OpenGL ES!
+  //glDrawElements(vao_.iboSize(0), GL_UNSIGNED_INT, 0); //todo ibo indexing
+  glDrawElements(GL_LINE_STRIP, vao_.iboSize(0), GL_UNSIGNED_INT, 0); //todo ibo indexing
+  glDisable(GL_PRIMITIVE_RESTART);
   this->updateAfter();
 }
 
-bool Protean3D::Plot3D::addPositionData(std::vector<glm::vec3> const& data, std::vector<GLuint> indexes, GLenum drawmode)
+bool Protean3D::Plot3D::addPositionData(std::vector<glm::vec3> const& data, GLenum drawmode)
 {
   return false;
 }
@@ -111,7 +126,7 @@ bool Protean3D::Plot3D::addPositionData(std::vector<glm::vec3> const& data, std:
 /* Create VBO, IBO and VAO objects for the heightmap geometry and bind them to
 * the specified program object
 */
-bool Protean3D::Plot3D::addPositionData(std::array<std::vector<float>, 3> const& data, std::vector<GLuint> indexes, GLenum drawmode,
+bool Protean3D::Plot3D::addPositionData(std::array<std::vector<float>, 3> const& data, size_t xsize, size_t ysize, 
   GLenum xdrawtype /*= GL_STATIC_DRAW*/, 
   GLenum ydrawtype /*= GL_STATIC_DRAW*/, 
   GLenum zdrawtype /*= GL_STATIC_DRAW*/)
@@ -120,14 +135,18 @@ bool Protean3D::Plot3D::addPositionData(std::array<std::vector<float>, 3> const&
     if (!shader_.create(vertex_shader_src_, fragment_shader_src_))
       return false;
 
-  drawmode_ = drawmode;
-
   vao_.bind();
 
   if (! (data[0].size() == data[1].size() && data[1].size()  == data[2].size()) )
     return false;
 
-  vao_.appendIBO(indexes);
+  if (xsize*ysize != data[0].size())
+    return false;
+
+  GL::IndexMaker im;
+  std::vector<GLuint> indexes;
+  if (im.create(indexes, xsize, ysize, GL_LINE_STRIP))
+    vao_.appendIBO(indexes);
 
   GL::VBO::PrimitiveLayout datalayout;
   datalayout.components = 1;

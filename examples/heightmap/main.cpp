@@ -29,7 +29,7 @@ int main()
 
     /* Check the frame rate and update the heightmap if needed */
     double dt = glfwGetTime();
-    if ((dt - last_update_time) > 0.001)
+    if ((dt - last_update_time) > 0.1)
     {
       hm.draw();
       w.update();

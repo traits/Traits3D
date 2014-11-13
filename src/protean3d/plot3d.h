@@ -25,9 +25,10 @@ namespace Protean3D
     void draw();
     virtual bool updateAfter(){ return true; }
 
-    bool addPositionData(std::vector<glm::vec3> const& data, std::vector<GLuint> indexes, GLenum drawmode);
+    bool addPositionData(std::vector<glm::vec3> const& data, GLenum drawmode);
 
-    bool addPositionData(std::array<std::vector<float>, 3> const& data, std::vector<GLuint> indexes, GLenum drawmode,
+    bool addPositionData(std::array<std::vector<float>, 3> const& data, 
+      size_t xsize, size_t ysize,
       GLenum xdrawtype = GL_STATIC_DRAW,
       GLenum ydrawtype = GL_STATIC_DRAW,
       GLenum zdrawtype = GL_STATIC_DRAW);
@@ -42,7 +43,6 @@ namespace Protean3D
     CoordinateSystem coordinate_system_;
     GL::Shader shader_;
     GL::VAO vao_;
-    GLenum drawmode_; // triangles, lines etc.
 
     glm::mat4 projection_matrix_;
     glm::mat4  modelview_matrix_;

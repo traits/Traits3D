@@ -14,8 +14,6 @@
 
 HeightMap::HeightMap()
 {
-  map_line_indices.resize(2 * MAP_NUM_LINES);
-
   for (auto i = 0; i != 3; ++i)
     map_vertices[i].resize(MAP_NUM_TOTAL_VERTICES);
 
@@ -24,16 +22,15 @@ HeightMap::HeightMap()
 
 bool HeightMap::loadData()
 {
-  return addPositionData(map_vertices, map_line_indices, 
-    GL_LINES, 
-    GL_STATIC_DRAW, GL_DYNAMIC_DRAW, GL_STATIC_DRAW);
+  return addPositionData(map_vertices, MAP_NUM_VERTICES, MAP_NUM_VERTICES,
+    GL_STATIC_DRAW, GL_STATIC_DRAW, GL_DYNAMIC_DRAW);
 }
 
 bool HeightMap::updateAfter()
 {
   update_map(1);
 
-  return updatePositionData(1, map_vertices[1]);
+  return updatePositionData(2, map_vertices[2]);
 
   //glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[1]); // otherwise, the current bound buffer would be replaced
   //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[1][0]);
@@ -46,7 +43,7 @@ void HeightMap::init_map()
 {
   GLfloat step = MAP_SIZE / (MAP_NUM_VERTICES - 1);
   GLfloat x = 0.0f;
-  GLfloat z = 0.0f;
+  GLfloat y = 0.0f;
   /* Create a flat grid */
   auto k = 0;
   for (auto i = 0; i < MAP_NUM_VERTICES; ++i)
@@ -54,15 +51,14 @@ void HeightMap::init_map()
     for (auto j = 0; j < MAP_NUM_VERTICES; ++j)
     {
       map_vertices[0][k] = x;
-      map_vertices[1][k] = 0.0f;
-      map_vertices[2][k] = z;
-      z += step;
+      map_vertices[1][k] = y;
+      map_vertices[2][k] = 0.0f;
+      y += step;
       ++k;
     }
     x += step;
-    z = 0.0f;
+    y = 0.0f;
   }
-  createIndexes();
 }
 
 void HeightMap::generate_heightmap_circle(float& center_x, float& center_y,
@@ -87,65 +83,23 @@ void HeightMap::update_map(size_t num_iter)
   {
     /* center of the circle */
     float center_x;
-    float center_z;
+    float center_y;
     float circle_size;
     float disp;
-    generate_heightmap_circle(center_x, center_z, circle_size, disp);
+    generate_heightmap_circle(center_x, center_y, circle_size, disp);
     disp = disp / 2.0f;
     for (auto i = 0; i < MAP_NUM_TOTAL_VERTICES; ++i)
     {
       GLfloat dx = center_x - map_vertices[0][i];
-      GLfloat dz = center_z - map_vertices[2][i];
-      GLfloat pd = (2.0f * sqrtf((dx * dx) + (dz * dz))) / circle_size;
-      if (fabs(pd) <= 1.0f)
+      GLfloat dy = center_y - map_vertices[1][i];
+      GLfloat pd = (2.0f * sqrtf((dx * dx) + (dy * dy))) / circle_size;
+      //if (fabs(pd) <= 1.0f)
       {
-        /* tx,tz is within the circle */
+        /* tx,ty is within the circle */
         GLfloat new_height = disp + (float)(cos(pd*3.14f)*disp);
-        map_vertices[1][i] = new_height;
+        map_vertices[2][i] = new_height;
       }
     }
     --num_iter;
-  }
-}
-
-void HeightMap::createIndexes()
-{
-  /* create indices */
-  /* line fan based on i
-  * i+1
-  * |  / i + n + 1
-  * | /
-  * |/
-  * i --- i + n
-  */
-
-  /* close the top of the square */
-  size_t k = 0;
-  for (auto i = 0; i < MAP_NUM_VERTICES - 1; ++i)
-  {
-    map_line_indices[k++] = (i + 1) * MAP_NUM_VERTICES - 1;
-    map_line_indices[k++] = (i + 2) * MAP_NUM_VERTICES - 1;
-  }
-  /* close the right of the square */
-  for (auto i = 0; i < MAP_NUM_VERTICES - 1; ++i)
-  {
-    map_line_indices[k++] = (MAP_NUM_VERTICES - 1) * MAP_NUM_VERTICES + i;
-    map_line_indices[k++] = (MAP_NUM_VERTICES - 1) * MAP_NUM_VERTICES + i + 1;
-  }
-
-  for (auto i = 0; i < (MAP_NUM_VERTICES - 1); ++i)
-  {
-    for (auto j = 0; j < (MAP_NUM_VERTICES - 1); ++j)
-    {
-      int ref = i * (MAP_NUM_VERTICES)+j;
-      map_line_indices[k++] = ref;
-      map_line_indices[k++] = ref + 1;
-
-      map_line_indices[k++] = ref;
-      map_line_indices[k++] = ref + MAP_NUM_VERTICES;
-
-      map_line_indices[k++] = ref;
-      map_line_indices[k++] = ref + MAP_NUM_VERTICES + 1;
-    }
   }
 }
