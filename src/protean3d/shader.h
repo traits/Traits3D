@@ -33,6 +33,7 @@ namespace Protean3D
       bool use();
       
       bool setUniformMatrix(glm::mat4 const& mat, std::string const& name);
+      bool setUniformVec4(glm::vec4 const& vec, std::string const& name);
 
     private:  
       bool initialized_;

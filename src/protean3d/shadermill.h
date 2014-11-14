@@ -7,15 +7,22 @@ namespace Protean3D
 {
   namespace GL
   {
+    enum class VertexShaderCategory
+    {
+      Triangles,
+      Lines
+    };
+
     //! Creates shader source texts
     class ShaderMill
     {
     public:
       static const std::string proj_matrix;
       static const std::string mv_matrix;
+      static const std::string v_in_color;
 
       ShaderMill();
-      std::string vertexCode() const;
+      std::string vertexCode(VertexShaderCategory val) const;
       std::string fragmentCode() const;
 
     private:
@@ -26,6 +33,8 @@ namespace Protean3D
 
       std::string v_standard_txt_;
       std::string f_standard_txt_;
+
+      std::string lineText() const;
     };
 
   } // ns

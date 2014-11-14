@@ -150,6 +150,23 @@ bool Protean3D::GL::Shader::setUniformMatrix(glm::mat4 const& mat, std::string c
   return true;
 }
 
+bool Protean3D::GL::Shader::setUniformVec4(glm::vec4 const& vec, std::string const& name)
+{
+  if (name.empty())
+    return false;
+
+  GLint loc = glGetUniformLocation(program_id_, name.c_str());
+  if (-1 == loc || GL_NO_ERROR != glGetError())
+    return false;
+
+  glUniform4fv(loc, 1, &vec[0]);
+  if (GL_NO_ERROR != glGetError())
+    return false;
+
+  return true;
+}
+
+
 bool Protean3D::GL::Shader::use()
 {
   if (initialized_)

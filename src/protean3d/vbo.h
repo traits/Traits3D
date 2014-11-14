@@ -47,11 +47,6 @@ namespace Protean3D
     template <typename PRIMITIVE>
     bool Protean3D::GL::VBO::update(std::vector<PRIMITIVE> const& data)
     {
-      GLuint attrloc = glGetAttribLocation(program_, attr_name_.c_str());
-      GLenum err = glGetError();
-      if (attr_name_.empty() || GL_INVALID_OPERATION == err)
-        return false;
-
       glBindBuffer(GL_ARRAY_BUFFER, id_);
 
       size_t bsize = sizeof(PRIMITIVE) * data.size();
@@ -61,7 +56,7 @@ namespace Protean3D
       else
         glBufferSubData(GL_ARRAY_BUFFER, 0, bsize, bsize ? &data[0] : nullptr);
 
-      err = glGetError();
+      GLenum err = glGetError();
       switch (err)
       {
       case GL_INVALID_ENUM:
@@ -72,6 +67,11 @@ namespace Protean3D
         bsize_ = bsize;
         break;
       }
+
+      GLuint attrloc = glGetAttribLocation(program_, attr_name_.c_str());
+      err = glGetError();
+      if (attr_name_.empty() || GL_INVALID_OPERATION == err)
+        return false;
 
       char* ptr = nullptr;
       ptr += description_.offset;

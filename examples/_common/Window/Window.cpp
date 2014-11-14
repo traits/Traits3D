@@ -72,7 +72,7 @@ bool Example::Window::init(std::string val)
   glfwMakeContextCurrent(window_);
 
   /* setup the scene ready for rendering */
-  glClearColor(0.0f, 0.0f, 0.5f, 0.0f);
+  glClearColor(0.7f, 0.7f, 0.7f, 0.0f);
 
   // turn vsync off
   glfwSwapInterval(0);

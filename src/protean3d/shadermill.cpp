@@ -9,7 +9,8 @@ const std::string Protean3D::GL::ShaderMill::os_switch_ =
 ;
 
 const std::string Protean3D::GL::ShaderMill::proj_matrix  = "proj_matrix";
-const std::string Protean3D::GL::ShaderMill::mv_matrix    = "mv_matrix";
+const std::string Protean3D::GL::ShaderMill::mv_matrix = "mv_matrix";
+const std::string Protean3D::GL::ShaderMill::v_in_color = "v_in_color";
 
 const std::string Protean3D::GL::ShaderMill::matrix_preamble_ =
   std::string("uniform mat4 ") + proj_matrix + ";\n"
@@ -27,13 +28,12 @@ Protean3D::GL::ShaderMill::ShaderMill()
     + "in float x;\n"
     + "in float y;\n"
     + "in float z;\n"
-    //+ "in vec4  v_in_color;\n"
+    + "in vec4  v_in_color;\n"
     + "out vec4  v_out_color;\n"
     + "\n" 
     + main_begin_ 
     + "   gl_Position = proj_matrix * mv_matrix * vec4(x, y, z, 1.0);\n"
-    + "   v_out_color = vec4(y, y, y, 1.0);\n"
-    //+ "   v_out_color = v_in_color;\n"
+    + "   v_out_color = " + v_in_color + ";\n"
     + main_end_;
 
   f_standard_txt_ =
@@ -45,14 +45,42 @@ Protean3D::GL::ShaderMill::ShaderMill()
     + main_end_;
 }
 
-std::string Protean3D::GL::ShaderMill::vertexCode() const
+std::string Protean3D::GL::ShaderMill::vertexCode(VertexShaderCategory val) const
 {
+  switch (val)
+  {
+  case VertexShaderCategory::Triangles:
+    return v_standard_txt_;
+  case VertexShaderCategory::Lines:
+    return lineText();
+  default:
+    break;
+  }
   return v_standard_txt_;
 }
 
 std::string Protean3D::GL::ShaderMill::fragmentCode() const
 {
   return f_standard_txt_;
+}
+
+std::string Protean3D::GL::ShaderMill::lineText() const
+{
+  std::string result =
+    os_switch_
+    + matrix_preamble_
+    + "in float x;\n"
+    + "in float y;\n"
+    + "in float z;\n"
+    + "uniform vec4 v_in_color;\n"
+    + "out vec4  v_out_color;\n"
+    + "\n"
+    + main_begin_
+    + "   gl_Position = proj_matrix * mv_matrix * vec4(x, y, z, 1.0);\n"
+    + "   v_out_color = " + v_in_color + ";\n"
+    + main_end_;
+
+  return result;
 }
 
 

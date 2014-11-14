@@ -6,74 +6,23 @@
 
 Protean3D::Plot3D::Plot3D()
 {
-  modelview_matrix_ = glm::mat4
-  (
-    1.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 1.0f
-  );
-  projection_matrix_ = glm::mat4
-  (  
-    1.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 1.0f
-  );
-
-//todo color
-  vertex_shader_src_ = shader_mill_.vertexCode();
-  fragment_shader_src_ = shader_mill_.fragmentCode();
-
   view_angle = 65.0f * Protean3D::PI / 180;
   aspect_ratio = 4.0f / 3.0f;
   z_near = 1.0f;
   z_far = 100.f;
 
-  initMatrices();
-}
-
-Protean3D::Plot3D::~Plot3D()
-{
-
-}
-
-
-/**********************************************************************
-* OpenGL helper functions
-*********************************************************************/
-
-/**********************************************************************
-* Geometry creation functions
-*********************************************************************/
-
-/**********************************************************************
-* OpenGL helper functions
-*********************************************************************/
-
-void Protean3D::Plot3D::initMatrices()
-{
   projection_matrix_ = glm::perspective(view_angle, aspect_ratio, z_near, z_far);
-  modelview_matrix_ = glm::rotate(modelview_matrix_, glm::radians(-70.0f), glm::vec3(1, 0, 0));
+  modelview_matrix_ = glm::rotate(glm::mat4(1.0f), glm::radians(-70.0f), glm::vec3(1, 0, 0));
 
   /* Set the camera position */
   modelview_matrix_[3][0] = -5.0f;
   modelview_matrix_[3][1] = -4.0f;
   modelview_matrix_[3][2] = -7.0f;
-
 }
 
-void Protean3D::Plot3D::draw()
+Protean3D::Plot3D::~Plot3D()
 {
-  /* render the next frame */
-  glClear(GL_COLOR_BUFFER_BIT);
 
-  glEnable(GL_PRIMITIVE_RESTART);
-  glPrimitiveRestartIndex(std::numeric_limits<GLuint>::max()); //todo not available in OpenGL ES!
-  //glDrawElements(vao_.iboSize(0), GL_UNSIGNED_INT, 0); //todo ibo indexing
-  glDrawElements(GL_LINE_STRIP, vao_.iboSize(0), GL_UNSIGNED_INT, 0); //todo ibo indexing
-  glDisable(GL_PRIMITIVE_RESTART);
-  this->updateAfter();
 }
 
 bool Protean3D::Plot3D::addPositionData(std::vector<glm::vec3> const& data, GLenum drawmode)
@@ -90,7 +39,7 @@ bool Protean3D::Plot3D::addPositionData(std::array<std::vector<float>, 3> const&
   GLenum zdrawtype /*= GL_STATIC_DRAW*/)
 {
   if (!shader_.initialized())
-    if (!shader_.create(vertex_shader_src_, fragment_shader_src_))
+    if (!shader_.create(shader_mill_.vertexCode(GL::VertexShaderCategory::Lines), shader_mill_.fragmentCode()))
       return false;
 
   vao_.bind();
@@ -119,10 +68,25 @@ bool Protean3D::Plot3D::addPositionData(std::array<std::vector<float>, 3> const&
   vao_.appendVBO(data[2], datalayout, shader_.programId(), "z", zdrawtype);
 
   shader_.use();
-  shader_.setUniformMatrix(projection_matrix_, shader_mill_.proj_matrix);
-  shader_.setUniformMatrix(modelview_matrix_, shader_mill_.mv_matrix);
+  shader_.setUniformMatrix(projection_matrix_, GL::ShaderMill::proj_matrix);
+  shader_.setUniformMatrix(modelview_matrix_, GL::ShaderMill::mv_matrix);
 
+  glm::vec4 color(0.0f, 0.0f, 1.0f, 1.0f);
+  shader_.setUniformVec4(color, GL::ShaderMill::v_in_color);
   return true;
+}
+
+void Protean3D::Plot3D::draw()
+{
+  /* render the next frame */
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  glEnable(GL_PRIMITIVE_RESTART);
+  glPrimitiveRestartIndex(std::numeric_limits<GLuint>::max()); //todo not available in OpenGL ES!
+  //glDrawElements(vao_.iboSize(0), GL_UNSIGNED_INT, 0); //todo ibo indexing
+  glDrawElements(GL_LINE_STRIP, vao_.iboSize(0), GL_UNSIGNED_INT, 0); //todo ibo indexing
+  glDisable(GL_PRIMITIVE_RESTART);
+  this->updateAfter();
 }
 
 bool Protean3D::Plot3D::addColorData(std::vector<glm::vec3> const& data)

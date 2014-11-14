@@ -48,8 +48,6 @@ namespace Protean3D
 
     glm::mat4 projection_matrix_;
     glm::mat4  modelview_matrix_;
-    std::string vertex_shader_src_;
-    std::string fragment_shader_src_;
 
     /**********************************************************************
     * Heightmap vertex and index data
@@ -60,6 +58,5 @@ namespace Protean3D
     GLfloat aspect_ratio;
     GLfloat z_near;
     GLfloat z_far;
-    void initMatrices();
   };
 } // ns
