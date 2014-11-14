@@ -52,7 +52,7 @@ Protean3D::Plot3D::Plot3D()
     "    gl_FragColor = vcolor; \n"
     "}\n";
 
-  view_angle = 65.0f * Protean3D::PI / 180;
+  view_angle = 70.0f * Protean3D::PI / 180;
   aspect_ratio = 4.0f / 3.0f;
   z_near = 1.0f;
   z_far = 100.f;
@@ -90,8 +90,8 @@ void Protean3D::Plot3D::initMatrices()
 
   /* Set the camera position */
   modelview_matrix_[3][0] = -5.0f;
-  modelview_matrix_[3][1] = -5.0f;
-  modelview_matrix_[3][2] = -5.0f;
+  modelview_matrix_[3][1] = -4.0f;
+  modelview_matrix_[3][2] = -3.0f;
 
   modelview_matrix_[0][0] = 1;
   modelview_matrix_[0][1] = 0;

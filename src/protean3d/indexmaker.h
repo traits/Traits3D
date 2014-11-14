@@ -16,7 +16,6 @@ namespace GL
   private:
     bool createLineStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize);
     bool createTriangleStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize);
-
   };
 
 }

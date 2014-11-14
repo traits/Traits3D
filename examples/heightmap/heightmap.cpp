@@ -7,10 +7,9 @@
 
 /* Map general information */
 #define MAP_SIZE (10.0f)
-#define MAP_NUM_VERTICES (80)
-#define MAP_NUM_TOTAL_VERTICES (MAP_NUM_VERTICES*MAP_NUM_VERTICES)
-#define MAP_NUM_LINES (3* (MAP_NUM_VERTICES - 1) * (MAP_NUM_VERTICES - 1) + \
-  2 * (MAP_NUM_VERTICES - 1))
+#define MAP_NUM_VERTICES_X (100)
+#define MAP_NUM_VERTICES_Y (60)
+#define MAP_NUM_TOTAL_VERTICES (MAP_NUM_VERTICES_X*MAP_NUM_VERTICES_Y)
 
 HeightMap::HeightMap()
 {
@@ -22,7 +21,7 @@ HeightMap::HeightMap()
 
 bool HeightMap::loadData()
 {
-  return addPositionData(map_vertices, MAP_NUM_VERTICES, MAP_NUM_VERTICES,
+  return addPositionData(map_vertices, MAP_NUM_VERTICES_X, MAP_NUM_VERTICES_Y,
     GL_STATIC_DRAW, GL_STATIC_DRAW, GL_DYNAMIC_DRAW);
 }
 
@@ -31,9 +30,6 @@ bool HeightMap::updateAfter()
   update_map(1);
 
   return updatePositionData(2, map_vertices[2]);
-
-  //glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo[1]); // otherwise, the current bound buffer would be replaced
-  //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat)* MAP_NUM_TOTAL_VERTICES, &map_vertices[1][0]);
 }
 
 
@@ -41,23 +37,23 @@ bool HeightMap::updateAfter()
 */
 void HeightMap::init_map()
 {
-  GLfloat step = MAP_SIZE / (MAP_NUM_VERTICES - 1);
+  GLfloat step = MAP_SIZE / (MAP_NUM_VERTICES_X - 1);
   GLfloat x = 0.0f;
   GLfloat y = 0.0f;
   /* Create a flat grid */
   auto k = 0;
-  for (auto i = 0; i < MAP_NUM_VERTICES; ++i)
+  for (auto yy = 0; yy < MAP_NUM_VERTICES_Y; ++yy)
   {
-    for (auto j = 0; j < MAP_NUM_VERTICES; ++j)
+    for (auto xx = 0; xx < MAP_NUM_VERTICES_X; ++xx)
     {
       map_vertices[0][k] = x;
       map_vertices[1][k] = y;
       map_vertices[2][k] = 0.0f;
-      y += step;
+      x += step;
       ++k;
     }
-    x += step;
-    y = 0.0f;
+    y += step;
+    x = 0.0f;
   }
 }
 
@@ -87,6 +83,11 @@ void HeightMap::update_map(size_t num_iter)
     float circle_size;
     float disp;
     generate_heightmap_circle(center_x, center_y, circle_size, disp);
+
+    //center_x = 2;
+    //center_y = 1;
+    //circle_size = 1;
+
     disp = disp / 2.0f;
     for (auto i = 0; i < MAP_NUM_TOTAL_VERTICES; ++i)
     {
