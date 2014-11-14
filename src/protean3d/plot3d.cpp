@@ -1,3 +1,5 @@
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "indexmaker.h"
 #include "plot3d.h"
 
@@ -26,8 +28,8 @@ Protean3D::Plot3D::Plot3D()
 #else
     "#version 150\n"
 #endif
-    "uniform mat4 project;\n"
-    "uniform mat4 modelview;\n"
+    "uniform mat4 proj_matrix;\n"
+    "uniform mat4 mv_matrix;\n"
     "in float x;\n"
     "in float y;\n"
     "in float z;\n"
@@ -35,7 +37,7 @@ Protean3D::Plot3D::Plot3D()
     "\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = project * modelview * vec4(x, y, z, 1.0);\n"
+    "   gl_Position = proj_matrix * mv_matrix * vec4(x, y, z, 1.0);\n"
     "   vcolor = vec4(y, y, y, 1.0);\n"
     "}\n";
 
@@ -52,7 +54,7 @@ Protean3D::Plot3D::Plot3D()
     "    gl_FragColor = vcolor; \n"
     "}\n";
 
-  view_angle = 70.0f * Protean3D::PI / 180;
+  view_angle = 65.0f * Protean3D::PI / 180;
   aspect_ratio = 4.0f / 3.0f;
   z_near = 1.0f;
   z_far = 100.f;
@@ -80,28 +82,13 @@ Protean3D::Plot3D::~Plot3D()
 
 void Protean3D::Plot3D::initMatrices()
 {
-  /* Compute the projection matrix */
-  float f = 1.0f / tanf(view_angle / 2.0f);
-  projection_matrix_[0][0] = f / aspect_ratio;
-  projection_matrix_[1][1] = f;
-  projection_matrix_[2][2] = (z_far + z_near) / (z_near - z_far);
-  projection_matrix_[2][3] = 2.0f * (z_far * z_near) / (z_near - z_far);
-  projection_matrix_[3][2] = -1.0f;
+  projection_matrix_ = glm::perspective(view_angle, aspect_ratio, z_near, z_far);
+  modelview_matrix_ = glm::rotate(modelview_matrix_, glm::radians(-70.0f), glm::vec3(1, 0, 0));
 
   /* Set the camera position */
   modelview_matrix_[3][0] = -5.0f;
   modelview_matrix_[3][1] = -4.0f;
-  modelview_matrix_[3][2] = -3.0f;
-
-  modelview_matrix_[0][0] = 1;
-  modelview_matrix_[0][1] = 0;
-  modelview_matrix_[0][2] = 0;
-  modelview_matrix_[1][0] = 0;
-  modelview_matrix_[1][1] = cosf(view_angle);
-  modelview_matrix_[1][2] = -sinf(view_angle);
-  modelview_matrix_[2][0] = 0;
-  modelview_matrix_[2][1] = sinf(view_angle);
-  modelview_matrix_[2][2] = cosf(view_angle);
+  modelview_matrix_[3][2] = -7.0f;
 
 }
 
@@ -160,8 +147,8 @@ bool Protean3D::Plot3D::addPositionData(std::array<std::vector<float>, 3> const&
 
   glUseProgram(shader_.programId());
 
-  shader_.setUniformMatrix(projection_matrix_, "project");
-  shader_.setUniformMatrix(modelview_matrix_, "modelview");
+  shader_.setUniformMatrix(projection_matrix_, "proj_matrix");
+  shader_.setUniformMatrix(modelview_matrix_, "mv_matrix");
 
   return true;
 }

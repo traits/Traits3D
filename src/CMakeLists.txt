@@ -1,5 +1,6 @@
 add_definitions(-DPROTEAN3D_DLL -DPROTEAN3D_MAKEDLL)
 add_definitions(-DPROTEAN3D_GL_IS_${PROTEAN3D_GL_VARIANT})
+add_definitions(-DGLM_FORCE_RADIANS)
 
 find_package(OpenGL REQUIRED)
 list(APPEND ALL_LIBS ${OPENGL_LIBRARY})
