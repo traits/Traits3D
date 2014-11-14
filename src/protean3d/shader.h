@@ -29,6 +29,9 @@ namespace Protean3D
       //! For initialized()==true, the function returns a valid shader program id
       GLuint programId() const { return program_id_; }
 
+      //! calls glUseProgram for valid shader
+      bool use();
+      
       bool setUniformMatrix(glm::mat4 const& mat, std::string const& name);
 
     private:  
@@ -36,7 +39,6 @@ namespace Protean3D
       bool load(std::string& result, std::string const& path);
       bool compile(GLuint shader_id, std::string const& shader_code);
       bool link(GLuint vertex_shader_id, GLuint fragment_shader_id);
-
       GLuint program_id_;
     };
   } // ns

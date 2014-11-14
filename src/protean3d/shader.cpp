@@ -150,3 +150,10 @@ bool Protean3D::GL::Shader::setUniformMatrix(glm::mat4 const& mat, std::string c
   return true;
 }
 
+bool Protean3D::GL::Shader::use()
+{
+  if (initialized_)
+    glUseProgram(program_id_);
+
+  return initialized_;
+}

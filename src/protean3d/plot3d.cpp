@@ -22,37 +22,8 @@ Protean3D::Plot3D::Plot3D()
   );
 
 //todo color
-  vertex_shader_src_ =
-#ifdef GL_ES_VERSION_2_0
-    "#version 100\n"
-#else
-    "#version 150\n"
-#endif
-    "uniform mat4 proj_matrix;\n"
-    "uniform mat4 mv_matrix;\n"
-    "in float x;\n"
-    "in float y;\n"
-    "in float z;\n"
-    "out vec4 vcolor;\n"
-    "\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = proj_matrix * mv_matrix * vec4(x, y, z, 1.0);\n"
-    "   vcolor = vec4(y, y, y, 1.0);\n"
-    "}\n";
-
-  fragment_shader_src_ =
-#ifdef GL_ES_VERSION_2_0
-    "#version 100\n"
-#else
-    "#version 150\n"
-#endif
-    "in vec4 vcolor; \n"
-    "out vec4 gl_FragColor;\n"
-    "void main()\n"
-    "{\n"
-    "    gl_FragColor = vcolor; \n"
-    "}\n";
+  vertex_shader_src_ = shader_mill_.vertexCode();
+  fragment_shader_src_ = shader_mill_.fragmentCode();
 
   view_angle = 65.0f * Protean3D::PI / 180;
   aspect_ratio = 4.0f / 3.0f;
@@ -134,6 +105,8 @@ bool Protean3D::Plot3D::addPositionData(std::array<std::vector<float>, 3> const&
   std::vector<GLuint> indexes;
   if (im.create(indexes, xsize, ysize, GL_LINE_STRIP))
     vao_.appendIBO(indexes);
+  //if (im.create(indexes, xsize, ysize, GL_TRIANGLE_STRIP))
+  //  vao_.appendIBO(indexes);
 
   GL::VBO::PrimitiveLayout datalayout;
   datalayout.components = 1;
@@ -145,10 +118,9 @@ bool Protean3D::Plot3D::addPositionData(std::array<std::vector<float>, 3> const&
   vao_.appendVBO(data[1], datalayout, shader_.programId(), "y", ydrawtype);
   vao_.appendVBO(data[2], datalayout, shader_.programId(), "z", zdrawtype);
 
-  glUseProgram(shader_.programId());
-
-  shader_.setUniformMatrix(projection_matrix_, "proj_matrix");
-  shader_.setUniformMatrix(modelview_matrix_, "mv_matrix");
+  shader_.use();
+  shader_.setUniformMatrix(projection_matrix_, shader_mill_.proj_matrix);
+  shader_.setUniformMatrix(modelview_matrix_, shader_mill_.mv_matrix);
 
   return true;
 }
