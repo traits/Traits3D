@@ -13,14 +13,14 @@ Protean3D::GL::VAO::~VAO()
     glDeleteVertexArrays(1, &idx_);
 }
 
-size_t Protean3D::GL::VAO::appendIBO(std::vector<GLuint> const& data, GLenum draw_type /*= GL_STATIC_DRAW*/)
+bool Protean3D::GL::VAO::appendIBO(std::vector<GLuint> const& data, GLenum draw_type /*= GL_STATIC_DRAW*/)
 {
   //static_assert(std::is_same<PRIMITIVE, GLfloat>::value, "Incorrect buffer type!");
   IBO buffer;
-  if (buffer.create(data, draw_type))
+  if (buffer.bindData(data, draw_type))
   {
     ibos_.push_back(buffer);
-    return ibos_.size()-1;
+    return true;
   }
-  return std::numeric_limits<size_t>::max();
+  return false;
 }

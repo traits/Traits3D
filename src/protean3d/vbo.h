@@ -25,66 +25,46 @@ namespace Protean3D
         size_t offset; // offset in byte 
       };
 
-      VBO() : id_(0), draw_type_(GL_STATIC_DRAW), bsize_(0) {}
+      explicit VBO(PrimitiveLayout const& descr);
       virtual ~VBO() = default;
       GLuint id() const { return id_; } //!< VBO index
 
-      bool create(PrimitiveLayout const& descr, GLuint program, const char* attr_name, GLenum drawtype = GL_STATIC_DRAW);
-
       template <typename PRIMITIVE>
-      bool update(std::vector<PRIMITIVE> const& data);
+      bool bindData(std::vector<PRIMITIVE> const& data, GLenum drawtype);
 
+      bool bindShader(GLenum program_id, std::string attr_name);
       
     private:
       GLuint id_;
-      GLenum draw_type_;
       PrimitiveLayout description_;
       size_t bsize_; //buffer size in byte
       GLuint program_;
       std::string attr_name_;
+    
     };
 
     template <typename PRIMITIVE>
-    bool Protean3D::GL::VBO::update(std::vector<PRIMITIVE> const& data)
+    bool Protean3D::GL::VBO::bindData(std::vector<PRIMITIVE> const& data, GLenum drawtype)
     {
       glBindBuffer(GL_ARRAY_BUFFER, id_);
 
-      size_t bsize = sizeof(PRIMITIVE) * data.size();
-
-      if (!bsize_ || bsize_ != bsize)
-        glBufferData(GL_ARRAY_BUFFER, bsize, bsize ? &data[0] : nullptr, draw_type_);
-      else
-        glBufferSubData(GL_ARRAY_BUFFER, 0, bsize, bsize ? &data[0] : nullptr);
-
-      GLenum err = glGetError();
-      switch (err)
-      {
-      case GL_INVALID_ENUM:
-      case GL_INVALID_OPERATION:
-      case GL_OUT_OF_MEMORY:
-        return false;
-      default:
-        bsize_ = bsize;
-        break;
-      }
-
-      GLuint attrloc = glGetAttribLocation(program_, attr_name_.c_str());
-      err = glGetError();
-      if (attr_name_.empty() || GL_INVALID_OPERATION == err)
-        return false;
-
-      char* ptr = nullptr;
-      ptr += description_.offset;
-      glVertexAttribPointer(attrloc, description_.components, description_.type, GL_FALSE, description_.stride, ptr);
-      err = glGetError();
-      if (GL_NO_ERROR != err)
-        return false;
-
-      glEnableVertexAttribArray(attrloc);
+      GLint oldtype;
+      glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_USAGE, &oldtype);
       if (GL_NO_ERROR != glGetError())
         return false;
 
+      size_t bsize = sizeof(PRIMITIVE) * data.size();
+      if (!bsize_ || bsize_ != bsize || static_cast<GLenum>(oldtype) != drawtype)
+        glBufferData(GL_ARRAY_BUFFER, bsize, bsize ? &data[0] : nullptr, drawtype);
+      else
+        glBufferSubData(GL_ARRAY_BUFFER, 0, bsize, bsize ? &data[0] : nullptr);
+
+      if (GL_NO_ERROR != glGetError())
+        return false;
+
+      bsize_ = bsize;
       return true;
     }
   } // ns
 } // ns
+

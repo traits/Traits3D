@@ -97,29 +97,29 @@ bool Protean3D::GL::Shader::create(std::string const& vertex_code, std::string c
   return true;
 }
 
-bool Protean3D::GL::Shader::create()
-{
-  const char* vsrc =
-    "attribute highp vec4 vertex;\n"
-    "attribute mediump vec4 texCoord;\n"
-    "varying mediump vec4 texc;\n"
-    "uniform mediump mat4 matrix;\n"
-    "void main(void)\n"
-    "{\n"
-    "    gl_Position = matrix * vertex;\n"
-    "    texc = texCoord;\n"
-    "}\n";
-
-  const char* fsrc =
-    "uniform sampler2D texture;\n"
-    "varying mediump vec4 texc;\n"
-    "void main(void)\n"
-    "{\n"
-    "    gl_FragColor = texture2D(texture, texc.st);\n"
-    "}\n";
-
-  return  create(vsrc, fsrc);
-}
+//bool Protean3D::GL::Shader::create()
+//{
+//  const char* vsrc =
+//    "attribute highp vec4 vertex;\n"
+//    "attribute mediump vec4 texCoord;\n"
+//    "varying mediump vec4 texc;\n"
+//    "uniform mediump mat4 matrix;\n"
+//    "void main(void)\n"
+//    "{\n"
+//    "    gl_Position = matrix * vertex;\n"
+//    "    texc = texCoord;\n"
+//    "}\n";
+//
+//  const char* fsrc =
+//    "uniform sampler2D texture;\n"
+//    "varying mediump vec4 texc;\n"
+//    "void main(void)\n"
+//    "{\n"
+//    "    gl_FragColor = texture2D(texture, texc.st);\n"
+//    "}\n";
+//
+//  return  create(vsrc, fsrc);
+//}
 
 bool Protean3D::GL::Shader::createFromFile(std::string const& vertex_file_path, std::string const& fragment_file_path)
 {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include "glhelper.h"
 #include "types.h"
 
@@ -14,8 +15,8 @@ namespace Protean3D
     public:
       Shader();
 
-      //! Create complete shader program with standard shaders
-      bool create();
+      ////! Create complete shader program with standard shaders
+      //bool create();
 
       //! Create complete shader program from string
       bool create(std::string const& vertex_code, std::string const& fragment_code);
@@ -32,6 +33,7 @@ namespace Protean3D
       //! calls glUseProgram for valid shader
       bool use();
       
+      // have to call use() before
       bool setUniformMatrix(glm::mat4 const& mat, std::string const& name);
       bool setUniformVec4(glm::vec4 const& vec, std::string const& name);
 
@@ -40,6 +42,7 @@ namespace Protean3D
       bool load(std::string& result, std::string const& path);
       bool compile(GLuint shader_id, std::string const& shader_code);
       bool link(GLuint vertex_shader_id, GLuint fragment_shader_id);
+      
       GLuint program_id_;
     };
   } // ns

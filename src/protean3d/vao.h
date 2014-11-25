@@ -23,10 +23,10 @@ namespace Protean3D
 
       //! Returns index of new element or std::numeric_limits<size_t>::max() in case of errors
       template<typename PRIMITIVE>
-      size_t appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr, GLuint program, const char* attr_name, GLenum draw_type = GL_STATIC_DRAW);
+      bool appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr, GLuint program, const char* attr_name, GLenum draw_type = GL_STATIC_DRAW);
 
       //! Returns index of new element or std::numeric_limits<size_t>::max() in case of errors
-      size_t appendIBO(std::vector<GLuint> const& data, GLenum draw_type = GL_STATIC_DRAW);
+      bool appendIBO(std::vector<GLuint> const& data, GLenum draw_type = GL_STATIC_DRAW);
 
       template<typename PRIMITIVE>
       bool updateVBO(size_t idx, std::vector<PRIMITIVE> const& data);
@@ -45,20 +45,16 @@ namespace Protean3D
     // implementation
 
     template<typename PRIMITIVE>
-    size_t Protean3D::GL::VAO::appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr
+    bool Protean3D::GL::VAO::appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr
       ,GLuint program, const char* attr_name, GLenum draw_type /*= GL_STATIC_DRAW*/)
     {
       //static_assert(std::is_same<PRIMITIVE, GLfloat>::value, "Incorrect buffer type!");
-      VBO buffer;
-      if (buffer.create(descr, program, attr_name, draw_type ))
-      {
-        if (!data.empty() && !buffer.update(data))
-          return std::numeric_limits<size_t>::max();
+      VBO buffer(descr);
+      if (data.empty() || !buffer.bindData(data, draw_type) || !buffer.bindShader(program, attr_name))
+        return false;
 
-        vbos_.push_back(buffer);
-        return vbos_.size()-1;
-      }
-      return std::numeric_limits<size_t>::max();
+      vbos_.push_back(buffer);
+      return true;
     }
 
     template<typename PRIMITIVE>
@@ -67,7 +63,12 @@ namespace Protean3D
       if (idx >= vboCount())
         return false;
 
-      return vbos_[idx].update(data);
+      GLint oldtype;
+      glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_USAGE, &oldtype);
+      if (GL_NO_ERROR != glGetError())
+        return false;
+
+      return vbos_[idx].bindData(data, static_cast<GLenum>(oldtype));
     }
 
   } // ns

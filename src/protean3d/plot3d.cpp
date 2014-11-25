@@ -6,7 +6,7 @@
 
 Protean3D::Plot3D::Plot3D()
 {
-  view_angle = 65.0f * Protean3D::PI / 180;
+  view_angle = 65.0f * static_cast<GLfloat>(Protean3D::PI) / 180;
   aspect_ratio = 4.0f / 3.0f;
   z_near = 1.0f;
   z_far = 100.f;
@@ -57,12 +57,8 @@ bool Protean3D::Plot3D::addPositionData(std::array<std::vector<float>, 3> const&
   //if (im.create(indexes, xsize, ysize, GL_TRIANGLE_STRIP))
   //  vao_.appendIBO(indexes);
 
-  GL::VBO::PrimitiveLayout datalayout;
-  datalayout.components = 1;
-  datalayout.type = GL_FLOAT;
-  datalayout.stride = 0;
-  datalayout.offset = 0;
-
+  GL::VBO::PrimitiveLayout datalayout(1, GL_FLOAT, 0, 0);
+  
   vao_.appendVBO(data[0], datalayout, shader_.programId(), "x", xdrawtype);
   vao_.appendVBO(data[1], datalayout, shader_.programId(), "y", ydrawtype);
   vao_.appendVBO(data[2], datalayout, shader_.programId(), "z", zdrawtype);

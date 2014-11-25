@@ -11,8 +11,8 @@ namespace Protean3D
     class PROTEAN3D_EXPORT DataShader
     {
     public:
-      VAO vao;
-      Shader shader;
+      std::vector<VAO> vaos;
+      std::vector<Shader> shaders;
 
     private:
     };
