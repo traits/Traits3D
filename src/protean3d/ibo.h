@@ -10,19 +10,21 @@ namespace Protean3D
   namespace GL
   {
     //! Index Buffer Objects
-    class PROTEAN3D_EXPORT IBO
+    class IBO
     {
     public:
       IBO();
       virtual ~IBO() = default;
       GLuint id() const { return id_; } //!< IBO index
       size_t size() const { return size_; } //! buffer size in sizeof(GLuint)
-
-      bool bindData(std::vector<GLuint> const &data, GLenum drawtype);
+      
+      bool create(size_t xsize, size_t ysize, GLenum primitive_type);
+      bool bindData(GLenum drawtype);
 
     private:
       GLuint id_;
       size_t size_; //buffer size
+      std::vector<GLuint> indexes_;
     };
   } // ns
 } // ns

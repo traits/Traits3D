@@ -1,6 +1,5 @@
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "indexmaker.h"
 #include "plot3d.h"
 
 
@@ -50,12 +49,11 @@ bool Protean3D::Plot3D::addPositionData(std::array<std::vector<float>, 3> const&
   if (xsize*ysize != data[0].size())
     return false;
 
-  GL::IndexMaker im;
-  std::vector<GLuint> indexes;
-  if (im.create(indexes, xsize, ysize, GL_LINE_STRIP))
-    vao_.appendIBO(indexes);
-  //if (im.create(indexes, xsize, ysize, GL_TRIANGLE_STRIP))
-  //  vao_.appendIBO(indexes);
+  if (!vao_.appendIBO(xsize, ysize, GL_LINE_STRIP))
+    return false;
+
+  if (!vao_.bindIBO(0, GL_STATIC_DRAW))
+    return false;
 
   GL::VBO::PrimitiveLayout datalayout(1, GL_FLOAT, 0, 0);
   
@@ -79,8 +77,8 @@ void Protean3D::Plot3D::draw()
 
   glEnable(GL_PRIMITIVE_RESTART);
   glPrimitiveRestartIndex(std::numeric_limits<GLuint>::max()); //todo not available in OpenGL ES!
-  //glDrawElements(vao_.iboSize(0), GL_UNSIGNED_INT, 0); //todo ibo indexing
   glDrawElements(GL_LINE_STRIP, vao_.iboSize(0), GL_UNSIGNED_INT, 0); //todo ibo indexing
+  //glDrawElements(GL_TRIANGLE_STRIP, vao_.iboSize(0), GL_UNSIGNED_INT, 0); //todo ibo indexing
   glDisable(GL_PRIMITIVE_RESTART);
   this->updateAfter();
 }

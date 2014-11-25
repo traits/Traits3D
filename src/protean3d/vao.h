@@ -12,7 +12,7 @@ namespace Protean3D
   namespace GL
   {
     //! Unifies buffer handling the VAO way
-    class PROTEAN3D_EXPORT VAO
+    class VAO
     {
     public:
       VAO();
@@ -21,20 +21,21 @@ namespace Protean3D
       void bind() { glBindVertexArray(idx_); }
       void unbind() { glBindVertexArray(0); }
 
-      //! Returns index of new element or std::numeric_limits<size_t>::max() in case of errors
       template<typename PRIMITIVE>
       bool appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr, GLuint program, const char* attr_name, GLenum draw_type = GL_STATIC_DRAW);
 
-      //! Returns index of new element or std::numeric_limits<size_t>::max() in case of errors
-      bool appendIBO(std::vector<GLuint> const& data, GLenum draw_type = GL_STATIC_DRAW);
+      bool appendIBO(size_t xsize, size_t ysize, GLenum primitive_type);
 
       template<typename PRIMITIVE>
       bool updateVBO(size_t idx, std::vector<PRIMITIVE> const& data);
+      
+      bool bindIBO(size_t idx, GLenum draw_type = GL_STATIC_DRAW);
+      
       size_t iboSize(short index) const { return (index < iboCount()) ? ibos_[index].size() : 0; }
 
       size_t vboCount() const { return vbos_.size(); }
       size_t iboCount() const { return ibos_.size(); }
-
+    
     private:
       GLuint idx_;
 

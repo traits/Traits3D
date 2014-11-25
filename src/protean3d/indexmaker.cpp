@@ -1,6 +1,14 @@
 #include "indexmaker.h"
 
-bool Protean3D::GL::IndexMaker::create(std::vector<GLuint>& result, GLuint xsize, GLuint ysize, GLenum drawType)
+
+Protean3D::GL::IndexMaker::IndexMaker()
+  :flag_(Flag::Normal)
+{
+}
+
+
+bool Protean3D::GL::IndexMaker::create(std::vector<GLuint>& result, GLuint xsize, GLuint ysize, 
+  GLenum drawType)
 {
   if (2 > xsize || 2 > ysize /*|| xsize * ysize > ( (GLushort)-1)*/) // path. cases
   {
@@ -11,8 +19,10 @@ bool Protean3D::GL::IndexMaker::create(std::vector<GLuint>& result, GLuint xsize
   switch (drawType)
   {
   case GL_LINE_STRIP:
+    flag_ = Flag::PrimitiveRestart;
     return createLineStrips(result, xsize, ysize);
   case GL_TRIANGLE_STRIP:
+    flag_ = Flag::Normal;
     return createTriangleStrips(result, xsize, ysize);
   default:
     return false;

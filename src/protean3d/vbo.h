@@ -10,7 +10,7 @@ namespace Protean3D
   namespace GL
   {
     //! Vertex Buffer Objects
-    class PROTEAN3D_EXPORT VBO
+    class VBO
     {
     public:
       class PrimitiveLayout

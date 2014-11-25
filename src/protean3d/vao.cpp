@@ -13,14 +13,19 @@ Protean3D::GL::VAO::~VAO()
     glDeleteVertexArrays(1, &idx_);
 }
 
-bool Protean3D::GL::VAO::appendIBO(std::vector<GLuint> const& data, GLenum draw_type /*= GL_STATIC_DRAW*/)
+bool Protean3D::GL::VAO::appendIBO(size_t xsize, size_t ysize, GLenum primitive_type)
 {
   //static_assert(std::is_same<PRIMITIVE, GLfloat>::value, "Incorrect buffer type!");
   IBO buffer;
-  if (buffer.bindData(data, draw_type))
+  if (buffer.create(xsize, ysize, primitive_type))
   {
     ibos_.push_back(buffer);
     return true;
   }
   return false;
+}
+
+bool Protean3D::GL::VAO::bindIBO(size_t idx, GLenum draw_type /*= GL_STATIC_DRAW*/)
+{
+  return (idx < ibos_.size() && ibos_[idx].bindData(draw_type));
 }
