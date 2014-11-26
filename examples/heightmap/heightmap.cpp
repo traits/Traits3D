@@ -21,11 +21,26 @@ HeightMap::HeightMap()
 
 bool HeightMap::loadData()
 {
-  return addPositionData(map_vertices, MAP_NUM_VERTICES_X, MAP_NUM_VERTICES_Y,
-    GL_STATIC_DRAW, GL_STATIC_DRAW, GL_DYNAMIC_DRAW);
+  if (!addPositionData(map_vertices, MAP_NUM_VERTICES_X, MAP_NUM_VERTICES_Y,
+    GL_STATIC_DRAW, GL_STATIC_DRAW, GL_DYNAMIC_DRAW))
+    return false;
+
+  size_t size = map_vertices[0].size();
+  float fsize = size;
+  std::vector<glm::vec4> colors(size);
+  for (auto i = 0; i != size; ++i)
+  {
+    glm::vec4& elem = colors[i];
+    elem[0] = i / fsize;
+    elem[1] = i / fsize / 4;
+    elem[2] = 1 - i / fsize;
+    elem[3] = 1.0f;
+  }
+
+  return addColorData(colors);
 }
 
-bool HeightMap::updateAfter()
+bool HeightMap::setData()
 {
   update_map(1);
 

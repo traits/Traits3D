@@ -42,6 +42,7 @@ Protean3D::GL::ShaderMill::ShaderMill()
     + "out vec4 gl_FragColor;\n"
     + main_begin_
     + "  gl_FragColor = v_out_color; \n"
+    //+ "  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); \n"
     + main_end_;
 }
 

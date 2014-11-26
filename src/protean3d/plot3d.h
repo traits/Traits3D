@@ -24,7 +24,7 @@ namespace Protean3D
 
 
     void draw();
-    virtual bool updateAfter(){ return true; }
+    virtual bool setData(){ return true; }
 
     bool addPositionData(std::vector<glm::vec3> const& data, GLenum drawmode);
 
@@ -37,13 +37,13 @@ namespace Protean3D
     // index in [0..2] and only for 2nd variant of addPositionData
     bool updatePositionData(short index, std::vector<float> const& data);
 
-    bool addColorData(std::vector<glm::vec3> const& data);
-    
+    bool addColorData(std::vector<glm::vec4> const& data);
+
   private:
     Protean3D::GL::ShaderMill shader_mill_;
     Box hull_;
     CoordinateSystem coordinate_system_;
-    GL::Shader shader_;
+    std::vector<GL::Shader> shader_;
     GL::VAO vao_;
 
     glm::mat4 projection_matrix_;
@@ -58,5 +58,7 @@ namespace Protean3D
     GLfloat aspect_ratio;
     GLfloat z_near;
     GLfloat z_far;
+
+    bool initShader();
   };
 } // ns

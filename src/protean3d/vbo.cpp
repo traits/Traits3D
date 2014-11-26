@@ -8,21 +8,21 @@ Protean3D::GL::VBO::VBO(PrimitiveLayout const& descr)
     throw std::domain_error("Protean3D: VBO construction error");
 }
 
-bool Protean3D::GL::VBO::bindShader(GLenum program_id, std::string attr_name)
+bool Protean3D::GL::VBO::bindShader(GLuint program_id, std::string attr_name)
 {
   if (attr_name.empty())
     return false;
 
+  glBindBuffer(GL_ARRAY_BUFFER, id_);
+
   GLuint attrloc = glGetAttribLocation(program_id, attr_name.c_str());
-  GLenum err = glGetError();
-  if (GL_INVALID_OPERATION == err)
+  if (GL_NO_ERROR != glGetError())
     return false;
 
   char* ptr = nullptr;
   ptr += description_.offset;
   glVertexAttribPointer(attrloc, description_.components, description_.type, GL_FALSE, description_.stride, ptr);
-  err = glGetError();
-  if (GL_NO_ERROR != err)
+  if (GL_NO_ERROR != glGetError())
     return false;
 
   glEnableVertexAttribArray(attrloc);

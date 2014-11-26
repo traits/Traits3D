@@ -69,33 +69,33 @@ bool Protean3D::GL::IndexMaker::createTriangleStrips(std::vector<GLuint>& result
 {
   typedef GLuint T;
 
-  // a single stripe needs 2*ysize describing indexes
-  const T stripesize = 2 * ysize;
+  // a single stripe needs 2*xsize describing indexes
+  const T stripesize = 2 * xsize;
 
   // All but the last stripe need degenerate triangles 
   // to connect them to the next stripe
   const T degindexes = 2;
 
-  T size = (xsize - 1) * stripesize + (xsize - 2) * degindexes;
+  T size = (ysize - 1) * stripesize + (ysize - 2) * degindexes;
 
   result.resize(size);
 
   T colidx = 0;
-  for (T x = 0; x != xsize; ++x)
+  for (T y = 0; y != ysize; ++y)
   {
-    colidx = x*(stripesize + degindexes);
-    for (T y = 0; y != ysize; ++y)
+    colidx = y*(stripesize + degindexes);
+    for (T x = 0; x != xsize; ++x)
     {
-      result[colidx + 2 * y] = (x + 1) * ysize + y;
-      result[colidx + 2 * y + 1] = x * ysize + y;
+      result[colidx + 2 * x] = (y + 1) * xsize + x;
+      result[colidx + 2 * x + 1] = y * xsize + x;
     }
 
-    if (x == xsize - 2)
+    if (y == ysize - 2)
       break;
 
     // degenerated triangles 
-    result[colidx + stripesize] = (x + 1) * ysize - 1;
-    result[colidx + stripesize + 1] = (x + 2) * ysize;
+    result[colidx + stripesize] = (y + 1) * xsize - 1;
+    result[colidx + stripesize + 1] = (y + 2) * xsize;
   }
   return true;
 }
