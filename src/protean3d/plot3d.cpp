@@ -105,7 +105,9 @@ bool Protean3D::Plot3D::addColorData(std::vector<glm::vec4> const& data)
 {
   vao_.bind();
   GL::VBO::PrimitiveLayout datalayout(4, GL_FLOAT, 0, 0);
-  return vao_.appendVBO(data, datalayout, GL_STATIC_DRAW);
+  if (!vao_.appendVBO(data, datalayout, GL_STATIC_DRAW))
+    return false;
+  return vao_.bindShader(3, shader_[1].programId(), GL::ShaderMill::v_in_color.c_str());
 }
 
 bool Protean3D::Plot3D::updatePositionData(short index, std::vector<float> const& data)
@@ -125,7 +127,7 @@ void Protean3D::Plot3D::draw()
 
   vao_.bindIBO(1, GL_STATIC_DRAW);
   shader_[1].use();
-  shader_[1].setUniformMatrix(modelview_matrix_, GL::ShaderMill::mv_matrix);
+  //shader_[1].setUniformMatrix(modelview_matrix_, GL::ShaderMill::mv_matrix);
   glDrawElements(GL_TRIANGLE_STRIP, vao_.iboSize(1), GL_UNSIGNED_INT, 0); //todo ibo indexing
 
 
