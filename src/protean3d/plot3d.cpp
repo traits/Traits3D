@@ -125,21 +125,13 @@ void Protean3D::Plot3D::draw()
   modelview_matrix_ = glm::translate(modelview_matrix_, glm::vec3(shift, shift, 0));
   modelview_matrix_ = glm::rotate(modelview_matrix_, glm::radians(1.0f), glm::vec3(0, 0, 1));
 
-  vao_.bindIBO(1, GL_STATIC_DRAW);
   shader_[1].use();
   //shader_[1].setUniformMatrix(modelview_matrix_, GL::ShaderMill::mv_matrix);
-  glDrawElements(GL_TRIANGLE_STRIP, vao_.iboSize(1), GL_UNSIGNED_INT, 0); //todo ibo indexing
+  vao_.drawIBO(1, GL_STATIC_DRAW);
 
-
-  vao_.bindIBO(0, GL_STATIC_DRAW);
   shader_[0].use();
   shader_[0].setUniformMatrix(modelview_matrix_, GL::ShaderMill::mv_matrix);
-
-  glEnable(GL_PRIMITIVE_RESTART);
-  glPrimitiveRestartIndex(std::numeric_limits<GLuint>::max()); //todo not available in OpenGL ES!
-  glDrawElements(GL_LINE_STRIP, vao_.iboSize(0), GL_UNSIGNED_INT, 0); //todo ibo indexing
-  //glDrawElements(GL_TRIANGLE_STRIP, vao_.iboSize(0), GL_UNSIGNED_INT, 0); //todo ibo indexing
-  glDisable(GL_PRIMITIVE_RESTART);
+  vao_.drawIBO(0, GL_STATIC_DRAW);
 
   modelview_matrix_ = glm::translate(modelview_matrix_, glm::vec3(-shift, -shift, 0));
 }

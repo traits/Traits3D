@@ -13,19 +13,17 @@ namespace GL
   public:
     IndexMaker();
 
-    enum class Flag
+    enum class RestartType
     {
-      Normal,
+      DegeneratedElements,
       PrimitiveRestart
     };
 
-    bool create(std::vector<GLuint>& result, GLuint xsize, GLuint ysize, GLenum drawType);
-    Flag flag() const { return flag_; }
+    bool create(std::vector<GLuint>& result, RestartType& restart_type, GLuint xsize, GLuint ysize, GLenum drawType);
 
   private:
     bool createLineStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize);
     bool createTriangleStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize);
-    Flag flag_;
   };
 
 }

@@ -25,12 +25,12 @@ bool Protean3D::GL::VAO::appendIBO(size_t xsize, size_t ysize, GLenum primitive_
   return false;
 }
 
-bool Protean3D::GL::VAO::bindIBO(size_t idx, GLenum draw_type /*= GL_STATIC_DRAW*/)
-{
-  return (idx < ibos_.size() && ibos_[idx].bindData(draw_type));
-}
-
 bool Protean3D::GL::VAO::bindShader(size_t idx, GLuint program, const char* attr_name)
 {
   return (idx < vbos_.size() && vbos_[idx].bindShader(program, attr_name));
+}
+
+bool Protean3D::GL::VAO::drawIBO(size_t idx, GLenum draw_type)
+{
+  return (idx < ibos_.size() && ibos_[idx].bindData(draw_type) && ibos_[idx].draw());
 }

@@ -23,20 +23,17 @@ namespace Protean3D
 
       template<typename PRIMITIVE>
       bool appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr, GLenum draw_type = GL_STATIC_DRAW);
-
       bool appendIBO(size_t xsize, size_t ysize, GLenum primitive_type);
 
       template<typename PRIMITIVE>
       bool updateVBO(size_t idx, std::vector<PRIMITIVE> const& data);
       
-      bool bindIBO(size_t idx, GLenum draw_type = GL_STATIC_DRAW);
       bool bindShader(size_t idx, GLuint program, const char* attr_name);
-
-      size_t iboSize(short index) const { return (index < iboCount()) ? ibos_[index].size() : 0; }
-
+      size_t iboSize(size_t index) const { return (index < iboCount()) ? ibos_[index].size() : 0; }
       size_t vboCount() const { return vbos_.size(); }
       size_t iboCount() const { return ibos_.size(); }
-    
+      bool drawIBO(size_t idx, GLenum draw_type);
+
     private:
       GLuint idx_;
 
