@@ -29,7 +29,6 @@ namespace Protean3D
       bool updateVBO(size_t idx, std::vector<PRIMITIVE> const& data);
       
       bool bindShader(size_t idx, GLuint program, const char* attr_name);
-      size_t iboSize(size_t index) const { return (index < iboCount()) ? ibos_[index].size() : 0; }
       size_t vboCount() const { return vbos_.size(); }
       size_t iboCount() const { return ibos_.size(); }
       bool drawIBO(size_t idx, GLenum draw_type);
