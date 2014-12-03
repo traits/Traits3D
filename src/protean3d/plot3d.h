@@ -26,17 +26,10 @@ namespace Protean3D
     void draw();
     virtual bool setData(){ return true; }
 
-    bool addPositionData(std::vector<glm::vec3> const& data, GLenum drawmode);
+    bool addPositionData(std::vector<glm::vec3> const& data,
+      size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
 
-    bool addPositionData(std::array<std::vector<float>, 3> const& data, 
-      size_t xsize, size_t ysize,
-      GLenum xdrawtype = GL_STATIC_DRAW,
-      GLenum ydrawtype = GL_STATIC_DRAW,
-      GLenum zdrawtype = GL_STATIC_DRAW);
-
-    // index in [0..2] and only for 2nd variant of addPositionData
-    bool updatePositionData(short index, std::vector<float> const& data);
-
+    bool updatePositionData(std::vector<glm::vec3> const& data);
     bool addColorData(std::vector<glm::vec4> const& data);
 
   private:

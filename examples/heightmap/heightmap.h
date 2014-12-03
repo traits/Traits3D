@@ -11,7 +11,7 @@ public:
 
 private:
   std::vector<GLuint> map_line_indices;
-  std::array<std::vector<GLfloat>, 3> map_vertices;
+  std::vector<glm::vec3> map_vertices;
 
   void init_map();
 

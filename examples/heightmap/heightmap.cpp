@@ -13,19 +13,17 @@
 
 HeightMap::HeightMap()
 {
-  for (auto i = 0; i != 3; ++i)
-    map_vertices[i].resize(MAP_NUM_TOTAL_VERTICES);
+  map_vertices.resize(MAP_NUM_TOTAL_VERTICES);
 
   init_map();
 }
 
 bool HeightMap::loadData()
 {
-  if (!addPositionData(map_vertices, MAP_NUM_VERTICES_X, MAP_NUM_VERTICES_Y,
-    GL_STATIC_DRAW, GL_STATIC_DRAW, GL_DYNAMIC_DRAW))
+  if (!addPositionData(map_vertices, MAP_NUM_VERTICES_X, MAP_NUM_VERTICES_Y, GL_DYNAMIC_DRAW))
     return false;
 
-  size_t size = map_vertices[0].size();
+  size_t size = map_vertices.size();
   float fsize = size;
   std::vector<glm::vec4> colors(size);
   for (auto i = 0; i != size; ++i)
@@ -44,7 +42,7 @@ bool HeightMap::setData()
 {
   update_map(1);
 
-  return updatePositionData(2, map_vertices[2]);
+  return updatePositionData(map_vertices);
 }
 
 
@@ -61,9 +59,9 @@ void HeightMap::init_map()
   {
     for (auto xx = 0; xx < MAP_NUM_VERTICES_X; ++xx)
     {
-      map_vertices[0][k] = x;
-      map_vertices[1][k] = y;
-      map_vertices[2][k] = 0.0f;
+      map_vertices[k].x = x;
+      map_vertices[k].y = y;
+      map_vertices[k].z = 0.0f;
       x += step;
       ++k;
     }
@@ -106,14 +104,14 @@ void HeightMap::update_map(size_t num_iter)
     disp = disp / 2.0f;
     for (auto i = 0; i < MAP_NUM_TOTAL_VERTICES; ++i)
     {
-      GLfloat dx = center_x - map_vertices[0][i];
-      GLfloat dy = center_y - map_vertices[1][i];
+      GLfloat dx = center_x - map_vertices[i].x;
+      GLfloat dy = center_y - map_vertices[i].y;
       GLfloat pd = (2.0f * sqrtf((dx * dx) + (dy * dy))) / circle_size;
       //if (fabs(pd) <= 1.0f)
       {
         /* tx,ty is within the circle */
         GLfloat new_height = disp + (float)(cos(pd*3.14f)*disp);
-        map_vertices[2][i] = new_height;
+        map_vertices[i].z = new_height;
       }
     }
     --num_iter;

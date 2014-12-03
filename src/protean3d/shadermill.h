@@ -20,6 +20,8 @@ namespace Protean3D
       static const std::string proj_matrix;
       static const std::string mv_matrix;
       static const std::string v_in_color;
+      static const std::string v_coordinates;
+      static const std::string v_normals;
 
       ShaderMill();
       std::string vertexCode(VertexShaderCategory val) const;

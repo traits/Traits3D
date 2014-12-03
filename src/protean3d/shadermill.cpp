@@ -11,6 +11,8 @@ const std::string Protean3D::GL::ShaderMill::os_switch_ =
 const std::string Protean3D::GL::ShaderMill::proj_matrix  = "proj_matrix";
 const std::string Protean3D::GL::ShaderMill::mv_matrix = "mv_matrix";
 const std::string Protean3D::GL::ShaderMill::v_in_color = "v_in_color";
+const std::string Protean3D::GL::ShaderMill::v_coordinates = "v_coordinates";
+const std::string Protean3D::GL::ShaderMill::v_normals = "v_normals";
 
 const std::string Protean3D::GL::ShaderMill::matrix_preamble_ =
   std::string("uniform mat4 ") + proj_matrix + ";\n"
@@ -25,14 +27,13 @@ Protean3D::GL::ShaderMill::ShaderMill()
   v_standard_txt_ =
     os_switch_
     + matrix_preamble_
-    + "in float x;\n"
-    + "in float y;\n"
-    + "in float z;\n"
+    + "in vec3 " + v_coordinates + ";\n"
+    + "in vec3 " + v_normals + ";\n"
     + "in vec4  v_in_color;\n"
     + "out vec4  v_out_color;\n"
     + "\n" 
     + main_begin_ 
-    + "   gl_Position = proj_matrix * mv_matrix * vec4(x, y, z, 1.0);\n"
+    + "   gl_Position = proj_matrix * mv_matrix * vec4(" + v_coordinates + ", 1.0);\n"
     + "   v_out_color = " + v_in_color + ";\n"
     + main_end_;
 
@@ -70,14 +71,13 @@ std::string Protean3D::GL::ShaderMill::lineText() const
   std::string result =
     os_switch_
     + matrix_preamble_
-    + "in float x;\n"
-    + "in float y;\n"
-    + "in float z;\n"
+    + "in vec3 " + v_coordinates + ";\n"
+    + "in vec3 " + v_normals + ";\n"
     + "uniform vec4 v_in_color;\n"
     + "out vec4  v_out_color;\n"
     + "\n"
     + main_begin_
-    + "   gl_Position = proj_matrix * mv_matrix * vec4(x, y, z, 1.0);\n"
+    + "   gl_Position = proj_matrix * mv_matrix * vec4(" + v_coordinates + ", 1.0);\n"
     + "   v_out_color = " + v_in_color + ";\n"
     + main_end_;
 
