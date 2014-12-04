@@ -13,19 +13,25 @@ bool Protean3D::GL::VBO::bindShader(GLuint program_id, std::string attr_name)
   if (attr_name.empty())
     return false;
 
-  glBindBuffer(GL_ARRAY_BUFFER, id_);
-
   GLuint attrloc = glGetAttribLocation(program_id, attr_name.c_str());
   if (GL_NO_ERROR != glGetError())
     return false;
 
+  return bindAttribute(attrloc);
+}
+
+bool Protean3D::GL::VBO::bindAttribute(GLuint attr_location)
+{
+  glBindBuffer(GL_ARRAY_BUFFER, id_);
+
   char* ptr = nullptr;
   ptr += description_.offset;
-  glVertexAttribPointer(attrloc, description_.components, description_.type, GL_FALSE, description_.stride, ptr);
+  glVertexAttribPointer(attr_location, description_.components, description_.type, 
+    GL_FALSE, description_.stride, ptr);
   if (GL_NO_ERROR != glGetError())
     return false;
 
-  glEnableVertexAttribArray(attrloc);
+  glEnableVertexAttribArray(attr_location);
   if (GL_NO_ERROR != glGetError())
     return false;
 

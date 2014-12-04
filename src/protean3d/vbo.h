@@ -33,7 +33,7 @@ namespace Protean3D
       bool bindData(std::vector<PRIMITIVE> const& data, GLenum drawtype);
 
       bool bindShader(GLuint program_id, std::string attr_name);
-      
+
     private:
       GLuint id_;
       PrimitiveLayout description_;
@@ -41,6 +41,7 @@ namespace Protean3D
       GLuint program_;
       std::string attr_name_;
     
+      bool bindAttribute(GLuint attr_location);
     };
 
     template <typename PRIMITIVE>
