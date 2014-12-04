@@ -67,7 +67,7 @@ bool Protean3D::Plot3D::addPositionData(std::vector<glm::vec3> const& data,
 
   for (auto i = 0; i != shader_.size(); ++i)
   {
-    vao_.bindShader(0, shader_[i].programId(), GL::ShaderMill::v_coordinates.c_str());
+    vao_.bindShader(0, shader_[i].programId(), GL::ShaderMill::v_coordinates);
 
     shader_[i].use();
     shader_[i].setUniformMatrix(projection_matrix_, GL::ShaderMill::proj_matrix);
@@ -80,7 +80,7 @@ bool Protean3D::Plot3D::addPositionData(std::vector<glm::vec3> const& data,
     }
     else if (1 == i)
     {
-      vao_.bindShader(1, shader_[i].programId(), GL::ShaderMill::v_in_color.c_str());
+      vao_.bindShader(1, shader_[i].programId(), GL::ShaderMill::v_in_color);
     }
   }
   return true;
@@ -93,7 +93,7 @@ bool Protean3D::Plot3D::addColorData(std::vector<glm::vec4> const& data)
   GL::VBO::PrimitiveLayout datalayout(4, GL_FLOAT, 0, 0);
   if (!vao_.appendVBO(data, datalayout, GL_STATIC_DRAW))
     return false;
-  return vao_.bindShader(1, shader_[1].programId(), GL::ShaderMill::v_in_color.c_str()); //todo hard-wired index
+  return vao_.bindShader(1, shader_[1].programId(), GL::ShaderMill::v_in_color); //todo hard-wired index
 }
 
 bool Protean3D::Plot3D::updatePositionData(std::vector<glm::vec3> const& data)
