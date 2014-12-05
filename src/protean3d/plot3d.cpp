@@ -30,12 +30,12 @@ bool Protean3D::Plot3D::initShader()
 {
   GL::Shader s;
   
-  if (!s.create(shader_mill_.vertexCode(GL::VertexShaderCategory::Lines), shader_mill_.fragmentCode()))
+  if (!s.create(GL::ShaderCode::Vertex::Line, GL::ShaderCode::Fragment::Simple))
     return false;
 
   shader_.push_back(s);
 
-  if (!s.create(shader_mill_.vertexCode(GL::VertexShaderCategory::Triangles), shader_mill_.fragmentCode()))
+  if (!s.create(GL::ShaderCode::Vertex::TriangleStrip, GL::ShaderCode::Fragment::Simple))
     return false;
 
   shader_.push_back(s);
@@ -67,20 +67,20 @@ bool Protean3D::Plot3D::addPositionData(std::vector<glm::vec3> const& data,
 
   for (auto i = 0; i != shader_.size(); ++i)
   {
-    vao_.bindShader(0, shader_[i].programId(), GL::ShaderMill::v_coordinates);
+    vao_.bindShader(0, shader_[i].programId(), GL::ShaderCode::Vertex::v_coordinates);
 
     shader_[i].use();
-    shader_[i].setUniformMatrix(projection_matrix_, GL::ShaderMill::proj_matrix);
-    shader_[i].setUniformMatrix(modelview_matrix_, GL::ShaderMill::mv_matrix);
+    shader_[i].setUniformMatrix(projection_matrix_, GL::ShaderCode::Vertex::proj_matrix);
+    shader_[i].setUniformMatrix(modelview_matrix_, GL::ShaderCode::Vertex::mv_matrix);
 
     if (0 == i)
     {
       glm::vec4 color(0.0f, 0.0f, 1.0f, 1.0f);
-      shader_[i].setUniformVec4(color, GL::ShaderMill::v_in_color);
+      shader_[i].setUniformVec4(color, GL::ShaderCode::Vertex::v_in_color);
     }
     else if (1 == i)
     {
-      vao_.bindShader(1, shader_[i].programId(), GL::ShaderMill::v_in_color);
+      vao_.bindShader(1, shader_[i].programId(), GL::ShaderCode::Vertex::v_in_color);
     }
   }
   return true;
@@ -93,7 +93,7 @@ bool Protean3D::Plot3D::addColorData(std::vector<glm::vec4> const& data)
   GL::VBO::PrimitiveLayout datalayout(4, GL_FLOAT, 0, 0);
   if (!vao_.appendVBO(data, datalayout, GL_STATIC_DRAW))
     return false;
-  return vao_.bindShader(1, shader_[1].programId(), GL::ShaderMill::v_in_color); //todo hard-wired index
+  return vao_.bindShader(1, shader_[1].programId(), GL::ShaderCode::Vertex::v_in_color); //todo hard-wired index
 }
 
 bool Protean3D::Plot3D::updatePositionData(std::vector<glm::vec3> const& data)
@@ -112,11 +112,11 @@ void Protean3D::Plot3D::draw()
   modelview_matrix_ = glm::rotate(modelview_matrix_, glm::radians(1.0f), glm::vec3(0, 0, 1));
 
   shader_[1].use();
-  //shader_[1].setUniformMatrix(modelview_matrix_, GL::ShaderMill::mv_matrix);
+  //shader_[1].setUniformMatrix(modelview_matrix_, GL::ShaderCode::Vertex::mv_matrix);
   vao_.drawIBO(1, GL_STATIC_DRAW);
 
   shader_[0].use();
-  shader_[0].setUniformMatrix(modelview_matrix_, GL::ShaderMill::mv_matrix);
+  shader_[0].setUniformMatrix(modelview_matrix_, GL::ShaderCode::Vertex::mv_matrix);
   vao_.drawIBO(0, GL_STATIC_DRAW);
 
   modelview_matrix_ = glm::translate(modelview_matrix_, glm::vec3(-shift, -shift, 0));

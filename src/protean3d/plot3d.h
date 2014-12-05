@@ -3,7 +3,6 @@
 
 #include <array>
 #include "coordinatesystem.h"
-#include "shadermill.h"
 #include "shader.h"
 #include "vao.h"
 
@@ -33,7 +32,6 @@ namespace Protean3D
     bool addColorData(std::vector<glm::vec4> const& data);
 
   private:
-    Protean3D::GL::ShaderMill shader_mill_;
     Box hull_;
     CoordinateSystem coordinate_system_;
     std::vector<GL::Shader> shader_;

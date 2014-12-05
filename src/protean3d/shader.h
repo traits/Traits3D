@@ -3,6 +3,7 @@
 #include <map>
 #include "glhelper.h"
 #include "types.h"
+#include "shader_std.h"
 
 
 namespace Protean3D
