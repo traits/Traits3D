@@ -11,18 +11,18 @@ const std::string Protean3D::GL::ShaderCode::Vertex::v_normals =     "v_normals"
 const char* Protean3D::GL::ShaderCode::Vertex::Line =
 {
 #ifdef GL_ES_VERSION_3_0
-  "#version 100\n"
+  "#version 300 es\n"
 #else
-  "#version 150\n"
+  "#version 330\n"
 #endif
   "uniform mat4 proj_matrix; \n"
   "uniform mat4 mv_matrix; \n"
-  "in vec3 v_coordinates;\n"
+  "layout (location = 0) in vec3 v_coordinates;\n"
   "in vec3 v_normals;\n"
   "uniform vec4 v_in_color;\n"
   "out vec4 v_out_color;\n"
   "void main()\n"
-  "{"
+  "{\n"
   "   gl_Position = proj_matrix * mv_matrix * vec4(v_coordinates, 1.0);\n"
   "   v_out_color = v_in_color;\n"
   "}"
@@ -31,18 +31,18 @@ const char* Protean3D::GL::ShaderCode::Vertex::Line =
 const char* Protean3D::GL::ShaderCode::Vertex::TriangleStrip =
 {
 #ifdef GL_ES_VERSION_3_0
-  "#version 100\n"
+  "#version 300 es\n"
 #else
-  "#version 150\n"
+  "#version 330\n"
 #endif
   "uniform mat4 proj_matrix; \n"
   "uniform mat4 mv_matrix; \n"
-  "in vec3 v_coordinates;\n"
+  "layout (location = 0) in vec3 v_coordinates;\n"
   "in vec3 v_normals;\n"
   "in vec4 v_in_color;\n"
   "out vec4 v_out_color;\n"
   "void main()\n"
-  "{"
+  "{\n"
   "   gl_Position = proj_matrix * mv_matrix * vec4(v_coordinates, 1.0);\n"
   "   v_out_color = v_in_color;\n"
   "}"
@@ -51,9 +51,9 @@ const char* Protean3D::GL::ShaderCode::Vertex::TriangleStrip =
 const char* Protean3D::GL::ShaderCode::Vertex::LineXYZ =
 {
 #ifdef GL_ES_VERSION_3_0
-  "#version 100\n"
+  "#version 300 es\n"
 #else
-  "#version 150\n"
+  "#version 330\n"
 #endif
   "uniform mat4 proj_matrix;\n"
   "uniform mat4 mv_matrix;\n"
@@ -72,9 +72,9 @@ const char* Protean3D::GL::ShaderCode::Vertex::LineXYZ =
 const char* Protean3D::GL::ShaderCode::Vertex::TriangleStripXYZ =
 {
 #ifdef GL_ES_VERSION_3_0
-  "#version 100\n"
+  "#version 300 es\n"
 #else
-  "#version 150\n"
+  "#version 330\n"
 #endif
   "uniform mat4 proj_matrix;\n"
   "uniform mat4 mv_matrix;\n"
@@ -96,15 +96,15 @@ const char* Protean3D::GL::ShaderCode::Vertex::TriangleStripXYZ =
 const char* Protean3D::GL::ShaderCode::Fragment::Simple =
 {
 #ifdef GL_ES_VERSION_3_0
-  "#version 100\n"
+  "#version 300 es\n"
 #else
-  "#version 150\n"
+  "#version 330\n"
 #endif
   "in vec4 v_out_color;\n"
-  "out vec4 gl_FragColor;\n"
+  "out vec4 frag_color;\n"
   "void main()\n"
   "{"
-  "  gl_FragColor = v_out_color;\n"
+  "  frag_color = v_out_color;\n"
   "}"
 };
 

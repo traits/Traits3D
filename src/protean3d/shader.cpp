@@ -34,16 +34,16 @@ bool Protean3D::GL::Shader::compile(GLuint shader_id, std::string const& shader_
 
   // Check shader
   glGetShaderiv(shader_id, GL_COMPILE_STATUS, &result);
-  //if (GL_FALSE == result)
-  //{
-  //  int infolog_size;
-  //  glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &infolog_size);
-  //  if (infolog_size > 0){
-  //    std::vector<char> shader_error(infolog_size + 1);
-  //    glGetShaderInfoLog(shaderID, infolog_size, NULL, &shader_error[0]);
-  //    printf("%s\n", &shader_error[0]);
-  //  }
-  //}
+  if (GL_FALSE == result)
+  {
+    int infolog_size;
+    glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &infolog_size);
+    if (infolog_size > 0){
+      std::vector<char> shader_error(infolog_size + 1);
+      glGetShaderInfoLog(shader_id, infolog_size, NULL, &shader_error[0]);
+      printf(__FUNCTION__ ":\n%s\n", &shader_error[0]);
+    }
+  }
   return (GL_TRUE == result) ? true : false;
 }
 
@@ -60,16 +60,16 @@ bool Protean3D::GL::Shader::link(GLuint vertex_shader_id, GLuint fragment_shader
 
   // Check the program
   glGetProgramiv(program_id_, GL_LINK_STATUS, &result);
-  //if (GL_FALSE == result)
-  //{
-  //  int infolog_size;
-  //  glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &infolog_size);
-  //  if (infolog_size > 0){
-  //    std::vector<char> program_error(infolog_size + 1);
-  //    glGetProgramInfoLog(program_id, infolog_size, NULL, &program_error[0]);
-  //    printf("%s\n", &program_error[0]);
-  //  }
-  //}
+  if (GL_FALSE == result)
+  {
+    int infolog_size;
+    glGetProgramiv(program_id_, GL_INFO_LOG_LENGTH, &infolog_size);
+    if (infolog_size > 0){
+      std::vector<char> program_error(infolog_size + 1);
+      glGetProgramInfoLog(program_id_, infolog_size, NULL, &program_error[0]);
+      printf("%s\n", &program_error[0]);
+    }
+  }
   return (result == GL_TRUE) ? true : false;
 }
 
