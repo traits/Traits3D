@@ -28,10 +28,10 @@ namespace Protean3D
       template<typename PRIMITIVE>
       bool updateVBO(size_t idx, std::vector<PRIMITIVE> const& data);
       
-      bool bindShader(size_t idx, GLuint program, std::string attr_name);
       size_t vboCount() const { return vbos_.size(); }
       size_t iboCount() const { return ibos_.size(); }
       bool drawIBO(size_t idx, GLenum draw_type);
+      VBO& vbo(size_t idx) { return vbos_[idx]; }
 
     private:
       GLuint idx_;

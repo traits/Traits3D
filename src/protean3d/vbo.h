@@ -31,8 +31,7 @@ namespace Protean3D
 
       template <typename PRIMITIVE>
       bool bindData(std::vector<PRIMITIVE> const& data, GLenum drawtype);
-
-      bool bindShader(GLuint program_id, std::string attr_name);
+      bool bindAttribute(GLuint attr_location);
 
     private:
       GLuint id_;
@@ -40,8 +39,6 @@ namespace Protean3D
       size_t bsize_; //buffer size in byte
       GLuint program_;
       std::string attr_name_;
-    
-      bool bindAttribute(GLuint attr_location);
     };
 
     template <typename PRIMITIVE>

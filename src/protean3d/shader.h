@@ -10,6 +10,8 @@ namespace Protean3D
 {
   namespace GL
   {
+    class VBO;
+
     //! Shader program, containing various GLSL shaders
     class PROTEAN3D_EXPORT Shader
     {
@@ -31,20 +33,23 @@ namespace Protean3D
       //! For initialized()==true, the function returns a valid shader program id
       GLuint programId() const { return program_id_; }
 
-      //! calls glUseProgram for valid shader
+      //! calls glUseProgram if not yet used for valid shader
       bool use();
-      
-      // have to call use() before
-      bool setUniformMatrix(glm::mat4 const& mat, std::string const& name);
+
+      bool bindAttribute(VBO& vbo, std::string const& name);
       bool setUniformVec4(glm::vec4 const& vec, std::string const& name);
+      bool setProjectionMatrix(glm::mat4 const& mat);
+      bool setModelViewMatrix(glm::mat4 const& mat);
 
     private:  
       bool initialized_;
       bool load(std::string& result, std::string const& path);
       bool compile(GLuint shader_id, std::string const& shader_code);
       bool link(GLuint vertex_shader_id, GLuint fragment_shader_id);
-      
+      bool inUse() const;
       GLuint program_id_;
+
+      bool setUniformMatrix(glm::mat4 const& mat, std::string const& name);
     };
   } // ns
 } // ns

@@ -8,18 +8,6 @@ Protean3D::GL::VBO::VBO(PrimitiveLayout const& descr)
     throw std::domain_error("Protean3D: VBO construction error");
 }
 
-bool Protean3D::GL::VBO::bindShader(GLuint program_id, std::string attr_name)
-{
-  if (attr_name.empty())
-    return false;
-
-  GLuint attrloc = glGetAttribLocation(program_id, attr_name.c_str());
-  if (GL_NO_ERROR != glGetError())
-    return false;
-
-  return bindAttribute(attrloc);
-}
-
 bool Protean3D::GL::VBO::bindAttribute(GLuint attr_location)
 {
   glBindBuffer(GL_ARRAY_BUFFER, id_);

@@ -1,6 +1,7 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include "vbo.h"
 #include "shader.h"
 
 Protean3D::GL::Shader::Shader()
@@ -136,7 +137,7 @@ bool Protean3D::GL::Shader::createFromFile(std::string const& vertex_file_path, 
 
 bool Protean3D::GL::Shader::setUniformMatrix(glm::mat4 const& mat, std::string const& name)
 {
-  if (name.empty())
+  if (name.empty() || !use())
     return false;
 
   GLint loc = glGetUniformLocation(program_id_, name.c_str());
@@ -152,7 +153,7 @@ bool Protean3D::GL::Shader::setUniformMatrix(glm::mat4 const& mat, std::string c
 
 bool Protean3D::GL::Shader::setUniformVec4(glm::vec4 const& vec, std::string const& name)
 {
-  if (name.empty())
+  if (name.empty() || !use())
     return false;
 
   GLint loc = glGetUniformLocation(program_id_, name.c_str());
@@ -166,11 +167,53 @@ bool Protean3D::GL::Shader::setUniformVec4(glm::vec4 const& vec, std::string con
   return true;
 }
 
+bool Protean3D::GL::Shader::setProjectionMatrix(glm::mat4 const& mat)
+{
+  return setUniformMatrix(mat, ShaderCode::Vertex::proj_matrix);
+}
+
+
+bool Protean3D::GL::Shader::setModelViewMatrix(glm::mat4 const& mat)
+{
+  return setUniformMatrix(mat, ShaderCode::Vertex::mv_matrix);
+}
 
 bool Protean3D::GL::Shader::use()
 {
-  if (initialized_)
-    glUseProgram(program_id_);
+  if (!initialized_)
+    return false;
 
-  return initialized_;
+  if (inUse())
+    return true;
+
+  glUseProgram(program_id_);
+  if (GL_NO_ERROR != glGetError())
+    return false;
+
+  return true;
+}
+
+bool Protean3D::GL::Shader::inUse() const
+{
+  if (!initialized_)
+    return false;
+
+  GLint currprog;
+  glGetIntegerv(GL_CURRENT_PROGRAM, &currprog);
+  if (GL_NO_ERROR != glGetError())
+    return false;
+
+  return static_cast<GLuint>(currprog) == program_id_;
+}
+
+bool Protean3D::GL::Shader::bindAttribute(VBO& vbo, std::string const& name)
+{
+  if (name.empty())
+    return false;
+
+  GLuint attrloc = glGetAttribLocation(program_id_, name.c_str());
+  if (GL_NO_ERROR != glGetError())
+    return false;
+
+  return vbo.bindAttribute(attrloc);
 }
