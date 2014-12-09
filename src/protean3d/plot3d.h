@@ -1,10 +1,8 @@
 #pragma once
 
-
 #include <array>
 #include "coordinatesystem.h"
-#include "shader.h"
-#include "vao.h"
+#include "dataobject.h"
 
 namespace Protean3D
 {
@@ -34,8 +32,7 @@ namespace Protean3D
   private:
     Box hull_;
     CoordinateSystem coordinate_system_;
-    std::vector<GL::Shader> shader_;
-    GL::VAO vao_;
+    GL::DataObject data_object_;
 
     glm::mat4 projection_matrix_;
     glm::mat4  modelview_matrix_;
@@ -49,7 +46,5 @@ namespace Protean3D
     GLfloat aspect_ratio;
     GLfloat z_near;
     GLfloat z_far;
-
-    bool initShader();
   };
 } // ns
