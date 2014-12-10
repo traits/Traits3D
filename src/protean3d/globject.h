@@ -11,6 +11,7 @@ namespace Protean3D
     {
     public:
       Object();
+      virtual ~Object() = default;
       virtual void draw() = 0;
       void setProjectionMatrix(glm::mat4 const& mat);
       void setModelViewMatrix(glm::mat4 const& mat);

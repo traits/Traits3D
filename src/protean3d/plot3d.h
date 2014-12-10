@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include "coordinatesystem.h"
+#include "coordinatesobject.h"
 #include "dataobject.h"
 
 namespace Protean3D
@@ -31,7 +31,7 @@ namespace Protean3D
 
   private:
     Box hull_;
-    CoordinateSystem coordinate_system_;
+    GL::CoordinatesObject coordinates_object_;
     GL::DataObject data_object_;
 
     glm::mat4 projection_matrix_;

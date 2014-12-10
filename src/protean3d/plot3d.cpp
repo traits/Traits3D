@@ -23,13 +23,19 @@ Protean3D::Plot3D::~Plot3D()
 
 }
 
-
 /* Create VBO, IBO and VAO objects for the heightmap geometry and bind them to
 * the specified program object
 */
 bool Protean3D::Plot3D::addPositionData(std::vector<glm::vec3> const& data,
   size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/) 
 {
+  coordinates_object_.setProjectionMatrix(projection_matrix_);
+  coordinates_object_.setModelViewMatrix(modelview_matrix_);
+
+  coordinates_object_.setHull(Protean3D::Box(
+    Protean3D::Triple(0, 0, -2),
+    Protean3D::Triple(6, 10, 2)));
+
   data_object_.setProjectionMatrix(projection_matrix_);
   data_object_.setModelViewMatrix(modelview_matrix_);
 
@@ -53,5 +59,6 @@ void Protean3D::Plot3D::draw()
   /* render the next frame */
   glClear(GL_COLOR_BUFFER_BIT);
 
+  coordinates_object_.draw();
   data_object_.draw();
 }

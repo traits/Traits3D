@@ -1,10 +1,10 @@
-#include "coordinatesystem.h"
+#include "coordinates.h"
 
 using namespace std;
 using namespace Protean3D;
 
 
-CoordinateSystem::CoordinateSystem(Protean3D::Triple first, Protean3D::Triple second, Protean3D::COORDINATESTYLE st)
+Coordinates::Coordinates(Protean3D::Triple first, Protean3D::Triple second, Protean3D::COORDINATESTYLE st)
 {
 	autodecoration_ = true;
 	axes = std::vector<Axis>(asize);
@@ -13,11 +13,11 @@ CoordinateSystem::CoordinateSystem(Protean3D::Triple first, Protean3D::Triple se
 	setGridLines(false, false);
 }
 
-CoordinateSystem::~CoordinateSystem()
+Coordinates::~Coordinates()
 {
 }
 
-void CoordinateSystem::init(Protean3D::Triple first, Protean3D::Triple second)
+void Coordinates::init(Protean3D::Triple first, Protean3D::Triple second)
 {
   for (unsigned i=0; i!=axes.size(); ++i)
     axes[i].setScale(LINEARSCALE);
@@ -109,7 +109,7 @@ void CoordinateSystem::init(Protean3D::Triple first, Protean3D::Triple second)
 
 
 //! build convex hull (6 axes: 2 x, 2 y, 2 z) and choose one of them at a time for scales, labels etc.  
-void CoordinateSystem::chooseAxes()
+void Coordinates::chooseAxes()
 {
 	//vector<Triple> beg(axes.size());
 	//vector<Triple> end(axes.size());
@@ -281,7 +281,7 @@ void CoordinateSystem::chooseAxes()
 }
 
 
-void CoordinateSystem::autoDecorateExposedAxis(Axis& ax, bool left)
+void Coordinates::autoDecorateExposedAxis(Axis& ax, bool left)
 {
 	//Triple diff = World2ViewPort(ax.end()) - World2ViewPort(ax.begin());
 
@@ -373,31 +373,31 @@ void CoordinateSystem::autoDecorateExposedAxis(Axis& ax, bool left)
 }
 
 
-void CoordinateSystem::setPosition(Triple first, Triple second)
+void Coordinates::setPosition(Triple first, Triple second)
 {
 	first_ = first;
 	second_ = second;
 }
 
-void CoordinateSystem::setAutoScale(bool val)
+void Coordinates::setAutoScale(bool val)
 {
 	for (unsigned i=0; i!=axes.size(); ++i)
 		axes[i].setAutoScale(val);
 }
 
-void CoordinateSystem::recalculateAxesTics()
+void Coordinates::recalculateAxesTics()
 {
 	for (unsigned i=0; i!=axes.size(); ++i)
 		axes[i].recalculateTics();
 }
 
-void CoordinateSystem::setStandardScale()
+void Coordinates::setStandardScale()
 {
 	for (unsigned i=0; i!=axes.size(); ++i)
     axes[i].setScale(LINEARSCALE);
 }
 
-void CoordinateSystem::setStyle(Protean3D::COORDINATESTYLE s, Protean3D::AXIS frame_1, 
+void Coordinates::setStyle(Protean3D::COORDINATESTYLE s, Protean3D::AXIS frame_1, 
                                 Protean3D::AXIS frame_2, Protean3D::AXIS frame_3) 
 { 
 	//style_ = s;
@@ -440,14 +440,14 @@ For most cases an identical tic distribution is therefore recommended.
 \param minors  Draw grid between minor tics
 \param sides   Side(s), where the grid should be drawn
 */
-void CoordinateSystem::setGridLines(bool majors, bool minors, int sides) 
+void Coordinates::setGridLines(bool majors, bool minors, int sides) 
 {
 	sides_ = sides;
   majorgridlines_ = majors; 
 	minorgridlines_ = minors;
 } 
 
-void CoordinateSystem::drawMajorGridLines()
+void Coordinates::drawMajorGridLines()
 {
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glColor4d(gridlinecolor_.r,gridlinecolor_.g,gridlinecolor_.b,gridlinecolor_.a);		
@@ -487,7 +487,7 @@ void CoordinateSystem::drawMajorGridLines()
  // glEnd();
 }
 
-void CoordinateSystem::drawMinorGridLines()
+void Coordinates::drawMinorGridLines()
 {
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glColor4d(gridlinecolor_.r,gridlinecolor_.g,gridlinecolor_.b,gridlinecolor_.a);		
@@ -527,7 +527,7 @@ void CoordinateSystem::drawMinorGridLines()
  // glEnd();
 }
 
-void CoordinateSystem::drawMajorGridLines(Axis& a0, Axis& a1)
+void Coordinates::drawMajorGridLines(Axis& a0, Axis& a1)
 {
  // Triple d = a1.begin()-a0.begin();
 
@@ -538,7 +538,7 @@ void CoordinateSystem::drawMajorGridLines(Axis& a0, Axis& a1)
 	//}
 }
 
-void CoordinateSystem::drawMinorGridLines(Axis& a0, Axis& a1)
+void Coordinates::drawMinorGridLines(Axis& a0, Axis& a1)
 {
  // Triple d = a1.begin()-a0.begin();
 

@@ -32,15 +32,26 @@ namespace Protean3D
       template <typename PRIMITIVE>
       bool bindData(std::vector<PRIMITIVE> const& data, GLenum drawtype);
       bool bindAttribute(GLuint attr_location);
+      bool draw(GLenum primitive_type, size_t first, size_t count);
 
     private:
       GLuint id_;
       PrimitiveLayout description_;
-      size_t bsize_; //buffer size in byte
+      size_t bsize_ = 0; //buffer size in byte
+      size_t primitive_size_ = 1;
       GLuint program_;
       std::string attr_name_;
     };
 
+
+    /**
+     Bind data.
+    
+     \param data     The data.
+     \param drawtype GL_STATIC_DRAW etc.
+    
+     \return true if it succeeds, false if it fails.
+     */
     template <typename PRIMITIVE>
     bool Protean3D::GL::VBO::bindData(std::vector<PRIMITIVE> const& data, GLenum drawtype)
     {
@@ -61,6 +72,7 @@ namespace Protean3D
         return false;
 
       bsize_ = bsize;
+      primitive_size_ = sizeof(PRIMITIVE);
       return true;
     }
   } // ns

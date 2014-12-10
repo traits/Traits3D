@@ -8,12 +8,12 @@ namespace Protean3D
 {
 
 //! A coordinate system with different styles (BOX, FRAME)
-class PROTEAN3D_EXPORT CoordinateSystem
+class PROTEAN3D_EXPORT Coordinates
 {
 
 public:
-	explicit CoordinateSystem(Protean3D::Triple blb = Protean3D::Triple(0,0,0), Protean3D::Triple ftr = Protean3D::Triple(0,0,0), Protean3D::COORDINATESTYLE = Protean3D::BOX);
-  ~CoordinateSystem();	
+	explicit Coordinates(Protean3D::Triple blb = Protean3D::Triple(0,0,0), Protean3D::Triple ftr = Protean3D::Triple(0,0,0), Protean3D::COORDINATESTYLE = Protean3D::BOX);
+  ~Coordinates();	
 	
 	void init(Protean3D::Triple beg = Protean3D::Triple(0,0,0), Protean3D::Triple end = Protean3D::Triple(0,0,0));
 	//! Set style for the coordinate system (NOCOORDINATES, FRAME or BOX)

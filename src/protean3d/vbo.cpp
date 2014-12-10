@@ -1,7 +1,7 @@
 #include "vbo.h"
 
 Protean3D::GL::VBO::VBO(PrimitiveLayout const& descr) 
-  : bsize_(0), description_(descr)
+  : description_(descr)
 {
   glGenBuffers(1, &id_);
   if (GL_NO_ERROR != glGetError())
@@ -24,4 +24,19 @@ bool Protean3D::GL::VBO::bindAttribute(GLuint attr_location)
     return false;
 
   return true;
+}
+
+bool Protean3D::GL::VBO::draw(GLenum primitive_type, size_t first, size_t count)
+{
+  GLuint glfirst = static_cast<GLuint> (first * primitive_size_);
+  GLsizei glcount = static_cast<GLuint> (count * primitive_size_);
+
+  if (glfirst + glcount > bsize_)
+    return false;
+
+  glDrawArrays(primitive_type, glfirst, glcount); 
+
+  GLenum err = glGetError();
+
+  return GL_NO_ERROR == err;
 }

@@ -80,7 +80,9 @@ void Protean3D::GL::DataObject::draw()
 {
   //this->setData();
   /* render the next frame */
-  glClear(GL_COLOR_BUFFER_BIT);
+  //glClear(GL_COLOR_BUFFER_BIT);
+
+  vao_p.bind();
 
   float shift = 5.0f;
   modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(shift, shift, 0));
