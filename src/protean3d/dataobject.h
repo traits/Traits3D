@@ -18,9 +18,13 @@ namespace Protean3D
 
       bool updatePositionData(std::vector<glm::vec3> const& data);
       bool addColorData(std::vector<glm::vec4> const& data);
+      
+      const Protean3D::Box& hull() const { return hull_; }
 
     private:
       bool initShader();
+      Protean3D::Box hull_;
+      void calcHull(std::vector<glm::vec3> const& data);
     };
   } // ns
 } // ns

@@ -58,6 +58,8 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& da
       shader_p[i].setUniformVec4(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);
     }
   }
+
+  calcHull(data);
   return true;
 }
 
@@ -73,6 +75,7 @@ bool Protean3D::GL::DataObject::addColorData(std::vector<glm::vec4> const& data)
 
 bool Protean3D::GL::DataObject::updatePositionData(std::vector<glm::vec3> const& data)
 {
+  calcHull(data);
   return vao_p.updateVBO(0, data); //todo
 }
 
@@ -97,4 +100,25 @@ void Protean3D::GL::DataObject::draw()
   vao_p.drawIBO(0, GL_STATIC_DRAW);
 
   modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(-shift, -shift, 0));
+}
+
+void Protean3D::GL::DataObject::calcHull(std::vector<glm::vec3> const& data)
+{
+  hull_ = Protean3D::Box(); // reset
+  for (auto p : data)
+  {
+    if (p.x < hull_.minVertex.x)
+      hull_.minVertex.x = p.x;
+    if (p.y < hull_.minVertex.y)
+      hull_.minVertex.y = p.y;
+    if (p.z < hull_.minVertex.z)
+      hull_.minVertex.z = p.z;
+
+    if (p.x > hull_.maxVertex.x)
+      hull_.maxVertex.x = p.x;
+    if (p.y > hull_.maxVertex.y)
+      hull_.maxVertex.y = p.y;
+    if (p.z > hull_.maxVertex.z)
+      hull_.maxVertex.z = p.z;
+  }
 }

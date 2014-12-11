@@ -110,7 +110,6 @@ enum ANCHOR
 typedef glm::dvec2 Tuple;
 typedef glm::dvec3 Triple;
 
-
 //! Box spanned by 2 Triples
 /**
 Please use \em normalized boxes:\n\n
@@ -120,8 +119,12 @@ minVertex[2] <= maxVertex[2]\n
 */
 struct PROTEAN3D_EXPORT Box
 {
-	//! Construct non-initialized Box
+	//! Construct degenerated Box with minVertex components set to max(double) and maxVertex comp's to min(double)
 	Box()
+    : Box(
+       Triple(std::numeric_limits<Triple::value_type>::max()),
+       Triple(std::numeric_limits<Triple::value_type>::min())
+         )
 	{
 	}
 

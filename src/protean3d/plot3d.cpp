@@ -16,6 +16,8 @@ Protean3D::Plot3D::Plot3D()
   modelview_matrix_[3][0] = -5.0f;
   modelview_matrix_[3][1] = -4.0f;
   modelview_matrix_[3][2] = -7.0f;
+
+  glEnable(GL_DEPTH_TEST);
 }
 
 Protean3D::Plot3D::~Plot3D()
@@ -32,14 +34,14 @@ bool Protean3D::Plot3D::addPositionData(std::vector<glm::vec3> const& data,
   coordinates_object_.setProjectionMatrix(projection_matrix_);
   coordinates_object_.setModelViewMatrix(modelview_matrix_);
 
-  coordinates_object_.setHull(Protean3D::Box(
-    Protean3D::Triple(0, 0, -2),
-    Protean3D::Triple(6, 10, 2)));
-
   data_object_.setProjectionMatrix(projection_matrix_);
   data_object_.setModelViewMatrix(modelview_matrix_);
 
-  return data_object_.addPositionData(data, xsize, ysize, drawtype);
+  if (!data_object_.addPositionData(data, xsize, ysize, drawtype))
+    return false;
+
+  coordinates_object_.setHull(data_object_.hull());
+  return true;
 }
 
 // todo check size against position vector[s]
@@ -50,14 +52,18 @@ bool Protean3D::Plot3D::addColorData(std::vector<glm::vec4> const& data)
 
 bool Protean3D::Plot3D::updatePositionData(std::vector<glm::vec3> const& data)
 {
-  return data_object_.updatePositionData(data);
+  if (!data_object_.updatePositionData(data))
+    return false;
+
+  coordinates_object_.setHull(data_object_.hull());
+  return true;
 }
 
 void Protean3D::Plot3D::draw()
 {
   this->setData();
   /* render the next frame */
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   coordinates_object_.draw();
   data_object_.draw();
