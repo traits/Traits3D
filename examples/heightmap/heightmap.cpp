@@ -35,7 +35,7 @@ bool HeightMap::loadData()
     elem[3] = 1.0f;
   }
 
-  return addColorData(colors);
+  return addDataColor(colors);
 }
 
 bool HeightMap::setData()

@@ -45,9 +45,9 @@ bool Protean3D::Plot3D::addPositionData(std::vector<glm::vec3> const& data,
 }
 
 // todo check size against position vector[s]
-bool Protean3D::Plot3D::addColorData(std::vector<glm::vec4> const& data)
+bool Protean3D::Plot3D::addDataColor(std::vector<glm::vec4> const& data)
 {
-  return data_object_.addColorData(data);
+  return data_object_.addColor(data);
 }
 
 bool Protean3D::Plot3D::updatePositionData(std::vector<glm::vec3> const& data)

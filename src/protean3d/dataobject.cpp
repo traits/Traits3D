@@ -64,7 +64,7 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& da
 }
 
 // todo check size against position vector[s]
-bool Protean3D::GL::DataObject::addColorData(std::vector<glm::vec4> const& data)
+bool Protean3D::GL::DataObject::addColor(std::vector<glm::vec4> const& data)
 {
   vao_p.bind();
   GL::VBO::PrimitiveLayout datalayout(4, GL_FLOAT, 0, 0);

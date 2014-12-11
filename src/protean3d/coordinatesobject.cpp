@@ -27,7 +27,6 @@ bool Protean3D::GL::CoordinatesObject::setHull(Protean3D::Box const& hull)
   vao_p.bind();
 
   //todo
-
   
   float x = hull.minVertex.x;
   float X = hull.maxVertex.x;
