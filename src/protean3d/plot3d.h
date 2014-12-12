@@ -27,7 +27,8 @@ namespace Protean3D
       size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
 
     bool updatePositionData(std::vector<glm::vec3> const& data);
-    bool addDataColor(std::vector<glm::vec4> const& data);
+    bool addDataColor(std::vector<glm::vec4> const& val);
+    bool addMeshColor(glm::vec4 const& val);
 
   private:
     Box hull_;

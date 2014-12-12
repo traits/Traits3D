@@ -34,8 +34,8 @@ bool HeightMap::loadData()
     elem[2] = 1 - i / fsize;
     elem[3] = 1.0f;
   }
-
-  return addDataColor(colors);
+  
+  return addDataColor(colors) && addMeshColor(glm::vec4(0,0,0,0));
 }
 
 bool HeightMap::setData()

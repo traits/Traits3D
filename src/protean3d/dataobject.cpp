@@ -52,16 +52,12 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& da
     shader_p[i].bindAttribute(vao_p.vbo(0), GL::ShaderCode::Vertex::v_coordinates);
     shader_p[i].setProjectionMatrix(projection_matrix_p);
     shader_p[i].setModelViewMatrix(modelview_matrix_p);
-
-    if (0 == i)
-    {
-      shader_p[i].setUniformVec4(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);
-    }
   }
 
   calcHull(data);
   return true;
 }
+
 
 // todo check size against position vector[s]
 bool Protean3D::GL::DataObject::addColor(std::vector<glm::vec4> const& data)
@@ -71,6 +67,12 @@ bool Protean3D::GL::DataObject::addColor(std::vector<glm::vec4> const& data)
   if (!vao_p.appendVBO(data, datalayout, GL_STATIC_DRAW))
     return false;
   return shader_p[1].bindAttribute(vao_p.vbo(1), GL::ShaderCode::Vertex::v_in_color);
+}
+
+bool Protean3D::GL::DataObject::addMeshColor(glm::vec4 const& data)
+{
+  vao_p.bind();
+  return shader_p[0].setUniformVec4(data, GL::ShaderCode::Vertex::v_in_color);
 }
 
 bool Protean3D::GL::DataObject::updatePositionData(std::vector<glm::vec3> const& data)
@@ -92,7 +94,7 @@ void Protean3D::GL::DataObject::draw()
   modelview_matrix_p = glm::rotate(modelview_matrix_p, glm::radians(1.0f), glm::vec3(0, 0, 1));
 
   shader_p[1].use();
-  //shader_[1].setModelViewMatrix(modelview_matrix_);
+  shader_p[1].setModelViewMatrix(modelview_matrix_p);
   vao_p.drawIBO(1, GL_STATIC_DRAW);
 
   shader_p[0].use();

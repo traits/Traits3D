@@ -71,6 +71,8 @@ bool Protean3D::GL::CoordinatesObject::setHull(Protean3D::Box const& hull)
 
   shader_p[0].bindAttribute(vao_p.vbo(0), GL::ShaderCode::Vertex::v_coordinates);
   shader_p[0].setUniformVec4(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);
+  shader_p[0].setProjectionMatrix(projection_matrix_p);
+  shader_p[0].setModelViewMatrix(modelview_matrix_p);
 
   return true;
 }
@@ -91,7 +93,6 @@ void Protean3D::GL::CoordinatesObject::draw()
   modelview_matrix_p = glm::rotate(modelview_matrix_p, glm::radians(1.0f), glm::vec3(0, 0, 1));
 
   shader_p[0].use();
-  shader_p[0].setProjectionMatrix(projection_matrix_p);
   shader_p[0].setModelViewMatrix(modelview_matrix_p);
   vao_p.vbo(0).draw(GL_LINES, 0, 24);
   modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(-shift, -shift, 0));

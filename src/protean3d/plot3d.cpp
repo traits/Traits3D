@@ -17,7 +17,10 @@ Protean3D::Plot3D::Plot3D()
   modelview_matrix_[3][1] = -4.0f;
   modelview_matrix_[3][2] = -7.0f;
 
-  glEnable(GL_DEPTH_TEST);
+  //todo enable this, we need it for correct hidden lines etc. (implement something 
+  // better than glPolygonOffset 
+  // e.g. https://www.opengl.org/discussion_boards/showthread.php/179958-How-to-draw-one-line-on-top-of-another-in-OpenGL-without-Z-fighting?p=1245277&viewfull=1#post1245277
+  //glEnable(GL_DEPTH_TEST);
 }
 
 Protean3D::Plot3D::~Plot3D()
@@ -45,9 +48,16 @@ bool Protean3D::Plot3D::addPositionData(std::vector<glm::vec3> const& data,
 }
 
 // todo check size against position vector[s]
-bool Protean3D::Plot3D::addDataColor(std::vector<glm::vec4> const& data)
+bool Protean3D::Plot3D::addDataColor(std::vector<glm::vec4> const& val)
 {
-  return data_object_.addColor(data);
+  return data_object_.addColor(val);
+}
+
+
+
+bool Protean3D::Plot3D::addMeshColor(glm::vec4 const& val)
+{
+  return data_object_.addMeshColor(val);
 }
 
 bool Protean3D::Plot3D::updatePositionData(std::vector<glm::vec3> const& data)
