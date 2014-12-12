@@ -20,7 +20,7 @@ Protean3D::Plot3D::Plot3D()
   //todo enable this, we need it for correct hidden lines etc. (implement something 
   // better than glPolygonOffset 
   // e.g. https://www.opengl.org/discussion_boards/showthread.php/179958-How-to-draw-one-line-on-top-of-another-in-OpenGL-without-Z-fighting?p=1245277&viewfull=1#post1245277
-  //glEnable(GL_DEPTH_TEST);
+  glEnable(GL_DEPTH_TEST);
 }
 
 Protean3D::Plot3D::~Plot3D()

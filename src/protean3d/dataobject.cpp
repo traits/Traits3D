@@ -93,12 +93,21 @@ void Protean3D::GL::DataObject::draw()
   modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(shift, shift, 0));
   modelview_matrix_p = glm::rotate(modelview_matrix_p, glm::radians(1.0f), glm::vec3(0, 0, 1));
 
+  // polygons
   shader_p[1].use();
   shader_p[1].setModelViewMatrix(modelview_matrix_p);
   vao_p.drawIBO(1, GL_STATIC_DRAW);
 
+
+  // mesh
   shader_p[0].use();
   shader_p[0].setModelViewMatrix(modelview_matrix_p);
+  
+  //todo [educated] hack 
+  glm::mat4 ttt = projection_matrix_p;
+  ttt[2][2] += 5E-4;
+  shader_p[0].setProjectionMatrix(ttt);
+
   vao_p.drawIBO(0, GL_STATIC_DRAW);
 
   modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(-shift, -shift, 0));

@@ -111,7 +111,7 @@ void HeightMap::update_map(size_t num_iter)
       {
         /* tx,ty is within the circle */
         GLfloat new_height = disp + (float)(cos(pd*3.14f)*disp);
-        map_vertices[i].z = new_height;
+        map_vertices[i].z = 3*new_height;
       }
     }
     --num_iter;
