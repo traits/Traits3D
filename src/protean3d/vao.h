@@ -19,7 +19,7 @@ namespace Protean3D
       virtual ~VAO();
 
       template<typename PRIMITIVE>
-      bool appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr, GLenum draw_type = GL_STATIC_DRAW);
+      bool appendVBO(std::vector<PRIMITIVE> const& data, GLenum draw_type = GL_STATIC_DRAW);
       bool appendIBO(size_t xsize, size_t ysize, GLenum primitive_type);
 
       template<typename PRIMITIVE>
@@ -43,12 +43,11 @@ namespace Protean3D
     // implementation
 
     template<typename PRIMITIVE>
-    bool Protean3D::GL::VAO::appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr
-      , GLenum draw_type /*= GL_STATIC_DRAW*/)
+    bool Protean3D::GL::VAO::appendVBO(std::vector<PRIMITIVE> const& data, GLenum draw_type /*= GL_STATIC_DRAW*/)
     {
       bind();
       //static_assert(std::is_same<PRIMITIVE, GLfloat>::value, "Incorrect buffer type!");
-      VBO buffer(descr);
+      VBO buffer;
       if (data.empty() || !buffer.bindData(data, draw_type))
         return false;
 

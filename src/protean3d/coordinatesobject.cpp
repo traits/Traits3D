@@ -51,9 +51,7 @@ bool Protean3D::GL::CoordinatesObject::setHull(Protean3D::Box const& hull)
   axes_[23] = glm::vec3(X, Y, Z);
 
 
-  GL::VBO::PrimitiveLayout datalayout(3, GL_FLOAT, 0, 0);
-
-  vao_p.appendVBO(axes_, datalayout, GL_STATIC_DRAW); //todo (could be dynamic)
+  vao_p.appendVBO(axes_, GL_STATIC_DRAW); //todo (could be dynamic)
 
   shader_.bindAttribute(vao_p.vbo(0), GL::ShaderCode::Vertex::v_coordinates);
   shader_.setUniformVec4(glm::vec4(0.0f, 0.5f, 0.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);

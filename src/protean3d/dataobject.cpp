@@ -50,10 +50,8 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& da
   
   if (!vao_p.appendIBO(xsize, ysize, GL_TRIANGLE_STRIP))
     return false;
-
-  GL::VBO::PrimitiveLayout datalayout(3, GL_FLOAT, 0, 0);
   
-  vao_p.appendVBO(data, datalayout, drawtype);
+  vao_p.appendVBO(data, drawtype);
 
   for (auto& s : shader_)
   {
@@ -70,8 +68,7 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& da
 // todo check size against position vector[s]
 bool Protean3D::GL::DataObject::addColor(ColorVector const& data)
 {
-  GL::VBO::PrimitiveLayout datalayout(4, GL_FLOAT, 0, 0);
-  if (!vao_p.appendVBO(data, datalayout, GL_STATIC_DRAW)) //todo Reihenfolge vbo's!
+  if (!vao_p.appendVBO(data, GL_STATIC_DRAW)) //todo Reihenfolge vbo's!
     return false;
   
   colors_ = data;

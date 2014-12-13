@@ -13,34 +13,58 @@ namespace Protean3D
     class VBO
     {
     public:
-      class PrimitiveLayout
+      VBO();
+      virtual ~VBO() = default;
+      GLuint id() const { return id_; } //!< VBO index
+
+      bool bindData(std::vector<glm::vec3> const& data, GLenum drawtype);
+      bool bindData(std::vector<glm::vec4> const& data, GLenum drawtype);
+      bool bindAttribute(GLuint attr_location);
+      bool draw(GLenum primitive_type, size_t first, size_t count);
+
+    private:
+      class Layout
       {
       public:
-        explicit PrimitiveLayout(char c = 0, GLenum t = GL_FLOAT, GLsizei s = 0, unsigned o = 0) 
+        explicit Layout(char c = 0, GLenum t = GL_FLOAT, GLsizei s = 0, unsigned o = 0)
           : components(c), type(t), stride(s), offset(o)
         {}
         char components; // 1..4
         GLenum type; // GL_BYTE, GL_UNSIGNED_BYTE, GL_FLOAT //TODO GL_HALF_FLOAT 
         GLsizei stride;
         size_t offset; // offset in byte 
+
+        bool match(const Layout& layout)
+        {
+          if (initialized() && layout != *this)
+            return false;
+
+          *this = layout;
+          return true;
+        }
+
+      private: 
+        bool operator!=(const Layout& r) const
+        {
+          return components != r.components
+            || type != r.type
+            || stride != r.stride  //todo
+            || offset != r.offset; //todo
+        }
+
+        bool initialized() const { return 0 < components; }
       };
 
-      explicit VBO(PrimitiveLayout const& descr);
-      virtual ~VBO() = default;
-      GLuint id() const { return id_; } //!< VBO index
-
-      template <typename PRIMITIVE>
-      bool bindData(std::vector<PRIMITIVE> const& data, GLenum drawtype);
-      bool bindAttribute(GLuint attr_location);
-      bool draw(GLenum primitive_type, size_t first, size_t count);
-
-    private:
       GLuint id_;
-      PrimitiveLayout description_;
+      Layout layout_;
       size_t bsize_ = 0; //buffer size in byte
       size_t primitive_size_ = 1;
       GLuint program_;
       std::string attr_name_;
+
+
+      template <typename PRIMITIVE>
+      bool bindData(std::vector<PRIMITIVE> const& data, GLenum drawtype);
     };
 
 
