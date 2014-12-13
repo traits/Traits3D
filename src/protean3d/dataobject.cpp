@@ -1,11 +1,28 @@
 #include <glm/gtc/matrix_transform.hpp>
+#include "helper.h"
+#include "color.h"
 #include "dataobject.h"
 
+const std::map<Protean3D::GL::DataObject::VBOindex, size_t> Protean3D::GL::DataObject::vidx =
+{
+  { VBOindex::Position, 0 },
+  { VBOindex::DataColor, 1 },
+};
+
+const std::map<Protean3D::GL::DataObject::ShaderIndex, size_t>
+Protean3D::GL::DataObject::EnumedContainer<Protean3D::GL::Shader, Protean3D::GL::DataObject::ShaderIndex>::idx_map =
+{
+  { Protean3D::GL::DataObject::ShaderIndex::Lines, 0 },
+  { Protean3D::GL::DataObject::ShaderIndex::TriangleStrip, 1 },
+};
 
 Protean3D::GL::DataObject::DataObject()
-  : GL::Object()
+  : GL::Object(), shader_(shader_p)
 {
   initShader();
+
+//  vidx[VBOindex::Position] = 0;
+//  vidx[VBOindex::DataColor] = 1;
 }
 
 
@@ -49,36 +66,44 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& da
 
   for (auto i = 0; i != shader_p.size(); ++i)
   {
-    shader_p[i].bindAttribute(vao_p.vbo(0), GL::ShaderCode::Vertex::v_coordinates);
+    shader_p[i].bindAttribute(vbo(VBOindex::Position), GL::ShaderCode::Vertex::v_coordinates);
     shader_p[i].setProjectionMatrix(projection_matrix_p);
     shader_p[i].setModelViewMatrix(modelview_matrix_p);
   }
 
-  calcHull(data);
+  hull_ = calcHull(data);
   return true;
 }
 
 
 // todo check size against position vector[s]
-bool Protean3D::GL::DataObject::addColor(std::vector<glm::vec4> const& data)
+bool Protean3D::GL::DataObject::addColor(ColorVector const& data)
 {
   vao_p.bind();
   GL::VBO::PrimitiveLayout datalayout(4, GL_FLOAT, 0, 0);
-  if (!vao_p.appendVBO(data, datalayout, GL_STATIC_DRAW))
+  if (!vao_p.appendVBO(data, datalayout, GL_STATIC_DRAW)) //todo Reihenfolge vbo's!
     return false;
-  return shader_p[1].bindAttribute(vao_p.vbo(1), GL::ShaderCode::Vertex::v_in_color);
+  
+  colors_ = data;
+  return shader_[ShaderIndex::TriangleStrip].bindAttribute(vbo(VBOindex::DataColor), GL::ShaderCode::Vertex::v_in_color);
 }
 
 bool Protean3D::GL::DataObject::addMeshColor(glm::vec4 const& data)
 {
   vao_p.bind();
-  return shader_p[0].setUniformVec4(data, GL::ShaderCode::Vertex::v_in_color);
+  return shader_[ShaderIndex::Lines].setUniformVec4(data, GL::ShaderCode::Vertex::v_in_color);
 }
 
 bool Protean3D::GL::DataObject::updatePositionData(std::vector<glm::vec3> const& data)
 {
-  calcHull(data);
-  return vao_p.updateVBO(0, data); //todo
+  hull_ = calcHull(data);
+
+  if (vao_p.vboCount() > 1)
+  {
+    ColorVector colors = Protean3D::Color::createColors(data, colors_);
+    updateVBO(VBOindex::DataColor, colors);
+  }
+  return updateVBO(VBOindex::Position, data);
 }
 
 void Protean3D::GL::DataObject::draw()
@@ -94,42 +119,24 @@ void Protean3D::GL::DataObject::draw()
   modelview_matrix_p = glm::rotate(modelview_matrix_p, glm::radians(1.0f), glm::vec3(0, 0, 1));
 
   // polygons
-  shader_p[1].use();
-  shader_p[1].setModelViewMatrix(modelview_matrix_p);
+  shader_[ShaderIndex::TriangleStrip].use();
+  shader_[ShaderIndex::TriangleStrip].setModelViewMatrix(modelview_matrix_p);
   vao_p.drawIBO(1, GL_STATIC_DRAW);
 
 
   // mesh
-  shader_p[0].use();
-  shader_p[0].setModelViewMatrix(modelview_matrix_p);
+  
+  shader_[ShaderIndex::Lines].use();
+  //shader_p[0].use();
+  shader_[ShaderIndex::Lines].setModelViewMatrix(modelview_matrix_p);
   
   //todo [educated] hack 
   glm::mat4 ttt = projection_matrix_p;
-  ttt[2][2] += 5E-4;
-  shader_p[0].setProjectionMatrix(ttt);
+  ttt[2][2] += 5E-4f;
+  shader_[ShaderIndex::Lines].setProjectionMatrix(ttt);
 
   vao_p.drawIBO(0, GL_STATIC_DRAW);
 
   modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(-shift, -shift, 0));
 }
 
-void Protean3D::GL::DataObject::calcHull(std::vector<glm::vec3> const& data)
-{
-  hull_ = Protean3D::Box(); // reset
-  for (auto p : data)
-  {
-    if (p.x < hull_.minVertex.x)
-      hull_.minVertex.x = p.x;
-    if (p.y < hull_.minVertex.y)
-      hull_.minVertex.y = p.y;
-    if (p.z < hull_.minVertex.z)
-      hull_.minVertex.z = p.z;
-
-    if (p.x > hull_.maxVertex.x)
-      hull_.maxVertex.x = p.x;
-    if (p.y > hull_.maxVertex.y)
-      hull_.maxVertex.y = p.y;
-    if (p.z > hull_.maxVertex.z)
-      hull_.maxVertex.z = p.z;
-  }
-}

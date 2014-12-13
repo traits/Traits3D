@@ -4,11 +4,12 @@
   #pragma warning ( disable : 4786 )
 #endif
 
+#include <vector>
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
+#include "glm/vec4.hpp"
 
 #include "global.h"
-#include "helper.h"
 //#include "protean3d/gl/helper.h"
 
 // Common namespace for all Protean3D classes
@@ -200,16 +201,7 @@ unsigned tesselationSize(Protean3D::CellVector const& t);
 PROTEAN3D_EXPORT Protean3D::Box hull(TripleVector const& data);
 
 //! Red-Green-Blue-Alpha value
-struct PROTEAN3D_EXPORT RGBA
-{
-	RGBA()
-		: r(0), g(0), b(0), a(1)
-		{}
-	RGBA(double rr, double gg, double bb, double aa = 1)
-		: r(rr), g(gg), b(bb), a(aa)
-		{}
-	double r,g,b,a;
-};
+typedef glm::vec4 RGBA;
 
 //! A Color field
 typedef std::vector<RGBA> ColorVector;
@@ -297,7 +289,6 @@ inline double angle(double sx, double sy, double ex, double ey)
 }
 
 void convexhull2d( std::vector<unsigned>& idx, const std::vector<Protean3D::Tuple>& src );
-
 
 #endif // PROTEAN3D_NOT_FOR_DOXYGEN 
 

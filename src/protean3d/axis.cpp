@@ -1,3 +1,4 @@
+#include "helper.h"
 #include "axis.h"
 
 using namespace Protean3D;

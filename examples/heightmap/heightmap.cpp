@@ -25,17 +25,17 @@ bool HeightMap::loadData()
 
   size_t size = map_vertices.size();
   float fsize = size;
-  std::vector<glm::vec4> colors(size);
+  Protean3D::ColorVector colors(size);
   for (auto i = 0; i != size; ++i)
   {
     glm::vec4& elem = colors[i];
-    elem[0] = i / fsize;
-    elem[1] = i / fsize / 4;
-    elem[2] = 1 - i / fsize;
-    elem[3] = 1.0f;
+    elem.r = i / fsize;
+    elem.g = i / fsize / 4;
+    elem.b = 1 - i / fsize;
+    elem.a = 1.0f;
   }
-  
-  return addDataColor(colors) && addMeshColor(glm::vec4(0,0,0,0));
+
+  return addDataColor(colors) && addMeshColor(glm::vec4(0, 0, 0, 0));
 }
 
 bool HeightMap::setData()

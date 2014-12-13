@@ -1,3 +1,4 @@
+#include "helper.h"
 #include "scale.h"
 
 using namespace Protean3D;

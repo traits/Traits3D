@@ -5,6 +5,7 @@
 #include <cmath>
 #include <vector>
 #include <algorithm>
+#include "types.h"
 
 
 namespace Protean3D
@@ -24,6 +25,8 @@ inline std::shared_ptr<TARGET> safe_down_cast(std::shared_ptr<SOURCE> source)
 {
   return dynamic_pointer_cast<TARGET>(source);
 }
+
+Box calcHull(std::vector<glm::vec3> const& data);
 
 } //ns
 
