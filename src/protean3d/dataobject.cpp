@@ -49,8 +49,6 @@ bool Protean3D::GL::DataObject::initShader()
 bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& data,
   size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/) 
 {
-  vao_p.bind();
-
   if (xsize*ysize != data.size())
     return false;
 
@@ -79,7 +77,6 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& da
 // todo check size against position vector[s]
 bool Protean3D::GL::DataObject::addColor(ColorVector const& data)
 {
-  vao_p.bind();
   GL::VBO::PrimitiveLayout datalayout(4, GL_FLOAT, 0, 0);
   if (!vao_p.appendVBO(data, datalayout, GL_STATIC_DRAW)) //todo Reihenfolge vbo's!
     return false;
@@ -90,7 +87,6 @@ bool Protean3D::GL::DataObject::addColor(ColorVector const& data)
 
 bool Protean3D::GL::DataObject::addMeshColor(glm::vec4 const& data)
 {
-  vao_p.bind();
   return shader_[ShaderIndex::Lines].setUniformVec4(data, GL::ShaderCode::Vertex::v_in_color);
 }
 
@@ -111,8 +107,6 @@ void Protean3D::GL::DataObject::draw()
   //this->setData();
   /* render the next frame */
   //glClear(GL_COLOR_BUFFER_BIT);
-
-  vao_p.bind();
 
   float shift = 5.0f;
   modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(shift, shift, 0));

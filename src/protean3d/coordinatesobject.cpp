@@ -24,7 +24,6 @@ bool Protean3D::GL::CoordinatesObject::initShader()
 bool Protean3D::GL::CoordinatesObject::setHull(Protean3D::Box const& hull)
 {
   hull_ = hull;
-  vao_p.bind();
 
   //todo
   
@@ -84,8 +83,6 @@ bool Protean3D::GL::CoordinatesObject::setHull(Protean3D::Box const& hull)
 
 void Protean3D::GL::CoordinatesObject::draw()
 {
-  vao_p.bind();
-
   vao_p.updateVBO(0, axes_); //todo
 
   float shift = 5.0f;

@@ -18,9 +18,6 @@ namespace Protean3D
       VAO();
       virtual ~VAO();
 
-      void bind() { glBindVertexArray(idx_); }
-      void unbind() { glBindVertexArray(0); }
-
       template<typename PRIMITIVE>
       bool appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr, GLenum draw_type = GL_STATIC_DRAW);
       bool appendIBO(size_t xsize, size_t ysize, GLenum primitive_type);
@@ -34,10 +31,13 @@ namespace Protean3D
       VBO& vbo(size_t idx) { return vbos_[idx]; }
 
     private:
-      GLuint idx_;
+      GLuint id_ = 0;
 
       std::vector<VBO> vbos_;
       std::vector<IBO> ibos_;
+
+      void bind();
+      void unbind();
     };
 
     // implementation
@@ -46,6 +46,7 @@ namespace Protean3D
     bool Protean3D::GL::VAO::appendVBO(std::vector<PRIMITIVE> const& data, VBO::PrimitiveLayout const& descr
       , GLenum draw_type /*= GL_STATIC_DRAW*/)
     {
+      bind();
       //static_assert(std::is_same<PRIMITIVE, GLfloat>::value, "Incorrect buffer type!");
       VBO buffer(descr);
       if (data.empty() || !buffer.bindData(data, draw_type))
@@ -61,6 +62,7 @@ namespace Protean3D
       if (idx >= vboCount())
         return false;
 
+      bind();
       GLint oldtype;
       glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_USAGE, &oldtype);
       if (GL_NO_ERROR != glGetError())
