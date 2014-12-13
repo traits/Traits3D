@@ -9,15 +9,8 @@ const std::map<Protean3D::GL::DataObject::VBOindex, size_t> Protean3D::GL::DataO
   { VBOindex::DataColor, 1 },
 };
 
-const std::map<Protean3D::GL::DataObject::ShaderIndex, size_t>
-Protean3D::GL::DataObject::EnumedContainer<Protean3D::GL::Shader, Protean3D::GL::DataObject::ShaderIndex>::idx_map =
-{
-  { Protean3D::GL::DataObject::ShaderIndex::Lines, 0 },
-  { Protean3D::GL::DataObject::ShaderIndex::TriangleStrip, 1 },
-};
-
 Protean3D::GL::DataObject::DataObject()
-  : GL::Object(), shader_(shader_p)
+  : GL::Object()
 {
   initShader();
 
@@ -33,12 +26,12 @@ bool Protean3D::GL::DataObject::initShader()
   if (!s.create(GL::ShaderCode::Vertex::Line, GL::ShaderCode::Fragment::Simple))
     return false;
 
-  shader_p.push_back(s);
+  shader_[ShaderIndex::Lines] = s;
 
   if (!s.create(GL::ShaderCode::Vertex::TriangleStrip, GL::ShaderCode::Fragment::Simple))
     return false;
 
-  shader_p.push_back(s);
+  shader_[ShaderIndex::TriangleStrip] = s;
 
   return true;
 }
@@ -62,11 +55,11 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& da
   
   vao_p.appendVBO(data, datalayout, drawtype);
 
-  for (auto i = 0; i != shader_p.size(); ++i)
+  for (auto& s : shader_)
   {
-    shader_p[i].bindAttribute(vbo(VBOindex::Position), GL::ShaderCode::Vertex::v_coordinates);
-    shader_p[i].setProjectionMatrix(projection_matrix_p);
-    shader_p[i].setModelViewMatrix(modelview_matrix_p);
+    s.second.bindAttribute(vbo(VBOindex::Position), GL::ShaderCode::Vertex::v_coordinates);
+    s.second.setProjectionMatrix(projection_matrix_p);
+    s.second.setModelViewMatrix(modelview_matrix_p);
   }
 
   hull_ = calcHull(data);

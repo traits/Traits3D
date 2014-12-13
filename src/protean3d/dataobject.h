@@ -57,33 +57,7 @@ namespace Protean3D
         return vao_p.updateVBO(vidx.at(idx), data);
       }
 
-      template <typename P, typename... Params>
-      class EnumedContainer;
-
-      template <typename C, typename E>
-      class EnumedContainer < VAO, C, E >
-      {
-
-      };
-
-      template <>
-      class EnumedContainer < Shader, ShaderIndex >
-      {
-      public:
-        explicit EnumedContainer(std::vector<Shader>& data)
-        : data_(data) {}
-  
-        Shader& operator[](ShaderIndex idx) { return data_[idx_map.at(idx)]; }
-
-      private:
-        static const std::map<ShaderIndex, size_t> idx_map;
-        std::vector<Shader>& data_;
-      };
-      
-
-      EnumedContainer<VAO, VBO, VBOindex> vbos;
-      EnumedContainer<VAO, IBO, IBOindex> ibos;
-      EnumedContainer<Shader, ShaderIndex> shader_;
+      std::map<ShaderIndex, Shader> shader_;
 
     };
 

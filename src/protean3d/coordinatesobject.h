@@ -18,8 +18,7 @@ namespace Protean3D
       //bool updatePositionData(std::vector<glm::vec3> const& data);
 
     private:
-      bool initShader();
-
+      GL::Shader shader_;
       Coordinates coordinates_;
       Protean3D::Box hull_;
 
