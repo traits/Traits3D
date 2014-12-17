@@ -47,18 +47,8 @@ namespace Protean3D
         TriangleStrip
       };
 
-      static const std::map<VBOindex, size_t> vidx;
-
-      VBO& vbo(VBOindex idx) { return vao_p.vbo(vidx.at(idx)); }
-
-      template <typename T>
-      bool updateVBO(VBOindex idx, std::vector<T> const& data)
-      {
-        return vao_p.updateVBO(vidx.at(idx), data);
-      }
-
       std::map<ShaderIndex, Shader> shader_;
-
+      std::map<VBOindex, std::unique_ptr<VBO>> vbos_;
     };
 
   } // ns

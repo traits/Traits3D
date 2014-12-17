@@ -6,6 +6,8 @@ Protean3D::GL::CoordinatesObject::CoordinatesObject()
   : GL::Object()
 {
   shader_.create(GL::ShaderCode::Vertex::Line, GL::ShaderCode::Fragment::Simple);
+
+  vbo_ = std::make_unique<VBO>(&vao_p);
 }
 
 bool Protean3D::GL::CoordinatesObject::setHull(Protean3D::Box const& hull)
@@ -50,10 +52,9 @@ bool Protean3D::GL::CoordinatesObject::setHull(Protean3D::Box const& hull)
   axes_[22] = glm::vec3(X, Y, z);
   axes_[23] = glm::vec3(X, Y, Z);
 
+  vbo_->create(axes_, GL_STATIC_DRAW); //todo (could be dynamic)
 
-  vao_p.appendVBO(axes_, GL_STATIC_DRAW); //todo (could be dynamic)
-
-  shader_.bindAttribute(vao_p.vbo(0), GL::ShaderCode::Vertex::v_coordinates);
+  shader_.bindAttribute(*vbo_, GL::ShaderCode::Vertex::v_coordinates);
   shader_.setUniformVec4(glm::vec4(0.0f, 0.5f, 0.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);
   shader_.setProjectionMatrix(projection_matrix_p);
   shader_.setModelViewMatrix(modelview_matrix_p);
@@ -68,7 +69,7 @@ bool Protean3D::GL::CoordinatesObject::setHull(Protean3D::Box const& hull)
 
 void Protean3D::GL::CoordinatesObject::draw()
 {
-  vao_p.updateVBO(0, axes_); //todo
+  vbo_->update(axes_); //todo
 
   float shift = 5.0f;
   modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(shift, shift, 0));
@@ -76,6 +77,6 @@ void Protean3D::GL::CoordinatesObject::draw()
 
   shader_.use();
   shader_.setModelViewMatrix(modelview_matrix_p);
-  vao_p.vbo(0).draw(GL_LINES, 0, 24);
+  vbo_->draw(GL_LINES, 0, 24);
   modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(-shift, -shift, 0));
 }

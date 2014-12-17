@@ -1,14 +1,16 @@
 #include "vbo.h"
 
-Protean3D::GL::VBO::VBO() 
+Protean3D::GL::VBO::VBO(VAO* vao) 
+  :vao_(vao)
 {
   glGenBuffers(1, &id_);
-  if (GL_NO_ERROR != glGetError())
+  if (!vao_ || GL_NO_ERROR != glGetError())
     throw std::domain_error("Protean3D: VBO construction error");
 }
 
 bool Protean3D::GL::VBO::bindAttribute(GLuint attr_location)
 {
+  vao_->bind();
   glBindBuffer(GL_ARRAY_BUFFER, id_);
 
   char* ptr = nullptr;

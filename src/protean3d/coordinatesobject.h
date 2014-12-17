@@ -2,6 +2,7 @@
 
 #include "coordinates.h"
 #include "globject.h"
+#include "vbo.h"
 
 namespace Protean3D
 {
@@ -23,6 +24,8 @@ namespace Protean3D
       Protean3D::Box hull_;
 
       std::vector<glm::vec3> axes_;
+
+      std::unique_ptr<VBO> vbo_;
     };
   } // ns
 } // ns

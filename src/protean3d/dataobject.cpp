@@ -1,18 +1,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "helper.h"
+#include "vbo.h"
 #include "color.h"
 #include "dataobject.h"
-
-const std::map<Protean3D::GL::DataObject::VBOindex, size_t> Protean3D::GL::DataObject::vidx =
-{
-  { VBOindex::Position, 0 },
-  { VBOindex::DataColor, 1 },
-};
 
 Protean3D::GL::DataObject::DataObject()
   : GL::Object()
 {
   initShader();
+  vbos_[VBOindex::Position] = std::make_unique<VBO>(&vao_p);
+  vbos_[VBOindex::DataColor] = std::make_unique<VBO>(&vao_p);
 
 //  vidx[VBOindex::Position] = 0;
 //  vidx[VBOindex::DataColor] = 1;
@@ -51,11 +48,11 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& da
   if (!vao_p.appendIBO(xsize, ysize, GL_TRIANGLE_STRIP))
     return false;
   
-  vao_p.appendVBO(data, drawtype);
+  vbos_[VBOindex::Position]->create(data, drawtype);
 
   for (auto& s : shader_)
   {
-    s.second.bindAttribute(vbo(VBOindex::Position), GL::ShaderCode::Vertex::v_coordinates);
+    s.second.bindAttribute(*vbos_[VBOindex::Position], GL::ShaderCode::Vertex::v_coordinates);
     s.second.setProjectionMatrix(projection_matrix_p);
     s.second.setModelViewMatrix(modelview_matrix_p);
   }
@@ -68,11 +65,11 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& da
 // todo check size against position vector[s]
 bool Protean3D::GL::DataObject::addColor(ColorVector const& data)
 {
-  if (!vao_p.appendVBO(data, GL_STATIC_DRAW)) //todo Reihenfolge vbo's!
+  if (!vbos_[VBOindex::DataColor]->create(data, GL_STATIC_DRAW))
     return false;
   
   colors_ = data;
-  return shader_[ShaderIndex::TriangleStrip].bindAttribute(vbo(VBOindex::DataColor), GL::ShaderCode::Vertex::v_in_color);
+  return shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColor], GL::ShaderCode::Vertex::v_in_color);
 }
 
 bool Protean3D::GL::DataObject::addMeshColor(glm::vec4 const& data)
@@ -84,12 +81,10 @@ bool Protean3D::GL::DataObject::updatePositionData(std::vector<glm::vec3> const&
 {
   hull_ = calcHull(data);
 
-  if (vao_p.vboCount() > 1)
-  {
     ColorVector colors = Protean3D::Color::createColors(data, colors_);
-    updateVBO(VBOindex::DataColor, colors);
-  }
-  return updateVBO(VBOindex::Position, data);
+    vbos_[VBOindex::DataColor]->update(colors);
+
+    return vbos_[VBOindex::Position]->update(data);
 }
 
 void Protean3D::GL::DataObject::draw()
