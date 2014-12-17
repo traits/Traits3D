@@ -1,8 +1,11 @@
 #include "IBO.h"
 
 
-Protean3D::GL::IBO::IBO()
+Protean3D::GL::IBO::IBO(VAO* vao)
+  :vao_(vao)
 {
+  if (!vao_)
+    throw std::domain_error("Protean3D: IBO construction error");
   glGenBuffers(1, &id_);
   if (GL_NO_ERROR != glGetError())
     throw std::domain_error("Protean3D: IBO construction error");
@@ -12,6 +15,8 @@ bool Protean3D::GL::IBO::bindData(GLenum draw_type)
 {
   if (indexes_.empty())
     return false;
+
+  vao_->bind();
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_);
  
@@ -40,8 +45,11 @@ bool Protean3D::GL::IBO::create(size_t xsize, size_t ysize, GLenum primitive_typ
   return indexmaker_.create(indexes_, restart_type_, xsize, ysize, primitive_type);
 }
 
-bool Protean3D::GL::IBO::draw()
+bool Protean3D::GL::IBO::draw(GLenum draw_type)
 {
+  if (!bindData(draw_type))
+    return false;
+
   if (IndexMaker::RestartType::PrimitiveRestart == restart_type_)
   {
 	  glEnable(GL_PRIMITIVE_RESTART);

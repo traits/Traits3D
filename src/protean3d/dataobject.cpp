@@ -1,6 +1,5 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "helper.h"
-#include "vbo.h"
 #include "color.h"
 #include "dataobject.h"
 
@@ -10,6 +9,8 @@ Protean3D::GL::DataObject::DataObject()
   initShader();
   vbos_[VBOindex::Position] = std::make_unique<VBO>(&vao_p);
   vbos_[VBOindex::DataColor] = std::make_unique<VBO>(&vao_p);
+  ibos_[IBOindex::Polygons] = std::make_unique<IBO>(&vao_p);
+  ibos_[IBOindex::Mesh] = std::make_unique<IBO>(&vao_p);
 
 //  vidx[VBOindex::Position] = 0;
 //  vidx[VBOindex::DataColor] = 1;
@@ -42,10 +43,10 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& da
   if (xsize*ysize != data.size())
     return false;
 
-  if (!vao_p.appendIBO(xsize, ysize, GL_LINE_STRIP))
+  if (!ibos_[IBOindex::Mesh]->create(xsize, ysize, GL_LINE_STRIP))
     return false;
   
-  if (!vao_p.appendIBO(xsize, ysize, GL_TRIANGLE_STRIP))
+  if (!ibos_[IBOindex::Polygons]->create(xsize, ysize, GL_TRIANGLE_STRIP))
     return false;
   
   vbos_[VBOindex::Position]->create(data, drawtype);
@@ -100,7 +101,7 @@ void Protean3D::GL::DataObject::draw()
   // polygons
   shader_[ShaderIndex::TriangleStrip].use();
   shader_[ShaderIndex::TriangleStrip].setModelViewMatrix(modelview_matrix_p);
-  vao_p.drawIBO(1, GL_STATIC_DRAW);
+  ibos_[IBOindex::Polygons]->draw(GL_STATIC_DRAW);
 
 
   // mesh
@@ -114,7 +115,7 @@ void Protean3D::GL::DataObject::draw()
   ttt[2][2] += 5E-4f;
   shader_[ShaderIndex::Lines].setProjectionMatrix(ttt);
 
-  vao_p.drawIBO(0, GL_STATIC_DRAW);
+  ibos_[IBOindex::Mesh]->draw(GL_STATIC_DRAW);
 
   modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(-shift, -shift, 0));
 }

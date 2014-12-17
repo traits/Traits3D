@@ -2,7 +2,6 @@
 
 #include "coordinates.h"
 #include "globject.h"
-#include "vbo.h"
 
 namespace Protean3D
 {

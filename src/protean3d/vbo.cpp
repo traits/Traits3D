@@ -3,8 +3,11 @@
 Protean3D::GL::VBO::VBO(VAO* vao) 
   :vao_(vao)
 {
+  if (!vao_)
+    throw std::domain_error("Protean3D: VBO construction error");
+
   glGenBuffers(1, &id_);
-  if (!vao_ || GL_NO_ERROR != glGetError())
+  if (GL_NO_ERROR != glGetError())
     throw std::domain_error("Protean3D: VBO construction error");
 }
 

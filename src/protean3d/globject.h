@@ -2,6 +2,8 @@
 
 #include "shader.h"
 #include "vao.h"
+#include "vbo.h"
+#include "ibo.h"
 
 namespace Protean3D
 {

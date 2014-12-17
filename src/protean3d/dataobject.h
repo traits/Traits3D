@@ -49,6 +49,7 @@ namespace Protean3D
 
       std::map<ShaderIndex, Shader> shader_;
       std::map<VBOindex, std::unique_ptr<VBO>> vbos_;
+      std::map<IBOindex, std::unique_ptr<IBO>> ibos_;
     };
 
   } // ns
