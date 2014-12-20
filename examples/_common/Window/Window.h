@@ -7,7 +7,7 @@
 namespace Example
 {
 
-  class EXAMPLE_EXPORT Window
+class EXAMPLE_EXPORT Window
 {
 public:
   explicit Window(std::string val = "Protean3D Demo");

@@ -17,15 +17,14 @@ namespace Protean3D
       explicit VBO(VAO* vao);
       virtual ~VBO() = default;
       GLuint id() const { return id_; } //!< VBO index
-
+      
+      //todo specialize this
       template<typename PRIMITIVE>
       bool create(std::vector<PRIMITIVE> const& data, GLenum draw_type = GL_STATIC_DRAW);
 
       template<typename PRIMITIVE>
       bool update(std::vector<PRIMITIVE> const& data);
 
-      bool bindData(std::vector<glm::vec3> const& data, GLenum drawtype);
-      bool bindData(std::vector<glm::vec4> const& data, GLenum drawtype);
       bool bindAttribute(GLuint attr_location);
       bool draw(GLenum primitive_type, size_t first, size_t count);
 
@@ -68,11 +67,13 @@ namespace Protean3D
       size_t primitive_size_ = 1;
       GLuint program_;
       std::string attr_name_;
-      VAO* vao_; // weak pointer
+      VAO* vao_; // non-owning pointer
 
 
       template <typename PRIMITIVE>
       bool bindData(std::vector<PRIMITIVE> const& data, GLenum drawtype);    
+      bool bindData(std::vector<glm::vec3> const& data, GLenum drawtype);
+      bool bindData(std::vector<glm::vec4> const& data, GLenum drawtype);
     };
 
 

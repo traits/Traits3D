@@ -4,11 +4,11 @@
 
 namespace Protean3D
 {
-class PROTEAN3D_EXPORT Color
+class PROTEAN3D_EXPORT ColorTable
 {
 public:
-  virtual ~Color(){}
-  static RGBA color(float z, ColorVector const& vec, float zmin, float zmax);
+  virtual ~ColorTable(){}
+  static Color color(float z, ColorVector const& vec, float zmin, float zmax);
   static ColorVector stdColor(size_t len);
   static ColorVector createColors(std::vector<glm::vec3> const& data, ColorVector const& color_field);
 

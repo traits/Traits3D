@@ -2,7 +2,7 @@
 
 #include <array>
 #include "helper.h"
-#include "color.h"
+#include "colortable.h"
 #include "coordinatesobject.h"
 #include "dataobject.h"
 
@@ -25,26 +25,15 @@ namespace Protean3D
     void draw();
     virtual bool setData(){ return true; }
 
-    bool addPositionData(std::vector<glm::vec3> const& data,
-      size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
+  protected:
+    Box hull_p;
+    GL::CoordinatesObject coordinates_object_p;
+    GL::DataObject data_object_p;
 
-    bool updatePositionData(std::vector<glm::vec3> const& data);
-    bool addDataColor(ColorVector const& val);
-    ColorVector createColors(std::vector<glm::vec3> const& data, ColorVector const& color_field);
-    bool addMeshColor(glm::vec4 const& val);
+    glm::mat4 projection_matrix_p;
+    glm::mat4  modelview_matrix_p;
 
   private:
-    Box hull_;
-    GL::CoordinatesObject coordinates_object_;
-    GL::DataObject data_object_;
-
-    glm::mat4 projection_matrix_;
-    glm::mat4  modelview_matrix_;
-
-    /**********************************************************************
-    * Heightmap vertex and index data
-    *********************************************************************/
-
     /* Frustum configuration */
     GLfloat view_angle;
     GLfloat aspect_ratio;

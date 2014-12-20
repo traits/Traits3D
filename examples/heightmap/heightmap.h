@@ -1,8 +1,8 @@
 #pragma once
 
-#include "protean3d/plot3d.h"
+#include "protean3d/surfaceplot.h"
 
-class HeightMap : public Protean3D::Plot3D
+class HeightMap : public Protean3D::SurfacePlot
 {
 public:
   HeightMap();

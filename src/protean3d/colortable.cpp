@@ -1,21 +1,21 @@
 #include <cmath>
 #include "helper.h"
-#include "color.h"
+#include "colortable.h"
 
 
-Protean3D::RGBA Protean3D::Color::color(float z, ColorVector const& vec, float zmin, float zmax)
+Protean3D::Color Protean3D::ColorTable::color(float z, ColorVector const& vec, float zmin, float zmax)
 {
   size_t len = vec.size();
 
   if (z<zmin || z>zmax || zmax <= zmin || 0==len)
-    return RGBA();
+    return Color();
 
   size_t idx = static_cast<size_t>(std::lround((z - zmin) / (zmax - zmin) * len));
 
   return (idx < len) ? vec[idx] : vec.back();
 }
 
-Protean3D::ColorVector Protean3D::Color::stdColor(size_t len)
+Protean3D::ColorVector Protean3D::ColorTable::stdColor(size_t len)
 {
   if (0 == len)
     return ColorVector();
@@ -35,7 +35,7 @@ Protean3D::ColorVector Protean3D::Color::stdColor(size_t len)
   return colors;
 }
 
-Protean3D::ColorVector Protean3D::Color::createColors(std::vector<glm::vec3> const& data, ColorVector const& color_field)
+Protean3D::ColorVector Protean3D::ColorTable::createColors(std::vector<glm::vec3> const& data, ColorVector const& color_field)
 {
   ColorVector ret(data.size());
 
@@ -46,7 +46,7 @@ Protean3D::ColorVector Protean3D::Color::createColors(std::vector<glm::vec3> con
 
   for (auto i = 0; i != data.size(); ++i)
   {
-    RGBA c = color(data[i].z, color_field, zmin, zmax);
+    Color c = color(data[i].z, color_field, zmin, zmax);
     ret[i] = c;
   }
   return ret;

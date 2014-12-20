@@ -201,10 +201,10 @@ unsigned tesselationSize(Protean3D::CellVector const& t);
 PROTEAN3D_EXPORT Protean3D::Box hull(TripleVector const& data);
 
 //! Red-Green-Blue-Alpha value
-typedef glm::vec4 RGBA;
+typedef glm::vec4 Color;
 
 //! A Color field
-typedef std::vector<RGBA> ColorVector;
+typedef std::vector<Color> ColorVector;
 
 ////! simplified glut routine (glUnProject): windows coordinates_p --> object coordinates_p 
 ///**

@@ -1,6 +1,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "helper.h"
-#include "color.h"
+#include "colortable.h"
 #include "dataobject.h"
 
 Protean3D::GL::DataObject::DataObject()
@@ -11,9 +11,6 @@ Protean3D::GL::DataObject::DataObject()
   vbos_[VBOindex::DataColor] = std::make_unique<VBO>(&vao_p);
   ibos_[IBOindex::Polygons] = std::make_unique<IBO>(&vao_p);
   ibos_[IBOindex::Mesh] = std::make_unique<IBO>(&vao_p);
-
-//  vidx[VBOindex::Position] = 0;
-//  vidx[VBOindex::DataColor] = 1;
 }
 
 
@@ -73,7 +70,7 @@ bool Protean3D::GL::DataObject::addColor(ColorVector const& data)
   return shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColor], GL::ShaderCode::Vertex::v_in_color);
 }
 
-bool Protean3D::GL::DataObject::addMeshColor(glm::vec4 const& data)
+bool Protean3D::GL::DataObject::addMeshColor(Color const& data)
 {
   return shader_[ShaderIndex::Lines].setUniformVec4(data, GL::ShaderCode::Vertex::v_in_color);
 }
@@ -82,10 +79,10 @@ bool Protean3D::GL::DataObject::updatePositionData(std::vector<glm::vec3> const&
 {
   hull_ = calcHull(data);
 
-    ColorVector colors = Protean3D::Color::createColors(data, colors_);
-    vbos_[VBOindex::DataColor]->update(colors);
+  ColorVector colors = Protean3D::ColorTable::createColors(data, colors_);
+  vbos_[VBOindex::DataColor]->update(colors);
 
-    return vbos_[VBOindex::Position]->update(data);
+  return vbos_[VBOindex::Position]->update(data);
 }
 
 void Protean3D::GL::DataObject::draw()
@@ -104,8 +101,7 @@ void Protean3D::GL::DataObject::draw()
   ibos_[IBOindex::Polygons]->draw(GL_STATIC_DRAW);
 
 
-  // mesh
-  
+  // mesh  
   shader_[ShaderIndex::Lines].use();
   //shader_p[0].use();
   shader_[ShaderIndex::Lines].setModelViewMatrix(modelview_matrix_p);

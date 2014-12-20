@@ -20,7 +20,7 @@ namespace Protean3D
     /**    
      Checks, if the argument fits in a GLfloat by returning the scaling factor
      associated with values position in (+/-)[0 ... max(GLfloat) ... max(double)]
-     \return m, with (+/-)m*max(GLfloat) == value (>1 for values, exceeding the range of GLfloat)  
+     \return m>=0, with (+/-)m*max(GLfloat) == value (>1 for values, exceeding the range of GLfloat)  
      */
     inline GLfloat excess(double value)
     {
@@ -29,12 +29,24 @@ namespace Protean3D
         : -static_cast<GLfloat>(value / std::numeric_limits<GLfloat>::max());
     }
 
+    //! \return maximal excess for all three components
     inline GLfloat excess(glm::dvec3 value)
     {
       return std::max({ excess(value.x), excess(value.y), excess(value.z) });
     }
     
+    //! \return maximal excess for val
     GLfloat excess(std::vector<glm::dvec3> const& val); 
+
+    /**
+     Scale vector by maximal excess, if exc > 1, simply convert 
+     vector<glm::vec3> else
+    
+     \param [in,out] exc The maximal excess
+     \param val          The vector to scale
+    
+     \return Scaled/converted vector
+     */
     std::vector<glm::vec3> scale(double& exc, std::vector<glm::dvec3> const& val);
   }
 }

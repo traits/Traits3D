@@ -20,7 +20,7 @@ namespace Protean3D
 
       bool updatePositionData(std::vector<glm::vec3> const& data);
       bool addColor(ColorVector const& data);
-      bool addMeshColor(glm::vec4 const& data);
+      bool addMeshColor(Color const& data);
 
       const Protean3D::Box& hull() const { return hull_; }
 
