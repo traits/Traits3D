@@ -71,12 +71,12 @@ void Protean3D::GL::CoordinatesObject::draw()
 {
   vbo_->update(axes_); //todo
 
-  float shift = 5.0f;
-  modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(shift, shift, 0));
-  modelview_matrix_p = glm::rotate(modelview_matrix_p, glm::radians(1.0f), glm::vec3(0, 0, 1));
+  //float shift = 5.0f;
+  //modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(shift, shift, 0));
+  //modelview_matrix_p = glm::rotate(modelview_matrix_p, glm::radians(1.0f), glm::vec3(0, 0, 1));
 
   shader_.use();
   shader_.setModelViewMatrix(modelview_matrix_p);
   vbo_->draw(GL_LINES, 0, 24);
-  modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(-shift, -shift, 0));
+  //modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(-shift, -shift, 0));
 }

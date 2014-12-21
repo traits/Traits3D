@@ -26,7 +26,7 @@ void Coordinates::init(Protean3D::Triple first, Protean3D::Triple second)
 	
 	setPosition(first, second);
 	
-	double majl =  dv.length() / 100; // 1 %
+	double majl =  glm::length(dv) / 100; // 1 %
 	//setTicLength(majl, 0.6 * majl);
 
 	axes[X1].setPosition(first, first+Triple(dv.x,    0,     0));												// front bottom x
@@ -287,7 +287,7 @@ void Coordinates::autoDecorateExposedAxis(Axis& ax, bool left)
 
 	//diff = Triple(diff.x,diff.y,0); // projection
 	//
-	//double s = diff.length();
+	//double s = glm::distance(diff);
 	//
 	//if (!s)
 	//	return;

@@ -8,6 +8,7 @@
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 #include "glm/vec4.hpp"
+#include "glm/geometric.hpp"
 
 #include "global.h"
 //#include "protean3d/gl/helper.h"
@@ -110,6 +111,7 @@ enum ANCHOR
 
 typedef glm::dvec2 Tuple;
 typedef glm::dvec3 Triple;
+typedef glm::vec3 TripleF;
 
 //! Box spanned by 2 Triples
 /**
@@ -246,7 +248,7 @@ inline Triple normalizedCross(Triple const& u, Triple const& v)
   n[2] = u[0] * v[1] - u[1] * v[0];
 
   /* normalize */
-  double l = n.length();
+  double l = glm::length(n);
   if (l)
 	{
 		n /= l;

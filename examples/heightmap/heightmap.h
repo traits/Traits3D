@@ -7,7 +7,7 @@ class HeightMap : public Protean3D::SurfacePlot
 public:
   HeightMap();
   bool loadData();
-  bool setData() override;
+  void updateData() override;
 
 private:
   std::vector<GLuint> map_line_indices;

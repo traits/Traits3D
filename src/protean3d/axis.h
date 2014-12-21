@@ -26,7 +26,7 @@ public:
   void position(Protean3D::Triple& beg, Protean3D::Triple& end) const {beg = beg_; end = end_;} //!< Returns axis' position
   Protean3D::Triple begin() const { return beg_; } //!< Returns axis' beginning position
   Protean3D::Triple end() const { return end_; } //!< Returns axis' ending position 
-  double length() const { return (end_-beg_).length(); } //!< Returns axis' length
+  double length() const { return glm::distance(beg_,end_); } //!< Returns axis' length
 
   void setTicOrientation(double tx, double ty, double tz); //!< Sets tic orientation
   void setTicOrientation(const Protean3D::Triple& val); //!< Same function as above

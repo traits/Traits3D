@@ -87,16 +87,14 @@ bool Protean3D::GL::DataObject::updatePositionData(std::vector<glm::vec3> const&
 
 void Protean3D::GL::DataObject::draw()
 {
-  //this->setData();
-  /* render the next frame */
-  //glClear(GL_COLOR_BUFFER_BIT);
+  //float shift = 5.0f;
+  //modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(shift, shift, 0));
+  //modelview_matrix_p = glm::rotate(modelview_matrix_p, glm::radians(1.0f), glm::vec3(0, 0, 1));
 
-  float shift = 5.0f;
-  modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(shift, shift, 0));
-  modelview_matrix_p = glm::rotate(modelview_matrix_p, glm::radians(1.0f), glm::vec3(0, 0, 1));
 
   // polygons
   shader_[ShaderIndex::TriangleStrip].use();
+  shader_[ShaderIndex::TriangleStrip].setProjectionMatrix(projection_matrix_p);
   shader_[ShaderIndex::TriangleStrip].setModelViewMatrix(modelview_matrix_p);
   ibos_[IBOindex::Polygons]->draw(GL_STATIC_DRAW);
 
@@ -108,11 +106,12 @@ void Protean3D::GL::DataObject::draw()
   
   //todo [educated] hack 
   glm::mat4 ttt = projection_matrix_p;
-  ttt[2][2] += 5E-4f;
+  ttt[2][2] += 0.0f;
+  //ttt[2][2] += 5E-6f;
   shader_[ShaderIndex::Lines].setProjectionMatrix(ttt);
-
+  shader_[ShaderIndex::Lines].setModelViewMatrix(modelview_matrix_p);
   ibos_[IBOindex::Mesh]->draw(GL_STATIC_DRAW);
 
-  modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(-shift, -shift, 0));
+  //modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(-shift, -shift, 0));
 }
 

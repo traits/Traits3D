@@ -38,11 +38,11 @@ bool HeightMap::loadData()
   return addDataColor(colors) && addMeshColor(glm::vec4(0, 0, 0, 0));
 }
 
-bool HeightMap::setData()
+void HeightMap::updateData()
 {
   update_map(1);
 
-  return updatePositionData(map_vertices);
+  updatePositionData(map_vertices);
 }
 
 

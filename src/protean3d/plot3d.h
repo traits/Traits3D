@@ -1,10 +1,11 @@
 #pragma once
 
 #include <array>
-#include "helper.h"
 #include "colortable.h"
 #include "coordinatesobject.h"
 #include "dataobject.h"
+#include "extglwidget.h"
+
 
 namespace Protean3D
 {
@@ -15,7 +16,7 @@ namespace Protean3D
     in this respect - an abstract base class. It's nevertheless no pure interface.
     The class provides interfaces for basic data controlled color allocation.
     */
-  class PROTEAN3D_EXPORT Plot3D/* : public ExtGLWidget*/
+  class PROTEAN3D_EXPORT Plot3D : public ExtGLWidget
   {
   public:
     Plot3D();
@@ -23,7 +24,7 @@ namespace Protean3D
 
 
     void draw();
-    virtual bool setData(){ return true; }
+    void updateData() override {}
 
   protected:
     Box hull_p;
