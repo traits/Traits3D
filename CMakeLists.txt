@@ -1,4 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
+
+# http://www.volumesoffun.com/tag/cmake/
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 PROJECT("Protean3D")
 set(CMAKE_DEBUG_POSTFIX "D")
 

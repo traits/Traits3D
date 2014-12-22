@@ -32,6 +32,9 @@ elseif ("${PROTEAN3D_EXAMPLES_GL_CONTEXT}"  STREQUAL "GLFW")
 #    endif (GLFW_FOUND) 
 endif()
 add_subdirectory(Window)
+set_property(TARGET glfw PROPERTY FOLDER "examples/glfw/glfw-3.0.4")
+set_property(TARGET window PROPERTY FOLDER "examples/glfw/window")
+
 
 
 

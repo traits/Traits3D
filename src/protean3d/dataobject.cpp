@@ -51,8 +51,8 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& da
   for (auto& s : shader_)
   {
     s.second.bindAttribute(*vbos_[VBOindex::Position], GL::ShaderCode::Vertex::v_coordinates);
-    s.second.setProjectionMatrix(projection_matrix_p);
-    s.second.setModelViewMatrix(modelview_matrix_p);
+    //s.second.setProjectionMatrix(projection_matrix_p);
+    //s.second.setModelViewMatrix(modelview_matrix_p);
   }
 
   hull_ = calcHull(data);
