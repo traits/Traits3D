@@ -1,79 +1,90 @@
-  //-----------------------------------------------------------------
-  //              simpleplot.cpp
-  //
-  //      A simple example which shows how to use SurfacePlot
-  //-----------------------------------------------------------------
+//-----------------------------------------------------------------
+//              simpleplot.cpp
+//
+//      A simple example which shows how to use SurfacePlot
+//-----------------------------------------------------------------
 
-  #include <math.h>
-  #include <qapplication.h>
-  #include <protean3d/qtwidget.hh>
-  #include <protean3d/function.h>
-  
+#include <math.h>
+#include <qapplication.h>
+#include "qtwidget.hh"
+#include "protean3d/surfaceplot.h"
 
-  using namespace Protean3D;
 
-  class Rosenbrock : public Function
+using namespace Protean3D;
+
+class Rosenbrock : public SurfacePlot
+{
+public:
+  const size_t xsize = 41;
+  const size_t ysize = 31;
+  const float xmin = -1.73f;
+  const float xmax = 1.5f;
+  const float ymin = -1.5f;
+  const float ymax = 1.5f;
+
+
+  bool loadData()
   {
-  public:
+    float dx = (xmax - xmin) / (xsize - 1);
+    float dy = (ymax - ymin) / (ysize - 1);
+    float curr_x = ymin;
+    float curr_y = xmin;
 
-    Rosenbrock(SurfacePlot& pw)
-    :Function(pw)
+    std::vector<glm::vec3> data(xsize*ysize);
+    auto k = 0;
+    for (auto y = 0; y != ysize; ++y)
     {
+      for (auto x = 0; x != xsize; ++x)
+      {
+        data[k].x = curr_x;
+        data[k].y = curr_y;
+        data[k].x = getZ(x,y);
+        curr_x += dx;
+        ++k;
+      }
+      curr_y += dy;
+      curr_x = xmin;
     }
+    return addPositionData(data, xsize, ysize, GL_STATIC_DRAW);
+  }
 
-    double operator()(double x, double y)
-    {
-      return log((1-x)*(1-x) + 100 * (y - x*x)*(y - x*x)) / 8;
-    }
-  };
-
-
-  class Plot : public QtWidget<SurfacePlot>
+private:
+  double getZ(double x, double y)
   {
-  public:
-      Plot();
-  };
+    return std::max<float>(-10.0f, log((1-x)*(1-x) + 100 * (y - x*x)*(y - x*x)) / 8);
+  }
+};
 
 
-  Plot::Plot()
-  {
-    plot().setTitle("A Simple SurfacePlot Demonstration");
+class Plot : public QtWidget<Rosenbrock>
+{
+public:
+    Plot();
+};
+
+
+Plot::Plot()
+{
+  plot().setRotation(30, 0, 15);
+  plot().setScale(1, 1, 1);
+  plot().setShift(0.15, 0, 0);
+  plot().setZoom(0.9);
+
+//  updateData();
+}
+
+int main(int argc, char **argv)
+{
+    QApplication a(argc, argv);
     
-    Rosenbrock rosenbrock(this->plot());
+    Plot* plot = new Plot();
 
-    rosenbrock.setMesh(41,31);
-    rosenbrock.setDomain(-1.73,1.5,-1.5,1.5);
-    rosenbrock.setMinZ(-10);
+    plot->plot().initializedGL();
 
-    rosenbrock.create();
-
-    plot().setRotation(30,0,15);
-    plot().setScale(1,1,1);
-    plot().setShift(0.15,0,0);
-    plot().setZoom(0.9);
-
-    for (unsigned i=0; i!=plot().coordinates()->axes.size(); ++i)
-    {
-      plot().coordinates()->axes[i].setMajors(7);
-      plot().coordinates()->axes[i].setMinors(4);
-    }
+    plot->plot().loadData();
 
 
-    plot().coordinates()->axes[X1].setLabelString("x-axis");
-    plot().coordinates()->axes[Y1].setLabelString("y-axis");
-    //coordinates()->axes[Z1].setLabelString(QChar(0x38f)); // Omega - see http://www.unicode.org/charts/
-
-
-    plot().setCoordinateStyle(BOX);
-
-    updateData();
-  }
-
-  int main(int argc, char **argv)
-  {
-      QApplication a(argc, argv);
-      Plot plot;
-      plot.resize(800,600);
-      plot.show();
-      return a.exec();
-  }
+    plot->resize(800, 600);
+    plot->show();
+    return a.exec();
+}

@@ -20,6 +20,11 @@ inline bool isPracticallyZero(double a, double b = 0)
     std::fmin(std::abs(a), std::abs(b)) * std::numeric_limits<double>::epsilon());
 }
 
+inline int round(double d)
+{
+  return (d > 0) ? int(d + 0.5) : int(d - 0.5);
+}
+
 template <typename TARGET, typename SOURCE>
 inline std::shared_ptr<TARGET> safe_down_cast(std::shared_ptr<SOURCE> source)
 {
