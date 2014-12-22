@@ -202,7 +202,7 @@ void QtWidgetBase::wheelEvent( QWheelEvent *e )
 	scale z:              Qt::LeftButton | Qt::AltButton | Qt::ShiftButton
 	zoom:                 Qt::LeftButton | Qt::AltButton | Qt::ControlButton
 	shifting along x:     Qt::LeftButton | Qt::ControlButton 
-	shifting along y:     Qt::LeftButton | Qt::ControlButton
+	shifting along z:     Qt::LeftButton | Qt::ControlButton
 	\endverbatim
 
 	mouseMoveEvent() evaluates this function - if overridden, their usefulness becomes somehow limited
@@ -529,9 +529,6 @@ void Protean3D::QtWidgetBase::enableLighting( bool val /*= true*/ )
 {
   makeCurrent();
   plot_p->enableLighting(val);
-  
-  if (plot_p->initializedGL())
-    updateGL();
 }
 
 void Protean3D::QtWidgetBase::disableLighting( bool val /*= true*/ )
