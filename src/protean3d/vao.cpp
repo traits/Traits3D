@@ -8,8 +8,8 @@ Protean3D::GL::VAO::VAO()
 
 Protean3D::GL::VAO::~VAO()
 {
-  if (GL_TRUE == glIsVertexArray(id_))
-    glDeleteVertexArrays(1, &id_);
+  //if (GL_TRUE == glIsVertexArray(id_))
+  //  glDeleteVertexArrays(1, &id_);
 }
 
 void Protean3D::GL::VAO::bind()

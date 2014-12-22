@@ -21,15 +21,15 @@ namespace Protean3D
   public:
     Plot3D();
     virtual ~Plot3D();
-
+    bool initializeGL() override;
 
     void draw();
     void updateData() override {}
 
   protected:
     Box hull_p;
-    GL::CoordinatesObject coordinates_object_p;
-    GL::DataObject data_object_p;
+    std::unique_ptr<GL::CoordinatesObject> coordinates_object_p;
+    std::unique_ptr<GL::DataObject> data_object_p;
 
     glm::mat4 projection_matrix_p;
     glm::mat4  modelview_matrix_p;

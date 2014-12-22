@@ -31,8 +31,8 @@ void Protean3D::Plot3D::draw()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   
-  Triple beg = data_object_p.hull().minVertex;
-  Triple end = data_object_p.hull().maxVertex;
+  Triple beg = data_object_p->hull().minVertex;
+  Triple end = data_object_p->hull().maxVertex;
   Triple center = beg + (end - beg) * 0.5;
   float radius = static_cast<float>(glm::distance(center,beg)); //todo
 
@@ -71,10 +71,17 @@ void Protean3D::Plot3D::draw()
   projection_matrix_p = glm::translate(projection_matrix_p,
     glm::vec3(xViewportShift() * 2 * radius, yViewportShift() * 2 * radius, -7 * radius));
 
-  coordinates_object_p.setModelViewMatrix(modelview_matrix_p);
-  coordinates_object_p.setProjectionMatrix(projection_matrix_p);
-  coordinates_object_p.draw();
-  data_object_p.setModelViewMatrix(modelview_matrix_p);
-  data_object_p.setProjectionMatrix(projection_matrix_p);
-  data_object_p.draw();
+  coordinates_object_p->setModelViewMatrix(modelview_matrix_p);
+  coordinates_object_p->setProjectionMatrix(projection_matrix_p);
+  coordinates_object_p->draw();
+  data_object_p->setModelViewMatrix(modelview_matrix_p);
+  data_object_p->setProjectionMatrix(projection_matrix_p);
+  data_object_p->draw();
+}
+
+bool Protean3D::Plot3D::initializeGL()
+{
+  coordinates_object_p = std::make_unique<GL::CoordinatesObject>();
+  data_object_p = std::make_unique<GL::DataObject>();
+  return true;
 }

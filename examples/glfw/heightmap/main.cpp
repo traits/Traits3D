@@ -8,12 +8,12 @@
 
 int main()
 {
+  HeightMap hm;
+
+  // set OpenGL context
   Example::Window w("GLFW OpenGL3 Heightmap Demo");
-
-  //Protean3D::GL::VAO vao;
-
-  // has to be placed after window creation (OpenGL initialization) at this moment
-  HeightMap hm; 
+  if (!hm.initializeGL())
+    return false;
 
   if (!hm.loadData())
     return -1;

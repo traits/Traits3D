@@ -17,8 +17,7 @@ public:
   ExtGLWidget ();
   virtual ~ExtGLWidget() {}
 	
-  bool initializeGL();
-  bool initializedGL() const {return initializedGL_;}
+  virtual bool initializeGL();
   virtual void draw() = 0;
   virtual void updateData() = 0;
 
