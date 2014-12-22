@@ -37,7 +37,7 @@ void Protean3D::Plot3D::draw()
   float radius = static_cast<float>(glm::distance(center,beg)); //todo
 
   modelview_matrix_p = glm::mat4(1.0f);
-  setRotation(20.0f, 0.0f, zRotation() + 1.0f);
+  //setRotation(20.0f, 0.0f, zRotation() + 1.0f);
 
   modelview_matrix_p = glm::rotate(modelview_matrix_p, 
     glm::radians(xRotation()-90), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -56,7 +56,7 @@ void Protean3D::Plot3D::draw()
   if (beg != end)
   {
     if (ortho())
-      projection_matrix_p = glm::ortho(-radius, +radius, -radius, +radius, 0.0f, 40 * radius);
+      projection_matrix_p = glm::ortho(-radius, +radius, -radius, +radius, 0.1f * radius, 40 * radius);
     else
       projection_matrix_p = glm::frustum(-radius, +radius, -radius, +radius, 5 * radius, 400 * radius);
   }
@@ -81,6 +81,7 @@ void Protean3D::Plot3D::draw()
 
 bool Protean3D::Plot3D::initializeGL()
 {
+  ExtGLWidget::initializeGL();
   coordinates_object_p = std::make_unique<GL::CoordinatesObject>();
   data_object_p = std::make_unique<GL::DataObject>();
   return true;
