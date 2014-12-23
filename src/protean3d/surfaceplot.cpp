@@ -6,17 +6,10 @@
 bool Protean3D::SurfacePlot::addPositionData(std::vector<glm::vec3> const& data,
   size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
-  coordinates_object_p->setProjectionMatrix(projection_matrix_p);
-  coordinates_object_p->setModelViewMatrix(modelview_matrix_p);
-
-  data_object_p->setProjectionMatrix(projection_matrix_p);
-  data_object_p->setModelViewMatrix(modelview_matrix_p);
-
   if (!data_object_p->addPositionData(data, xsize, ysize, drawtype))
     return false;
 
-  coordinates_object_p->setHull(data_object_p->hull());
-  return true;
+  return coordinates_object_p->setHull(data_object_p->hull());
 }
 
 // todo check size against position vector[s]
@@ -35,6 +28,5 @@ bool Protean3D::SurfacePlot::updatePositionData(std::vector<glm::vec3> const& da
   if (!data_object_p->updatePositionData(data))
     return false;
 
-  coordinates_object_p->setHull(data_object_p->hull());
-  return true;
+  return coordinates_object_p->setHull(data_object_p->hull());
 }
