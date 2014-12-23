@@ -19,7 +19,7 @@ namespace Protean3D
   The class covers mouse/keyboard handling, lighting and basic transformations, like
   scaling, shifting and rotating objects.
 */
-  class EXAMPLE_EXPORT QtWidgetBase : public QGLWidget
+class EXAMPLE_EXPORT QtWidgetBase : public QGLWidget
 {
   Q_OBJECT
 

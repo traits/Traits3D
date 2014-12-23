@@ -31,8 +31,6 @@ list(REMOVE_ITEM SUBDIRS _common)
 ## no executables to create here
 #list(REMOVE_ITEM SUBDIRS _common)
 
-file(GLOB PROTEAN3D_GL_DIR_SOURCES ${PROTEAN3D_GL_DIR}/*.*)
-#add_library(glloader STATIC ${PROTEAN3D_GL_DIR_SOURCES})
 
 # create single project for every example
 foreach(subdir ${SUBDIRS})

@@ -66,7 +66,7 @@ public:
     return addDataColor(colors) && addMeshColor(glm::vec4(0, 0, 0, 0));
   }
 
-  void updateData()
+  void updateData() override
   {
     updatePositionData(data_);
   }
@@ -89,12 +89,10 @@ public:
 
 Plot::Plot()
 {
-  plot().setRotation(30, 0, 15);
-  plot().setScale(1, 1, 1);
-  plot().setShift(0.15, 0, 0);
-  plot().setZoom(0.9);
-
-//  updateData();
+  setRotation(30, 0, 15);
+  setScale(1, 1, 1);
+  setShift(0.15, 0, 0);
+  setZoom(0.9);
 }
 
 int main(int argc, char **argv)
@@ -106,7 +104,7 @@ int main(int argc, char **argv)
     plot->resize(800, 600);
     plot->show();
     //todo cannot call before show, because Qt doesn't initialize
-    // OpenGL upt to this point
+    // OpenGL up to this point
     plot->plot().loadData();
     return a.exec();
 }

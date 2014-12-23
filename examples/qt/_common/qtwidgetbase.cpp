@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include "protean3d/helper.h"
+#include "protean3d/glhelper.h"
 #include "qtwidgetbase.h"
 
 using namespace std;
@@ -560,7 +561,7 @@ void Protean3D::QtWidgetBase::paintGL()
 */
 void Protean3D::QtWidgetBase::resizeGL( int w, int h )
 {
-	//glViewport( 0, 0, w, h );
+	glViewport( 0, 0, w, h );
 	plot_p->draw();
 }
 
