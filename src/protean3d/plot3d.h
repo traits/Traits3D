@@ -21,7 +21,6 @@ namespace Protean3D
   public:
     Plot3D();
     virtual ~Plot3D();
-    bool initializeGL() override;
 
     void draw();
     void updateData() override {}

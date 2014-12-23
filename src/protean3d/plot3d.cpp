@@ -37,20 +37,17 @@ void Protean3D::Plot3D::draw()
   float radius = static_cast<float>(glm::distance(center,beg)); //todo
 
   modelview_matrix_p = glm::mat4(1.0f);
-  //setRotation(20.0f, 0.0f, zRotation() + 1.0f);
 
-  modelview_matrix_p = glm::rotate(modelview_matrix_p, 
-    glm::radians(xRotation()-90), glm::vec3(1.0f, 0.0f, 0.0f));
-  modelview_matrix_p = glm::rotate(modelview_matrix_p, 
-    glm::radians(yRotation()), glm::vec3(0.0f, 1.0f, 0.0f));
-  modelview_matrix_p = glm::rotate(modelview_matrix_p, 
-    glm::radians(zRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
-
-  modelview_matrix_p = glm::scale(modelview_matrix_p, glm::vec3(zoom() * xScale(), zoom() * yScale(), zoom() * zScale()));
-  modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(
-    xShift() - static_cast<float>(center.x),
-    yShift() - static_cast<float>(center.y),
-    zShift() - static_cast<float>(center.z)));
+  modelview_matrix_p =
+    modelview_matrix_p
+    * glm::rotate(modelview_matrix_p, glm::radians(xRotation() - 90), glm::vec3(1.0f, 0.0f, 0.0f))
+    * glm::rotate(modelview_matrix_p, glm::radians(yRotation()), glm::vec3(0.0f, 1.0f, 0.0f))
+    * glm::rotate(modelview_matrix_p, glm::radians(zRotation()), glm::vec3(0.0f, 0.0f, 1.0f))
+    * glm::scale(modelview_matrix_p, glm::vec3(zoom() * xScale(), zoom() * yScale(), zoom() * zScale()))
+    * glm::translate(modelview_matrix_p, glm::vec3(
+        xShift() - static_cast<float>(center.x),
+        yShift() - static_cast<float>(center.y),
+        zShift() - static_cast<float>(center.z)));
 
   //setOrtho(false);
   if (beg != end)
@@ -77,12 +74,4 @@ void Protean3D::Plot3D::draw()
   data_object_p->setModelViewMatrix(modelview_matrix_p);
   data_object_p->setProjectionMatrix(projection_matrix_p);
   data_object_p->draw();
-}
-
-bool Protean3D::Plot3D::initializeGL()
-{
-  ExtGLWidget::initializeGL();
-  coordinates_object_p = std::make_unique<GL::CoordinatesObject>();
-  data_object_p = std::make_unique<GL::DataObject>();
-  return true;
 }

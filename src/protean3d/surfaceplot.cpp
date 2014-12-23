@@ -30,3 +30,12 @@ bool Protean3D::SurfacePlot::updatePositionData(std::vector<glm::vec3> const& da
 
   return coordinates_object_p->setHull(data_object_p->hull());
 }
+
+bool Protean3D::SurfacePlot::initializeGL()
+{
+  if (!Plot3D::initializeGL())
+    return false;
+  coordinates_object_p = std::make_unique<GL::CoordinatesObject>();
+  data_object_p = std::make_unique<GL::DataObject>();
+  return true;
+}

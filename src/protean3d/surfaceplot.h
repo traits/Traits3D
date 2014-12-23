@@ -7,6 +7,7 @@ namespace Protean3D
   class PROTEAN3D_EXPORT SurfacePlot : public Plot3D
   {
   public:
+    bool initializeGL() override;
     bool addPositionData(std::vector<glm::vec3> const& data,
       size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
 
