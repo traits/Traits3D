@@ -17,7 +17,7 @@ find_package(Qt5OpenGL)
 
 
 add_subdirectory(_common)
-set_property(TARGET qtwidget PROPERTY FOLDER "examples/qt/qtwidget")
+set_property(TARGET qtwidget PROPERTY FOLDER "examples/qt/common")
 
 # real examples
 
@@ -47,7 +47,7 @@ foreach(subdir ${SUBDIRS})
 
   include_directories(${CMAKE_SOURCE_DIR}/src)
   add_executable(${subdir}  ${${subdir}_PROTEAN3D_EXAMPLE_SOURCES} ${${subdir}_PROTEAN3D_EXAMPLE_HEADERS})
-  set_property(TARGET ${subdir} PROPERTY FOLDER "examples/qt/${subdir}")
+  set_property(TARGET ${subdir} PROPERTY FOLDER "examples/qt")
   target_link_libraries(${subdir} protean3d ${OPENGL_LIBRARIES} Qt5::Widgets)
   #target_link_libraries(${subdir} glloader)
   #target_link_libraries(${subdir} glfw ${GLFW_LIBRARIES})

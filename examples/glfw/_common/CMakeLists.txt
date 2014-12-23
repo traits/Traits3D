@@ -24,8 +24,8 @@ mark_as_advanced(GLFW_USE_EGL)
 #    endif (GLFW_FOUND) 
 
 add_subdirectory(Window)
-set_property(TARGET glfw PROPERTY FOLDER "examples/glfw/glfw-3.0.4")
-set_property(TARGET window PROPERTY FOLDER "examples/glfw/window")
+set_property(TARGET glfw PROPERTY FOLDER "examples/glfw/common")
+set_property(TARGET window PROPERTY FOLDER "examples/glfw/common")
 
 
 
