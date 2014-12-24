@@ -106,5 +106,6 @@ int main(int argc, char **argv)
     //todo cannot call before show, because Qt doesn't initialize
     // OpenGL up to this point
     plot->plot().loadData();
+    plot->plot().setBackgroundColor(Color(0.95f));
     return a.exec();
 }

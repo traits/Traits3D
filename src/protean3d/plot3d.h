@@ -24,6 +24,8 @@ namespace Protean3D
 
     void draw();
     void updateData() override {}
+    void setBackgroundColor(Color val); //!< Sets widgets background color
+    Color backgroundRGBAColor() const { return bgcolor_; } //!< Returns the widgets background color
 
   protected:
     Box hull_p;
@@ -34,10 +36,6 @@ namespace Protean3D
     glm::mat4  modelview_matrix_p;
 
   private:
-    /* Frustum configuration */
-    GLfloat view_angle;
-    GLfloat aspect_ratio;
-    GLfloat z_near;
-    GLfloat z_far;
+    Color bgcolor_;
   };
 } // ns

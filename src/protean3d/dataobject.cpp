@@ -57,6 +57,15 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& da
   return true;
 }
 
+bool Protean3D::GL::DataObject::updatePositionData(std::vector<glm::vec3> const& data)
+{
+  hull_ = calcHull(data);
+
+  ColorVector colors = Protean3D::ColorTable::createColors(data, colors_);
+  vbos_[VBOindex::DataColor]->update(colors);
+
+  return vbos_[VBOindex::Position]->update(data);
+}
 
 // todo check size against position vector[s]
 bool Protean3D::GL::DataObject::addColor(ColorVector const& data)
@@ -73,15 +82,6 @@ bool Protean3D::GL::DataObject::addMeshColor(Color const& data)
   return shader_[ShaderIndex::Lines].setUniformVec4(data, GL::ShaderCode::Vertex::v_in_color);
 }
 
-bool Protean3D::GL::DataObject::updatePositionData(std::vector<glm::vec3> const& data)
-{
-  hull_ = calcHull(data);
-
-  ColorVector colors = Protean3D::ColorTable::createColors(data, colors_);
-  vbos_[VBOindex::DataColor]->update(colors);
-
-  return vbos_[VBOindex::Position]->update(data);
-}
 
 void Protean3D::GL::DataObject::draw()
 {
