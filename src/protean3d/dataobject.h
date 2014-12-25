@@ -13,7 +13,7 @@ namespace Protean3D
     public:
       DataObject();
 
-      void draw() override;
+      void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix) override;
 
       bool addPositionData(std::vector<glm::vec3> const& data,
         size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);

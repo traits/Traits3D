@@ -56,9 +56,7 @@ bool Protean3D::GL::CoordinatesObject::setHull(Protean3D::Box const& hull)
 
   shader_.bindAttribute(*vbo_, GL::ShaderCode::Vertex::v_coordinates);
   shader_.setUniformVec4(glm::vec4(0.0f, 0.5f, 0.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);
-  shader_.setProjectionMatrix(projection_matrix_p);
-  shader_.setModelViewMatrix(modelview_matrix_p);
-
+ 
   return true;
 }
 
@@ -67,7 +65,7 @@ bool Protean3D::GL::CoordinatesObject::setHull(Protean3D::Box const& hull)
 //  return vao_p.updateVBO(0, data); //todo
 //}
 
-void Protean3D::GL::CoordinatesObject::draw()
+void Protean3D::GL::CoordinatesObject::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
 {
   vbo_->update(axes_); //todo
 
@@ -76,7 +74,8 @@ void Protean3D::GL::CoordinatesObject::draw()
   //modelview_matrix_p = glm::rotate(modelview_matrix_p, glm::radians(1.0f), glm::vec3(0, 0, 1));
 
   shader_.use();
-  shader_.setModelViewMatrix(modelview_matrix_p);
+  shader_.setProjectionMatrix(proj_matrix);
+  shader_.setModelViewMatrix(mv_matrix);
   vbo_->draw(GL_LINES, 0, 24);
   //modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(-shift, -shift, 0));
 }

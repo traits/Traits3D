@@ -83,25 +83,25 @@ bool Protean3D::GL::DataObject::addMeshColor(Color const& data)
 }
 
 
-void Protean3D::GL::DataObject::draw()
+void Protean3D::GL::DataObject::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
 {
   // polygons
   shader_[ShaderIndex::TriangleStrip].use();
-  shader_[ShaderIndex::TriangleStrip].setProjectionMatrix(projection_matrix_p);
-  shader_[ShaderIndex::TriangleStrip].setModelViewMatrix(modelview_matrix_p);
+  shader_[ShaderIndex::TriangleStrip].setProjectionMatrix(proj_matrix);
+  shader_[ShaderIndex::TriangleStrip].setModelViewMatrix(mv_matrix);
   ibos_[IBOindex::Polygons]->draw(GL_STATIC_DRAW);
 
   // mesh  
   shader_[ShaderIndex::Lines].use();
   //shader_p[0].use();
-  shader_[ShaderIndex::Lines].setModelViewMatrix(modelview_matrix_p);
+  shader_[ShaderIndex::Lines].setModelViewMatrix(mv_matrix);
   
   //todo [educated] hack 
-  glm::mat4 ttt = projection_matrix_p;
+  glm::mat4 ttt = proj_matrix;
   ttt[2][2] += 0.0f;
   //ttt[2][2] += 5E-5f;
   shader_[ShaderIndex::Lines].setProjectionMatrix(ttt);
-  shader_[ShaderIndex::Lines].setModelViewMatrix(modelview_matrix_p);
+  shader_[ShaderIndex::Lines].setModelViewMatrix(mv_matrix);
   ibos_[IBOindex::Mesh]->draw(GL_STATIC_DRAW);
 }
 

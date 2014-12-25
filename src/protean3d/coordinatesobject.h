@@ -12,7 +12,7 @@ namespace Protean3D
     public:
       CoordinatesObject();
 
-      void draw() override;
+      void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix) override;
 
       bool setHull(Protean3D::Box const& hull);
       //bool updatePositionData(std::vector<glm::vec3> const& data);

@@ -56,12 +56,8 @@ void Protean3D::Plot3D::draw()
   projection_matrix_p = glm::translate(projection_matrix_p,
     glm::vec3(xViewportShift() * 2 * radius, yViewportShift() * 2 * radius, -7 * radius));
 
-  coordinates_object_p->setModelViewMatrix(modelview_matrix_p);
-  coordinates_object_p->setProjectionMatrix(projection_matrix_p);
-  coordinates_object_p->draw();
-  data_object_p->setModelViewMatrix(modelview_matrix_p);
-  data_object_p->setProjectionMatrix(projection_matrix_p);
-  data_object_p->draw();
+  coordinates_object_p->draw(projection_matrix_p, modelview_matrix_p);
+  data_object_p->draw(projection_matrix_p, modelview_matrix_p);
 }
 
 void Protean3D::Plot3D::setBackgroundColor(Color val)
