@@ -18,6 +18,8 @@ int main()
   if (!hm.loadData())
     return -1;
 
+  hm.setRotation(30, 0, 45);
+
   /* main loop */
   double last_update_time = glfwGetTime();
 
