@@ -28,8 +28,8 @@ set_property(CACHE PROTEAN3D_OS PROPERTY STRINGS "Windows")
 #MB todo set_property(CACHE PROTEAN3D_OS PROPERTY STRINGS "Windows" "Linux" "Android" "iOS" "emscripten")
 
 # OpenGL Context Provider
-set(PROTEAN3D_EXAMPLES_GL_CONTEXT "GLFW" CACHE STRING "OpenGL Context Provider")
-set_property(CACHE PROTEAN3D_EXAMPLES_GL_CONTEXT PROPERTY STRINGS "Qt" "GLFW")
+option(PROTEAN3D_EXAMPLES_GLFW "GLFW" ON)
+option(PROTEAN3D_EXAMPLES_QT "Qt" OFF)
 
 # OpenGL Version Provider
 set(PROTEAN3D_GL_VARIANT "OPENGL" CACHE STRING "OpenGL Variant (OpenGL, OpenGL ES, WebGL)")

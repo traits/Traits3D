@@ -47,8 +47,6 @@ foreach(subdir ${SUBDIRS})
   add_executable(${subdir}  ${${subdir}_PROTEAN3D_EXAMPLE_SOURCES} ${${subdir}_PROTEAN3D_EXAMPLE_HEADERS})
   set_property(TARGET ${subdir} PROPERTY FOLDER "examples/qt")
   target_link_libraries(${subdir} protean3d ${OPENGL_LIBRARIES} Qt5::Widgets)
-  #target_link_libraries(${subdir} glloader)
-  #target_link_libraries(${subdir} glfw ${GLFW_LIBRARIES})
   target_link_libraries(${subdir} qtwidget)
   set_target_properties(${subdir} PROPERTIES WIN32_EXECUTABLE false)
   install(TARGETS ${subdir} 

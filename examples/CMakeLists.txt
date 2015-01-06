@@ -1,6 +1,7 @@
-if ("${PROTEAN3D_EXAMPLES_GL_CONTEXT}"  STREQUAL "Qt")
+if (PROTEAN3D_EXAMPLES_QT)
     add_subdirectory(qt)
-elseif ("${PROTEAN3D_EXAMPLES_GL_CONTEXT}"  STREQUAL "GLFW") 
+endif()
+if (PROTEAN3D_EXAMPLES_GLFW)
     add_subdirectory(glfw)
 endif()
 

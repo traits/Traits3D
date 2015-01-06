@@ -12,8 +12,8 @@ PROTEAN3D_SUBDIRLIST(SUBDIRS ${CMAKE_CURRENT_SOURCE_DIR})
 list(REMOVE_ITEM SUBDIRS _common)
 
 file(GLOB PROTEAN3D_GL_DIR_SOURCES ${PROTEAN3D_GL_DIR}/*.*)
-add_library(glloader STATIC ${PROTEAN3D_GL_DIR_SOURCES})
-set_property(TARGET glloader PROPERTY FOLDER "examples/glfw/common")
+add_library(glloader_glfw STATIC ${PROTEAN3D_GL_DIR_SOURCES})
+set_property(TARGET glloader_glfw PROPERTY FOLDER "examples/glfw/common")
 
 # create single project for every example
 foreach(subdir ${SUBDIRS})
@@ -31,8 +31,6 @@ foreach(subdir ${SUBDIRS})
   set_property(TARGET ${subdir} PROPERTY FOLDER "examples/glfw")
 
   target_link_libraries(${subdir} protean3d ${OPENGL_LIBRARIES})
-  target_link_libraries(${subdir} glloader)
-  #target_link_libraries(${subdir} glfw ${GLFW_LIBRARIES})
   target_link_libraries(${subdir} window)
   set_target_properties(${subdir} PROPERTIES WIN32_EXECUTABLE false)
   install(TARGETS ${subdir} 
