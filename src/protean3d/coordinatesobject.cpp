@@ -52,7 +52,7 @@ bool Protean3D::GL::CoordinatesObject::setHull(Protean3D::Box const& hull)
   axes_[22] = glm::vec3(X, Y, z);
   axes_[23] = glm::vec3(X, Y, Z);
 
-  vbo_->create(axes_, GL_STATIC_DRAW); //todo (could be dynamic)
+  vbo_->setData(axes_); //todo (could be dynamic)
 
   shader_.bindAttribute(*vbo_, GL::ShaderCode::Vertex::v_coordinates);
   shader_.setUniformVec4(glm::vec4(0.0f, 0.5f, 0.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);
@@ -67,7 +67,7 @@ bool Protean3D::GL::CoordinatesObject::setHull(Protean3D::Box const& hull)
 
 void Protean3D::GL::CoordinatesObject::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
 {
-  vbo_->update(axes_); //todo
+  vbo_->setData(axes_); //todo
 
   //float shift = 5.0f;
   //modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(shift, shift, 0));

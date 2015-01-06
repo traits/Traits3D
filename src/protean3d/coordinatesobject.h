@@ -1,6 +1,6 @@
 #pragma once
 
-#include "coordinates.h"
+#include <memory>
 #include "globject.h"
 
 namespace Protean3D
@@ -19,7 +19,6 @@ namespace Protean3D
 
     private:
       GL::Shader shader_;
-      Coordinates coordinates_;
       Protean3D::Box hull_;
 
       std::vector<glm::vec3> axes_;

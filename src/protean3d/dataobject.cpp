@@ -46,7 +46,7 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& da
   if (!ibos_[IBOindex::Polygons]->create(xsize, ysize, GL_TRIANGLE_STRIP))
     return false;
   
-  vbos_[VBOindex::Position]->create(data, drawtype);
+  vbos_[VBOindex::Position]->setData(data, true, drawtype);
 
   for (auto& s : shader_)
   {
@@ -62,15 +62,15 @@ bool Protean3D::GL::DataObject::updatePositionData(std::vector<glm::vec3> const&
   hull_ = calcHull(data);
 
   ColorVector colors = Protean3D::ColorTable::createColors(data, colors_);
-  vbos_[VBOindex::DataColor]->update(colors);
+  vbos_[VBOindex::DataColor]->setData(colors);
 
-  return vbos_[VBOindex::Position]->update(data);
+  return vbos_[VBOindex::Position]->setData(data);
 }
 
 // todo check size against position vector[s]
 bool Protean3D::GL::DataObject::addColor(ColorVector const& data)
 {
-  if (!vbos_[VBOindex::DataColor]->create(data, GL_STATIC_DRAW))
+  if (!vbos_[VBOindex::DataColor]->setData(data))
     return false;
   
   colors_ = data;

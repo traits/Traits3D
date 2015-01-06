@@ -45,18 +45,20 @@ bool Protean3D::GL::VBO::draw(GLenum primitive_type, size_t first, size_t count)
   return GL_NO_ERROR == err;
 }
 
-bool Protean3D::GL::VBO::bindData(std::vector<glm::vec3> const& data, GLenum drawtype)
+bool Protean3D::GL::VBO::setData(std::vector<glm::vec3> const& data, 
+  bool setdrawtype/* = false*/, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
   if (!layout_.match(Layout(3, GL_FLOAT, 0, 0)))
     return false;
 
-  return bindData<glm::vec3>(data, drawtype);
+  return setData<glm::vec3>(data, setdrawtype, drawtype);
 }
 
-bool Protean3D::GL::VBO::bindData(std::vector<glm::vec4> const& data, GLenum drawtype)
+bool Protean3D::GL::VBO::setData(std::vector<glm::vec4> const& data, 
+  bool setdrawtype/* = false*/, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
   if (!layout_.match(Layout(4, GL_FLOAT, 0, 0)))
     return false;
 
-  return bindData<glm::vec4>(data, drawtype);
+  return setData<glm::vec4>(data, setdrawtype, drawtype);
 }

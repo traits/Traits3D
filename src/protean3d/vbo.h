@@ -18,12 +18,8 @@ namespace Protean3D
       virtual ~VBO() = default;
       GLuint id() const { return id_; } //!< VBO index
       
-      //todo specialize this
-      template<typename PRIMITIVE>
-      bool create(std::vector<PRIMITIVE> const& data, GLenum draw_type = GL_STATIC_DRAW);
-
-      template<typename PRIMITIVE>
-      bool update(std::vector<PRIMITIVE> const& data);
+      bool setData(std::vector<glm::vec3> const& data, bool setdrawtype = false, GLenum drawtype = GL_STATIC_DRAW);
+      bool setData(std::vector<glm::vec4> const& data, bool setdrawtype = false, GLenum drawtype = GL_STATIC_DRAW);
 
       bool bindAttribute(GLuint attr_location);
       bool draw(GLenum primitive_type, size_t first, size_t count);
@@ -71,23 +67,25 @@ namespace Protean3D
 
 
       template <typename PRIMITIVE>
-      bool bindData(std::vector<PRIMITIVE> const& data, GLenum drawtype);    
-      bool bindData(std::vector<glm::vec3> const& data, GLenum drawtype);
-      bool bindData(std::vector<glm::vec4> const& data, GLenum drawtype);
+      bool setData(std::vector<PRIMITIVE> const& data, bool setdrawtype = false, GLenum drawtype = GL_STATIC_DRAW);
     };
 
 
     /**
      Bind data.
     
-     \param data     The data.
-     \param drawtype GL_STATIC_DRAW etc.
-    
+     \param data        The data.
+     \param setdrawtype if true, consider the following argument
+     \param drawtype    GL_STATIC_DRAW etc.
+
      \return true if it succeeds, false if it fails.
      */
     template <typename PRIMITIVE>
-    bool Protean3D::GL::VBO::bindData(std::vector<PRIMITIVE> const& data, GLenum drawtype)
+    bool Protean3D::GL::VBO::setData(std::vector<PRIMITIVE> const& data, bool setdrawtype/* = false*/, GLenum drawtype /*= GL_STATIC_DRAW*/)
     {
+      if (data.empty())
+        return false;
+
       vao_->bind();
 
       glBindBuffer(GL_ARRAY_BUFFER, id_);
@@ -110,32 +108,6 @@ namespace Protean3D
       primitive_size_ = sizeof(PRIMITIVE);
       return true;
     }
-
-
-    template<typename PRIMITIVE>
-    bool Protean3D::GL::VBO::create(std::vector<PRIMITIVE> const& data, GLenum draw_type /*= GL_STATIC_DRAW*/)
-    {
-      //static_assert(std::is_same<PRIMITIVE, GLfloat>::value, "Incorrect buffer type!");
-      if (data.empty() || !bindData(data, draw_type))
-        return false;
-
-      return true;
-    }
-
-    template<typename PRIMITIVE>
-    bool Protean3D::GL::VBO::update(std::vector<PRIMITIVE> const& data)
-    {
-      vao_->bind(); //todo remove?
-      GLint oldtype;
-      glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_USAGE, &oldtype);
-      if (GL_NO_ERROR != glGetError())
-        return false;
-
-      return bindData(data, static_cast<GLenum>(oldtype));
-    }
-
-
-
 
   } // ns
 } // ns
