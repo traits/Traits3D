@@ -17,7 +17,6 @@ namespace Protean3D
       virtual void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix) = 0;
 
     protected:
-      //std::vector<GL::Shader> shader_p;
       GL::VAO vao_p;
     };
   } // ns

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "glhelper.h"
-//#include "protean3d/label.h"
 #include "scale.h"
 #include "autoscaler.h"
 #include "axisobject.h"
@@ -21,7 +20,9 @@ public:
   Axis(); //!< Constructs standard axis
   Axis(Protean3D::Triple beg, Protean3D::Triple end); //!< Constructs a new axis with specified limits
   virtual ~Axis(); // dtor
+  
   virtual bool initializeGL();
+  void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix);
 
   void setPosition(const Protean3D::Triple& beg, const Protean3D::Triple& end); //!< Positionate axis
   void position(Protean3D::Triple& beg, Protean3D::Triple& end) const {beg = beg_; end = end_;} //!< Returns axis' position
@@ -29,6 +30,9 @@ public:
   Protean3D::Triple end() const { return end_; } //!< Returns axis' ending position 
   double length() const { return glm::distance(beg_,end_); } //!< Returns axis' length
 
+  void setTicLength(double majorl, double minorl); //!< Sets tics lengths in world coordinates
+  //! Returns tics lengths
+  void ticLength(double& majorl, double& minorl) const { majorl = lmaj_; minorl = lmin_; }
   void setTicOrientation(double tx, double ty, double tz); //!< Sets tic orientation
   void setTicOrientation(const Protean3D::Triple& val); //!< Same function as above
   Protean3D::Triple ticOrientation() const { return orientation_;} //!< Returns tic orientation
@@ -49,8 +53,6 @@ public:
   void limits(double& start, double& stop) const {start = start_; stop = stop_;} //!< Returns axis interval
   void recalculateTics(); //!< Enforces recalculation of ticmark positions
   
-  void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix);
-
 protected:
   std::shared_ptr<GL::AxisObject> globject_p;
 
@@ -63,6 +65,8 @@ private:
   Protean3D::TripleVector majorpos_, minorpos_; //! vectors, holding major resp. minor tic positions;
 
   double start_, stop_, autostart_, autostop_;
+  double lmaj_ = 0.0;
+  double lmin_ = 0.0;
   Protean3D::Triple orientation_;
 
   size_t majorintervals_, minorintervals_;

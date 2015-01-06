@@ -2,7 +2,6 @@
 
 #include <list>
 #include "axis.h"
-#include "coordinatesobject.h"
 
 namespace Protean3D
 {
@@ -44,9 +43,6 @@ public:
 	
 	//! The vector of all 12 axes - use them to set axis properties individually.
   std::vector<Axis> axes;
-
-protected:
-  std::shared_ptr<GL::CoordinatesObject> globject_p;
 
 private:
   static unsigned const asize = 12;

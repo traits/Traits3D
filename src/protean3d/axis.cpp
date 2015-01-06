@@ -70,6 +70,14 @@ void Axis::setTicOrientation(const Triple& val)
   orientation_ = glm::normalize(val);
 }
 
+void Axis::setTicLength(double majorl, double minorl)
+{
+  lmaj_ = majorl;
+  lmin_ = minorl;
+}
+
+
+
 bool Axis::prepTicCalculation(Triple& startpoint)
 {
   if (isPracticallyZero(start_, stop_))
@@ -102,7 +110,7 @@ bool Axis::prepTicCalculation(Triple& startpoint)
 void Axis::recalculateTics()
 {
   Triple runningpoint;
-  if (false==prepTicCalculation(runningpoint))
+  if (false == prepTicCalculation(runningpoint))
     return;
 
   unsigned int i;
@@ -142,7 +150,14 @@ void Axis::setScale(Protean3D::SCALETYPE val)
 
 void Protean3D::Axis::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
 {
-
+  //todo performance!
+  recalculateTics();
+  globject_p->setSymmetricTics(symtics_);
+  globject_p->setTicOrientation(orientation_);
+  globject_p->setTicLength(lmaj_, lmin_);
+  globject_p->setValues(beg_, end_, majorpos_, minorpos_);
+  //end todo
+  globject_p->draw(proj_matrix, mv_matrix);
 }
 
 bool Protean3D::Axis::initializeGL()

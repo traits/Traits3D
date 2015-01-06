@@ -30,6 +30,7 @@ bool Protean3D::SurfacePlot::updatePositionData(std::vector<glm::vec3> const& da
     return false;
 
   coordinates_p.init(data_object_p->hull());
+  
   return true;
 }
 

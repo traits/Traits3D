@@ -75,9 +75,6 @@ void Coordinates::init(Protean3D::Triple first, Protean3D::Triple second)
 	axes[Z3].setTicOrientation(1,0,0);
 	
 	setStyle(style_);
-
-  if (globject_p)
-    globject_p->setHull(Box(first_, second_));
 }
 
 void Protean3D::Coordinates::init(Protean3D::Box hull)
@@ -87,13 +84,23 @@ void Protean3D::Coordinates::init(Protean3D::Box hull)
 
 bool Protean3D::Coordinates::initializeGL()
 {
-  globject_p = std::make_shared<GL::CoordinatesObject>();
-  return (globject_p) ? true : false;
+  for (auto& a : axes)
+  {
+    if (!a.initializeGL())
+      return false;
+  }
+  return true;
+
+  //globject_p = std::make_shared<GL::CoordinatesObject>();
+  //return (globject_p) ? true : false;
 }
 
 void Coordinates::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
 {	
-  globject_p->draw(proj_matrix, mv_matrix);
+  //globject_p->draw(proj_matrix, mv_matrix);
+
+  for (auto& a : axes)
+    a.draw(proj_matrix, mv_matrix);
 
 	//GL::StateBewarer sb(GL_LINE_SMOOTH, true);
 	//

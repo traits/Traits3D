@@ -58,6 +58,8 @@ bool Protean3D::GL::Shader::link(GLuint vertex_shader_id, GLuint fragment_shader
   glAttachShader(program_id_, vertex_shader_id);
   glAttachShader(program_id_, fragment_shader_id);
   glLinkProgram(program_id_);
+  glDetachShader(program_id_, vertex_shader_id);
+  glDetachShader(program_id_, fragment_shader_id);
 
   // Check the program
   glGetProgramiv(program_id_, GL_LINK_STATUS, &result);
