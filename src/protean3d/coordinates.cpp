@@ -1,6 +1,5 @@
 #include "coordinates.h"
 
-using namespace std;
 using namespace Protean3D;
 
 
@@ -76,10 +75,26 @@ void Coordinates::init(Protean3D::Triple first, Protean3D::Triple second)
 	axes[Z3].setTicOrientation(1,0,0);
 	
 	setStyle(style_);
+
+  if (globject_p)
+    globject_p->setHull(Box(first_, second_));
 }
 
-//void CoordinateSystem::draw()
-//{	
+void Protean3D::Coordinates::init(Protean3D::Box hull)
+{
+  init(hull.minVertex, hull.maxVertex);
+}
+
+bool Protean3D::Coordinates::initializeGL()
+{
+  globject_p = std::make_shared<GL::CoordinatesObject>();
+  return (globject_p) ? true : false;
+}
+
+void Coordinates::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
+{	
+  globject_p->draw(proj_matrix, mv_matrix);
+
 	//GL::StateBewarer sb(GL_LINE_SMOOTH, true);
 	//
 	//if (!lineSmooth())
@@ -105,7 +120,7 @@ void Coordinates::init(Protean3D::Triple first, Protean3D::Triple second)
  //   drawMajorGridLines();
 	//if (minorgridlines_)
 	//	drawMinorGridLines();
-//}
+}
 
 
 //! build convex hull (6 axes: 2 x, 2 y, 2 z) and choose one of them at a time for scales, labels etc.  

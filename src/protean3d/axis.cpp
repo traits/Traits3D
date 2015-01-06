@@ -139,3 +139,14 @@ void Axis::setScale(Protean3D::SCALETYPE val)
     break;
   }
 }
+
+void Protean3D::Axis::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
+{
+
+}
+
+bool Protean3D::Axis::initializeGL()
+{
+  globject_p = std::make_shared<GL::AxisObject>();
+  return (globject_p) ? true : false;
+}

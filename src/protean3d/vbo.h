@@ -22,7 +22,7 @@ namespace Protean3D
       bool setData(std::vector<glm::vec4> const& data, bool setdrawtype = false, GLenum drawtype = GL_STATIC_DRAW);
 
       bool bindAttribute(GLuint attr_location);
-      bool draw(GLenum primitive_type, size_t first, size_t count);
+      bool draw(GLenum primitive_type);
 
     private:
       class Layout
@@ -65,6 +65,7 @@ namespace Protean3D
       std::string attr_name_;
       VAO* vao_; // non-owning pointer
 
+      bool draw(GLenum primitive_type, size_t first, size_t count);
 
       template <typename PRIMITIVE>
       bool setData(std::vector<PRIMITIVE> const& data, bool setdrawtype = false, GLenum drawtype = GL_STATIC_DRAW);

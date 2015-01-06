@@ -2,7 +2,7 @@
 
 #include <array>
 #include "colortable.h"
-#include "coordinatesobject.h"
+#include "coordinates.h"
 #include "dataobject.h"
 #include "extglwidget.h"
 
@@ -22,6 +22,8 @@ namespace Protean3D
     Plot3D();
     virtual ~Plot3D();
 
+    bool initializeGL() override;
+
     void draw();
     void updateData() override {}
     void setBackgroundColor(Color val); //!< Sets widgets background color
@@ -29,8 +31,9 @@ namespace Protean3D
 
   protected:
     Box hull_p;
-    std::unique_ptr<GL::CoordinatesObject> coordinates_object_p;
     std::unique_ptr<GL::DataObject> data_object_p;
+
+    Coordinates coordinates_p;
 
     glm::mat4 projection_matrix_p;
     glm::mat4  modelview_matrix_p;

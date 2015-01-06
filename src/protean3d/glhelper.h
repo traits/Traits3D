@@ -39,8 +39,8 @@ namespace Protean3D
     GLfloat excess(std::vector<glm::dvec3> const& val); 
 
     /**
-     Scale vector by maximal excess, if exc > 1, simply convert 
-     vector<glm::vec3> else
+     Scale vector by maximal excess, if exc > 1; 
+     simply convert to vector<glm::vec3> else
     
      \param [in,out] exc The maximal excess
      \param val          The vector to scale
@@ -48,5 +48,10 @@ namespace Protean3D
      \return Scaled/converted vector
      */
     std::vector<glm::vec3> scale(double& exc, std::vector<glm::dvec3> const& val);
+    
+    //! Enforce scaling of val with 2nd argument 
+    std::vector<glm::vec3> scale(std::vector<glm::dvec3> const& val, double excess);
+    //! Converts value into vec3 vector - only casts are applied
+    std::vector<glm::vec3> convert(std::vector<glm::dvec3> const& val);
   }
 }

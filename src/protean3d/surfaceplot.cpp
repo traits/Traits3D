@@ -9,7 +9,8 @@ bool Protean3D::SurfacePlot::addPositionData(std::vector<glm::vec3> const& data,
   if (!data_object_p->addPositionData(data, xsize, ysize, drawtype))
     return false;
 
-  return coordinates_object_p->setHull(data_object_p->hull());
+  coordinates_p.init(data_object_p->hull());
+  return true;
 }
 
 // todo check size against position vector[s]
@@ -28,14 +29,14 @@ bool Protean3D::SurfacePlot::updatePositionData(std::vector<glm::vec3> const& da
   if (!data_object_p->updatePositionData(data))
     return false;
 
-  return coordinates_object_p->setHull(data_object_p->hull());
+  coordinates_p.init(data_object_p->hull());
+  return true;
 }
 
 bool Protean3D::SurfacePlot::initializeGL()
 {
   if (!Plot3D::initializeGL())
     return false;
-  coordinates_object_p = std::make_unique<GL::CoordinatesObject>();
   data_object_p = std::make_unique<GL::DataObject>();
   return true;
 }

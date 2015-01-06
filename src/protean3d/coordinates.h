@@ -2,7 +2,7 @@
 
 #include <list>
 #include "axis.h"
-//#include "colorlegend.h"
+#include "coordinatesobject.h"
 
 namespace Protean3D
 {
@@ -15,8 +15,11 @@ public:
 	explicit Coordinates(Protean3D::Triple blb = Protean3D::Triple(0,0,0), Protean3D::Triple ftr = Protean3D::Triple(0,0,0), Protean3D::COORDINATESTYLE = Protean3D::BOX);
   ~Coordinates();	
 	
-	void init(Protean3D::Triple beg = Protean3D::Triple(0,0,0), Protean3D::Triple end = Protean3D::Triple(0,0,0));
-	//! Set style for the coordinate system (NOCOORDINATES, FRAME or BOX)
+  void init(Protean3D::Triple beg = Protean3D::Triple(0, 0, 0), Protean3D::Triple end = Protean3D::Triple(0, 0, 0));
+  void init(Protean3D::Box hull);
+  virtual bool initializeGL();
+
+  //! Set style for the coordinate system (NOCOORDINATES, FRAME or BOX)
   void setStyle(Protean3D::COORDINATESTYLE s,	Protean3D::AXIS frame_1 = Protean3D::X1, 
 																			Protean3D::AXIS frame_2 = Protean3D::Y1, 
 																			Protean3D::AXIS frame_3 = Protean3D::Z1);
@@ -33,7 +36,7 @@ public:
 	void setAutoDecoration(bool val = true) {autodecoration_ = val;}
 	bool autoDecoration() const { return autodecoration_;}
 
-//	void draw();
+  void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix);
 	
 	//! Defines whether a grid between the major and/or minor tics should be drawn
   void setGridLines(bool majors, bool minors, int sides = Protean3D::NOSIDEGRID); 
@@ -42,6 +45,8 @@ public:
 	//! The vector of all 12 axes - use them to set axis properties individually.
   std::vector<Axis> axes;
 
+protected:
+  std::shared_ptr<GL::CoordinatesObject> globject_p;
 
 private:
   static unsigned const asize = 12;

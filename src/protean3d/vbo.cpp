@@ -45,6 +45,11 @@ bool Protean3D::GL::VBO::draw(GLenum primitive_type, size_t first, size_t count)
   return GL_NO_ERROR == err;
 }
 
+bool Protean3D::GL::VBO::draw(GLenum primitive_type)
+{
+  return draw(primitive_type, 0, bsize_ / primitive_size_);
+}
+
 bool Protean3D::GL::VBO::setData(std::vector<glm::vec3> const& data, 
   bool setdrawtype/* = false*/, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {

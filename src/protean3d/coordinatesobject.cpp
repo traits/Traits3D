@@ -76,6 +76,6 @@ void Protean3D::GL::CoordinatesObject::draw(glm::mat4 const& proj_matrix, glm::m
   shader_.use();
   shader_.setProjectionMatrix(proj_matrix);
   shader_.setModelViewMatrix(mv_matrix);
-  vbo_->draw(GL_LINES, 0, 24);
+  vbo_->draw(GL_LINES);
   //modelview_matrix_p = glm::translate(modelview_matrix_p, glm::vec3(-shift, -shift, 0));
 }

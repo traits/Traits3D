@@ -4,6 +4,7 @@
 //#include "protean3d/label.h"
 #include "scale.h"
 #include "autoscaler.h"
+#include "axisobject.h"
 
 namespace Protean3D
 {
@@ -17,10 +18,10 @@ class PROTEAN3D_EXPORT Axis
 {
 
 public:
-
   Axis(); //!< Constructs standard axis
   Axis(Protean3D::Triple beg, Protean3D::Triple end); //!< Constructs a new axis with specified limits
   virtual ~Axis(); // dtor
+  virtual bool initializeGL();
 
   void setPosition(const Protean3D::Triple& beg, const Protean3D::Triple& end); //!< Positionate axis
   void position(Protean3D::Triple& beg, Protean3D::Triple& end) const {beg = beg_; end = end_;} //!< Returns axis' position
@@ -47,15 +48,17 @@ public:
   void setLimits(double start, double stop) {start_=start; stop_=stop;} //!< Sets interval
   void limits(double& start, double& stop) const {start = start_; stop = stop_;} //!< Returns axis interval
   void recalculateTics(); //!< Enforces recalculation of ticmark positions
+  
+  void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix);
 
+protected:
+  std::shared_ptr<GL::AxisObject> globject_p;
 
 private:
-
   void init();
   bool prepTicCalculation(Triple& startpoint);
 
   Protean3D::Triple biggestNumberString();
-
   Protean3D::Triple beg_, end_;
   Protean3D::TripleVector majorpos_, minorpos_; //! vectors, holding major resp. minor tic positions;
 
