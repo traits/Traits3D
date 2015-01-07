@@ -9,7 +9,7 @@ bool Protean3D::SurfacePlot::addPositionData(std::vector<glm::vec3> const& data,
   if (!data_object_p->addPositionData(data, xsize, ysize, drawtype))
     return false;
 
-  coordinates_p.init(data_object_p->hull());
+  coordinates_p->init(data_object_p->hull());
   return true;
 }
 
@@ -29,7 +29,7 @@ bool Protean3D::SurfacePlot::updatePositionData(std::vector<glm::vec3> const& da
   if (!data_object_p->updatePositionData(data))
     return false;
 
-  coordinates_p.init(data_object_p->hull());
+  coordinates_p->init(data_object_p->hull());
   
   return true;
 }

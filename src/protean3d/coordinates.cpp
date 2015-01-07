@@ -26,7 +26,7 @@ void Coordinates::init(Protean3D::Triple first, Protean3D::Triple second)
 	setPosition(first, second);
 	
 	double majl =  glm::length(dv) / 100; // 1 %
-	//setTicLength(majl, 0.6 * majl);
+	setTicLength(majl, 0.6 * majl);
 
 	axes[X1].setPosition(first, first+Triple(dv.x,    0,     0));												// front bottom x
 	axes[Y1].setPosition(first, first+Triple(   0, dv.y,     0));												// bottom left  y
@@ -93,6 +93,12 @@ bool Protean3D::Coordinates::initializeGL()
 
   //globject_p = std::make_shared<GL::CoordinatesObject>();
   //return (globject_p) ? true : false;
+}
+
+void Protean3D::Coordinates::setTicLength(double major, double minor)
+{
+  for (auto& a : axes)
+    a.setTicLength(major, minor);
 }
 
 void Coordinates::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)

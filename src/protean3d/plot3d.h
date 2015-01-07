@@ -33,7 +33,7 @@ namespace Protean3D
     Box hull_p;
     std::unique_ptr<GL::DataObject> data_object_p;
 
-    Coordinates coordinates_p;
+    std::shared_ptr<Coordinates> coordinates_p;
 
     glm::mat4 projection_matrix_p;
     glm::mat4  modelview_matrix_p;

@@ -26,7 +26,9 @@ public:
 	void setPosition(Protean3D::Triple first, Protean3D::Triple second); //!< first == front_left_bottom, second == back_right_top
   void setStandardScale(); //!< Sets an linear axis with real number items
 	
-	//! Switch autoscaling of axes
+  //! Set length for tic marks
+  void setTicLength(double major, double minor);
+  //! Switch autoscaling of axes
   void setAutoScale(bool val = true);
 
 	Protean3D::Triple first() const { return first_;}

@@ -25,6 +25,16 @@ public:
   Rosenbrock()
   {
     data_.resize(xsize*ysize);
+    setRotation(30, 0, 15);
+    setScale(1, 1, 1);
+    setShift(0.15, 0, 0);
+    setZoom(0.9);     
+    
+    for (unsigned i = 0; i != coordinates_p->axes.size(); ++i)
+    {
+      coordinates_p->axes[i].setMajors(7);
+      coordinates_p->axes[i].setMinors(4);
+    }
   }
 
   bool loadData()

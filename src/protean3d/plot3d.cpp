@@ -4,6 +4,7 @@
 
 Protean3D::Plot3D::Plot3D()
 {
+  coordinates_p = std::make_shared<Coordinates>();
 }
 
 Protean3D::Plot3D::~Plot3D()
@@ -56,7 +57,7 @@ void Protean3D::Plot3D::draw()
   projection_matrix_p = glm::translate(projection_matrix_p,
     glm::vec3(xViewportShift() * 2 * radius, yViewportShift() * 2 * radius, -7 * radius));
 
-  coordinates_p.draw(projection_matrix_p, modelview_matrix_p);
+  coordinates_p->draw(projection_matrix_p, modelview_matrix_p);
   data_object_p->draw(projection_matrix_p, modelview_matrix_p);
 }
 
@@ -70,5 +71,5 @@ bool Protean3D::Plot3D::initializeGL()
   if (!ExtGLWidget::initializeGL())
     return false;
   
-  return coordinates_p.initializeGL();
+  return coordinates_p->initializeGL();
 }
