@@ -80,7 +80,7 @@ void Axis::setTicLength(double majorl, double minorl)
 
 bool Axis::prepTicCalculation(Triple& startpoint)
 {
-  if (isPracticallyZero(start_, stop_))
+  if (equal(start_, stop_))
     return false;
 
   autostart_ = start_;
@@ -89,7 +89,7 @@ bool Axis::prepTicCalculation(Triple& startpoint)
   if (autoScale()) 
   {  
     setMajors(scale_->autoscale(autostart_, autostop_, start_, stop_, majors()));
-    if (isPracticallyZero(autostart_, autostop_))
+    if (equal(autostart_, autostop_))
       return false;
   }
   
@@ -101,16 +101,16 @@ bool Axis::prepTicCalculation(Triple& startpoint)
 
   startpoint = end_ - beg_;
 
-  majorpos_.clear();
-  minorpos_.clear();
-
   return true;
 }
 
 void Axis::recalculateTics()
 {
   Triple runningpoint;
-  if (false == prepTicCalculation(runningpoint))
+  majorpos_.clear();
+  minorpos_.clear();
+
+  if (!drawtics_ || false == prepTicCalculation(runningpoint))
     return;
 
   unsigned int i;

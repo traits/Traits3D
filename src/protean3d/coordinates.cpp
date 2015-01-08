@@ -1,3 +1,5 @@
+#include <glm/gtc/type_ptr.hpp>
+#include "helper.h"
 #include "coordinates.h"
 
 using namespace Protean3D;
@@ -90,9 +92,6 @@ bool Protean3D::Coordinates::initializeGL()
       return false;
   }
   return true;
-
-  //globject_p = std::make_shared<GL::CoordinatesObject>();
-  //return (globject_p) ? true : false;
 }
 
 void Protean3D::Coordinates::setTicLength(double major, double minor)
@@ -102,28 +101,28 @@ void Protean3D::Coordinates::setTicLength(double major, double minor)
 }
 
 void Coordinates::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
-{	
-  //globject_p->draw(proj_matrix, mv_matrix);
+{
+  //GL::StateBewarer sb(GL_LINE_SMOOTH, true);
+  //
+  //if (!lineSmooth())
+  //	sb.turnOff();
+  //	
 
-  for (auto& a : axes)
-    a.draw(proj_matrix, mv_matrix);
+  glm::dmat4 d_proj = proj_matrix;
+  glm::dmat4 d_mv = mv_matrix;
 
-	//GL::StateBewarer sb(GL_LINE_SMOOTH, true);
-	//
-	//if (!lineSmooth())
-	//	sb.turnOff();
-	//	
-
-	//if (autoDecoration())
-	//	chooseAxes();
-	//
- // saveGLState();
- // for (std::list<unsigned>::iterator it = aidx_.begin(); it!=aidx_.end(); ++it)
- // {
- //   axes[*it].draw();
- // }
- // restoreGLState();
-
+  if (autoDecoration())
+  {
+    glm::ivec4 viewport;
+    glGetIntegerv(GL_VIEWPORT, glm::value_ptr(viewport));
+    chooseAxes(proj_matrix, mv_matrix, viewport);
+  }
+  
+  for (auto it : aidx_)
+  {
+    axes[it].draw(proj_matrix, mv_matrix);
+  }
+ 
 	//if( style_ == NOCOORDINATES)
 	//	return;
 
@@ -137,190 +136,196 @@ void Coordinates::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
 
 
 //! build convex hull (6 axes: 2 x, 2 y, 2 z) and choose one of them at a time for scales, labels etc.  
-void Coordinates::chooseAxes()
+void Coordinates::chooseAxes(
+  glm::dmat4 const& proj_matrix, glm::dmat4 const& mv_matrix, glm::ivec4 const& viewport)
 {
-	//vector<Triple> beg(axes.size());
-	//vector<Triple> end(axes.size());
-	//vector<Tuple> src(2*axes.size());
+	TripleVector beg(axes.size());
+	TripleVector end(axes.size());
+	std::vector<Tuple> src(2*axes.size());
 
-	//unsigned i;
-	//// collect axes viewport coordinates and initialize
-	//for (i=0; i!=axes.size(); ++i)
-	//{
-	//	if (style() != NOCOORDINATES)
-	//		attach(i);
-	//	
-	//	beg[i] = World2ViewPort(axes[i].begin());
-	//	end[i] = World2ViewPort(axes[i].end());
-	//	src[i] = Tuple(beg[i].x, beg[i].y);
-	//	src[axes.size()+i] = Tuple(end[i].x, end[i].y);
+	size_t i;
+	// collect axes viewport coordinates and initialize
+	for (i=0; i!=axes.size(); ++i)
+	{
+		if (style() != NOCOORDINATES)
+			attach(i);
+		
+    beg[i] = GL::World2ViewPort(axes[i].begin(), mv_matrix, proj_matrix, viewport);
+    end[i] = GL::World2ViewPort(axes[i].end(), mv_matrix, proj_matrix, viewport);
+		src[i] = Tuple(beg[i].x, beg[i].y);
+		src[axes.size()+i] = Tuple(end[i].x, end[i].y);
 
-	//	axes[i].setScaling(false);
-	//	axes[i].setNumbers(false);
-	//	axes[i].setLabel(false);
-	//}
+		axes[i].showTics(false);
+		//axes[i].setNumbers(false);
+		//axes[i].setLabel(false);
+	}
 
-	//vector<unsigned> idx;
-	//convexhull2d(idx,src);
+	std::vector<size_t> idx;
+	convexhull2d(idx,src);
 
-	//int rem_x = -1;
-	//int rem_y = -1;
-	//int rem_z = -1;
+	int rem_x = -1;
+	int rem_y = -1;
+	int rem_z = -1;
 
 
-	//bool left;
+	bool left;
 
-	//int choice_x = -1; 
-	//int	choice_y = -1;
-	//int choice_z = -1;
+	int choice_x = -1; 
+	int	choice_y = -1;
+	int choice_z = -1;
 
- // int other_x = -1;
- // int other_y = -1;
- // int other_z = -1;
+  int other_x = -1;
+  int other_y = -1;
+  int other_z = -1;
 
-	////traverse convex hull
-	//for (unsigned k=0; k!=idx.size(); ++k)
-	//{
-	//	Triple one, two;
-	//	
-	//	if (idx[k] >= axes.size()) // is end point
-	//		one = end[idx[k]-axes.size()];
-	//	else                       // is begin point  
-	//		one = beg[idx[k]];
+	//traverse convex hull
+	for (size_t k=0; k!=idx.size(); ++k)
+	{
+		Triple one, two;
+		
+		if (idx[k] >= axes.size()) // is end point
+			one = end[idx[k]-axes.size()];
+		else                       // is begin point  
+			one = beg[idx[k]];
 
-	//	unsigned int next = idx[(k+1) % idx.size()];  // next point in cv (considered as ring buffer of points)
+		size_t next = idx[(k+1) % idx.size()];  // next point in cv (considered as ring buffer of points)
 
-	//	if (next >= axes.size()) 
-	//		two = end[next-axes.size()];
-	//	else
-	//		two = beg[next];
-	//	
-	//	for (i=0; i!=axes.size(); ++i)
-	//	{			
-	//		if (
-	//				(one == beg[i] && two == end[i])
-	//				||
-	//				(two == beg[i] && one == end[i])
-	//			 )
-	//		{
-	//			if (i==X1 || i==X2 || i==X3 || i==X4)  // x Achsen
-	//			{
-	//				if (rem_x>=0) // schon zweite Achse der konvexen Huelle ?
-	//				{
-	//					// untere der beiden x Achsen
-	//					double y = min(min(end[rem_x].y,end[i].y),min(beg[rem_x].y,beg[i].y));
-	//					choice_x = (y == beg[i].y || y == end[i].y) ? i : rem_x;
-	//											
-	//					other_x = (choice_x == (int)i) ? rem_x : (int)i;
-	//					left = (beg[choice_x].x < beg[other_x].x || end[choice_x].x < end[other_x].x) 
-	//						? true
-	//						: false;
-	//					
-	//					autoDecorateExposedAxis(axes[choice_x], left);
+		if (next >= axes.size()) 
+			two = end[next-axes.size()];
+		else
+			two = beg[next];
+		
+		for (i=0; i!=axes.size(); ++i)
+		{			
+			if (
+          (equal(one, beg[i]) && equal(two, end[i]))
+					||
+          (equal(two, beg[i]) && equal(one, end[i]))
+				 )
+			{
+				if (i==X1 || i==X2 || i==X3 || i==X4)  // x Achsen
+				{
+					if (rem_x>=0) // schon zweite Achse der konvexen Huelle ?
+					{
+						// untere der beiden x Achsen
+						double y = std::min(std::min(end[rem_x].y,end[i].y),std::min(beg[rem_x].y,beg[i].y));
+						choice_x = static_cast<int>(
+              (equal(y, beg[i].y) || equal(y, end[i].y)) ? i : rem_x);
+												
+						other_x = (choice_x == (int)i) ? rem_x : (int)i;
+						left = (beg[choice_x].x < beg[other_x].x || end[choice_x].x < end[other_x].x) 
+							? true
+							: false;
+						
+            autoDecorateExposedAxis(axes[choice_x], left, proj_matrix, mv_matrix, viewport);
 
-	//					rem_x = -1;
-	//				}
-	//				else
-	//				{
-	//					rem_x = i;
-	//				}
-	//			}
-	//			else if (i==Y1 || i==Y2 || i==Y3 || i==Y4)
-	//			{
-	//				if (rem_y>=0)
-	//				{
-	//					// untere der beiden y Achsen
-	//					double y = min(min(end[rem_y].y,end[i].y),min(beg[rem_y].y,beg[i].y));
-	//					choice_y = (y == beg[i].y || y == end[i].y) ? i : rem_y;
-	//					
-	//					other_y = (choice_y == (int)i) ? rem_y : (int)i;
-	//					left = (beg[choice_y].x < beg[other_y].x || end[choice_y].x < end[other_y].x) 
-	//						? true
-	//						: false;
-	//					autoDecorateExposedAxis(axes[choice_y], left);
+						rem_x = -1;
+					}
+					else
+					{
+            rem_x = static_cast<int>(i);
+					}
+				}
+				else if (i==Y1 || i==Y2 || i==Y3 || i==Y4)
+				{
+					if (rem_y>=0)
+					{
+						// untere der beiden y Achsen
+            double y = std::min(std::min(end[rem_y].y, end[i].y), std::min(beg[rem_y].y, beg[i].y));
+            choice_y = static_cast<int>(
+              (equal(y, beg[i].y) || equal(y, end[i].y)) ? i : rem_y);
+						
+						other_y = (choice_y == (int)i) ? rem_y : (int)i;
+						left = (beg[choice_y].x < beg[other_y].x || end[choice_y].x < end[other_y].x) 
+							? true
+							: false;
+						autoDecorateExposedAxis(axes[choice_y], left, proj_matrix, mv_matrix, viewport);
 
-	//					rem_y = -1;
-	//				}
-	//				else
-	//				{
-	//					rem_y = i;
-	//				}
-	//			}
-	//			else if (i==Z1 || i==Z2 || i==Z3 || i==Z4)
-	//			{
-	//				if (rem_z>=0)
-	//				{
-	//					// hintere der beiden z Achsen
-	//					double z = max(max(end[rem_z].z,end[i].z),max(beg[rem_z].z,beg[i].z));
-	//					choice_z = (z == beg[i].z || z == end[i].z) ? i : rem_z;
+						rem_y = -1;
+					}
+					else
+					{
+            rem_y = static_cast<int>(i);
+					}
+				}
+				else if (i==Z1 || i==Z2 || i==Z3 || i==Z4)
+				{
+					if (rem_z>=0)
+					{
+						// hintere der beiden z Achsen
+            double z = std::max(std::max(end[rem_z].z, end[i].z), std::max(beg[rem_z].z, beg[i].z));
+            choice_z = static_cast<int>(
+              (equal(z, beg[i].z) || equal(z, end[i].z)) ? i : rem_z);
 
-	//					other_z = (choice_z == (int)i) ? rem_z : (int)i;
-	//											
-	//					rem_z = -1;
+						other_z = (choice_z == (int)i) ? rem_z : (int)i;
+												
+						rem_z = -1;
 
-	//				}
-	//				else
-	//				{
-	//					rem_z = i;
-	//				}
-	//			}
-	//		}
-	//	} // for axes
-	//} // for idx
+					}
+					else
+					{
+            rem_z = static_cast<int>(i);
+					}
+				}
+			}
+		} // for axes
+	} // for idx
 
-	//// fit z axis in - the onthewall axis if the decorated axes build a continous line, the opposite else 
-	//if (choice_x>=0 && choice_y>=0 && choice_z>=0)
-	//{
-	//	left = (beg[choice_z].x < beg[other_z].x || end[choice_z].x < end[other_z].x) 
-	//		? true
-	//		: false;
-	//	
+	// fit z axis in - the onthewall axis if the decorated axes build a continuous line, the opposite else 
+	if (choice_x>=0 && choice_y>=0 && choice_z>=0)
+	{
+		left = (beg[choice_z].x < beg[other_z].x || end[choice_z].x < end[other_z].x) 
+			? true
+			: false;
+		
 
-	//	if (
-	//				axes[choice_z].begin() == axes[choice_x].begin() 
-	//		||	axes[choice_z].begin() == axes[choice_x].end()
-	//		||	axes[choice_z].begin() == axes[choice_y].begin() 
-	//		||	axes[choice_z].begin() == axes[choice_y].end()
-	//		||	axes[choice_z].end() == axes[choice_x].begin() 
-	//		||	axes[choice_z].end() == axes[choice_x].end()
-	//		||	axes[choice_z].end() == axes[choice_y].begin() 
-	//		||	axes[choice_z].end() == axes[choice_y].end()
-	//		
-	//		)
-	//	{
-	//		autoDecorateExposedAxis(axes[choice_z], left);
-	//	}
+		if (
+				 equal(axes[choice_z].begin(), axes[choice_x].begin()) 
+			|| equal(axes[choice_z].begin(), axes[choice_x].end())
+      || equal(axes[choice_z].begin(), axes[choice_y].begin())
+      || equal(axes[choice_z].begin(), axes[choice_y].end())
+      || equal(axes[choice_z].end(), axes[choice_x].begin())
+      || equal(axes[choice_z].end(), axes[choice_x].end())
+      || equal(axes[choice_z].end(), axes[choice_y].begin())
+      || equal(axes[choice_z].end(), axes[choice_y].end())
+			
+			)
+		{
+      autoDecorateExposedAxis(axes[choice_z], left, proj_matrix, mv_matrix, viewport);
+		}
 
-	//	else
-	//	{
-	//		autoDecorateExposedAxis(axes[other_z], !left);
-	//		choice_z = other_z; // for FRAME
-	//	}
-	//}
-	//
-	//if (style() == FRAME)
-	//{
-	//	for (i=0; i!=axes.size(); ++i)
-	//	{
-	//		if ((int)i!=choice_x && (int)i!=choice_y && (int)i!=choice_z)
-	//			detach(i);
-	//	}
-	//}
+		else
+		{
+      autoDecorateExposedAxis(axes[other_z], !left, proj_matrix, mv_matrix, viewport);
+			choice_z = other_z; // for FRAME
+		}
+	}
+	
+	if (style() == FRAME)
+	{
+		for (i=0; i!=axes.size(); ++i)
+		{
+			if ((int)i!=choice_x && (int)i!=choice_y && (int)i!=choice_z)
+				detach(i);
+		}
+	}
 }
 
 
-void Coordinates::autoDecorateExposedAxis(Axis& ax, bool left)
+void Coordinates::autoDecorateExposedAxis(Axis& ax, bool left, 
+  glm::dmat4 const& proj_matrix, glm::dmat4 const& mv_matrix, glm::ivec4 const& viewport)
 {
-	//Triple diff = World2ViewPort(ax.end()) - World2ViewPort(ax.begin());
+  Triple diff = GL::World2ViewPort(ax.end(), mv_matrix, proj_matrix, viewport)
+    - GL::World2ViewPort(ax.begin(), mv_matrix, proj_matrix, viewport);
 
-	//diff = Triple(diff.x,diff.y,0); // projection
-	//
-	//double s = glm::distance(diff);
-	//
-	//if (!s)
-	//	return;
+	diff = Triple(diff.x,diff.y,0); // projection
+	
+	double s = glm::length(diff);
+	
+	if (isZero(s))
+		return;
 
-	//ax.setScaling(true);
+	ax.showTics(true);
 	//ax.setNumbers(true);
 	//ax.setLabel(true);
 
@@ -428,37 +433,37 @@ void Coordinates::setStandardScale()
 void Coordinates::setStyle(Protean3D::COORDINATESTYLE s, Protean3D::AXIS frame_1, 
                                 Protean3D::AXIS frame_2, Protean3D::AXIS frame_3) 
 { 
-	//style_ = s;
+  style_ = s;
 
-	//switch (s)
-	//{
-	//	case NOCOORDINATES:
-	//		{
-	//			for (unsigned i=0; i!=axes.size(); ++i)
-	//				detach (i);
-	//		}
-	//		break;
-	//	case BOX:
-	//		{
-	//			for (unsigned i=0; i!=axes.size(); ++i)
-	//				attach (i);
-	//		}
-	//		break;
-	//	case FRAME:
-	//		{
-	//			for (unsigned i=0; i!=axes.size(); ++i)
-	//				detach (i);
-	//			if (!autoDecoration())
-	//			{
-	//				attach(frame_1);
-	//				attach(frame_2);
-	//				attach(frame_3);
-	//			}
-	//		}
-	//		break;
-	//	default:
-	//		break;
-	//}
+  switch (s)
+  {
+    case NOCOORDINATES:
+    {
+      for (size_t i = 0; i != axes.size(); ++i)
+        detach(i);
+    }
+    break;
+    case BOX:
+    {
+      for (size_t i = 0; i != axes.size(); ++i)
+        attach(i);
+    }
+    break;
+    case FRAME:
+    {
+      for (size_t i = 0; i != axes.size(); ++i)
+        detach(i);
+      if (!autoDecoration())
+      {
+        attach(frame_1);
+        attach(frame_2);
+        attach(frame_3);
+      }
+    }
+    break;
+    default:
+      break;
+  }
 }
 
 /**
@@ -575,4 +580,19 @@ void Coordinates::drawMinorGridLines(Axis& a0, Axis& a1)
 	//	glVertex3d( a0.minorPositions()[i].x, a0.minorPositions()[i].y, a0.minorPositions()[i].z ); 
 	//	glVertex3d( a0.minorPositions()[i].x + d.x, a0.minorPositions()[i].y + d.y, a0.minorPositions()[i].z +d.z); 
 	//}
+}
+
+void Coordinates::attach(size_t idx)
+{
+  if (aidx_.end() == std::find(aidx_.begin(), aidx_.end(), idx))
+    aidx_.push_back(idx);
+}
+
+void Coordinates::detach(size_t idx)
+{
+  auto it = std::find(aidx_.begin(), aidx_.end(), idx);
+  if (it != aidx_.end())
+  {
+    aidx_.erase(it);
+  }
 }

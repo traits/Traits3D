@@ -198,7 +198,7 @@ typedef std::vector<unsigned> Cell;
 //! Vector of convex polygons. You need a TripleVector as base for the node data
 typedef std::vector<Cell> CellVector;
 //! Returns the sum over the sizes of the single cells
-unsigned tesselationSize(Protean3D::CellVector const& t);
+size_t tesselationSize(Protean3D::CellVector const& t);
 //! Rectangular hull for point cloud
 PROTEAN3D_EXPORT Protean3D::Box hull(TripleVector const& data);
 
@@ -207,34 +207,6 @@ typedef glm::vec4 Color;
 
 //! A Color field
 typedef std::vector<Color> ColorVector;
-
-////! simplified glut routine (glUnProject): windows coordinates_p --> object coordinates_p 
-///**
-//	Don't rely on (use) this in display lists !
-//*/
-//inline Triple ViewPort2World(Triple win, bool* err = 0)
-//{
-//  Triple ret;
-//  bool retb = GL::ViewPort2World(ret.x, ret[1], ret[2], win.x, win[1], win[2]);
-//  if (err)
-//    *err = retb;
-//
-//  return ret;
-//}
-
-////! simplified glut routine (glProject): object coordinates_p --> windows coordinates_p 
-///**
-//	Don't rely on (use) this in display lists !
-//*/
-//inline Triple World2ViewPort(Triple obj,	bool* err = 0)
-//{
-//  Triple ret;
-//  bool retb = GL::World2ViewPort(ret.x, ret[1], ret[2], obj.x, obj[1], obj[2]);
-//  if (err)
-//    *err = retb;
-//
-//  return ret;
-//}
 
 #ifndef PROTEAN3D_NOT_FOR_DOXYGEN
 
@@ -290,7 +262,7 @@ inline double angle(double sx, double sy, double ex, double ey)
   return theta < 0 ? theta + 360 : theta;
 }
 
-void convexhull2d( std::vector<unsigned>& idx, const std::vector<Protean3D::Tuple>& src );
+void convexhull2d( std::vector<size_t>& idx, const std::vector<Tuple>& src );
 
 #endif // PROTEAN3D_NOT_FOR_DOXYGEN 
 

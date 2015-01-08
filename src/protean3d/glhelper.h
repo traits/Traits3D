@@ -12,6 +12,7 @@
 #endif
 
 #include "glm/glm.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Protean3D
 {
@@ -53,5 +54,29 @@ namespace Protean3D
     std::vector<glm::vec3> scale(std::vector<glm::dvec3> const& val, double excess);
     //! Converts value into vec3 vector - only casts are applied
     std::vector<glm::vec3> convert(std::vector<glm::dvec3> const& val);
+
+    //! simplified glut routine (glUnProject): windows coordinates_p --> object coordinates_p 
+    inline glm::vec3 ViewPort2World(glm::vec3 const& obj, glm::mat4 const& mv, glm::mat4 const& proj, glm::ivec4 const& viewport)
+    {
+      return glm::unProject(obj, mv, proj, viewport);
+    }
+
+    //! simplified glut routine (glProject): object coordinates_p --> windows coordinates_p 
+    inline glm::vec3 World2ViewPort(glm::vec3 const& win, glm::mat4 const& mv, glm::mat4 const& proj, glm::ivec4 const& viewport)
+    {
+      return glm::project(win, mv, proj, viewport);
+    }
+
+    //! simplified glut routine (glUnProject): windows coordinates_p --> object coordinates_p 
+    inline glm::dvec3 ViewPort2World(glm::dvec3 const& obj, glm::dmat4 const& mv, glm::dmat4 const& proj, glm::ivec4 const& viewport)
+    {
+      return glm::unProject(obj, mv, proj, viewport);
+    }
+
+    //! simplified glut routine (glProject): object coordinates_p --> windows coordinates_p 
+    inline glm::dvec3 World2ViewPort(glm::dvec3 const& win, glm::dmat4 const& mv, glm::dmat4 const& proj, glm::ivec4 const& viewport)
+    {
+      return glm::project(win, mv, proj, viewport);
+    }
   }
 }

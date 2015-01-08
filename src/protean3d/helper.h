@@ -11,13 +11,25 @@
 namespace Protean3D
 {
 
-inline bool isPracticallyZero(double a, double b = 0)
+inline bool equal(double a, double b)
 {
   if (!b)
     return (std::abs(a) <= std::numeric_limits<double>::min());
 
   return (std::abs(a - b) <= 
     std::fmin(std::abs(a), std::abs(b)) * std::numeric_limits<double>::epsilon());
+}
+
+inline bool isZero(double x)
+{
+  return equal(x, 0.0);
+}
+
+inline bool equal(Triple const& a, Triple const& b)
+{
+  return equal(a.x, b.x)
+    && equal(a.y, b.y)
+    && equal(a.z, b.z);
 }
 
 inline int round(double d)

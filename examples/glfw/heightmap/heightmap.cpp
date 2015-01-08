@@ -13,7 +13,13 @@
 
 HeightMap::HeightMap()
 {
-  map_vertices.resize(MAP_NUM_TOTAL_VERTICES);
+  map_vertices.resize(MAP_NUM_TOTAL_VERTICES);  
+  for (unsigned i = 0; i != coordinates_p->axes.size(); ++i)
+  {
+    coordinates_p->axes[i].setMajors(5);
+    coordinates_p->axes[i].setMinors(3);
+    coordinates_p->axes[i].setSymmetricTics(true);
+  }
 
   init_map();
 }

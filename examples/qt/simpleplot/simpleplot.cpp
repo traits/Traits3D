@@ -29,7 +29,9 @@ public:
     setScale(1, 1, 1);
     setShift(0.15, 0, 0);
     setZoom(0.9);     
+    //setScale(1.0, 1.0, 0.5);
     
+    coordinates_p->setStyle(FRAME);
     for (unsigned i = 0; i != coordinates_p->axes.size(); ++i)
     {
       coordinates_p->axes[i].setMajors(7);
@@ -78,6 +80,9 @@ public:
 
   void updateData() override
   {
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable(GL_LINE_SMOOTH);
     updatePositionData(data_);
   }
 
@@ -99,10 +104,6 @@ public:
 
 Plot::Plot()
 {
-  setRotation(30, 0, 15);
-  setScale(1, 1, 1);
-  setShift(0.15, 0, 0);
-  setZoom(0.9);
 }
 
 int main(int argc, char **argv)

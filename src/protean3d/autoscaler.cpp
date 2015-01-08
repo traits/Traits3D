@@ -170,7 +170,7 @@ size_t LinearAutoScaler::execute(double& a, double& b, double start, double stop
   
   double delta = stop_ - start_; // always >= 0
 
-  if (isPracticallyZero(delta))
+  if (isZero(delta))
     return intervals_;
 
   double c; 

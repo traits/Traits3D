@@ -52,8 +52,8 @@ private:
 	Protean3D::Triple first_, second_;
 	Protean3D::COORDINATESTYLE style_;
 		
-	void chooseAxes();
-	void autoDecorateExposedAxis(Axis& ax, bool left);
+  void chooseAxes(glm::dmat4 const& proj_matrix, glm::dmat4 const& mv_matrix, glm::ivec4 const& viewport);
+  void autoDecorateExposedAxis(Axis& ax, bool left, glm::dmat4 const& proj_matrix, glm::dmat4 const& mv_matrix, glm::ivec4 const& viewport);
   void drawMajorGridLines(); //!< Draws a grid between the major tics on the site
 	void drawMinorGridLines(); //!< Draws a grid between the minor tics on the site
   void drawMajorGridLines(Protean3D::Axis&, Protean3D::Axis&); //! Helper
@@ -63,6 +63,10 @@ private:
 	bool autodecoration_;
 	bool majorgridlines_, minorgridlines_;
   int  sides_;
+
+  std::list<size_t> aidx_;
+  void attach(size_t idx);
+  void detach(size_t idx);
 };
 
 } // ns

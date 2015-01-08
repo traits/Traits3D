@@ -109,7 +109,7 @@ void LinearScale::calculate()
 		runningval = mstart_p + t * interval;
     if (runningval>stop_p)
       break;
-    if (isPracticallyZero(mstart_p, -t*interval)) // prevent rounding errors near 0
+    if (equal(mstart_p, -t*interval)) // prevent rounding errors near 0
       runningval = 0.0;
     majors_p.push_back(runningval);
 	}
@@ -130,7 +130,7 @@ void LinearScale::calculate()
   //  |_____________|_____ _ _ _
 
   double step = (majors_p[1]-majors_p[0]) / minorintervals_p;
-  if (isPracticallyZero(step))
+  if (isZero(step))
     return;
 
   runningval = mstart_p-step;

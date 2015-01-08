@@ -30,6 +30,7 @@ public:
   Protean3D::Triple end() const { return end_; } //!< Returns axis' ending position 
   double length() const { return glm::distance(beg_,end_); } //!< Returns axis' length
 
+  void showTics(bool d) { drawtics_ = d; } //!< Turns scale drawing on or off
   void setTicLength(double majorl, double minorl); //!< Sets tics lengths in world coordinates
   //! Returns tics lengths
   void ticLength(double& majorl, double& minorl) const { majorl = lmaj_; minorl = lmin_; }
@@ -70,6 +71,7 @@ private:
   Protean3D::Triple orientation_;
 
   size_t majorintervals_, minorintervals_;
+  bool drawtics_ = true;
 
   bool symtics_;
   bool autoscale_;
