@@ -63,7 +63,20 @@ void Protean3D::Plot3D::draw()
   coordinates_p->draw(projection_matrix_p, modelview_matrix_p);
   data_object_p->draw(projection_matrix_p, modelview_matrix_p);
 
-  text_engine_p->drawText(title_);
+
+  //todo
+  std::vector<std::string> texts(2);
+  std::vector<glm::vec2> positions(2);
+
+  texts[0] = title_;
+  texts[1] = "irgendwas...";
+
+  glm::ivec4 vp = GL::viewPort();
+
+  positions[0] = glm::vec2((vp[2]-vp[0]) / 2, 50);
+  positions[1] = glm::vec2(2*(vp[2] - vp[0]) / 3.0f, (vp[3]-vp[1]) * 4 / 5.0f);
+
+  text_engine_p->drawText(texts, positions, Color(0.9f, 0, 0.3f, 0.0f));
 }
 
 void Protean3D::Plot3D::setBackgroundColor(Color val)

@@ -14,6 +14,7 @@
 
 #include "glm/glm.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Protean3D
 {
@@ -51,6 +52,13 @@ namespace Protean3D
         std::cerr << err;
       }
     }*/
+
+    inline glm::ivec4 viewPort()
+    {
+      glm::ivec4 viewport;
+      glGetIntegerv(GL_VIEWPORT, glm::value_ptr(viewport)); // x,y,w,h
+      return viewport;
+    }
 
     /**    
      Checks, if the argument fits in a GLfloat by returning the scaling factor

@@ -1,4 +1,5 @@
 #define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
+#include <numeric>
 #include "textengine/fonts_std_generated.h"
 #include "glhelper.h"
 #include "textengine_std.h"
@@ -45,62 +46,82 @@ bool Protean3D::StandardTextEngine::initializeGL()
     return false;
   vao_ = std::make_unique<GL::VAO>();
   vbo_ = std::make_unique<GL::VBO>(vao_.get());
-  cdata.resize(96);
+
+  const size_t glyph_cnt = 96;
+  const float font_height = 32.0f;
+
+  cdata.resize(glyph_cnt); // ASCII 32..126 is 95 glyphs
 
   unsigned char temp_bitmap[512 * 512];
-  if (-1 == stbtt_BakeFontBitmap(&StandardFont::OpenSans_Regular_ttf[0], 0, 32.0,
-    temp_bitmap, 512, 512, 32, 96, &cdata[0])) // no guarantee this fits!
+  if (-1 == stbtt_BakeFontBitmap(&StandardFont::OpenSans_Regular_ttf[0], 0, font_height,
+    temp_bitmap, 512, 512, 32, int(glyph_cnt), &cdata[0])) // no guarantee this fits!
   {
     return false;
   }
   glGenTextures(1, &tex_atlas_);
   glBindTexture(GL_TEXTURE_2D, tex_atlas_);
   // GL_RED here, because GL_ALPHA is not longer supported from newer OpenGL versions
-  // enforces change from .a to .r component in fragment shader too
+  // requires change from .a to .r component in fragment shader too
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 512, 512, 0, GL_RED, GL_UNSIGNED_BYTE, temp_bitmap);
   // temp_bitmap free-able from this point
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   return true;
 }
 
-void Protean3D::StandardTextEngine::drawAt(float x, float y, std::string text, 
-  float scale, Protean3D::Color const& color)
+
+bool Protean3D::StandardTextEngine::drawText(
+  std::vector<std::string> const& texts, 
+  std::vector<glm::vec2> const& positions, 
+  Protean3D::Color const& color)
 {
+  if (positions.empty() || positions.size() != texts.size())
+    return false;
+
   shader_.use();
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, tex_atlas_);
   GLuint texture_sampler = glGetUniformLocation(shader_.programId(), "tex");
   glUniform1i(texture_sampler, 0);
 
-  int viewport[4];
-  glGetIntegerv(GL_VIEWPORT, viewport); // x,y,w,h
-
+  glm::ivec4 viewport = GL::viewPort();
   glm::mat4 pmat = glm::ortho<float>(
     static_cast<float>(viewport[0]), static_cast<float>(viewport[0] + viewport[2]),
     // reverse y axis
-    static_cast<float>(viewport[1] + viewport[3]), static_cast<float>(viewport[1]) 
+    static_cast<float>(viewport[1] + viewport[3]), static_cast<float>(viewport[1])
     );
 
   bool bf = shader_.setUniformMatrix(pmat, "proj_mat");
 
   shader_.setUniformVec3(glm::vec3(color.r, color.g, color.b), "color");
-  int c = 0;
-  std::vector<glm::vec4> coords(6 * text.size());
 
-  for (auto ch : text)
+  size_t char_cnt = 0;
+  for (auto text : texts)
+    char_cnt += text.size();
+
+  std::vector<glm::vec4> coords(6 * char_cnt);
+
+  size_t c = 0;
+  size_t i = 0;
+  for (auto text : texts)
   {
-    if (ch >= 32 && ch < 128)
+    float x = positions[i].x;
+    float y = positions[i].y;
+    ++i;
+    for (auto ch : text)
     {
-      stbtt_aligned_quad q;
-      stbtt_GetBakedQuad(&cdata[0], 512, 512, ch - 32, &x, &y, &q, 1);
+      if (ch >= 32 && ch < 128)
+      {
+        stbtt_aligned_quad q;
+        stbtt_GetBakedQuad(&cdata[0], 512, 512, ch - 32, &x, &y, &q, 1);
 
-      coords[c++] = glm::vec4(q.x0 * scale, q.y0 * scale, q.s0, q.t0);
-      coords[c++] = glm::vec4(q.x0 * scale, q.y1 * scale, q.s0, q.t1);
-      coords[c++] = glm::vec4(q.x1 * scale, q.y0 * scale, q.s1, q.t0);
-      
-      coords[c++] = glm::vec4(q.x0 * scale, q.y1 * scale, q.s0, q.t1);
-      coords[c++] = glm::vec4(q.x1 * scale, q.y0 * scale, q.s1, q.t0);
-      coords[c++] = glm::vec4(q.x1 * scale, q.y1 * scale, q.s1, q.t1);
+        coords[c++] = glm::vec4(q.x0, q.y0, q.s0, q.t0);
+        coords[c++] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
+        coords[c++] = glm::vec4(q.x1, q.y0, q.s1, q.t0);
+
+        coords[c++] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
+        coords[c++] = glm::vec4(q.x1, q.y0, q.s1, q.t0);
+        coords[c++] = glm::vec4(q.x1, q.y1, q.s1, q.t1);
+      }
     }
   }
   bf = vbo_->setData(coords);
@@ -121,16 +142,8 @@ void Protean3D::StandardTextEngine::drawAt(float x, float y, std::string text,
   //}
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
-}
 
-bool Protean3D::StandardTextEngine::drawText(std::string const& text)
-{
-  drawAt(10, 30, text, 1, Protean3D::Color(0.9f, 0.0f, 0.3f, 0.0f));
   return true;
 }
 
-bool Protean3D::StandardTextEngine::drawLabel(double val)
-{
-  return false;
-}
 

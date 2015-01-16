@@ -113,9 +113,7 @@ void Coordinates::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
 
   if (autoDecoration())
   {
-    glm::ivec4 viewport;
-    glGetIntegerv(GL_VIEWPORT, glm::value_ptr(viewport));
-    chooseAxes(proj_matrix, mv_matrix, viewport);
+    chooseAxes(proj_matrix, mv_matrix, GL::viewPort());
   }
   
   for (auto it : aidx_)
