@@ -178,6 +178,8 @@ bool ExtGLWidget::initializeGL()
   //  return false;
   //}
 
+  glPolygonOffset(1, 1);
+  glEnable(GL_POLYGON_OFFSET_FILL);
   //todo enable this, we need it for correct hidden lines etc. (implement something 
   // better than glPolygonOffset 
   // e.g. https://www.opengl.org/discussion_boards/showthread.php/179958-How-to-draw-one-line-on-top-of-another-in-OpenGL-without-Z-fighting?p=1245277&viewfull=1#post1245277
