@@ -8,6 +8,7 @@ set(CMAKE_DEBUG_POSTFIX "D")
 
 include("CMakeDependentOption")
 include("cmake/macros.cmake")
+include("cmake/functions.cmake")
 
 # search local cmake stuff
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")

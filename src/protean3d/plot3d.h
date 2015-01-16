@@ -5,6 +5,7 @@
 #include "coordinates.h"
 #include "dataobject.h"
 #include "extglwidget.h"
+#include "textengine.h"
 
 
 namespace Protean3D
@@ -29,16 +30,22 @@ namespace Protean3D
     void setBackgroundColor(Color val); //!< Sets widgets background color
     Color backgroundRGBAColor() const { return bgcolor_; } //!< Returns the widgets background color
 
+    //void setTitlePosition(double rely, double relx = 0.5); 
+    void setTitle(std::string const& val) { title_ = val; } //!< Set caption text (one row only) 
+
   protected:
     Box hull_p;
     std::unique_ptr<GL::DataObject> data_object_p;
-
     std::shared_ptr<Coordinates> coordinates_p;
+
+    // labels
+    std::shared_ptr<TextEngine> text_engine_p;
 
     glm::mat4 projection_matrix_p;
     glm::mat4  modelview_matrix_p;
 
   private:
     Color bgcolor_;
+    std::string title_;
   };
 } // ns

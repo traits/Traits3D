@@ -37,9 +37,11 @@ namespace Protean3D
       bool use();
 
       bool bindAttribute(VBO& vbo, std::string const& name);
+      bool setUniformVec3(glm::vec3 const& vec, std::string const& name);
       bool setUniformVec4(glm::vec4 const& vec, std::string const& name);
       bool setProjectionMatrix(glm::mat4 const& mat);
       bool setModelViewMatrix(glm::mat4 const& mat);
+      bool setUniformMatrix(glm::mat4 const& mat, std::string const& name);
 
     private:  
       bool initialized_;
@@ -48,8 +50,6 @@ namespace Protean3D
       bool link(GLuint vertex_shader_id, GLuint fragment_shader_id);
       bool inUse() const;
       GLuint program_id_;
-
-      bool setUniformMatrix(glm::mat4 const& mat, std::string const& name);
     };
   } // ns
 } // ns

@@ -1,10 +1,13 @@
 #include <glm/gtc/matrix_transform.hpp>
+#include "textengine_std.h"
 #include "plot3d.h"
 
 
 Protean3D::Plot3D::Plot3D()
 {
+  text_engine_p = std::make_shared<StandardTextEngine>();
   coordinates_p = std::make_shared<Coordinates>();
+  title_ = "Protean3D Plot";
 }
 
 Protean3D::Plot3D::~Plot3D()
@@ -59,6 +62,8 @@ void Protean3D::Plot3D::draw()
 
   coordinates_p->draw(projection_matrix_p, modelview_matrix_p);
   data_object_p->draw(projection_matrix_p, modelview_matrix_p);
+
+  text_engine_p->drawText(title_);
 }
 
 void Protean3D::Plot3D::setBackgroundColor(Color val)
@@ -71,5 +76,5 @@ bool Protean3D::Plot3D::initializeGL()
   if (!ExtGLWidget::initializeGL())
     return false;
   
-  return coordinates_p->initializeGL();
+  return text_engine_p->initializeGL() && coordinates_p->initializeGL();
 }
