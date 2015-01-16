@@ -6,6 +6,7 @@ Protean3D::GL::VBO::VBO(VAO* vao)
   if (!vao_)
     throw std::domain_error("Protean3D: VBO construction error");
 
+  GLenum err = glGetError(); //todo temp reset for gl error flag
   glGenBuffers(1, &id_);
   if (GL_NO_ERROR != glGetError())
     throw std::domain_error("Protean3D: VBO construction error");

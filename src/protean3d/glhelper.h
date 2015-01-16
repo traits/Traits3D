@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <vector>
 #include <algorithm>
 
@@ -18,6 +19,39 @@ namespace Protean3D
 {
   namespace GL
   {
+
+    inline void printGlError()
+    {
+      GLenum err = glGetError();
+
+      switch (err)
+      {
+      case GL_INVALID_ENUM:
+        std::cerr << "GL_INVALID_ENUM" << "\n";
+        break;
+      case GL_INVALID_VALUE:
+        std::cerr << "GL_INVALID_VALUE" << "\n";
+        break;
+      case GL_INVALID_OPERATION:
+        std::cerr << "GL_INVALID_OPERATION" << "\n";
+        break;
+      case GL_INVALID_FRAMEBUFFER_OPERATION:
+        std::cerr << "GL_INVALID_FRAMEBUFFER_OPERATION" << "\n";
+        break;
+      case GL_OUT_OF_MEMORY:
+        std::cerr << "GL_OUT_OF_MEMORY" << "\n";
+        break;
+      }
+    }
+
+ /*   bool error()
+    {
+      GLenum err;
+      while ((err = glGetError()) != GL_NO_ERROR) {
+        std::cerr << err;
+      }
+    }*/
+
     /**    
      Checks, if the argument fits in a GLfloat by returning the scaling factor
      associated with values position in (+/-)[0 ... max(GLfloat) ... max(double)]
