@@ -71,18 +71,15 @@ bool Protean3D::StandardTextEngine::initializeGL()
 }
 
 
-bool Protean3D::StandardTextEngine::drawText(
-  std::vector<std::string> const& texts, 
-  std::vector<TupleF> const& positions)
+bool Protean3D::StandardTextEngine::setText(std::vector<std::string> const& texts)
 {
-  if (positions.empty() || positions.size() != texts.size())
+  if (texts.empty())
     return false;
 
   texts_.resize(texts.size());
   for (auto i = 0; i != texts.size(); ++i)
   {
     texts_[i].text = texts[i];
-    texts_[i].position = positions[i];
     texts_[i].hull = Hull(); // reset //todo?
   }
 
@@ -90,12 +87,12 @@ bool Protean3D::StandardTextEngine::drawText(
   for (auto t : texts_)
     char_cnt += t.text.size();
 
-  std::vector<glm::vec4> coords(quad_points * char_cnt);
+  coords_.resize(quad_points * char_cnt);
 
   size_t c = 0;
   size_t i = 0;
 
-  for (auto t : texts_)
+  for (auto& t : texts_)
   {
     float dx = 0;
     float dy = 0;
@@ -106,13 +103,13 @@ bool Protean3D::StandardTextEngine::drawText(
         stbtt_aligned_quad q;
         stbtt_GetBakedQuad(&cdata[0], 512, 512, ch - 32, &dx, &dy, &q, 1);
 
-        coords[c++] = glm::vec4(q.x0, q.y0, q.s0, q.t0);
-        coords[c++] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
-        coords[c++] = glm::vec4(q.x1, q.y0, q.s1, q.t0);
+        coords_[c++] = glm::vec4(q.x0, q.y0, q.s0, q.t0);
+        coords_[c++] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
+        coords_[c++] = glm::vec4(q.x1, q.y0, q.s1, q.t0);
                                    
-        coords[c++] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
-        coords[c++] = glm::vec4(q.x1, q.y0, q.s1, q.t0);
-        coords[c++] = glm::vec4(q.x1, q.y1, q.s1, q.t1);
+        coords_[c++] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
+        coords_[c++] = glm::vec4(q.x1, q.y0, q.s1, q.t0);
+        coords_[c++] = glm::vec4(q.x1, q.y1, q.s1, q.t1);
 
         if (q.x0 < t.hull.bl.x)
           t.hull.bl.x = q.x0;
@@ -126,10 +123,26 @@ bool Protean3D::StandardTextEngine::drawText(
     }
     ++i;
   }
-  bool bf = vbo_->setData(coords);
-  bf = shader_.bindAttribute(*vbo_, "coord");
+  return true;
+}
 
-  shader_.use();
+
+bool Protean3D::StandardTextEngine::drawText(std::vector<TupleF> const& positions)
+{
+  if (positions.size() != texts_.size())
+    return false;
+
+  for (auto i = 0; i != texts_.size(); ++i)
+  {
+    texts_[i].position = positions[i];
+  }
+
+  if ( !vbo_->setData(coords_)
+    || !shader_.bindAttribute(*vbo_, "coord")
+    || !shader_.use()
+    )
+    return false;
+
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, tex_atlas_);
   GLuint texture_sampler = glGetUniformLocation(shader_.programId(), "tex");
@@ -142,7 +155,7 @@ bool Protean3D::StandardTextEngine::drawText(
   //{
   //  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   //}
-  
+
   glm::ivec4 viewport = GL::viewPort();
   size_t sidx = 0;
   size_t step = 0;
@@ -151,16 +164,16 @@ bool Protean3D::StandardTextEngine::drawText(
   {
     // move viewport to make text appear at the right position
     glm::mat4 pmat = glm::ortho<float>(
-      static_cast<float>(viewport[0] - t.position.x), 
+      static_cast<float>(viewport[0] - t.position.x),
       static_cast<float>(viewport[0] + viewport[2] - t.position.x),
       // reverse y axis
       static_cast<float>(viewport[1] + viewport[3] - t.position.y),
       static_cast<float>(viewport[1] - t.position.y)
       );
 
-    bf = shader_.setUniformMatrix(pmat, "proj_mat");
+    shader_.setUniformMatrix(pmat, "proj_mat");
     step = quad_points *  t.text.size();
-    bf = vbo_->draw(GL_TRIANGLES, sidx, step);
+    vbo_->draw(GL_TRIANGLES, sidx, step);
     sidx += step;
   }
   //if (wireframe)

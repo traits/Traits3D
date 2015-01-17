@@ -9,12 +9,13 @@ namespace Protean3D
   {
   public:
     virtual bool initializeGL() = 0;
-    virtual bool drawText(
-      std::vector<std::string> const& texts,
-      std::vector<TupleF> const& positions) = 0;
-    
+    virtual bool setText(
+      std::vector<std::string> const& texts) = 0;
+
+    virtual bool drawText(std::vector<TupleF> const& positions) = 0;
+
     virtual bool setColor(Protean3D::Color const &color) = 0;
-    bool drawText(std::string const& text, TupleF const& position);
+    bool setText(std::string const& text);
 
   protected:
     struct Hull

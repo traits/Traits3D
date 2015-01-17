@@ -7,7 +7,6 @@ Protean3D::Plot3D::Plot3D()
 {
   text_engine_p = std::make_shared<StandardTextEngine>();
   coordinates_p = std::make_shared<Coordinates>();
-  title_ = "Protean3D Plot";
 }
 
 Protean3D::Plot3D::~Plot3D()
@@ -22,7 +21,6 @@ void Protean3D::Plot3D::draw()
   glClearColor(bgcolor_.r, bgcolor_.g, bgcolor_.b, bgcolor_.a);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  
   Triple beg = data_object_p->hull().minVertex;
   Triple end = data_object_p->hull().maxVertex;
   Triple center = beg + (end - beg) * 0.5;
@@ -63,21 +61,12 @@ void Protean3D::Plot3D::draw()
   coordinates_p->draw(projection_matrix_p, modelview_matrix_p);
   data_object_p->draw(projection_matrix_p, modelview_matrix_p);
 
-
   //todo
-  std::vector<std::string> texts(2);
-  std::vector<glm::vec2> positions(2);
-
-  texts[0] = title_;
-  texts[1] = "irgendwas...";
-
+  std::vector<glm::vec2> positions(1);
   glm::ivec4 vp = GL::viewPort();
 
   positions[0] = glm::vec2((vp[2] - vp[0]) / 2, 50);
-  positions[1] = glm::vec2(2 * (vp[2] - vp[0]) / 3.0f, (vp[3] - vp[1]) * 4 / 5.0f);
-
-  text_engine_p->setColor(Color(0.9f, 0, 0.3f, 0.0f));
-  text_engine_p->drawText(texts, positions);
+  text_engine_p->drawText(positions);
 }
 
 void Protean3D::Plot3D::setBackgroundColor(Color val)
@@ -90,5 +79,19 @@ bool Protean3D::Plot3D::initializeGL()
   if (!ExtGLWidget::initializeGL())
     return false;
   
-  return text_engine_p->initializeGL() && coordinates_p->initializeGL();
+  if (!text_engine_p->initializeGL())
+    return false;
+
+  if (!coordinates_p->initializeGL())
+    return false;
+  
+  setTitle("Protean3D Plot");
+  return true;
+}
+
+void Protean3D::Plot3D::setTitle(std::string const& val)
+{
+  title_ = val;
+  text_engine_p->setText(title_);
+  text_engine_p->setColor(Color(0.9f, 0, 0.3f, 0.0f));
 }

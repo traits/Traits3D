@@ -14,10 +14,8 @@ namespace Protean3D
   public:
     StandardTextEngine();
     bool initializeGL() override;
-    bool drawText(
-      std::vector<std::string> const& texts,
-      std::vector<TupleF> const& positions
-      ) override;
+    bool setText(std::vector<std::string> const& texts) override;
+    bool drawText(std::vector<TupleF> const& positions) override;
 
     bool setColor(Protean3D::Color const &color) override;
 
@@ -35,5 +33,6 @@ namespace Protean3D
     const size_t quad_points = 6; // character quad rendered by 2 triangles
 
     std::vector<Text> texts_;
+    std::vector<glm::vec4> coords_;
   };
 }

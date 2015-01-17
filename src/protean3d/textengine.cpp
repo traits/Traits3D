@@ -7,10 +7,9 @@ Protean3D::TextEngine::Hull::Hull()
 {
 }
 
-bool Protean3D::TextEngine::drawText(std::string const& text, TupleF const& position)
+bool Protean3D::TextEngine::setText(std::string const& text)
 {
   std::vector<std::string> textv(1, text);
-  std::vector<TupleF> posv(1, position);
-  return this->drawText(textv, posv);
+  return this->setText(textv);
 }
 

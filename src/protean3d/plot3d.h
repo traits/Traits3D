@@ -31,7 +31,7 @@ namespace Protean3D
     Color backgroundRGBAColor() const { return bgcolor_; } //!< Returns the widgets background color
 
     //void setTitlePosition(double rely, double relx = 0.5); 
-    void setTitle(std::string const& val) { title_ = val; } //!< Set caption text (one row only) 
+    void setTitle(std::string const& val); //!< Set caption text (one row only) 
 
   protected:
     Box hull_p;
