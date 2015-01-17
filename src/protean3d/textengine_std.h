@@ -16,9 +16,10 @@ namespace Protean3D
     bool initializeGL() override;
     bool drawText(
       std::vector<std::string> const& texts,
-      std::vector<glm::vec2> const& positions,
-      Protean3D::Color const& color
+      std::vector<TupleF> const& positions
       ) override;
+
+    bool setColor(Protean3D::Color const &color) override;
 
   private:
     const std::string VertexCode_;
@@ -30,5 +31,9 @@ namespace Protean3D
 
     GLuint  tex_atlas_;
     std::vector<stbtt_bakedchar> cdata;
+
+    const size_t quad_points = 6; // character quad rendered by 2 triangles
+
+    std::vector<Text> texts_;
   };
 }

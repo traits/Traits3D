@@ -110,6 +110,7 @@ enum ANCHOR
 
 
 typedef glm::dvec2 Tuple;
+typedef glm::vec2 TupleF;
 typedef glm::dvec3 Triple;
 typedef glm::vec3 TripleF;
 

@@ -73,10 +73,11 @@ void Protean3D::Plot3D::draw()
 
   glm::ivec4 vp = GL::viewPort();
 
-  positions[0] = glm::vec2((vp[2]-vp[0]) / 2, 50);
-  positions[1] = glm::vec2(2*(vp[2] - vp[0]) / 3.0f, (vp[3]-vp[1]) * 4 / 5.0f);
+  positions[0] = glm::vec2((vp[2] - vp[0]) / 2, 50);
+  positions[1] = glm::vec2(2 * (vp[2] - vp[0]) / 3.0f, (vp[3] - vp[1]) * 4 / 5.0f);
 
-  text_engine_p->drawText(texts, positions, Color(0.9f, 0, 0.3f, 0.0f));
+  text_engine_p->setColor(Color(0.9f, 0, 0.3f, 0.0f));
+  text_engine_p->drawText(texts, positions);
 }
 
 void Protean3D::Plot3D::setBackgroundColor(Color val)

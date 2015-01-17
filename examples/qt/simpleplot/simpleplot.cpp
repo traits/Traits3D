@@ -27,8 +27,8 @@ public:
     data_.resize(xsize*ysize);
     setRotation(30, 0, 15);
     setScale(1, 1, 1);
-    setShift(0.15, 0, 0);
-    setZoom(0.9);     
+    setShift(0.15f, 0, 0);
+    setZoom(0.9f);     
     //setScale(1.0, 1.0, 0.5);
     
     coordinates_p->setStyle(FRAME);

@@ -1,10 +1,8 @@
 #define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
-#include <numeric>
 #include "textengine/fonts_std_generated.h"
 #include "glhelper.h"
 #include "textengine_std.h"
 #include <iostream>
-
 
 Protean3D::StandardTextEngine::StandardTextEngine()
   :VertexCode_(
@@ -58,6 +56,10 @@ bool Protean3D::StandardTextEngine::initializeGL()
   {
     return false;
   }
+
+  if (!setColor(Color(0, 0, 0, 1)))
+    return false;
+
   glGenTextures(1, &tex_atlas_);
   glBindTexture(GL_TEXTURE_2D, tex_atlas_);
   // GL_RED here, because GL_ALPHA is not longer supported from newer OpenGL versions
@@ -71,62 +73,67 @@ bool Protean3D::StandardTextEngine::initializeGL()
 
 bool Protean3D::StandardTextEngine::drawText(
   std::vector<std::string> const& texts, 
-  std::vector<glm::vec2> const& positions, 
-  Protean3D::Color const& color)
+  std::vector<TupleF> const& positions)
 {
   if (positions.empty() || positions.size() != texts.size())
     return false;
+
+  texts_.resize(texts.size());
+  for (auto i = 0; i != texts.size(); ++i)
+  {
+    texts_[i].text = texts[i];
+    texts_[i].position = positions[i];
+    texts_[i].hull = Hull(); // reset //todo?
+  }
+
+  size_t char_cnt = 0;
+  for (auto t : texts_)
+    char_cnt += t.text.size();
+
+  std::vector<glm::vec4> coords(quad_points * char_cnt);
+
+  size_t c = 0;
+  size_t i = 0;
+
+  for (auto t : texts_)
+  {
+    float dx = 0;
+    float dy = 0;
+    for (auto ch : t.text)
+    {
+      if (ch >= 32 && ch < 128)
+      {
+        stbtt_aligned_quad q;
+        stbtt_GetBakedQuad(&cdata[0], 512, 512, ch - 32, &dx, &dy, &q, 1);
+
+        coords[c++] = glm::vec4(q.x0, q.y0, q.s0, q.t0);
+        coords[c++] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
+        coords[c++] = glm::vec4(q.x1, q.y0, q.s1, q.t0);
+                                   
+        coords[c++] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
+        coords[c++] = glm::vec4(q.x1, q.y0, q.s1, q.t0);
+        coords[c++] = glm::vec4(q.x1, q.y1, q.s1, q.t1);
+
+        if (q.x0 < t.hull.bl.x)
+          t.hull.bl.x = q.x0;
+        if (q.x1 > t.hull.tr.x)
+          t.hull.tr.x = q.x1;
+        if (q.y0 < t.hull.bl.y)
+          t.hull.bl.y = q.y0;
+        if (q.y1 > t.hull.tr.y)
+          t.hull.tr.y = q.y1;
+      }
+    }
+    ++i;
+  }
+  bool bf = vbo_->setData(coords);
+  bf = shader_.bindAttribute(*vbo_, "coord");
 
   shader_.use();
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, tex_atlas_);
   GLuint texture_sampler = glGetUniformLocation(shader_.programId(), "tex");
   glUniform1i(texture_sampler, 0);
-
-  glm::ivec4 viewport = GL::viewPort();
-  glm::mat4 pmat = glm::ortho<float>(
-    static_cast<float>(viewport[0]), static_cast<float>(viewport[0] + viewport[2]),
-    // reverse y axis
-    static_cast<float>(viewport[1] + viewport[3]), static_cast<float>(viewport[1])
-    );
-
-  bool bf = shader_.setUniformMatrix(pmat, "proj_mat");
-
-  shader_.setUniformVec3(glm::vec3(color.r, color.g, color.b), "color");
-
-  size_t char_cnt = 0;
-  for (auto text : texts)
-    char_cnt += text.size();
-
-  std::vector<glm::vec4> coords(6 * char_cnt);
-
-  size_t c = 0;
-  size_t i = 0;
-  for (auto text : texts)
-  {
-    float x = positions[i].x;
-    float y = positions[i].y;
-    ++i;
-    for (auto ch : text)
-    {
-      if (ch >= 32 && ch < 128)
-      {
-        stbtt_aligned_quad q;
-        stbtt_GetBakedQuad(&cdata[0], 512, 512, ch - 32, &x, &y, &q, 1);
-
-        coords[c++] = glm::vec4(q.x0, q.y0, q.s0, q.t0);
-        coords[c++] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
-        coords[c++] = glm::vec4(q.x1, q.y0, q.s1, q.t0);
-
-        coords[c++] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
-        coords[c++] = glm::vec4(q.x1, q.y0, q.s1, q.t0);
-        coords[c++] = glm::vec4(q.x1, q.y1, q.s1, q.t1);
-      }
-    }
-  }
-  bf = vbo_->setData(coords);
-  bf = shader_.bindAttribute(*vbo_, "coord");
-
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -135,7 +142,27 @@ bool Protean3D::StandardTextEngine::drawText(
   //{
   //  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   //}
-  bf = vbo_->draw(GL_TRIANGLES);
+  
+  glm::ivec4 viewport = GL::viewPort();
+  size_t sidx = 0;
+  size_t step = 0;
+
+  for (auto t : texts_)
+  {
+    // move viewport to make text appear at the right position
+    glm::mat4 pmat = glm::ortho<float>(
+      static_cast<float>(viewport[0] - t.position.x), 
+      static_cast<float>(viewport[0] + viewport[2] - t.position.x),
+      // reverse y axis
+      static_cast<float>(viewport[1] + viewport[3] - t.position.y),
+      static_cast<float>(viewport[1] - t.position.y)
+      );
+
+    bf = shader_.setUniformMatrix(pmat, "proj_mat");
+    step = quad_points *  t.text.size();
+    bf = vbo_->draw(GL_TRIANGLES, sidx, step);
+    sidx += step;
+  }
   //if (wireframe)
   //{
   //  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -146,4 +173,7 @@ bool Protean3D::StandardTextEngine::drawText(
   return true;
 }
 
-
+bool Protean3D::StandardTextEngine::setColor(Protean3D::Color const &color)
+{
+  return shader_.setUniformVec3(glm::vec3(color.r, color.g, color.b), "color");
+}
