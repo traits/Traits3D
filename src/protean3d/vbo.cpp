@@ -31,15 +31,20 @@ bool Protean3D::GL::VBO::bindAttribute(GLuint attr_location)
   return true;
 }
 
+/**
+ \param primitive_type Type of the primitive (GL_TRIANGLE_STRIP etc.).
+ \param first          Index to the first element to draw. An element means an entities, 
+                       set by the corresponding overloaded setData call (glm::vec4 etc.)
+ \param count          Number of elements to draw. 
+
+ \return true if it succeeds, false if it fails.
+ */
 bool Protean3D::GL::VBO::draw(GLenum primitive_type, size_t first, size_t count)
 {
-  GLuint glfirst = static_cast<GLuint> (first * primitive_size_);
-  GLsizei glcount = static_cast<GLuint> (count * primitive_size_);
-
-  if (glfirst + glcount > bsize_)
+  if ((first + count)*primitive_size_ > bsize_)
     return false;
 
-  glDrawArrays(primitive_type, glfirst, glcount); 
+  glDrawArrays(primitive_type, first, count); 
 
   GLenum err = glGetError();
 
