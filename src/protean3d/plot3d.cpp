@@ -65,7 +65,7 @@ void Protean3D::Plot3D::draw()
   std::vector<glm::vec2> positions(1);
   glm::ivec4 vp = GL::viewPort();
 
-  positions[0] = glm::vec2((vp[2] - vp[0]) / 2, 50);
+  positions[0] = glm::vec2((vp[2] - vp[0]) / 2, vp[3] - vp[1] - 50);
   text_engine_p->drawText(positions);
 }
 

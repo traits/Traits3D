@@ -5,6 +5,8 @@
 
 namespace Protean3D
 {
+  class TextEngine;
+
   namespace GL
   {
     class AxisObject : public GL::Object
@@ -33,6 +35,7 @@ namespace Protean3D
       bool modified_ = true;
 
       std::unique_ptr<VBO> vbo_;
+      std::shared_ptr<TextEngine> te_;
 
       bool updateData();
     };

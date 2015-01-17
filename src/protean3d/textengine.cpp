@@ -13,3 +13,8 @@ bool Protean3D::TextEngine::setText(std::string const& text)
   return this->setText(textv);
 }
 
+std::string Protean3D::TextEngine::d2t(double val)
+{
+  return std::to_string(val);
+}
+

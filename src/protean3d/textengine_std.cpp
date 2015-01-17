@@ -167,8 +167,8 @@ bool Protean3D::StandardTextEngine::drawText(std::vector<TupleF> const& position
       static_cast<float>(viewport[0] - t.position.x),
       static_cast<float>(viewport[0] + viewport[2] - t.position.x),
       // reverse y axis
-      static_cast<float>(viewport[1] + viewport[3] - t.position.y),
-      static_cast<float>(viewport[1] - t.position.y)
+      static_cast<float>(t.position.y),
+      static_cast<float>(t.position.y - viewport[3])
       );
 
     shader_.setUniformMatrix(pmat, "proj_mat");

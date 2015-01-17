@@ -12,10 +12,13 @@ namespace Protean3D
     virtual bool setText(
       std::vector<std::string> const& texts) = 0;
 
+    //! View port origin always bottom-left
     virtual bool drawText(std::vector<TupleF> const& positions) = 0;
 
     virtual bool setColor(Protean3D::Color const &color) = 0;
     bool setText(std::string const& text);
+
+    std::string d2t(double val);
 
   protected:
     struct Hull

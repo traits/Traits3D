@@ -1,4 +1,5 @@
 #include <glm/gtc/matrix_transform.hpp>
+#include "textengine_std.h"
 #include "axisobject.h"
 
 
@@ -8,6 +9,8 @@ Protean3D::GL::AxisObject::AxisObject()
   shader_.create(GL::ShaderCode::Vertex::Line, GL::ShaderCode::Fragment::Simple);
 
   vbo_ = std::make_unique<VBO>(&vao_p);
+  te_ = std::make_shared<StandardTextEngine>();
+  te_->initializeGL();
 }
 
 //bool Protean3D::GL::AxisObject::setHull(Protean3D::Box const& hull)
@@ -30,6 +33,20 @@ void Protean3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 con
   shader_.setProjectionMatrix(proj_matrix);
   shader_.setModelViewMatrix(mv_matrix);
   vbo_->draw(GL_LINES);
+
+  std::vector<TupleF> pos(1);
+  
+  glm::vec4 vp = GL::viewPort();
+
+  TripleF beg = GL::World2ViewPort(begin_, mv_matrix, proj_matrix, vp);
+  TripleF end = GL::World2ViewPort(end_, mv_matrix, proj_matrix, vp);
+  pos[0] = Tuple(beg.x + (end.x - beg.x) / 2, beg.y + (end.y - beg.y) / 2);
+
+  float val = glm::length(end_ - begin_); //todo float not double here!
+
+  te_->setText(te_->d2t(val));
+  te_->setColor(Color(0.5, 0.5, 0.5, 1));
+  te_->drawText(pos);
 }
 
 void Protean3D::GL::AxisObject::setValues(Protean3D::Triple const& begin, Protean3D::Triple const& end, 
