@@ -15,8 +15,9 @@ namespace Protean3D
       AxisObject();
 
       void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix) override;
-      void setValues(Protean3D::Triple const& begin, Protean3D::Triple const& end, 
-        std::vector<Triple> const& majors, std::vector<Triple> const& minors);
+      bool setValues(Protean3D::Triple const& begin, Protean3D::Triple const& end, 
+        std::vector<Triple> const& majors, std::vector<Triple> const& minors,
+        std::vector<double> const& major_values);
       void setTicOrientation(Triple const& val);
       void setSymmetricTics(bool val);
       void setTicLength(double majorticlen, double minorticlen);
@@ -27,6 +28,7 @@ namespace Protean3D
       Protean3D::TripleF end_;
       std::vector<TripleF> majors_;
       std::vector<TripleF> minors_;
+      std::vector<double> majorvalues_;
       float majorticlength_ = 0.0f;
       float minorticlength_ = 0.0f;
       bool symtics_ = false;

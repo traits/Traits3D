@@ -32,8 +32,8 @@ protected:
     virtual void setMinors(size_t val) {minorintervals_p=val;} //!< Sets number of minor intervals per major interval
     virtual void setMajorLimits(double start, double stop);
 
-    size_t majors() const {return majorintervals_p;} //!< Returns major intervals
-    size_t minors() const {return minorintervals_p;} //!< Returns minor intervals
+    size_t majors() const {return majorintervals_p;} //!< Returns number of major intervals
+    size_t minors() const {return minorintervals_p;} //!< Returns number of minor intervals per major interval
 
     //! This function should setup the 2 vectors for major and minor positions;
     virtual void calculate() = 0;

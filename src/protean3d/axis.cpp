@@ -155,7 +155,7 @@ void Protean3D::Axis::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_mat
   globject_p->setSymmetricTics(symtics_);
   globject_p->setTicOrientation(orientation_);
   globject_p->setTicLength(lmaj_, lmin_);
-  globject_p->setValues(beg_, end_, majorpos_, minorpos_);
+  globject_p->setValues(beg_, end_, majorpos_, minorpos_, scale_->majors_p);
   //end todo
   globject_p->draw(proj_matrix, mv_matrix);
 }

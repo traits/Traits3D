@@ -35,25 +35,31 @@ void Protean3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 con
   vbo_->draw(GL_LINES);
 
 
-  //todo is float not double here!
+  if (majors_.size() != majorvalues_.size()) // sanity
+    return;
+
   std::vector<TupleF> majorpositions_2d(majors_.size());
   std::vector<std::string> majorvalues(majors_.size());
+  
   for (auto i = 0; i != majors_.size(); ++i)
   {
     TripleF pos = GL::World2ViewPort(majors_[i], mv_matrix, proj_matrix, GL::viewPort());
     majorpositions_2d[i] = TupleF(pos.x, pos.y);
-
-    float val = glm::length(majors_[i] - begin_); //todo wrong!
-    majorvalues[i] = te_->d2t(val);
+    majorvalues[i] = te_->d2t(majorvalues_[i]);
   }
   te_->setText(majorvalues);
   te_->setColor(Color(0.5, 0.5, 0.5, 1));
   te_->drawText(majorpositions_2d);
 }
 
-void Protean3D::GL::AxisObject::setValues(Protean3D::Triple const& begin, Protean3D::Triple const& end, 
-  std::vector<Triple> const& majors, std::vector<Triple> const& minors)
+bool Protean3D::GL::AxisObject::setValues(Protean3D::Triple const& begin, Protean3D::Triple const& end, 
+  std::vector<Triple> const& majors, std::vector<Triple> const& minors,
+  std::vector<double> const& major_values)
 {
+  if (major_values.size() != majors.size())
+    return false;
+
+  majorvalues_ = major_values;
   std::vector<Triple> tmp(2);
   tmp[0] = begin;
   tmp[1] = end;
@@ -74,6 +80,7 @@ void Protean3D::GL::AxisObject::setValues(Protean3D::Triple const& begin, Protea
     minors_ = GL::convert(minors);
   }
   modified_ = true;
+  return true;
 }
 
 void Protean3D::GL::AxisObject::setTicOrientation(Triple const& val)
