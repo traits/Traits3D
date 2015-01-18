@@ -22,6 +22,7 @@ HeightMap::HeightMap()
   }
 
   init_map();
+  setZoom(0.8f);
 }
 
 bool HeightMap::loadData()

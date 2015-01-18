@@ -34,19 +34,21 @@ void Protean3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 con
   shader_.setModelViewMatrix(mv_matrix);
   vbo_->draw(GL_LINES);
 
-  std::vector<TupleF> pos(1);
-  
-  glm::vec4 vp = GL::viewPort();
 
-  TripleF beg = GL::World2ViewPort(begin_, mv_matrix, proj_matrix, vp);
-  TripleF end = GL::World2ViewPort(end_, mv_matrix, proj_matrix, vp);
-  pos[0] = Tuple(beg.x + (end.x - beg.x) / 2, beg.y + (end.y - beg.y) / 2);
+  //todo is float not double here!
+  std::vector<TupleF> majorpositions_2d(majors_.size());
+  std::vector<std::string> majorvalues(majors_.size());
+  for (auto i = 0; i != majors_.size(); ++i)
+  {
+    TripleF pos = GL::World2ViewPort(majors_[i], mv_matrix, proj_matrix, GL::viewPort());
+    majorpositions_2d[i] = TupleF(pos.x, pos.y);
 
-  float val = glm::length(end_ - begin_); //todo float not double here!
-
-  te_->setText(te_->d2t(val));
+    float val = glm::length(majors_[i] - begin_); //todo wrong!
+    majorvalues[i] = te_->d2t(val);
+  }
+  te_->setText(majorvalues);
   te_->setColor(Color(0.5, 0.5, 0.5, 1));
-  te_->drawText(pos);
+  te_->drawText(majorpositions_2d);
 }
 
 void Protean3D::GL::AxisObject::setValues(Protean3D::Triple const& begin, Protean3D::Triple const& end, 
