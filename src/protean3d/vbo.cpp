@@ -44,7 +44,7 @@ bool Protean3D::GL::VBO::draw(GLenum primitive_type, size_t first, size_t count)
   if ((first + count)*primitive_size_ > bsize_)
     return false;
 
-  glDrawArrays(primitive_type, first, count); 
+  glDrawArrays(primitive_type, static_cast<GLint>(first), static_cast<GLsizei>(count));
 
   GLenum err = glGetError();
 

@@ -57,7 +57,7 @@ bool Protean3D::GL::IBO::draw(GLenum draw_type)
 	  glPrimitiveRestartIndex(std::numeric_limits<GLuint>::max()); //todo not available in OpenGL ES!
   }
   
-  glDrawElements(primitive_type_, size_, GL_UNSIGNED_INT, 0); //todo ibo indexing
+  glDrawElements(primitive_type_, static_cast<GLsizei>(size_), GL_UNSIGNED_INT, 0); //todo ibo indexing
   
   if (IndexMaker::RestartType::PrimitiveRestart == restart_type_)
   {

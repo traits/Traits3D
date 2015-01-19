@@ -120,5 +120,63 @@ namespace Protean3D
     {
       return glm::project(win, mv, proj, viewport);
     }
+
+    //! RAII class for GL states
+    class State
+    {
+    public:
+      //! Create maintainer for state 'state_enum'
+      explicit State(GLenum state_enum)
+        : state_enum_(state_enum),
+        enabled_at_start_(glIsEnabled(state_enum))
+      {
+        current_state_ = enabled_at_start_;
+      }
+
+      State(GLenum state_enum, GLboolean enable_state)
+        : state_enum_(state_enum),
+        enabled_at_start_(glIsEnabled(state_enum))
+      {
+        current_state_ = enabled_at_start_;
+        if (GL_TRUE == enable_state)
+          enable();
+        else
+          disable();
+      }
+
+      //! Restore state from objects creation
+      ~State()
+      {
+        if (enabled_at_start_)
+          enable();
+        else
+          disable();
+      }
+
+      //! enable state temporarily 
+      void enable()
+      {
+        if (current_state_)
+          return;
+        
+        glEnable(state_enum_);
+        current_state_ = true;
+      }
+
+      //! disable state temporarily 
+      void disable()
+      {
+        if (!current_state_)
+          return;
+
+        glDisable(state_enum_);
+        current_state_ = false;
+      }
+
+    private:
+      const GLenum state_enum_;
+      const GLboolean enabled_at_start_;
+      GLboolean current_state_;
+    };
   }
 }

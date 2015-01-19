@@ -31,7 +31,7 @@ bool HeightMap::loadData()
     return false;
 
   size_t size = map_vertices.size();
-  float fsize = size;
+  float fsize = static_cast<FLOAT>(size);
   Protean3D::ColorVector colors(size);
   for (auto i = 0; i != size; ++i)
   {

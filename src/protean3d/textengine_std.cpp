@@ -148,9 +148,8 @@ bool Protean3D::StandardTextEngine::drawText(std::vector<TupleF> const& position
   GLuint texture_sampler = glGetUniformLocation(shader_.programId(), "tex");
   glUniform1i(texture_sampler, 0);
 
-  glEnable(GL_BLEND);
+  GL::State blend(GL_BLEND, GL_TRUE), depth_test(GL_DEPTH_TEST, GL_FALSE);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glDisable(GL_DEPTH_TEST);
   //if (wireframe)
   //{
   //  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -180,8 +179,6 @@ bool Protean3D::StandardTextEngine::drawText(std::vector<TupleF> const& position
   //{
   //  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   //}
-  glEnable(GL_DEPTH_TEST);
-  glDisable(GL_BLEND);
 
   return true;
 }
