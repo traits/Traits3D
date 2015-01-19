@@ -4,8 +4,10 @@ This README would normally document whatever steps are necessary to get your app
 
 ### What is this repository for? ###
 
-* Quick summary
-* Version
+* Protean3D is a successor of my 3D function plotting library [QwtPlot3D] (http://qwtplot3d.sourceforge.net/).
+It has been rewritten using modern C++ and OpenGL
+
+* Version (n.a)
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### How do I get set up? ###
