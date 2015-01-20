@@ -2,7 +2,6 @@
 
 #include <vector>
 #include "glhelper.h"
-#include "types.h"
 #include "vao.h"
 #include "indexmaker.h"
 

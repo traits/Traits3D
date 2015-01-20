@@ -2,7 +2,6 @@
 
 #include <map>
 #include "glhelper.h"
-#include "types.h"
 #include "shader_std.h"
 
 
@@ -13,7 +12,7 @@ namespace Protean3D
     class VBO;
 
     //! Shader program, containing various GLSL shaders
-    class PROTEAN3D_EXPORT Shader
+    class Shader
     {
     public:
       Shader();

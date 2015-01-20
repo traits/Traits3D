@@ -2,7 +2,6 @@
 
 #include <vector>
 #include "glhelper.h"
-#include "types.h"
 
 namespace Protean3D
 {
