@@ -324,83 +324,83 @@ void Coordinates::autoDecorateExposedAxis(Axis& ax, bool left,
 		return;
 
 	ax.showTics(true);
-	//ax.setNumbers(true);
+	ax.setNumbers(true);
 	//ax.setLabel(true);
 
-	//const double SQRT_2 = 0.7071067;
-	//double sina = fabs(diff.y / s);
+	const double SQRT_2 = 0.7071067;
+	double sina = fabs(diff.y / s);
 
 
-	//if (left) // leftmost (compared with antagonist in CV)  axis -> draw decorations on the left side
-	//{
-	//	if ( diff.x >= 0 && diff.y >= 0 && sina < SQRT_2)          // 0..Pi/4 
-	//	{
-	//		ax.setNumberAnchor(BottomCenter);
-	//	}
-	//	else if ( diff.x >= 0 && diff.y >= 0  && !left)            // octant 2
-	//	{
-	//		ax.setNumberAnchor(CenterRight);
-	//	}
-	//	else if ( diff.x <= 0 && diff.y >= 0  && sina >= SQRT_2)    // octant 3
-	//	{
-	//		ax.setNumberAnchor(CenterRight);
-	//	}
-	//	else if ( diff.x <= 0 && diff.y >= 0 )                      // octant 4
-	//	{
-	//		ax.setNumberAnchor(TopCenter);
-	//	}
-	//	else if ( diff.x <= 0 && diff.y <= 0  && sina <= SQRT_2)    // octant 5
-	//	{
-	//		ax.setNumberAnchor(BottomCenter);
-	//	}
-	//	else if ( diff.x <= 0 && diff.y <= 0)                      // octant 6
-	//	{
-	//		ax.setNumberAnchor(CenterRight);
-	//	}
-	//	else if ( diff.x >= 0 && diff.y <= 0  && sina >= SQRT_2)    // octant 7
-	//	{
-	//		ax.setNumberAnchor(CenterRight);
-	//	}
-	//	else if ( diff.x >= 0 && diff.y <= 0)                      // octant 8
-	//	{
-	//		ax.setNumberAnchor(TopCenter);
-	//	}
-	//}	
-	//else // rightmost axis
-	//{
-	//	if ( diff.x >= 0 && diff.y >= 0 && sina <= SQRT_2)
-	//	{
-	//		ax.setNumberAnchor(TopCenter);
-	//	}
-	//	else if ( diff.x >= 0 && diff.y >= 0  && !left) 
-	//	{
-	//		ax.setNumberAnchor(CenterLeft);
-	//	}
-	//	else if ( diff.x <= 0 && diff.y >= 0  && sina >= SQRT_2) 
-	//	{
-	//		ax.setNumberAnchor(CenterLeft);
-	//	}
-	//	else if ( diff.x <= 0 && diff.y >= 0) 
-	//	{
-	//		ax.setNumberAnchor(BottomCenter);
-	//	}
-	//	else if ( diff.x <= 0 && diff.y <= 0  && sina <= SQRT_2) 
-	//	{
-	//		ax.setNumberAnchor(TopCenter);
-	//	}
-	//	else if ( diff.x <= 0 && diff.y <= 0) 
-	//	{
-	//		ax.setNumberAnchor(CenterLeft);
-	//	}
-	//	else if ( diff.x >= 0 && diff.y <= 0  && sina >= SQRT_2) 
-	//	{
-	//		ax.setNumberAnchor(CenterLeft);
-	//	}
-	//	else if ( diff.x >= 0 && diff.y <= 0) 
-	//	{
-	//		ax.setNumberAnchor(BottomCenter);
-	//	}
-	//}
+	if (left) // leftmost (compared with antagonist in CV)  axis -> draw decorations on the left side
+	{
+		if ( diff.x >= 0 && diff.y >= 0 && sina < SQRT_2)          // 0..Pi/4 
+		{
+			ax.setNumberAnchor(BottomCenter);
+		}
+		else if ( diff.x >= 0 && diff.y >= 0  && !left)            // octant 2
+		{
+			ax.setNumberAnchor(CenterRight);
+		}
+		else if ( diff.x <= 0 && diff.y >= 0  && sina >= SQRT_2)    // octant 3
+		{
+			ax.setNumberAnchor(CenterRight);
+		}
+		else if ( diff.x <= 0 && diff.y >= 0 )                      // octant 4
+		{
+			ax.setNumberAnchor(TopCenter);
+		}
+		else if ( diff.x <= 0 && diff.y <= 0  && sina <= SQRT_2)    // octant 5
+		{
+			ax.setNumberAnchor(BottomCenter);
+		}
+		else if ( diff.x <= 0 && diff.y <= 0)                      // octant 6
+		{
+			ax.setNumberAnchor(CenterRight);
+		}
+		else if ( diff.x >= 0 && diff.y <= 0  && sina >= SQRT_2)    // octant 7
+		{
+			ax.setNumberAnchor(CenterRight);
+		}
+		else if ( diff.x >= 0 && diff.y <= 0)                      // octant 8
+		{
+			ax.setNumberAnchor(TopCenter);
+		}
+	}	
+	else // rightmost axis
+	{
+		if ( diff.x >= 0 && diff.y >= 0 && sina <= SQRT_2)
+		{
+			ax.setNumberAnchor(TopCenter);
+		}
+		else if ( diff.x >= 0 && diff.y >= 0  && !left) 
+		{
+			ax.setNumberAnchor(CenterLeft);
+		}
+		else if ( diff.x <= 0 && diff.y >= 0  && sina >= SQRT_2) 
+		{
+			ax.setNumberAnchor(CenterLeft);
+		}
+		else if ( diff.x <= 0 && diff.y >= 0) 
+		{
+			ax.setNumberAnchor(BottomCenter);
+		}
+		else if ( diff.x <= 0 && diff.y <= 0  && sina <= SQRT_2) 
+		{
+			ax.setNumberAnchor(TopCenter);
+		}
+		else if ( diff.x <= 0 && diff.y <= 0) 
+		{
+			ax.setNumberAnchor(CenterLeft);
+		}
+		else if ( diff.x >= 0 && diff.y <= 0  && sina >= SQRT_2) 
+		{
+			ax.setNumberAnchor(CenterLeft);
+		}
+		else if ( diff.x >= 0 && diff.y <= 0) 
+		{
+			ax.setNumberAnchor(BottomCenter);
+		}
+	}
 }
 
 

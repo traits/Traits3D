@@ -31,8 +31,21 @@ void Axis::init()
   setMinors(1);   
   setLimits(0,0);
 
+  setTicOrientation(0.0, 0.0, 0.0);
+  setTicLength(0.0, 0.0);
+  setColor(Color(0,0,0,0));
+  //setLineWidth(1.0);
   symtics_ = false;
+  draw_numbers_ = false;
+  draw_label_ = false;
+
+  draw_tics_ = false;
   autoscale_ = true;
+  numbercolor_ = Color(0, 0, 0, 0);
+
+  setNumberAnchor(Center);
+
+  numbergap_ = 0;
 }
 
 void Axis::setPosition(const Triple& beg, const Triple& end)
@@ -60,6 +73,12 @@ void Axis::setMinors(size_t val)
   minorintervals_ = (!val) ? 1 : val; // always >= 1
 }
 
+void Axis::setTicLength(double majorl, double minorl)
+{
+  lmaj_ = majorl;
+  lmin_ = minorl;
+}
+
 void Axis::setTicOrientation(double tx, double ty, double tz)
 {
   setTicOrientation(Triple(tx,ty,tz));
@@ -69,14 +88,6 @@ void Axis::setTicOrientation(const Triple& val)
 {
   orientation_ = glm::normalize(val);
 }
-
-void Axis::setTicLength(double majorl, double minorl)
-{
-  lmaj_ = majorl;
-  lmin_ = minorl;
-}
-
-
 
 bool Axis::prepTicCalculation(Triple& startpoint)
 {
@@ -110,7 +121,7 @@ void Axis::recalculateTics()
   majorpos_.clear();
   minorpos_.clear();
 
-  if (!drawtics_ || false == prepTicCalculation(runningpoint))
+  if (!draw_tics_ || false == prepTicCalculation(runningpoint))
     return;
 
   unsigned int i;
@@ -127,7 +138,12 @@ void Axis::recalculateTics()
   }
 }
 
-/*!
+void Axis::setNumberColor(Color col)
+{
+  numbercolor_ = col;
+}
+
+/*
   Sets one of the predefined scaling types.
   \warning Too small intervals in logarithmic scales lead to  
   empty scales (or perhaps a scale only containing an isolated 
@@ -156,6 +172,7 @@ void Protean3D::Axis::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_mat
   globject_p->setTicOrientation(orientation_);
   globject_p->setTicLength(lmaj_, lmin_);
   globject_p->setValues(beg_, end_, majorpos_, minorpos_, scale_->majors_p);
+  globject_p->setNumberAnchor(scaleNumberAnchor_);
   //end todo
   globject_p->draw(proj_matrix, mv_matrix);
 }

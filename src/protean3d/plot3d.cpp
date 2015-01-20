@@ -62,10 +62,12 @@ void Protean3D::Plot3D::draw()
   data_object_p->draw(projection_matrix_p, modelview_matrix_p);
 
   //todo
-  std::vector<glm::vec2> positions(1);
   glm::ivec4 vp = GL::viewPort();
 
-  positions[0] = glm::vec2((vp[2] - vp[0]) / 2, vp[3] - vp[1] - 50);
+  std::vector<TextEngine::Position> positions(1);
+  positions[0] = TextEngine::Position(
+    TupleF((vp[2] - vp[0]) / 2, vp[3] - vp[1]-10),
+    TopCenter);
   text_engine_p->drawText(positions);
 }
 

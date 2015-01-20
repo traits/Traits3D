@@ -38,13 +38,13 @@ void Protean3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 con
   if (majors_.size() != majorvalues_.size()) // sanity
     return;
 
-  std::vector<TupleF> majorpositions_2d(majors_.size());
+  std::vector<TextEngine::Position> majorpositions_2d(majors_.size());
   std::vector<std::string> majorvalues(majors_.size());
   
   for (auto i = 0; i != majors_.size(); ++i)
   {
-    TripleF pos = GL::World2ViewPort(majors_[i], mv_matrix, proj_matrix, GL::viewPort());
-    majorpositions_2d[i] = TupleF(pos.x, pos.y);
+    TripleF pos = GL::World2ViewPort(majors_[i] + majorticlength_ * orientation_, mv_matrix, proj_matrix, GL::viewPort());
+    majorpositions_2d[i] = TextEngine::Position(TupleF(pos.x, pos.y), number_anchor_);
     majorvalues[i] = te_->d2t(majorvalues_[i]);
   }
   te_->setText(majorvalues);

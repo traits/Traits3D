@@ -29,8 +29,9 @@ public:
   Protean3D::Triple begin() const { return beg_; } //!< Returns axis' beginning position
   Protean3D::Triple end() const { return end_; } //!< Returns axis' ending position 
   double length() const { return glm::distance(beg_,end_); } //!< Returns axis' length
+  void setColor(Color val) { color_ = val; }
 
-  void showTics(bool d) { drawtics_ = d; } //!< Turns scale drawing on or off
+  void showTics(bool d) { draw_tics_ = d; } //!< Turns scale drawing on or off
   void setTicLength(double majorl, double minorl); //!< Sets tics lengths in world coordinates
   //! Returns tics lengths
   void ticLength(double& majorl, double& minorl) const { majorl = lmaj_; minorl = lmin_; }
@@ -38,8 +39,17 @@ public:
   void setTicOrientation(const Protean3D::Triple& val); //!< Same function as above
   Protean3D::Triple ticOrientation() const { return orientation_;} //!< Returns tic orientation
   void setSymmetricTics( bool b) { symtics_ = b;} //!< Sets two-sided tics (default is false) 
+
+  void setScaling(bool d) {draw_tics_ = d;} //!< Turns scale drawing on or off
+  bool scaling() const {return draw_tics_;} //!< Returns, if scale drawing is on or off
   void setScale(Protean3D::SCALETYPE);
   void setScale(std::shared_ptr<Protean3D::Scale> scale){ scale_ = scale; } //!< This variant sets a user-defined scale object.
+  void setNumbers(bool d) {draw_numbers_ = d;} //!< Turns number drawing on or off
+  bool numbers() const {return draw_numbers_;} //!< Returns, if number drawing is on or off
+  void setNumberColor(Protean3D::Color col); //!< Sets the color for axes numbers
+  Protean3D::Color numberColor() const {return numbercolor_;} //!< Returns the color for axes numbers  
+  void setNumberAnchor(Protean3D::ANCHOR a) { scaleNumberAnchor_ = a;} //!< Sets anchor position for numbers
+  void adjustNumbers(int val) {numbergap_ = val;} //!< Shifts axis numbers in device coordinates dependent on anchor;
   void setAutoScale(bool val = true) {autoscale_ = val;} //!< Turns Autoscaling on or off
   bool autoScale() const { return autoscale_;} //!< actual Autoscaling mode
 
@@ -62,6 +72,7 @@ private:
   bool prepTicCalculation(Triple& startpoint);
 
   Protean3D::Triple biggestNumberString();
+  Protean3D::ANCHOR scaleNumberAnchor_;
   Protean3D::Triple beg_, end_;
   Protean3D::TripleVector majorpos_, minorpos_; //! vectors, holding major resp. minor tic positions;
 
@@ -71,11 +82,13 @@ private:
   Protean3D::Triple orientation_;
 
   size_t majorintervals_, minorintervals_;
-  bool drawtics_ = true;
 
   bool symtics_;
+  bool draw_numbers_, draw_tics_, draw_label_;
   bool autoscale_;
+  Protean3D::Color numbercolor_, color_;
 
+  int numbergap_; 
   std::shared_ptr<Protean3D::Scale> scale_;
 };
 

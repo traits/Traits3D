@@ -127,7 +127,7 @@ bool Protean3D::StandardTextEngine::setText(std::vector<std::string> const& text
 }
 
 
-bool Protean3D::StandardTextEngine::drawText(std::vector<TupleF> const& positions)
+bool Protean3D::StandardTextEngine::drawText(std::vector<TextEngine::Position> const& positions)
 {
   if (positions.size() != texts_.size())
     return false;
@@ -159,15 +159,46 @@ bool Protean3D::StandardTextEngine::drawText(std::vector<TupleF> const& position
   size_t sidx = 0;
   size_t step = 0;
 
+  TupleF tpos;
   for (auto t : texts_)
   {
+    tpos = t.position.coordinates;
+    switch (t.position.anchor)
+    {
+    case BottomCenter:
+      tpos.x -= 0.5f * t.hull.width();
+      break;
+    case BottomRight: 
+      tpos.x -= t.hull.width();
+      break;
+    case CenterLeft: 
+      tpos.y -= 0.5f * t.hull.height();
+      break;
+    case Center: 
+      tpos -= 0.5f * TupleF(t.hull.width(), t.hull.height());
+      break;
+    case CenterRight: 
+      tpos -= TupleF(t.hull.width(), 0.5 * t.hull.height());
+      break;
+    case TopLeft:
+      tpos.y -= t.hull.height();
+      break;
+    case TopCenter: 
+      tpos -= TupleF(0.5f * t.hull.width(), t.hull.height());
+      break;
+    case TopRight: 
+      tpos -= TupleF(t.hull.width(), t.hull.height());
+      break;
+    default:
+      break;
+    }
     // move viewport to make text appear at the right position
     glm::mat4 pmat = glm::ortho<float>(
-      static_cast<float>(viewport[0] - t.position.x),
-      static_cast<float>(viewport[0] + viewport[2] - t.position.x),
+      static_cast<float>(viewport[0] - tpos.x),
+      static_cast<float>(viewport[0] + viewport[2] - tpos.x),
       // reverse y axis
-      static_cast<float>(t.position.y),
-      static_cast<float>(t.position.y - viewport[3])
+      static_cast<float>(tpos.y),
+      static_cast<float>(tpos.y - viewport[3])
       );
 
     shader_.setUniformMatrix(pmat, "proj_mat");
@@ -183,7 +214,7 @@ bool Protean3D::StandardTextEngine::drawText(std::vector<TupleF> const& position
   return true;
 }
 
-bool Protean3D::StandardTextEngine::setColor(Protean3D::Color const &color)
+bool Protean3D::StandardTextEngine::setColor(Color const &color)
 {
   return shader_.setUniformVec3(glm::vec3(color.r, color.g, color.b), "color");
 }

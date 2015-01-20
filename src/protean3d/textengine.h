@@ -8,14 +8,24 @@ namespace Protean3D
   class TextEngine
   {
   public:
+    struct Position
+    {
+      explicit Position(TupleF const& c = TupleF(), ANCHOR a = BottomLeft) 
+        : coordinates(c), anchor(a)
+      {
+      }
+      TupleF coordinates;
+      ANCHOR anchor;
+    };
+
     virtual bool initializeGL() = 0;
     virtual bool setText(
       std::vector<std::string> const& texts) = 0;
 
     //! View port origin always bottom-left
-    virtual bool drawText(std::vector<TupleF> const& positions) = 0;
+    virtual bool drawText(std::vector<Position> const& positions) = 0;
+    virtual bool setColor(Color const &color) = 0;
 
-    virtual bool setColor(Protean3D::Color const &color) = 0;
     bool setText(std::string const& text);
 
     std::string d2t(double val);
@@ -25,11 +35,13 @@ namespace Protean3D
     {
       Hull();
       TupleF bl, tr;
+      float width() const { return tr.x - bl.x; }
+      float height() const { return tr.y - bl.y; }
     };
 
     struct Text
     {
-      TupleF position;
+      Position position;
       Hull hull;
       std::string text;
     };

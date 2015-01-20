@@ -31,7 +31,7 @@ public:
     setZoom(0.9f);     
     //setScale(1.0, 1.0, 0.5);
     
-    coordinates_p->setStyle(FRAME);
+    //coordinates_p->setStyle(FRAME);
     for (unsigned i = 0; i != coordinates_p->axes.size(); ++i)
     {
       coordinates_p->axes[i].setMajors(7);

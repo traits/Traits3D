@@ -14,10 +14,10 @@ namespace Protean3D
   public:
     StandardTextEngine();
     bool initializeGL() override;
+    bool setColor(Color const &color) override;
     bool setText(std::vector<std::string> const& texts) override;
-    bool drawText(std::vector<TupleF> const& positions) override;
+    bool drawText(std::vector<TextEngine::Position> const& positions) override;
 
-    bool setColor(Protean3D::Color const &color) override;
 
   private:
     const std::string VertexCode_;
