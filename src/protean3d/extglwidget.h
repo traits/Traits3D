@@ -6,8 +6,7 @@
 namespace Protean3D
 {
   
-//! An enhanced QGLWidget
-/*!
+/**
   The class covers mouse/keyboard handling, lighting and basic transformations, like
   scaling, shifting and rotating objects.
 */

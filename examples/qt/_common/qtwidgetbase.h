@@ -3,7 +3,7 @@
 #include <memory>
 #include "global.h"
 #include "protean3d/glhelper.h"
-#include <QtOpenGL/qgl.h>
+#include <QOpenGLWidget>
 #include "inputdevice.h"
 #include "protean3d/types.h"
 #include "protean3d/extglwidget.h"
@@ -14,17 +14,17 @@ class QKeyEvent;
 
 namespace Protean3D
 {  
-//! An enhanced QGLWidget
+//! An enhanced QOpenGLWidget
 /*!
   The class covers mouse/keyboard handling, lighting and basic transformations, like
   scaling, shifting and rotating objects.
 */
-class EXAMPLE_EXPORT QtWidgetBase : public QGLWidget
+class EXAMPLE_EXPORT QtWidgetBase : public QOpenGLWidget
 {
   Q_OBJECT
 
 public:
-  explicit QtWidgetBase ( std::shared_ptr<ExtGLWidget> plot, QWidget * parent = 0, const QGLWidget * shareWidget = 0 );
+  explicit QtWidgetBase(std::shared_ptr<ExtGLWidget> plot, QWidget * parent = 0, Qt::WindowFlags f = 0);
   virtual ~QtWidgetBase();
 
   //! Embraces plot().updateData with makeCurrent() and updateGL() 

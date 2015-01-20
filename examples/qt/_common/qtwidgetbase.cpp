@@ -19,8 +19,8 @@ using namespace Protean3D;
 /*!
   This should be the first call in your derived classes constructors.  
 */
-QtWidgetBase::QtWidgetBase( std::shared_ptr<ExtGLWidget> plot, QWidget * parent, const QGLWidget * shareWidget)
-    : plot_p(plot), QGLWidget( parent, shareWidget) 
+QtWidgetBase::QtWidgetBase(std::shared_ptr<ExtGLWidget> plot, QWidget * parent, Qt::WindowFlags flags)
+    : plot_p(plot), QOpenGLWidget( parent, flags) 
 {  
 	lastMouseMovePosition_ = QPoint(0,0);
 	mpressed_ = false;
@@ -187,7 +187,7 @@ void QtWidgetBase::wheelEvent( QWheelEvent *e )
 	else
 		plot_p->setZoom(max<double>(0.0,plot_p->zoom() + step ));
   
-  updateGL();
+  update();
 }
 
 /**
@@ -437,7 +437,7 @@ void QtWidgetBase::setRotation( double xVal, double yVal, double zVal )
   if (!plot_p->setRotation(xVal, yVal, zVal))
     return;
 	
-  updateGL();
+  update();
 	emit rotationChanged(xVal, yVal, zVal);
 }
 
@@ -453,7 +453,7 @@ void QtWidgetBase::setShift( double xVal, double yVal, double zVal )
   if(!plot_p->setShift(xVal, yVal, zVal))
     return;
 	
-  updateGL();
+  update();
 	emit shiftChanged(xVal, yVal, zVal);
 }
 
@@ -472,7 +472,7 @@ void QtWidgetBase::setViewportShift( double xVal, double yVal )
   if(!plot_p->setViewportShift(xVal, yVal))
     return;
 	
-  updateGL();
+  update();
 	emit vieportShiftChanged(xVal, yVal);
 }
 
@@ -489,7 +489,7 @@ void QtWidgetBase::setScale( double xVal, double yVal, double zVal )
   if(!plot_p->setScale(xVal, yVal, zVal))
     return;
 
-	updateGL();
+	update();
 	emit scaleChanged(xVal, yVal, zVal);
 }
 
@@ -502,7 +502,7 @@ void QtWidgetBase::setZoom( double val )
   if (!plot_p->setZoom(val))
     return;
 
- 	updateGL();
+ 	update();
 	emit zoomChanged(val);
 }
 
@@ -514,7 +514,7 @@ void QtWidgetBase::setOrtho( bool val )
   if (!plot_p->setOrtho(val))
     return;
 
-  updateGL();	
+  update();	
 	emit projectionChanged(val);
 }
 
@@ -536,19 +536,19 @@ void Protean3D::QtWidgetBase::disableLighting( bool val /*= true*/ )
 {
   makeCurrent();
   plot_p->disableLighting(val);
-  updateGL();
+  update();
 }
 
 void Protean3D::QtWidgetBase::setLightRotation( double xVal, double yVal, double zVal, unsigned int idx /*= 0 */ )
 {
   plot_p->setLightRotation(xVal, yVal, zVal, idx);
-  updateGL();
+  update();
 }
 
 void Protean3D::QtWidgetBase::setLightShift( double xVal, double yVal, double zVal, unsigned int idx /*= 0 */ )
 {
   plot_p->setLightShift(xVal, yVal, zVal, idx);
-  updateGL();
+  update();
 }
 
 void Protean3D::QtWidgetBase::paintGL()
@@ -569,5 +569,5 @@ void Protean3D::QtWidgetBase::updateData()
 {
   makeCurrent();
   plot_p->updateData();
-  updateGL();
+  update();
 }

@@ -15,8 +15,8 @@ template <typename P>
 class EXAMPLE_EXPORT QtWidget : public QtWidgetBase
 {
 public:
-  explicit QtWidget(QWidget * parent = 0, const QGLWidget * shareWidget = 0)
-    : QtWidgetBase(std::shared_ptr<P>(new P()), parent, shareWidget)
+  explicit QtWidget(QWidget * parent = 0, Qt::WindowFlags flags = 0)
+    : QtWidgetBase(std::shared_ptr<P>(new P()), parent, flags)
   {
   }
 
