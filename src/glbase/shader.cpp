@@ -1,8 +1,8 @@
 #include <vector>
 #include <fstream>
 #include <string>
-#include "protean3d/vbo.h"
-#include "protean3d/shader.h"
+#include "protean3d/glbase/vbo.h"
+#include "protean3d/glbase/shader.h"
 
 Protean3D::GL::Shader::Shader()
   : initialized_(false), program_id_(0)

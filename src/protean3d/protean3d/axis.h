@@ -1,9 +1,9 @@
 #pragma once
 
-#include "glhelper.h"
-#include "scale.h"
-#include "autoscaler.h"
-#include "axisobject.h"
+#include "protean3d/glbase/glhelper.h"
+#include "protean3d/scale.h"
+#include "protean3d/autoscaler.h"
+#include "protean3d/axisobject.h"
 
 namespace Protean3D
 {

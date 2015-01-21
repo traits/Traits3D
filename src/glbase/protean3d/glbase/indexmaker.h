@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "glhelper.h"
+#include "protean3d/glbase/glhelper.h"
 
 namespace Protean3D
 {

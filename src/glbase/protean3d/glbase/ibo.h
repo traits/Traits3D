@@ -1,15 +1,16 @@
 #pragma once
 
 #include <vector>
-#include "glhelper.h"
-#include "vao.h"
-#include "indexmaker.h"
+#include "protean3d/glbase/glhelper.h"
+#include "protean3d/glbase/indexmaker.h"
 
 namespace Protean3D
 {
   //! Projects GL namespace
   namespace GL
   {
+    class VAO;
+
     //! Index Buffer Objects
     class IBO
     {

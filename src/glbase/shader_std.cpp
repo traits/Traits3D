@@ -1,4 +1,4 @@
-#include "protean3d/shader_std.h"
+#include "protean3d/glbase/shader_std.h"
 
 const std::string Protean3D::GL::ShaderCode::Vertex::proj_matrix =   "proj_matrix";
 const std::string Protean3D::GL::ShaderCode::Vertex::mv_matrix =     "mv_matrix";

@@ -1,4 +1,5 @@
-#include "protean3d/vbo.h"
+#include "protean3d/glbase/vao.h"
+#include "protean3d/glbase/vbo.h"
 
 Protean3D::GL::VBO::VBO(VAO* vao) 
   :vao_(vao)

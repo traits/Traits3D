@@ -1,4 +1,4 @@
-#include "protean3d/vao.h"
+#include "protean3d/glbase/vao.h"
 
 Protean3D::GL::VAO::VAO()
 {

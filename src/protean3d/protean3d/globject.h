@@ -1,9 +1,9 @@
 #pragma once
 
-#include "shader.h"
-#include "vao.h"
-#include "vbo.h"
-#include "ibo.h"
+#include "protean3d/glbase/shader.h"
+#include "protean3d/glbase/vao.h"
+#include "protean3d/glbase/vbo.h"
+#include "protean3d/glbase/ibo.h"
 
 namespace Protean3D
 {

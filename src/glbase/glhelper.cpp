@@ -1,4 +1,4 @@
-#include "protean3d/glhelper.h"
+#include "protean3d/glbase/glhelper.h"
 
 GLfloat Protean3D::GL::excess(std::vector<glm::dvec3> const& val)
 {

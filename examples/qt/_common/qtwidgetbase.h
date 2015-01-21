@@ -2,7 +2,7 @@
 
 #include <memory>
 #include "global.h"
-#include "protean3d/glhelper.h"
+#include "protean3d/glbase/glhelper.h"
 #include <QOpenGLWidget>
 #include "inputdevice.h"
 #include "protean3d/types.h"

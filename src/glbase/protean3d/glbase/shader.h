@@ -1,8 +1,8 @@
 #pragma once
 
 #include <map>
-#include "glhelper.h"
-#include "shader_std.h"
+#include "protean3d/glbase/glhelper.h"
+#include "protean3d/glbase/shader_std.h"
 
 
 namespace Protean3D

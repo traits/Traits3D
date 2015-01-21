@@ -1,7 +1,7 @@
 #pragma once
 
-#include "types.h"
-#include "glhelper.h"
+#include "protean3d/types.h"
+#include "protean3d/glbase/glhelper.h"
 
 namespace Protean3D
 {

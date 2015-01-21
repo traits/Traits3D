@@ -1,6 +1,6 @@
 #include "Window/Window.h"
 
-#include "protean3d/vao.h"
+#include "protean3d/glbase/vao.h"
 #include "heightmap.h"
 
 

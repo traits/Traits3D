@@ -4,8 +4,8 @@
 #endif
 
 #include <algorithm>
+#include "protean3d/glbase/glhelper.h"
 #include "protean3d/helper.h"
-#include "protean3d/glhelper.h"
 #include "qtwidgetbase.h"
 
 using namespace std;
