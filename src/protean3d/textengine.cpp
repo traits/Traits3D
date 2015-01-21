@@ -1,5 +1,5 @@
 #include <numeric>
-#include "textengine.h"
+#include "protean3d/textengine.h"
 
 Protean3D::TextEngine::Hull::Hull()
   : bl(std::numeric_limits<float>::max(), std::numeric_limits<float>::max())

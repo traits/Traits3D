@@ -1,7 +1,7 @@
 #include <glm/gtc/matrix_transform.hpp>
-#include "helper.h"
-#include "colortable.h"
-#include "dataobject.h"
+#include "protean3d/helper.h"
+#include "protean3d/colortable.h"
+#include "protean3d/dataobject.h"
 
 Protean3D::GL::DataObject::DataObject()
   : GL::Object()

@@ -1,6 +1,6 @@
 #include <glm/gtc/matrix_transform.hpp>
-#include "textengine_std.h"
-#include "axisobject.h"
+#include "protean3d/textengine_std.h"
+#include "protean3d/axisobject.h"
 
 
 Protean3D::GL::AxisObject::AxisObject()

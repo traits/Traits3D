@@ -1,5 +1,5 @@
-#include "helper.h" 
-#include "autoscaler.h" 
+#include "protean3d/helper.h" 
+#include "protean3d/autoscaler.h" 
 
 using namespace Protean3D;
 

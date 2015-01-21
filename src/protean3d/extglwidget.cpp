@@ -3,7 +3,7 @@
 #pragma warning ( disable : 4786 )
 #endif
 
-#include "extglwidget.h"
+#include "protean3d/extglwidget.h"
 
 using namespace std;
 using namespace Protean3D;

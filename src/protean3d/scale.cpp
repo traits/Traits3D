@@ -1,5 +1,5 @@
-#include "helper.h"
-#include "scale.h"
+#include "protean3d/helper.h"
+#include "protean3d/scale.h"
 
 using namespace Protean3D;
 

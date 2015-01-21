@@ -1,4 +1,4 @@
-#include "helper.h"
+#include "protean3d/helper.h"
 
 Protean3D::Box Protean3D::calcHull(std::vector<glm::vec3> const& data)
 {

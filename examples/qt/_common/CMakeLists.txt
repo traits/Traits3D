@@ -1,6 +1,6 @@
 add_definitions(-DEXAMPLE_DLL -DEXAMPLE_MAKEDLL)
 
-include_directories(../../../src)
+include_directories(../../../src/protean3d)
 include_directories(../../../src/3rdparty)
 
 file(GLOB  SOURCES *.c*)

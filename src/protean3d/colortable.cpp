@@ -1,6 +1,6 @@
 #include <cmath>
-#include "helper.h"
-#include "colortable.h"
+#include "protean3d/helper.h"
+#include "protean3d/colortable.h"
 
 
 Protean3D::Color Protean3D::ColorTable::color(float z, ColorVector const& vec, float zmin, float zmax)

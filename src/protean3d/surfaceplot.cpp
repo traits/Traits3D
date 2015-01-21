@@ -1,4 +1,4 @@
-#include "surfaceplot.h"
+#include "protean3d/surfaceplot.h"
 
 /* Create VBO, IBO and VAO objects for the heightmap geometry and bind them to
 * the specified program object

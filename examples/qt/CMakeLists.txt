@@ -43,7 +43,7 @@ foreach(subdir ${SUBDIRS})
   include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/3rdparty)
   #include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/3rdparty/glloadgen/${PROTEAN3D_GL_VERSION})
 
-  include_directories(${CMAKE_SOURCE_DIR}/src)
+  include_directories(${CMAKE_SOURCE_DIR}/src/protean3d)
   add_executable(${subdir}  ${${subdir}_PROTEAN3D_EXAMPLE_SOURCES} ${${subdir}_PROTEAN3D_EXAMPLE_HEADERS})
   set_property(TARGET ${subdir} PROPERTY FOLDER "examples/qt")
   target_link_libraries(${subdir} protean3d ${OPENGL_LIBRARIES} Qt5::Widgets)

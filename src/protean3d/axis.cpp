@@ -1,5 +1,5 @@
-#include "helper.h"
-#include "axis.h"
+#include "protean3d/helper.h"
+#include "protean3d/axis.h"
 
 using namespace Protean3D;
 

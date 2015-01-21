@@ -5,7 +5,7 @@
 #include <stdlib.h> // qsort
 #include <algorithm>
 
-#include "types.h"
+#include "protean3d/types.h"
 
 using namespace Protean3D;
 

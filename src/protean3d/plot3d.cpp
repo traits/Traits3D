@@ -1,6 +1,6 @@
 #include <glm/gtc/matrix_transform.hpp>
-#include "textengine_std.h"
-#include "plot3d.h"
+#include "protean3d/textengine_std.h"
+#include "protean3d/plot3d.h"
 
 
 Protean3D::Plot3D::Plot3D()

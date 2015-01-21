@@ -1,4 +1,4 @@
-#include "indexmaker.h"
+#include "protean3d/indexmaker.h"
 
 
 const GLuint Protean3D::GL::IndexMaker::restart_place_holder_ = std::numeric_limits<GLuint>::max();

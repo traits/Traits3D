@@ -1,6 +1,6 @@
 #include <glm/gtc/type_ptr.hpp>
-#include "helper.h"
-#include "coordinates.h"
+#include "protean3d/helper.h"
+#include "protean3d/coordinates.h"
 
 using namespace Protean3D;
 
