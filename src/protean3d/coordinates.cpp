@@ -30,12 +30,14 @@ void Coordinates::init(Protean3D::Triple first, Protean3D::Triple second)
 	double majl =  glm::length(dv) / 100; // 1 %
 	setTicLength(majl, 0.6 * majl);
 
+  const double ori = -1; // inward tics
+
 	axes[X1].setPosition(first, first+Triple(dv.x,    0,     0));												// front bottom x
 	axes[Y1].setPosition(first, first+Triple(   0, dv.y,     0));												// bottom left  y
 	axes[Z1].setPosition (first+Triple(   0, dv.y, 0), first+Triple(   0, dv.y, dv.z));	// back left z
-	axes[X1].setTicOrientation(0,-1,0);
-	axes[Y1].setTicOrientation(-1,0,0);
-	axes[Z1].setTicOrientation(-1,0,0);
+	axes[X1].setTicOrientation(0,-ori,0);
+	axes[Y1].setTicOrientation(-ori,0,0);
+	axes[Z1].setTicOrientation(-ori,0,0);
 	
 	axes[X1].setLimits(first.x, second.x);
 	axes[X2].setLimits(first.x, second.x);
@@ -56,25 +58,25 @@ void Coordinates::init(Protean3D::Triple first, Protean3D::Triple second)
 	axes[X2].setPosition(first+Triple( 0,    0, dv.z), first+Triple( dv.x,    0, dv.z));	// front top x
 	axes[X3].setPosition(first+Triple( 0, dv.y, dv.z), second);		  											// back top x
 	axes[X4].setPosition(first+Triple( 0, dv.y,    0), first+Triple( dv.x, dv.y,    0));	// back bottom x
-	axes[X2].setTicOrientation(0,-1,0);
-	axes[X3].setTicOrientation(0,1,0);
-	axes[X4].setTicOrientation(0,1,0);
+	axes[X2].setTicOrientation(0,-ori,0);
+	axes[X3].setTicOrientation(0,ori,0);
+	axes[X4].setTicOrientation(0,ori,0);
 	
 	// remaining y axes 
 	axes[Y2].setPosition(first+Triple(dv.x, 0,    0), first+Triple(dv.x, dv.y,  0)); // bottom right y
 	axes[Y3].setPosition(first+Triple(dv.x, 0, dv.z), second);											 // top right y
 	axes[Y4].setPosition(first+Triple(0,    0, dv.z), first+Triple(0,  dv.y, dv.z)); // top left y
-	axes[Y2].setTicOrientation(1,0,0);
-	axes[Y3].setTicOrientation(1,0,0);
-	axes[Y4].setTicOrientation (-1,0,0);
+	axes[Y2].setTicOrientation(ori,0,0);
+	axes[Y3].setTicOrientation(ori,0,0);
+	axes[Y4].setTicOrientation (-ori,0,0);
 
 	// remaining z axes 
 	axes[Z2].setPosition(first, first+Triple(   0,    0,  dv.z));												// front left z
 	axes[Z4].setPosition(first+Triple(dv.x, dv.y, 0), second );                         // back right z
 	axes[Z3].setPosition(first+Triple(dv.x,    0, 0), first+Triple(dv.x,    0, dv.z));	// front right z
-	axes[Z2].setTicOrientation(-1,0,0);
-	axes[Z4].setTicOrientation(1,0,0);
-	axes[Z3].setTicOrientation(1,0,0);
+	axes[Z2].setTicOrientation(-ori,0,0);
+	axes[Z4].setTicOrientation(ori,0,0);
+	axes[Z3].setTicOrientation(ori,0,0);
 	
 	setStyle(style_);
 }
@@ -215,7 +217,7 @@ void Coordinates::chooseAxes(
 							? true
 							: false;
 						
-            autoDecorateExposedAxis(axes[choice_x], left, proj_matrix, mv_matrix, viewport);
+            autoDecorateExposedAxis(axes[choice_x], end[choice_x] - beg[choice_x], left);
 
 						rem_x = -1;
 					}
@@ -237,7 +239,7 @@ void Coordinates::chooseAxes(
 						left = (beg[choice_y].x < beg[other_y].x || end[choice_y].x < end[other_y].x) 
 							? true
 							: false;
-						autoDecorateExposedAxis(axes[choice_y], left, proj_matrix, mv_matrix, viewport);
+            autoDecorateExposedAxis(axes[choice_y], end[choice_y] - beg[choice_y], left);
 
 						rem_y = -1;
 					}
@@ -269,7 +271,7 @@ void Coordinates::chooseAxes(
 		} // for axes
 	} // for idx
 
-	// fit z axis in - the onthewall axis if the decorated axes build a continuous line, the opposite else 
+	// fit z axis in - the on-the-wall axis if the decorated axes build a continuous line, the opposite else 
 	if (choice_x>=0 && choice_y>=0 && choice_z>=0)
 	{
 		left = (beg[choice_z].x < beg[other_z].x || end[choice_z].x < end[other_z].x) 
@@ -289,12 +291,12 @@ void Coordinates::chooseAxes(
 			
 			)
 		{
-      autoDecorateExposedAxis(axes[choice_z], left, proj_matrix, mv_matrix, viewport);
+      autoDecorateExposedAxis(axes[choice_z], end[choice_z] - beg[choice_z], left);
 		}
 
 		else
 		{
-      autoDecorateExposedAxis(axes[other_z], !left, proj_matrix, mv_matrix, viewport);
+      autoDecorateExposedAxis(axes[other_z], end[choice_z] - beg[choice_z], !left);
 			choice_z = other_z; // for FRAME
 		}
 	}
@@ -310,73 +312,70 @@ void Coordinates::chooseAxes(
 }
 
 
-void Coordinates::autoDecorateExposedAxis(Axis& ax, bool left, 
-  glm::dmat4 const& proj_matrix, glm::dmat4 const& mv_matrix, glm::ivec4 const& viewport)
+void Coordinates::autoDecorateExposedAxis(Axis& ax, Triple const& projected_ax, bool left)
 {
-  Triple diff = GL::World2ViewPort(ax.end(), mv_matrix, proj_matrix, viewport)
-    - GL::World2ViewPort(ax.begin(), mv_matrix, proj_matrix, viewport);
-
-	diff = Triple(diff.x,diff.y,0); // projection
+  Tuple diff = Tuple(projected_ax.x, projected_ax.y);
 	
 	double s = glm::length(diff);
 	
-	if (isZero(s))
-		return;
+  if (isZero(s))
+    return;
 
-	ax.showTics(true);
-	ax.setNumbers(true);
+  ax.showTics(true);
+  ax.setNumbers(true);
 	//ax.setLabel(true);
 
-	const double SQRT_2 = 0.7071067;
-	double sina = fabs(diff.y / s);
 
+  // anchor position changes for critical angle of 5 degrees between label and projected axis 
+  const double switch_angle = sin(glm::radians(5.0));
+  const double sina = fabs(diff.y / s);
 
 	if (left) // leftmost (compared with antagonist in CV)  axis -> draw decorations on the left side
 	{
-		if ( diff.x >= 0 && diff.y >= 0 && sina < SQRT_2)          // 0..Pi/4 
+		if ( diff.x >= 0 && diff.y >= 0 && sina < switch_angle)          // 0..switch angle, 1st quadrant
 		{
 			ax.setNumberAnchor(BottomCenter);
 		}
-		else if ( diff.x >= 0 && diff.y >= 0  && !left)            // octant 2
+		else if ( diff.x >= 0 && diff.y >= 0)                            // >= switch angle, 1st quadrant
 		{
 			ax.setNumberAnchor(CenterRight);
 		}
-		else if ( diff.x <= 0 && diff.y >= 0  && sina >= SQRT_2)    // octant 3
+		else if ( diff.x <= 0 && diff.y >= 0  && sina >= switch_angle)   // ... 2nd quadrant etc.
 		{
 			ax.setNumberAnchor(CenterRight);
 		}
-		else if ( diff.x <= 0 && diff.y >= 0 )                      // octant 4
+		else if ( diff.x <= 0 && diff.y >= 0 ) 
 		{
 			ax.setNumberAnchor(TopCenter);
 		}
-		else if ( diff.x <= 0 && diff.y <= 0  && sina <= SQRT_2)    // octant 5
+		else if ( diff.x <= 0 && diff.y <= 0  && sina <= switch_angle)
 		{
 			ax.setNumberAnchor(BottomCenter);
 		}
-		else if ( diff.x <= 0 && diff.y <= 0)                      // octant 6
+		else if ( diff.x <= 0 && diff.y <= 0)
 		{
 			ax.setNumberAnchor(CenterRight);
 		}
-		else if ( diff.x >= 0 && diff.y <= 0  && sina >= SQRT_2)    // octant 7
+		else if ( diff.x >= 0 && diff.y <= 0  && sina >= switch_angle)    
 		{
 			ax.setNumberAnchor(CenterRight);
 		}
-		else if ( diff.x >= 0 && diff.y <= 0)                      // octant 8
+		else if ( diff.x >= 0 && diff.y <= 0)
 		{
 			ax.setNumberAnchor(TopCenter);
 		}
 	}	
 	else // rightmost axis
 	{
-		if ( diff.x >= 0 && diff.y >= 0 && sina <= SQRT_2)
+		if ( diff.x >= 0 && diff.y >= 0 && sina <= switch_angle)
 		{
 			ax.setNumberAnchor(TopCenter);
 		}
-		else if ( diff.x >= 0 && diff.y >= 0  && !left) 
+		else if ( diff.x >= 0 && diff.y >= 0) 
 		{
 			ax.setNumberAnchor(CenterLeft);
 		}
-		else if ( diff.x <= 0 && diff.y >= 0  && sina >= SQRT_2) 
+		else if ( diff.x <= 0 && diff.y >= 0  && sina >= switch_angle) 
 		{
 			ax.setNumberAnchor(CenterLeft);
 		}
@@ -384,7 +383,7 @@ void Coordinates::autoDecorateExposedAxis(Axis& ax, bool left,
 		{
 			ax.setNumberAnchor(BottomCenter);
 		}
-		else if ( diff.x <= 0 && diff.y <= 0  && sina <= SQRT_2) 
+		else if ( diff.x <= 0 && diff.y <= 0  && sina <= switch_angle) 
 		{
 			ax.setNumberAnchor(TopCenter);
 		}
@@ -392,7 +391,7 @@ void Coordinates::autoDecorateExposedAxis(Axis& ax, bool left,
 		{
 			ax.setNumberAnchor(CenterLeft);
 		}
-		else if ( diff.x >= 0 && diff.y <= 0  && sina >= SQRT_2) 
+		else if ( diff.x >= 0 && diff.y <= 0  && sina >= switch_angle) 
 		{
 			ax.setNumberAnchor(CenterLeft);
 		}

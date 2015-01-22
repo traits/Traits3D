@@ -53,7 +53,7 @@ private:
 	Protean3D::COORDINATESTYLE style_;
 		
   void chooseAxes(glm::dmat4 const& proj_matrix, glm::dmat4 const& mv_matrix, glm::ivec4 const& viewport);
-  void autoDecorateExposedAxis(Axis& ax, bool left, glm::dmat4 const& proj_matrix, glm::dmat4 const& mv_matrix, glm::ivec4 const& viewport);
+  void autoDecorateExposedAxis(Axis& ax, Triple const& projected_ax, bool left);
   void drawMajorGridLines(); //!< Draws a grid between the major tics on the site
 	void drawMinorGridLines(); //!< Draws a grid between the minor tics on the site
   void drawMajorGridLines(Protean3D::Axis&, Protean3D::Axis&); //! Helper

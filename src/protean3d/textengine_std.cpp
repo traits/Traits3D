@@ -46,7 +46,7 @@ bool Protean3D::StandardTextEngine::initializeGL()
   vbo_ = std::make_unique<GL::VBO>(vao_.get());
 
   const size_t glyph_cnt = 96;
-  const float font_height = 32.0f;
+  const float font_height = 24.0f;
 
   cdata.resize(glyph_cnt); // ASCII 32..126 is 95 glyphs
 

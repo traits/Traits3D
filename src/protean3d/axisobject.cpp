@@ -43,7 +43,8 @@ void Protean3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 con
   
   for (auto i = 0; i != majors_.size(); ++i)
   {
-    TripleF pos = GL::World2ViewPort(majors_[i] + majorticlength_ * orientation_, mv_matrix, proj_matrix, GL::viewPort());
+    // opposite to tic orientation
+    TripleF pos = GL::World2ViewPort(majors_[i] - majorticlength_ * orientation_, mv_matrix, proj_matrix, GL::viewPort());
     majorpositions_2d[i] = TextEngine::Position(TupleF(pos.x, pos.y), number_anchor_);
     majorvalues[i] = te_->d2t(majorvalues_[i]);
   }
