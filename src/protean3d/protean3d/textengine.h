@@ -18,6 +18,7 @@ namespace Protean3D
       ANCHOR anchor;
     };
 
+    virtual ~TextEngine() {};
     virtual bool initializeGL() = 0;
     virtual bool setText(
       std::vector<std::string> const& texts) = 0;

@@ -1,4 +1,4 @@
-create_resources("fonts" "fonts_std_generated")
+create_resources("fonts" "fonts_stb_generated")
 
 file(GLOB  SOURCES *.cpp)
 file(GLOB  HEADERS *.h)

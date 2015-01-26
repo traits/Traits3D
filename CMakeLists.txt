@@ -30,23 +30,29 @@ set_property(CACHE PROTEAN3D_OS PROPERTY STRINGS "Windows")
 
 # OpenGL Context Provider
 option(PROTEAN3D_EXAMPLES_GLFW "GLFW" ON)
-option(PROTEAN3D_EXAMPLES_QT "Qt" OFF)
+option(PROTEAN3D_EXAMPLES_QT "Qt" ON)
 
 # OpenGL Version Provider
 set(PROTEAN3D_GL_VARIANT "OPENGL" CACHE STRING "OpenGL Variant (OpenGL, OpenGL ES, WebGL)")
 set_property(CACHE PROTEAN3D_GL_VARIANT PROPERTY STRINGS "OPENGL" "OPENGL_ES" "WEBGL")
 
-# Font Provider
-set(PROTEAN3D_TEXT "Core" CACHE STRING "Font/String Provider")
-set_property(CACHE PROTEAN3D_TEXT PROPERTY STRINGS "Core" "freetype" "Qt")
+# Text Engine
+set(PROTEAN3D_TEXT "stb" CACHE STRING "Text Engine")
+set_property(CACHE PROTEAN3D_TEXT PROPERTY STRINGS "stb" "freetype" "Qt")
+if ("${PROTEAN3D_TEXT}"  STREQUAL "stb")
+  add_definitions(-DTEXTENGINE_STB)
+elseif ("${PROTEAN3D_TEXT}"  STREQUAL "freetype")
+  add_definitions(-DTEXTENGINE_FREETYPE)
+endif()
+
+
+
 
 add_subdirectory(src)
 
 option(TARGET_GLES "Build for OpenGL ES instead of desktop OpenGL" OFF)
 CMAKE_DEPENDENT_OPTION(TARGET_GLES2 "Build for OpenGL ES 2" ON "TARGET_GLES" OFF)
 CMAKE_DEPENDENT_OPTION(TARGET_DESKTOP_GLES "Build for OpenGL ES on desktop" OFF "TARGET_GLES" OFF)
-
-
 
 option(PROTEAN3D_EXAMPLES "Build examples" ON)
 # CMAKE_DEPENDENT_OPTION(PROTEAN3D_EXAMPLES "Build examples" ON "\"\${PROTEAN3D_EXAMPLES_GL_CONTEXT}\"  STREQUAL \"Qt\"" OFF)

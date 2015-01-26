@@ -9,10 +9,7 @@
 #include "qtwidget.hh"
 #include "protean3d/surfaceplot.h"
 
-
-using namespace Protean3D;
-
-class Rosenbrock : public SurfacePlot
+class Rosenbrock : public Protean3D::SurfacePlot
 {
 public:
   const size_t xsize = 41;
@@ -95,28 +92,18 @@ private:
 };
 
 
-class Plot : public QtWidget<Rosenbrock>
-{
-public:
-    Plot();
-};
-
-
-Plot::Plot()
-{
-}
-
 int main(int argc, char **argv)
 {
     QApplication a(argc, argv);
     
-    Plot* plot = new Plot();
+    Protean3D::QtWidget <Rosenbrock>* qtwidget 
+      = new Protean3D::QtWidget <Rosenbrock>();
 
-    plot->resize(800, 600);
-    plot->show();
+    qtwidget->resize(800, 600);
+    qtwidget->show();
     //todo cannot call before show, because Qt doesn't initialize
     // OpenGL up to this point
-    plot->plot().loadData();
-    plot->plot().setBackgroundColor(Color(0.95f));
+    qtwidget->plot3d->loadData();
+    qtwidget->plot3d->setBackgroundColor(Protean3D::Color(0.95f));
     return a.exec();
 }
