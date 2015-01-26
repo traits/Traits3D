@@ -6,6 +6,5 @@ if ("${PROTEAN3D_GL_VARIANT}"  STREQUAL "OPENGL")
   # ES header  
 endif()
 
-create_resources("textengine/fonts" "textengine/fonts_std_generated")
-set (PROTEAN3D_GL_SOURCES ${PROTEAN3D_GL_SOURCES} "${CMAKE_CURRENT_SOURCE_DIR}/textengine/fonts_std_generated.h" "${CMAKE_CURRENT_SOURCE_DIR}/textengine/fonts_std_generated.cpp" PARENT_SCOPE)
+add_subdirectory(textengine)
 

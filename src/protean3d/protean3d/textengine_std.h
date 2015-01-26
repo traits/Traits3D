@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "textengine/stb_truetype.h"
+#include "textengine/stb/stb_truetype.h"
 #include "protean3d/glbase/vao.h"
 #include "protean3d/glbase/vbo.h"
 #include "protean3d/glbase/shader.h"

@@ -28,10 +28,10 @@ include_directories(3rdparty)
 add_subdirectory(glbase)
 include_directories(glbase)
 list(APPEND ALL_LIBS glbase)
+list(APPEND ALL_LIBS textengine_stb)
 
 # adding core sources
 add_subdirectory(protean3d)
-
 
 add_library(protean3d SHARED ${PROTEAN3D_GL_SOURCES} ${PROTEAN3D_CORE_SOURCES} ${PROTEAN3D_CORE_HEADERS})
 target_link_libraries(protean3d ${ALL_LIBS})
