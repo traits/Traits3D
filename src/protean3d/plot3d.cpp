@@ -1,5 +1,5 @@
 #include <glm/gtc/matrix_transform.hpp>
-#include "protean3d/textengine_stb.h"
+#include "protean3d/textengine/textengine_stb.h"
 #include "protean3d/plot3d.h"
 
 

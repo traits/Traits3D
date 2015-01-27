@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "types.h"
+#include "protean3d/types.h"
 
 namespace Protean3D
 {

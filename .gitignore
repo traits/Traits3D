@@ -1,5 +1,3 @@
 /___coordinates
 /examples/glfw/heightmap/surface_deformer_ps.glsl
 /examples/glfw/heightmap/surface_deformer_vs.glsl
-/src/3rdparty/textengine/stb/fonts_stb_generated.cpp
-/src/3rdparty/textengine/stb/fonts_stb_generated.h

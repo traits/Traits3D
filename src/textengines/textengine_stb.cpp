@@ -1,7 +1,7 @@
 #define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
-#include "textengine/stb/fonts_stb_generated.h"
+#include "fontprovider/stb/fonts_stb_generated.h"
 #include "protean3d/glbase/glhelper.h"
-#include "protean3d/textengine_stb.h"
+#include "protean3d/textengine/textengine_stb.h"
 #include <iostream>
 
 Protean3D::StandardTextEngine::StandardTextEngine()

@@ -28,7 +28,15 @@ include_directories(3rdparty)
 add_subdirectory(glbase)
 include_directories(glbase)
 list(APPEND ALL_LIBS glbase)
-list(APPEND ALL_LIBS textengine_stb)
+
+# text engines
+
+include_directories(protean3d)
+add_subdirectory(textengines)
+include_directories(textengines/include)
+include_directories(textengines/3rdparty)
+list(APPEND ALL_LIBS fontprovider_stb)
+list(APPEND ALL_LIBS textengines)
 
 # adding core sources
 add_subdirectory(protean3d)

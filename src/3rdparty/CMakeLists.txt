@@ -5,6 +5,3 @@ if ("${PROTEAN3D_GL_VARIANT}"  STREQUAL "OPENGL")
 # elseif ("${PROTEAN3D_GL_VARIANT}"  STREQUAL "OPENGL_ES")
   # ES header  
 endif()
-
-add_subdirectory(textengine)
-
