@@ -5,7 +5,7 @@
 #include "protean3d/coordinates.h"
 #include "protean3d/dataobject.h"
 #include "protean3d/extglwidget.h"
-#include "protean3d/textengine/textengine.h"
+#include "protean3d/textengine.h"
 
 
 namespace Protean3D

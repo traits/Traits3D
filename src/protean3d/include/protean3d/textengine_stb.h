@@ -1,11 +1,11 @@
 #pragma once
 
 #include <memory>
-#include "fontprovider/stb/stb_truetype.h"
+#include "stb/stb_truetype.h"
 #include "protean3d/glbase/vao.h"
 #include "protean3d/glbase/vbo.h"
 #include "protean3d/glbase/shader.h"
-#include "protean3d/textengine/textengine.h"
+#include "protean3d/textengine.h"
 
 
 namespace Protean3D

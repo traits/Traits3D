@@ -1,13 +1,18 @@
 # Creates C resources file from files in given directory
-function(create_resources dir output)
-    # Create empty output file
-    file(WRITE ${output}.h "")
-    file(WRITE ${output}.cpp "")
-    # Collect input files
-    file(GLOB bins ${dir}/*)
+function(create_resources src_dir output_src_dir output_include_dir base_name include_prefix)
+    # Create empty output files
     
-    file(APPEND ${output}.h "#pragma once\n\nnamespace Protean3D\n{\nstruct StandardFont\n{\n")
-    file(APPEND ${output}.cpp "#include \"${output}.h\"\n\n")
+    set (src_name ${output_src_dir}/${base_name}.cpp)
+    set (inc_name ${output_include_dir}/${base_name}.h)
+    set (inc_statement ${include_prefix}/${base_name}.h)
+    
+    file(WRITE ${inc_name} "")
+    file(WRITE ${src_name} "")
+    # Collect input files
+    file(GLOB bins ${src_dir}/*)
+    
+    file(APPEND ${inc_name} "#pragma once\n\nnamespace Protean3D\n{\nstruct StandardFont\n{\n")
+    file(APPEND ${src_name} "#include \"${inc_statement}\"\n\n")
 
     # Iterate through input files
     foreach(bin ${bins})
@@ -19,11 +24,13 @@ function(create_resources dir output)
         file(READ ${bin} filedata HEX)
         # Convert hex data for C compatibility
         string(REGEX REPLACE "([0-9a-f][0-9a-f])" "0x\\1," filedata ${filedata})
+        # remove redundant comma 
+        string(REGEX REPLACE "(,$)" "" filedata ${filedata})
         # Append data to output file
-        file(APPEND ${output}.h "  static const unsigned char ${filename}[];\n  static const size_t ${filename}_size;\n")
-        file(APPEND ${output}.cpp "const unsigned char Protean3D::StandardFont::${filename}[] = {${filedata}};\nconst size_t Protean3D::StandardFont::${filename}_size = sizeof(${filename});\n")
+        file(APPEND ${inc_name} "  static const unsigned char ${filename}[];\n  static const size_t ${filename}_size;\n")
+        file(APPEND ${src_name} "const unsigned char Protean3D::StandardFont::${filename}[] = {${filedata}};\nconst size_t Protean3D::StandardFont::${filename}_size = sizeof(${filename});\n")
     endforeach()
-    file(APPEND ${output}.h "};\n} // ns \n")
+    file(APPEND ${inc_name} "};\n} // ns \n")
 endfunction()
 
 function(protean3d_example_creator subdirlist linklibrarylist ideproperty)

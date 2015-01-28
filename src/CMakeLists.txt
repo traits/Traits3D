@@ -24,19 +24,13 @@ endif()
 # glm and glloadgen files
 include_directories(3rdparty)
 
+add_subdirectory(resources)
+
 # gl buffer/shader support classes
 add_subdirectory(glbase)
 include_directories(glbase)
 list(APPEND ALL_LIBS glbase)
-
-# text engines
-
 include_directories(protean3d/include)
-add_subdirectory(textengines)
-include_directories(textengines/include)
-include_directories(textengines/3rdparty)
-list(APPEND ALL_LIBS fontprovider_stb)
-list(APPEND ALL_LIBS textengines)
 
 # adding core sources
 add_subdirectory(protean3d)
