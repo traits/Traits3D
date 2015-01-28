@@ -25,7 +25,7 @@ foreach(subdir ${SUBDIRS})
   include_directories(_common/glfw-3.0.4/include)
   include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src/3rdparty)
   #include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/3rdparty/glloadgen/${PROTEAN3D_GL_VERSION})
-  include_directories(${CMAKE_SOURCE_DIR}/src/protean3d)
+  include_directories(${CMAKE_SOURCE_DIR}/src/protean3d/include)
   include_directories(${CMAKE_SOURCE_DIR}/src/glbase)
   include_directories(${CMAKE_SOURCE_DIR}/src/textengines/include)
 
