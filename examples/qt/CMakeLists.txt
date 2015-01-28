@@ -16,6 +16,7 @@ find_package(Qt5OpenGL)
 #set(QT_USE_QTOPENGL TRUE)
 
 
+include_directories(_common)
 add_subdirectory(_common)
 set_property(TARGET qtwidget PROPERTY FOLDER "examples/qt/common")
 
@@ -27,17 +28,16 @@ PROTEAN3D_SUBDIRLIST(SUBDIRS ${CMAKE_CURRENT_SOURCE_DIR})
 # no executables to create here
 list(REMOVE_ITEM SUBDIRS _common)
 
+list (APPEND MY_LINK_LIBRARIES protean3d ${OPENGL_LIBRARIES} Qt5::Widgets qtwidget)
+
 # create single project for every example
 foreach(subdir ${SUBDIRS})
   file(GLOB  ${subdir}_SOURCES ${subdir}/*.c*)
   file(GLOB  ${subdir}_HEADERS ${subdir}/*.h)
 
-  include_directories(_common)
-
   add_executable(${subdir}  ${${subdir}_SOURCES} ${${subdir}_HEADERS})
   set_property(TARGET ${subdir} PROPERTY FOLDER "examples/qt")
-  target_link_libraries(${subdir} protean3d ${OPENGL_LIBRARIES} Qt5::Widgets)
-  target_link_libraries(${subdir} qtwidget)
+  target_link_libraries(${subdir} ${MY_LINK_LIBRARIES})
   set_target_properties(${subdir} PROPERTIES WIN32_EXECUTABLE false)
   install(TARGETS ${subdir} 
     RUNTIME DESTINATION bin 
