@@ -30,20 +30,9 @@ list(REMOVE_ITEM SUBDIRS _common)
 
 list (APPEND MY_LINK_LIBRARIES protean3d ${OPENGL_LIBRARIES} Qt5::Widgets qtwidget)
 
-# create single project for every example
-foreach(subdir ${SUBDIRS})
-  file(GLOB  ${subdir}_SOURCES ${subdir}/*.c*)
-  file(GLOB  ${subdir}_HEADERS ${subdir}/*.h)
+# create single project for every example 
+#(needs this strange syntax to expand lists correctly in cmake function)
+protean3d_example_creator("${SUBDIRS}" "${MY_LINK_LIBRARIES}" "examples/qt")
 
-  add_executable(${subdir}  ${${subdir}_SOURCES} ${${subdir}_HEADERS})
-  set_property(TARGET ${subdir} PROPERTY FOLDER "examples/qt")
-  target_link_libraries(${subdir} ${MY_LINK_LIBRARIES})
-  set_target_properties(${subdir} PROPERTIES WIN32_EXECUTABLE false)
-  install(TARGETS ${subdir} 
-    RUNTIME DESTINATION bin 
-    LIBRARY DESTINATION bin 
-    ARCHIVE DESTINATION lib
-    )
-endforeach()
 
 

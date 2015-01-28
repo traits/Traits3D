@@ -25,3 +25,20 @@ function(create_resources dir output)
     endforeach()
     file(APPEND ${output}.h "};\n} // ns \n")
 endfunction()
+
+function(protean3d_example_creator subdirlist linklibrarylist ideproperty)
+  foreach(subdir ${subdirlist})
+    file(GLOB  ${subdir}_SOURCES ${subdir}/*.c*)
+    file(GLOB  ${subdir}_HEADERS ${subdir}/*.h)
+
+    add_executable(${subdir}  ${${subdir}_SOURCES} ${${subdir}_HEADERS})
+    set_property(TARGET ${subdir} PROPERTY FOLDER ${ideproperty})
+    target_link_libraries(${subdir} ${linklibrarylist})
+    set_target_properties(${subdir} PROPERTIES WIN32_EXECUTABLE false)
+    install(TARGETS ${subdir} 
+    RUNTIME DESTINATION bin 
+    LIBRARY DESTINATION bin 
+    ARCHIVE DESTINATION lib
+    )
+  endforeach()
+endfunction()
