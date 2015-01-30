@@ -4,9 +4,18 @@
 #include "stb/stb_truetype.h"
 
 #include "protean3d/textengine/fonts_stb_generated.h"
+#include "protean3d/glbase/vao.h"
+#include "protean3d/glbase/vbo.h"
+#include "protean3d/glbase/shader.h"
 #include "protean3d/textengine/textengine_stb.h"
 #include <iostream>
 
+
+class Protean3D::StandardTextEngine::GLHider
+{
+public:
+  GLuint atlas;
+}; 
 
 class Protean3D::StandardTextEngine::StbHider
 {
@@ -45,13 +54,15 @@ Protean3D::StandardTextEngine::StandardTextEngine()
   "}"
   )
 {
-  cdata = std::make_shared<Protean3D::StandardTextEngine::StbHider>();
+  cdata_ = std::make_unique<Protean3D::StandardTextEngine::StbHider>();
+  tex_atlas_ = std::make_unique<Protean3D::StandardTextEngine::GLHider>();
 }
 
 
 bool Protean3D::StandardTextEngine::initializeGL()
 {
-  if (!shader_.create(VertexCode_, FragmentCode_))
+  shader_ = std::make_unique<GL::Shader>();
+  if (!shader_->create(VertexCode_, FragmentCode_))
     return false;
   vao_ = std::make_unique<GL::VAO>();
   vbo_ = std::make_unique<GL::VBO>(vao_.get());
@@ -59,11 +70,11 @@ bool Protean3D::StandardTextEngine::initializeGL()
   const size_t glyph_cnt = 96;
   const float font_height = 24.0f;
 
-  cdata->bc_vec.resize(glyph_cnt); // ASCII 32..126 is 95 glyphs
+  cdata_->bc_vec.resize(glyph_cnt); // ASCII 32..126 is 95 glyphs
 
   unsigned char temp_bitmap[512 * 512];
   if (-1 == stbtt_BakeFontBitmap(&StandardFont::OpenSans_Regular_ttf[0], 0, font_height,
-    temp_bitmap, 512, 512, 32, int(glyph_cnt), &cdata->bc_vec[0])) // no guarantee this fits!
+    temp_bitmap, 512, 512, 32, int(glyph_cnt), &cdata_->bc_vec[0])) // no guarantee this fits!
   {
     return false;
   }
@@ -71,8 +82,8 @@ bool Protean3D::StandardTextEngine::initializeGL()
   if (!setColor(glm::vec4(0, 0, 0, 1)))
     return false;
 
-  glGenTextures(1, &tex_atlas_);
-  glBindTexture(GL_TEXTURE_2D, tex_atlas_);
+  glGenTextures(1, &tex_atlas_->atlas);
+  glBindTexture(GL_TEXTURE_2D, tex_atlas_->atlas);
   // GL_RED here, because GL_ALPHA is not longer supported from newer OpenGL versions
   // requires change from .a to .r component in fragment shader too
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 512, 512, 0, GL_RED, GL_UNSIGNED_BYTE, temp_bitmap);
@@ -112,7 +123,7 @@ bool Protean3D::StandardTextEngine::setText(std::vector<std::string> const& text
       if (ch >= 32 && ch < 128)
       {
         stbtt_aligned_quad q;
-        stbtt_GetBakedQuad(&cdata->bc_vec[0], 512, 512, ch - 32, &dx, &dy, &q, 1);
+        stbtt_GetBakedQuad(&cdata_->bc_vec[0], 512, 512, ch - 32, &dx, &dy, &q, 1);
 
         coords_[c++] = glm::vec4(q.x0, q.y0, q.s0, q.t0);
         coords_[c++] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
@@ -149,14 +160,14 @@ bool Protean3D::StandardTextEngine::drawText(std::vector<TextEngine::Position> c
   }
 
   if ( !vbo_->setData(coords_)
-    || !shader_.bindAttribute(*vbo_, "coord")
-    || !shader_.use()
+    || !shader_->bindAttribute(*vbo_, "coord")
+    || !shader_->use()
     )
     return false;
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, tex_atlas_);
-  GLuint texture_sampler = glGetUniformLocation(shader_.programId(), "tex");
+  glBindTexture(GL_TEXTURE_2D, tex_atlas_->atlas);
+  GLuint texture_sampler = glGetUniformLocation(shader_->programId(), "tex");
   glUniform1i(texture_sampler, 0);
 
   GL::State blend(GL_BLEND, GL_TRUE), depth_test(GL_DEPTH_TEST, GL_FALSE);
@@ -212,7 +223,7 @@ bool Protean3D::StandardTextEngine::drawText(std::vector<TextEngine::Position> c
       static_cast<float>(tpos.y - viewport[3])
       );
 
-    shader_.setUniformMatrix(pmat, "proj_mat");
+    shader_->setUniformMatrix(pmat, "proj_mat");
     step = quad_points *  t.text.size();
     vbo_->draw(GL_TRIANGLES, sidx, step);
     sidx += step;
@@ -227,5 +238,5 @@ bool Protean3D::StandardTextEngine::drawText(std::vector<TextEngine::Position> c
 
 bool Protean3D::StandardTextEngine::setColor(glm::vec4 const &color)
 {
-  return shader_.setUniformVec3(glm::vec3(color.r, color.g, color.b), "color");
+  return shader_->setUniformVec3(glm::vec3(color.r, color.g, color.b), "color");
 }

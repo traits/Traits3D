@@ -1,13 +1,17 @@
 #pragma once
 
 #include <memory>
-#include "protean3d/glbase/vao.h"
-#include "protean3d/glbase/vbo.h"
-#include "protean3d/glbase/shader.h"
 #include "protean3d/textengine/textengine.h"
 
 namespace Protean3D
 {
+  namespace GL
+  {
+    class VAO;
+    class VBO;
+    class Shader;
+  }
+
   class StandardTextEngine : public TextEngine
   {
   public:
@@ -22,14 +26,15 @@ namespace Protean3D
     const std::string VertexCode_;
     const std::string FragmentCode_;
 
-    GL::Shader shader_;
+    std::unique_ptr<GL::Shader> shader_;
     std::unique_ptr<GL::VAO> vao_;
     std::unique_ptr<GL::VBO> vbo_;
 
-    GLuint  tex_atlas_;
+    class GLHider; // pimple OpenGL stuff
+    std::unique_ptr<GLHider> tex_atlas_;
     
     class StbHider; // pimple stb stuff
-    std::shared_ptr <StbHider> cdata;
+    std::unique_ptr <StbHider> cdata_;
 
     const size_t quad_points = 6; // character quad rendered by 2 triangles
 
