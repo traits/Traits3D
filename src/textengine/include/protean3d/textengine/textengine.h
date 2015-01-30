@@ -8,7 +8,7 @@ namespace Protean3D
 {
   class TextEngine
   {
-  public:   
+  public:
     //! Possible anchor points for drawing operations
     enum class Anchor
     {

@@ -7,7 +7,7 @@
 #include "protean3d/glbase/vao.h"
 #include "protean3d/glbase/vbo.h"
 #include "protean3d/glbase/shader.h"
-#include "protean3d/textengine/textengine_stb.h"
+#include "protean3d/textengine/textengine_std.h"
 #include <iostream>
 
 
