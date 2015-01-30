@@ -67,7 +67,7 @@ void Protean3D::Plot3D::draw()
   std::vector<TextEngine::Position> positions(1);
   positions[0] = TextEngine::Position(
     TupleF((vp[2] - vp[0]) / 2, vp[3] - vp[1]-10),
-    TopCenter);
+    TextEngine::Anchor::TopCenter);
   text_engine_p->drawText(positions);
 }
 

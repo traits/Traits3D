@@ -334,70 +334,70 @@ void Coordinates::autoDecorateExposedAxis(Axis& ax, Triple const& projected_ax, 
 	{
 		if ( diff.x >= 0 && diff.y >= 0 && sina < switch_angle)          // 0..switch angle, 1st quadrant
 		{
-			ax.setNumberAnchor(BottomCenter);
+			ax.setNumberAnchor(TextEngine::Anchor::BottomCenter);
 		}
 		else if ( diff.x >= 0 && diff.y >= 0)                            // >= switch angle, 1st quadrant
 		{
-			ax.setNumberAnchor(CenterRight);
+      ax.setNumberAnchor(TextEngine::Anchor::CenterRight);
 		}
 		else if ( diff.x <= 0 && diff.y >= 0  && sina >= switch_angle)   // ... 2nd quadrant etc.
 		{
-			ax.setNumberAnchor(CenterRight);
+      ax.setNumberAnchor(TextEngine::Anchor::CenterRight);
 		}
 		else if ( diff.x <= 0 && diff.y >= 0 ) 
 		{
-			ax.setNumberAnchor(TopCenter);
+      ax.setNumberAnchor(TextEngine::Anchor::TopCenter);
 		}
 		else if ( diff.x <= 0 && diff.y <= 0  && sina <= switch_angle)
 		{
-			ax.setNumberAnchor(BottomCenter);
+      ax.setNumberAnchor(TextEngine::Anchor::BottomCenter);
 		}
 		else if ( diff.x <= 0 && diff.y <= 0)
 		{
-			ax.setNumberAnchor(CenterRight);
+      ax.setNumberAnchor(TextEngine::Anchor::CenterRight);
 		}
 		else if ( diff.x >= 0 && diff.y <= 0  && sina >= switch_angle)    
 		{
-			ax.setNumberAnchor(CenterRight);
+      ax.setNumberAnchor(TextEngine::Anchor::CenterRight);
 		}
 		else if ( diff.x >= 0 && diff.y <= 0)
 		{
-			ax.setNumberAnchor(TopCenter);
+      ax.setNumberAnchor(TextEngine::Anchor::TopCenter);
 		}
 	}	
 	else // rightmost axis
 	{
 		if ( diff.x >= 0 && diff.y >= 0 && sina <= switch_angle)
 		{
-			ax.setNumberAnchor(TopCenter);
+      ax.setNumberAnchor(TextEngine::Anchor::TopCenter);
 		}
 		else if ( diff.x >= 0 && diff.y >= 0) 
 		{
-			ax.setNumberAnchor(CenterLeft);
+      ax.setNumberAnchor(TextEngine::Anchor::CenterLeft);
 		}
 		else if ( diff.x <= 0 && diff.y >= 0  && sina >= switch_angle) 
 		{
-			ax.setNumberAnchor(CenterLeft);
+      ax.setNumberAnchor(TextEngine::Anchor::CenterLeft);
 		}
 		else if ( diff.x <= 0 && diff.y >= 0) 
 		{
-			ax.setNumberAnchor(BottomCenter);
+      ax.setNumberAnchor(TextEngine::Anchor::BottomCenter);
 		}
 		else if ( diff.x <= 0 && diff.y <= 0  && sina <= switch_angle) 
 		{
-			ax.setNumberAnchor(TopCenter);
+      ax.setNumberAnchor(TextEngine::Anchor::TopCenter);
 		}
 		else if ( diff.x <= 0 && diff.y <= 0) 
 		{
-			ax.setNumberAnchor(CenterLeft);
+      ax.setNumberAnchor(TextEngine::Anchor::CenterLeft);
 		}
 		else if ( diff.x >= 0 && diff.y <= 0  && sina >= switch_angle) 
 		{
-			ax.setNumberAnchor(CenterLeft);
+      ax.setNumberAnchor(TextEngine::Anchor::CenterLeft);
 		}
 		else if ( diff.x >= 0 && diff.y <= 0) 
 		{
-			ax.setNumberAnchor(BottomCenter);
+      ax.setNumberAnchor(TextEngine::Anchor::BottomCenter);
 		}
 	}
 }

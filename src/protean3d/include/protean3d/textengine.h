@@ -7,15 +7,29 @@ namespace Protean3D
 {
   class TextEngine
   {
-  public:
+  public:   
+    //! Possible anchor points for drawing operations
+    enum class Anchor
+    {
+      BottomLeft,
+      BottomRight,
+      BottomCenter,
+      TopLeft,
+      TopRight,
+      TopCenter,
+      CenterLeft,
+      CenterRight,
+      Center
+    };
+
     struct Position
     {
-      explicit Position(TupleF const& c = TupleF(), ANCHOR a = BottomLeft) 
+      explicit Position(TupleF const& c = TupleF(), Anchor a = Anchor::BottomLeft)
         : coordinates(c), anchor(a)
       {
       }
       TupleF coordinates;
-      ANCHOR anchor;
+      Anchor anchor;
     };
 
     virtual ~TextEngine() {};

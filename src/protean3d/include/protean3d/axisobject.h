@@ -1,7 +1,8 @@
 #pragma once
 
 #include <memory>
-#include "globject.h"
+#include "protean3d/globject.h"
+#include "protean3d/textengine.h"
 
 namespace Protean3D
 {
@@ -21,7 +22,7 @@ namespace Protean3D
       void setTicOrientation(Triple const& val);
       void setSymmetricTics(bool val);
       void setTicLength(double majorticlen, double minorticlen);
-      void setNumberAnchor(ANCHOR a){number_anchor_ = a;}
+      void setNumberAnchor(TextEngine::Anchor a){ number_anchor_ = a; }
 
     private:
       GL::Shader shader_;
@@ -32,7 +33,7 @@ namespace Protean3D
       std::vector<double> majorvalues_;
       float majorticlength_ = 0.0f;
       float minorticlength_ = 0.0f;
-      ANCHOR number_anchor_ = BottomCenter;
+      TextEngine::Anchor number_anchor_ = TextEngine::Anchor::BottomCenter;
       bool symtics_ = false;
       TripleF orientation_ = TripleF(1.0f, 0.0f, 0.0f);
       double excess_ = 0.0; // becomes > 1 for axes outside float range

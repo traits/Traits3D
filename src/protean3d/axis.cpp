@@ -43,7 +43,7 @@ void Axis::init()
   autoscale_ = true;
   numbercolor_ = Color(0, 0, 0, 0);
 
-  setNumberAnchor(Center);
+  setNumberAnchor(TextEngine::Anchor::Center);
 
   numbergap_ = 0;
 }

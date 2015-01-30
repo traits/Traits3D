@@ -165,28 +165,28 @@ bool Protean3D::StandardTextEngine::drawText(std::vector<TextEngine::Position> c
     tpos = t.position.coordinates;
     switch (t.position.anchor)
     {
-    case BottomCenter:
+    case Anchor::BottomCenter:
       tpos.x -= 0.5f * t.hull.width();
       break;
-    case BottomRight: 
+    case Anchor::BottomRight:
       tpos.x -= t.hull.width();
       break;
-    case CenterLeft: 
+    case Anchor::CenterLeft:
       tpos.y -= 0.5f * t.hull.height();
       break;
-    case Center: 
+    case Anchor::Center:
       tpos -= 0.5f * TupleF(t.hull.width(), t.hull.height());
       break;
-    case CenterRight: 
+    case Anchor::CenterRight:
       tpos -= TupleF(t.hull.width(), 0.5 * t.hull.height());
       break;
-    case TopLeft:
+    case Anchor::TopLeft:
       tpos.y -= t.hull.height();
       break;
-    case TopCenter: 
+    case Anchor::TopCenter:
       tpos -= TupleF(0.5f * t.hull.width(), t.hull.height());
       break;
-    case TopRight: 
+    case Anchor::TopRight:
       tpos -= TupleF(t.hull.width(), t.hull.height());
       break;
     default:

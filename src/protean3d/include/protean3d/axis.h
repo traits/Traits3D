@@ -4,6 +4,7 @@
 #include "protean3d/scale.h"
 #include "protean3d/autoscaler.h"
 #include "protean3d/axisobject.h"
+#include "protean3d/textengine.h"
 
 namespace Protean3D
 {
@@ -48,7 +49,7 @@ public:
   bool numbers() const {return draw_numbers_;} //!< Returns, if number drawing is on or off
   void setNumberColor(Protean3D::Color col); //!< Sets the color for axes numbers
   Protean3D::Color numberColor() const {return numbercolor_;} //!< Returns the color for axes numbers  
-  void setNumberAnchor(Protean3D::ANCHOR a) { scaleNumberAnchor_ = a;} //!< Sets anchor position for numbers
+  void setNumberAnchor(Protean3D::TextEngine::Anchor a) { scaleNumberAnchor_ = a; } //!< Sets anchor position for numbers
   void adjustNumbers(int val) {numbergap_ = val;} //!< Shifts axis numbers in device coordinates dependent on anchor;
   void setAutoScale(bool val = true) {autoscale_ = val;} //!< Turns Autoscaling on or off
   bool autoScale() const { return autoscale_;} //!< actual Autoscaling mode
@@ -72,7 +73,7 @@ private:
   bool prepTicCalculation(Triple& startpoint);
 
   Protean3D::Triple biggestNumberString();
-  Protean3D::ANCHOR scaleNumberAnchor_;
+  Protean3D::TextEngine::Anchor scaleNumberAnchor_;
   Protean3D::Triple beg_, end_;
   Protean3D::TripleVector majorpos_, minorpos_; //! vectors, holding major resp. minor tic positions;
 

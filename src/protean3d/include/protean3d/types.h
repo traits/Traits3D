@@ -94,21 +94,6 @@ enum SIDE
   BACK   = 1 << 5
 };
 
-//! Possible anchor points for drawing operations
-enum ANCHOR
-{
-	BottomLeft,
-	BottomRight,
-	BottomCenter,
-	TopLeft,
-	TopRight,
-	TopCenter,
-	CenterLeft,
-	CenterRight,
-	Center
-};
-
-
 typedef glm::dvec2 Tuple;
 typedef glm::vec2 TupleF;
 typedef glm::dvec3 Triple;
