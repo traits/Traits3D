@@ -4,7 +4,7 @@
 #include "protean3d/scale.h"
 #include "protean3d/autoscaler.h"
 #include "protean3d/axisobject.h"
-#include "protean3d/textengine.h"
+#include "protean3d/textengine/textengine.h"
 
 namespace Protean3D
 {

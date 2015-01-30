@@ -1,7 +1,8 @@
 #pragma once
 
 #include <string>
-#include "protean3d/types.h"
+#include <vector>
+#include "glm/glm.hpp"
 
 namespace Protean3D
 {
@@ -24,11 +25,11 @@ namespace Protean3D
 
     struct Position
     {
-      explicit Position(TupleF const& c = TupleF(), Anchor a = Anchor::BottomLeft)
+      explicit Position(glm::vec2 const& c = glm::vec2(), Anchor a = Anchor::BottomLeft)
         : coordinates(c), anchor(a)
       {
       }
-      TupleF coordinates;
+      glm::vec2 coordinates;
       Anchor anchor;
     };
 
@@ -39,7 +40,7 @@ namespace Protean3D
 
     //! View port origin always bottom-left
     virtual bool drawText(std::vector<Position> const& positions) = 0;
-    virtual bool setColor(Color const &color) = 0;
+    virtual bool setColor(glm::vec4 const &color) = 0;
 
     bool setText(std::string const& text);
 
@@ -49,7 +50,7 @@ namespace Protean3D
     struct Hull
     {
       Hull();
-      TupleF bl, tr;
+      glm::vec2 bl, tr;
       float width() const { return tr.x - bl.x; }
       float height() const { return tr.y - bl.y; }
     };

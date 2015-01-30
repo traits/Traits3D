@@ -1,8 +1,18 @@
-#define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
-#include "protean3d/fonts_stb_generated.h"
 #include "protean3d/glbase/glhelper.h"
-#include "protean3d/textengine_stb.h"
+
+#define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
+#include "stb/stb_truetype.h"
+
+#include "protean3d/textengine/fonts_stb_generated.h"
+#include "protean3d/textengine/textengine_stb.h"
 #include <iostream>
+
+
+class Protean3D::StandardTextEngine::StbHider
+{
+public:
+  std::vector<stbtt_bakedchar> bc_vec;
+};
 
 Protean3D::StandardTextEngine::StandardTextEngine()
   :VertexCode_(
@@ -35,6 +45,7 @@ Protean3D::StandardTextEngine::StandardTextEngine()
   "}"
   )
 {
+  cdata = std::make_shared<Protean3D::StandardTextEngine::StbHider>();
 }
 
 
@@ -48,16 +59,16 @@ bool Protean3D::StandardTextEngine::initializeGL()
   const size_t glyph_cnt = 96;
   const float font_height = 24.0f;
 
-  cdata.resize(glyph_cnt); // ASCII 32..126 is 95 glyphs
+  cdata->bc_vec.resize(glyph_cnt); // ASCII 32..126 is 95 glyphs
 
   unsigned char temp_bitmap[512 * 512];
   if (-1 == stbtt_BakeFontBitmap(&StandardFont::OpenSans_Regular_ttf[0], 0, font_height,
-    temp_bitmap, 512, 512, 32, int(glyph_cnt), &cdata[0])) // no guarantee this fits!
+    temp_bitmap, 512, 512, 32, int(glyph_cnt), &cdata->bc_vec[0])) // no guarantee this fits!
   {
     return false;
   }
 
-  if (!setColor(Color(0, 0, 0, 1)))
+  if (!setColor(glm::vec4(0, 0, 0, 1)))
     return false;
 
   glGenTextures(1, &tex_atlas_);
@@ -101,7 +112,7 @@ bool Protean3D::StandardTextEngine::setText(std::vector<std::string> const& text
       if (ch >= 32 && ch < 128)
       {
         stbtt_aligned_quad q;
-        stbtt_GetBakedQuad(&cdata[0], 512, 512, ch - 32, &dx, &dy, &q, 1);
+        stbtt_GetBakedQuad(&cdata->bc_vec[0], 512, 512, ch - 32, &dx, &dy, &q, 1);
 
         coords_[c++] = glm::vec4(q.x0, q.y0, q.s0, q.t0);
         coords_[c++] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
@@ -159,7 +170,7 @@ bool Protean3D::StandardTextEngine::drawText(std::vector<TextEngine::Position> c
   size_t sidx = 0;
   size_t step = 0;
 
-  TupleF tpos;
+  glm::vec2 tpos;
   for (auto t : texts_)
   {
     tpos = t.position.coordinates;
@@ -175,19 +186,19 @@ bool Protean3D::StandardTextEngine::drawText(std::vector<TextEngine::Position> c
       tpos.y -= 0.5f * t.hull.height();
       break;
     case Anchor::Center:
-      tpos -= 0.5f * TupleF(t.hull.width(), t.hull.height());
+      tpos -= 0.5f * glm::vec2(t.hull.width(), t.hull.height());
       break;
     case Anchor::CenterRight:
-      tpos -= TupleF(t.hull.width(), 0.5 * t.hull.height());
+      tpos -= glm::vec2(t.hull.width(), 0.5 * t.hull.height());
       break;
     case Anchor::TopLeft:
       tpos.y -= t.hull.height();
       break;
     case Anchor::TopCenter:
-      tpos -= TupleF(0.5f * t.hull.width(), t.hull.height());
+      tpos -= glm::vec2(0.5f * t.hull.width(), t.hull.height());
       break;
     case Anchor::TopRight:
-      tpos -= TupleF(t.hull.width(), t.hull.height());
+      tpos -= glm::vec2(t.hull.width(), t.hull.height());
       break;
     default:
       break;
@@ -214,7 +225,7 @@ bool Protean3D::StandardTextEngine::drawText(std::vector<TextEngine::Position> c
   return true;
 }
 
-bool Protean3D::StandardTextEngine::setColor(Color const &color)
+bool Protean3D::StandardTextEngine::setColor(glm::vec4 const &color)
 {
   return shader_.setUniformVec3(glm::vec3(color.r, color.g, color.b), "color");
 }

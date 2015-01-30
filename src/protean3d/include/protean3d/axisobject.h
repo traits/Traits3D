@@ -2,7 +2,8 @@
 
 #include <memory>
 #include "protean3d/globject.h"
-#include "protean3d/textengine.h"
+#include "protean3d/types.h"
+#include "protean3d/textengine/textengine.h"
 
 namespace Protean3D
 {
