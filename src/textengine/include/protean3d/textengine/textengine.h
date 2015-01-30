@@ -37,6 +37,9 @@ namespace Protean3D
     virtual bool initializeGL() = 0;
     virtual bool setText(
       std::vector<std::string> const& texts) = 0;
+    bool setDoubleString(
+      std::vector<double> const& values,
+      int precision = 6);
 
     //! View port origin always bottom-left
     virtual bool drawText(std::vector<Position> const& positions) = 0;
@@ -44,7 +47,6 @@ namespace Protean3D
 
     bool setText(std::string const& text);
 
-    std::string d2t(double val);
 
   protected:
     struct Hull

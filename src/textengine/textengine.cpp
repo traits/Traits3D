@@ -1,4 +1,6 @@
 #include <numeric>
+#include <iomanip> 
+#include <sstream>
 #include "protean3d/textengine/textengine.h"
 
 Protean3D::TextEngine::Hull::Hull()
@@ -13,8 +15,18 @@ bool Protean3D::TextEngine::setText(std::string const& text)
   return this->setText(textv);
 }
 
-std::string Protean3D::TextEngine::d2t(double val)
+bool Protean3D::TextEngine::setDoubleString(
+  std::vector<double> const& values,
+  int precision/* = 6*/)
 {
-  return std::to_string(val);
+  std::ostringstream os;
+  std::vector<std::string> text(values.size());
+  for (size_t i = 0; i != values.size(); ++i)
+  {
+    os << std::setprecision(precision) << values[i];
+    text[i] = os.str();
+    os.clear();
+    os.str(std::string()); // clear stream
+  }
+  return setText(text);
 }
-

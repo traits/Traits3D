@@ -39,16 +39,14 @@ void Protean3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 con
     return;
 
   std::vector<TextEngine::Position> majorpositions_2d(majors_.size());
-  std::vector<std::string> majorvalues(majors_.size());
   
   for (auto i = 0; i != majors_.size(); ++i)
   {
     // opposite to tic orientation
     TripleF pos = GL::World2ViewPort(majors_[i] - majorticlength_ * orientation_, mv_matrix, proj_matrix, GL::viewPort());
     majorpositions_2d[i] = TextEngine::Position(TupleF(pos.x, pos.y), number_anchor_);
-    majorvalues[i] = te_->d2t(majorvalues_[i]);
   }
-  te_->setText(majorvalues);
+  te_->setDoubleString(majorvalues_);
   te_->setColor(Color(0.5, 0.5, 0.5, 1));
   te_->drawText(majorpositions_2d);
 }
