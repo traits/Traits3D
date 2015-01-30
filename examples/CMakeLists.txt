@@ -1,5 +1,5 @@
 include_directories(${PROJECT_SOURCE_DIR}/src/3rdparty)
-include_directories(${PROJECT_SOURCE_DIR}/src/glbase)
+include_directories(${PROJECT_SOURCE_DIR}/src/glbase/include)
 include_directories(${PROJECT_SOURCE_DIR}/src/protean3d/include)
 include_directories(${PROJECT_SOURCE_DIR}/src/textengines/include)
 

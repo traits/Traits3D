@@ -27,8 +27,8 @@ include_directories(3rdparty)
 add_subdirectory(resources)
 
 # gl buffer/shader support classes
+include_directories(glbase/include)
 add_subdirectory(glbase)
-include_directories(glbase)
 list(APPEND ALL_LIBS glbase)
 include_directories(protean3d/include)
 
