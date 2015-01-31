@@ -80,12 +80,16 @@ bool Protean3D::StandardTextEngine::initializeGL()
   }
 
   glGenTextures(1, &tex_atlas_->atlas);
+
+  GLint oldtex = 0;
+  glGetIntegerv(GL_TEXTURE_BINDING_2D, &oldtex);
   glBindTexture(GL_TEXTURE_2D, tex_atlas_->atlas);
   // GL_RED here, because GL_ALPHA is not longer supported from newer OpenGL versions
   // requires change from .a to .r component in fragment shader too
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 512, 512, 0, GL_RED, GL_UNSIGNED_BYTE, temp_bitmap);
   // temp_bitmap free-able from this point
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glBindTexture(GL_TEXTURE_2D, oldtex);
   return true;
 }
 
@@ -168,6 +172,12 @@ bool Protean3D::StandardTextEngine::drawText(
     )
     return false;
 
+
+  GLint oldtex = 0;
+  glGetIntegerv(GL_TEXTURE_BINDING_2D, &oldtex);
+  GLint oldactivetex = 0;
+  glGetIntegerv(GL_ACTIVE_TEXTURE, &oldactivetex);
+
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, tex_atlas_->atlas);
   GLuint texture_sampler = glGetUniformLocation(shader_->programId(), "tex");
@@ -238,5 +248,7 @@ bool Protean3D::StandardTextEngine::drawText(
   //  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   //}
 
+  glBindTexture(GL_TEXTURE_2D, oldtex);
+  glActiveTexture((GLenum)oldactivetex);
   return true;
 }
