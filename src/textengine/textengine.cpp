@@ -9,13 +9,14 @@ Protean3D::TextEngine::Hull::Hull()
 {
 }
 
-bool Protean3D::TextEngine::setText(std::string const& text)
+bool Protean3D::TextEngine::setText(std::string const& val)
 {
-  std::vector<std::string> textv(1, text);
-  return this->setText(textv);
+  std::vector<std::string> textv(1, val);
+  return this->setTexts(textv);
 }
 
-bool Protean3D::TextEngine::setDoubleString(
+
+bool Protean3D::TextEngine::setDoubleStrings(
   std::vector<double> const& values,
   int precision/* = 6*/)
 {
@@ -28,5 +29,5 @@ bool Protean3D::TextEngine::setDoubleString(
     os.clear();
     os.str(std::string()); // clear stream
   }
-  return setText(text);
+  return setTexts(text);
 }

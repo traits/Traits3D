@@ -25,6 +25,13 @@ public:
   virtual bool initializeGL();
   void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix);
 
+  /** 
+  Used to tag the axis as a z-axis. This information is used to draw correct labels.
+  The standard value for axes is false;
+  */
+  void setZ(bool val) {isZ_=val;} 
+  bool isZ() const {return isZ_;} //!< Is a z-axis
+
   void setPosition(const Protean3D::Triple& beg, const Protean3D::Triple& end); //!< Positionate axis
   void position(Protean3D::Triple& beg, Protean3D::Triple& end) const {beg = beg_; end = end_;} //!< Returns axis' position
   Protean3D::Triple begin() const { return beg_; } //!< Returns axis' beginning position
@@ -91,6 +98,8 @@ private:
 
   int numbergap_; 
   std::shared_ptr<Protean3D::Scale> scale_;
+
+  bool isZ_ = false; // identify z-axis
 };
 
 } // ns 

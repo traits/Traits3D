@@ -17,9 +17,10 @@ namespace Protean3D
   public:
     StandardTextEngine();
     bool initializeGL() override;
-    bool setColor(glm::vec4 const &color) override;
-    bool setText(std::vector<std::string> const& texts) override;
-    bool drawText(std::vector<TextEngine::Position> const& positions) override;
+    bool setTexts(std::vector<std::string> const& texts) override;
+    bool drawText(
+      std::vector<TextEngine::Position> const& positions,
+      std::vector<glm::vec4> const& colors) override;
 
 
   private:

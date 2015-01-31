@@ -35,18 +35,20 @@ namespace Protean3D
 
     virtual ~TextEngine() {};
     virtual bool initializeGL() = 0;
-    virtual bool setText(
+    virtual bool setTexts(
       std::vector<std::string> const& texts) = 0;
-    bool setDoubleString(
+    bool setDoubleStrings(
       std::vector<double> const& values,
       int precision = 6);
 
     //! View port origin always bottom-left
-    virtual bool drawText(std::vector<Position> const& positions) = 0;
-    virtual bool setColor(glm::vec4 const &color) = 0;
+    virtual bool drawText(
+      std::vector<Position> const& positions,
+      std::vector<glm::vec4> const& colors
+      ) = 0;
 
-    bool setText(std::string const& text);
-
+    //! convenience functions
+    bool setText(std::string const& val);
 
   protected:
     struct Hull
@@ -62,6 +64,7 @@ namespace Protean3D
       Position position;
       Hull hull;
       std::string text;
+      glm::vec4 color;
     };
   };
 }

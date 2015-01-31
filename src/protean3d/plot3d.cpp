@@ -68,7 +68,8 @@ void Protean3D::Plot3D::draw()
   positions[0] = TextEngine::Position(
     TupleF((vp[2] - vp[0]) / 2, vp[3] - vp[1]-10),
     TextEngine::Anchor::TopCenter);
-  text_engine_p->drawText(positions);
+  std::vector<Color> colors(1, Color(0.9f, 0, 0.3f, 0.0f));
+  text_engine_p->drawText(positions, colors);
 }
 
 void Protean3D::Plot3D::setBackgroundColor(Color val)
@@ -95,5 +96,4 @@ void Protean3D::Plot3D::setTitle(std::string const& val)
 {
   title_ = val;
   text_engine_p->setText(title_);
-  text_engine_p->setColor(Color(0.9f, 0, 0.3f, 0.0f));
 }

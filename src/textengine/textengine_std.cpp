@@ -79,9 +79,6 @@ bool Protean3D::StandardTextEngine::initializeGL()
     return false;
   }
 
-  if (!setColor(glm::vec4(0, 0, 0, 1)))
-    return false;
-
   glGenTextures(1, &tex_atlas_->atlas);
   glBindTexture(GL_TEXTURE_2D, tex_atlas_->atlas);
   // GL_RED here, because GL_ALPHA is not longer supported from newer OpenGL versions
@@ -93,7 +90,7 @@ bool Protean3D::StandardTextEngine::initializeGL()
 }
 
 
-bool Protean3D::StandardTextEngine::setText(std::vector<std::string> const& texts)
+bool Protean3D::StandardTextEngine::setTexts(std::vector<std::string> const& texts)
 {
   if (texts.empty())
     return false;
@@ -149,14 +146,20 @@ bool Protean3D::StandardTextEngine::setText(std::vector<std::string> const& text
 }
 
 
-bool Protean3D::StandardTextEngine::drawText(std::vector<TextEngine::Position> const& positions)
+bool Protean3D::StandardTextEngine::drawText(
+  std::vector<TextEngine::Position> const& positions,
+  std::vector<glm::vec4> const& colors)
 {
   if (positions.size() != texts_.size())
+    return false;
+  
+  if (colors.size() != texts_.size())
     return false;
 
   for (auto i = 0; i != texts_.size(); ++i)
   {
     texts_[i].position = positions[i];
+    texts_[i].color = colors[i];
   }
 
   if ( !vbo_->setData(coords_)
@@ -224,6 +227,8 @@ bool Protean3D::StandardTextEngine::drawText(std::vector<TextEngine::Position> c
       );
 
     shader_->setUniformMatrix(pmat, "proj_mat");
+    shader_->setUniformVec3(glm::vec3(t.color.r, t.color.g, t.color.b), "color");
+
     step = quad_points *  t.text.size();
     vbo_->draw(GL_TRIANGLES, sidx, step);
     sidx += step;
@@ -234,9 +239,4 @@ bool Protean3D::StandardTextEngine::drawText(std::vector<TextEngine::Position> c
   //}
 
   return true;
-}
-
-bool Protean3D::StandardTextEngine::setColor(glm::vec4 const &color)
-{
-  return shader_->setUniformVec3(glm::vec3(color.r, color.g, color.b), "color");
 }
