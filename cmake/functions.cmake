@@ -17,7 +17,8 @@ function(create_resources src_dir output_src_dir output_include_dir base_name in
     # Iterate through input files
     foreach(bin ${bins})
         # Get short filename
-        string(REGEX MATCH "([^/]+)$" filename ${bin})
+        get_filename_component(filename ${bin} NAME_WE)        
+        #string(REGEX MATCH "([^/]+)$" filename ${bin})
         # Replace filename spaces & extension separator for C compatibility
         string(REGEX REPLACE "\\.| |-" "_" filename ${filename})
         # Read hex data from file

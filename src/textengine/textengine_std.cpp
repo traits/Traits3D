@@ -73,7 +73,7 @@ bool Protean3D::StandardTextEngine::initializeGL()
   cdata_->bc_vec.resize(glyph_cnt); // ASCII 32..126 is 95 glyphs
 
   unsigned char temp_bitmap[512 * 512];
-  if (-1 == stbtt_BakeFontBitmap(&StandardFont::OpenSans_Regular_ttf[0], 0, font_height,
+  if (-1 == stbtt_BakeFontBitmap(&StandardFont::OpenSans_Regular[0], 0, font_height,
     temp_bitmap, 512, 512, 32, int(glyph_cnt), &cdata_->bc_vec[0])) // no guarantee this fits!
   {
     return false;
