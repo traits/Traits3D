@@ -1,4 +1,5 @@
 add_subdirectory(stb)
+include_directories(stb/include)
 
 file(GLOB  SOURCES *.cpp)
 file(GLOB  HEADERS include/protean3d/textengine/*.h)
