@@ -1,15 +1,13 @@
 #include "protean3d/glbase/glhelper.h"
 
 #define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
-#include "protean3d/stb/stb_truetype.h"
+#include "protean3d/textengine/stb_truetype.h"
 
 #include "protean3d/fonts/stdfonts.h"
 #include "protean3d/glbase/vao.h"
 #include "protean3d/glbase/vbo.h"
 #include "protean3d/glbase/shader.h"
 #include "protean3d/textengine/textengine_std.h"
-#include <iostream>
-
 
 class Protean3D::StandardTextEngine::GLHider
 {
