@@ -3,7 +3,7 @@
 #define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
 #include "protean3d/stb/stb_truetype.h"
 
-#include "protean3d/fonts/OpenSans_Regular.h"
+#include "protean3d/fonts/stdfonts.h"
 #include "protean3d/glbase/vao.h"
 #include "protean3d/glbase/vbo.h"
 #include "protean3d/glbase/shader.h"
