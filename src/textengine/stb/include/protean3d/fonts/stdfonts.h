@@ -1,12 +1,22 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 namespace Protean3D
 {
-struct StandardFont
-{
-  static const unsigned char OpenSans_Italic[];
-  static const size_t OpenSans_Italic_size;
-  static const unsigned char OpenSans_Regular[];
-  static const size_t OpenSans_Regular_size;
-};
+  struct Font
+  {
+    Font(const unsigned char* buffer = 0, size_t buflen = 0, std::string fname = std::string())
+    :data(buffer, buffer + buflen), name(fname)
+    {}
+    const std::vector<unsigned char> data;
+    const std::string name;
+  };
+
+  struct StandardFont
+  {
+    static const Font OpenSans_Italic;
+    static const Font OpenSans_Regular;
+  };
 } // ns
