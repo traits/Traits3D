@@ -36,7 +36,8 @@ for root, dirs, files in os.walk('fonts'):
     with open(ifile, mode='rb') as file:
         byte = file.read(1)
         while(byte):
-            cfile.write('0x{0:02x}'.format(ord(byte)))
+            #cfile.write('0x{0:02x}'.format(ord(byte)))
+            cfile.write(str(ord(byte)))
             byte = file.read(1)   
             if byte:
                 cfile.write(',')
