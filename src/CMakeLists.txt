@@ -32,6 +32,7 @@ list(APPEND ALL_LIBS glbase)
 # text engine
 include_directories(textengine/include)
 add_subdirectory(textengine)
+list(APPEND ALL_LIBS fontlib)
 list(APPEND ALL_LIBS textengine)
 
 include_directories(protean3d/include)

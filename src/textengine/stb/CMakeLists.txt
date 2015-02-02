@@ -1,15 +1,7 @@
-create_resources("fonts" 
-    "${PROJECT_SOURCE_DIR}/src/textengine" 
-    "${PROJECT_SOURCE_DIR}/src/textengine/include/protean3d/textengine"
-    "fonts_stb_generated"
-    "protean3d/textengine")
+file(GLOB  SOURCES *.cpp)
+file(GLOB  HEADERS include/protean3d/fonts/*.h)
 
-include_directories(tclap/include)
-add_executable(create_fonts create_fonts.cpp)
+include_directories(include)
+add_library(fontlib STATIC ${SOURCES} ${HEADERS})
 
-add_custom_command(
-  OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/OpenSans_Regular.cpp
-  COMMAND create_fonts -i "fonts/OpenSans-Regular.ttf" -o "${CMAKE_CURRENT_SOURCE_DIR}/OpenSans_Regular" -t "OpenSans-Regular"
-  DEPENDS fonts/OpenSans-Regular.ttf)
-
-add_custom_target (create_fonts_target DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/OpenSans_Regular.cpp)  
+set_property(TARGET fontlib PROPERTY FOLDER "textengine")
