@@ -5,8 +5,9 @@
 
 namespace Protean3D
 {
-  struct Font
+  class Font
   {
+  public:
     Font(const unsigned char* buffer = 0, size_t buflen = 0, std::string fname = std::string())
     :data(buffer, buffer + buflen), name(fname)
     {}

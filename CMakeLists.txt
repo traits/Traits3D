@@ -1,5 +1,14 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
 
+# remove configurations RelWithDebInfo etc. 
+# http://www.cmake.org/Wiki/CMake_FAQ
+if(CMAKE_CONFIGURATION_TYPES)
+   set(CMAKE_CONFIGURATION_TYPES Debug Release)
+   set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
+     "Reset the configurations to what we need"
+     FORCE)
+ endif()
+ 
 # http://www.volumesoffun.com/tag/cmake/
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 

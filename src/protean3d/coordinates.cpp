@@ -155,7 +155,7 @@ void Coordinates::chooseAxes(
 		src[i] = Tuple(beg[i].x, beg[i].y);
 		src[axes.size()+i] = Tuple(end[i].x, end[i].y);
 
-		axes[i].showTics(false);
+		axes[i].setScaling(false);
 		//axes[i].setNumbers(false);
 		//axes[i].setLabel(false);
 	}
@@ -321,7 +321,7 @@ void Coordinates::autoDecorateExposedAxis(Axis& ax, Triple const& projected_ax, 
   if (isZero(s))
     return;
 
-  ax.showTics(true);
+  ax.setScaling(true);
   ax.setNumbers(true);
 	//ax.setLabel(true);
 

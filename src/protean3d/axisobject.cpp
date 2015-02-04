@@ -49,18 +49,26 @@ void Protean3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 con
   }
   if (!colors.empty()) //todo test code only
     colors[colors.size()/2] = Color(0.0, 0.0, 0.7, 1);
-  te_->setDoubleStrings(majorvalues_);
+  
+  if (majors_changed_)
+    te_->setDoubleStrings(majorvalues_);
   te_->drawText(majorpositions_2d, colors);
 }
 
-bool Protean3D::GL::AxisObject::setValues(Protean3D::Triple const& begin, Protean3D::Triple const& end, 
+bool Protean3D::GL::AxisObject::setValues(
+  Protean3D::Triple const& begin, 
+  Protean3D::Triple const& end, 
   std::vector<Triple> const& majors, std::vector<Triple> const& minors,
   std::vector<double> const& major_values)
 {
   if (major_values.size() != majors.size())
     return false;
 
-  majorvalues_ = major_values;
+  // take some burden from the text engine, if suitable
+  majors_changed_ = majorvalues_ != major_values;
+  if (majors_changed_) 
+    majorvalues_ = major_values;
+  
   std::vector<Triple> tmp(2);
   tmp[0] = begin;
   tmp[1] = end;

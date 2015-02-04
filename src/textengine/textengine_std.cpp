@@ -56,7 +56,6 @@ Protean3D::StandardTextEngine::StandardTextEngine()
   tex_atlas_ = std::make_unique<Protean3D::StandardTextEngine::GLHider>();
 }
 
-
 bool Protean3D::StandardTextEngine::initializeGL()
 {
   shader_ = std::make_unique<GL::Shader>();

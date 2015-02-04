@@ -39,7 +39,6 @@ public:
   double length() const { return glm::distance(beg_,end_); } //!< Returns axis' length
   void setColor(Color val) { color_ = val; }
 
-  void showTics(bool d) { draw_tics_ = d; } //!< Turns scale drawing on or off
   void setTicLength(double majorl, double minorl); //!< Sets tics lengths in world coordinates
   //! Returns tics lengths
   void ticLength(double& majorl, double& minorl) const { majorl = lmaj_; minorl = lmin_; }
@@ -47,7 +46,7 @@ public:
   void setTicOrientation(const Protean3D::Triple& val); //!< Same function as above
   Protean3D::Triple ticOrientation() const { return orientation_;} //!< Returns tic orientation
   void setSymmetricTics( bool b) { symtics_ = b;} //!< Sets two-sided tics (default is false) 
-
+  
   void setScaling(bool d) {draw_tics_ = d;} //!< Turns scale drawing on or off
   bool scaling() const {return draw_tics_;} //!< Returns, if scale drawing is on or off
   void setScale(Protean3D::SCALETYPE);

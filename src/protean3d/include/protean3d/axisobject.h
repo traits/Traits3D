@@ -44,6 +44,8 @@ namespace Protean3D
       std::shared_ptr<TextEngine> te_;
 
       bool updateData();
+
+      bool majors_changed_ = true;
     };
   } // ns
 } // ns
