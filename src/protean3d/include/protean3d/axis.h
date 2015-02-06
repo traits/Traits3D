@@ -37,7 +37,7 @@ public:
   Protean3D::Triple begin() const { return beg_; } //!< Returns axis' beginning position
   Protean3D::Triple end() const { return end_; } //!< Returns axis' ending position 
   double length() const { return glm::distance(beg_,end_); } //!< Returns axis' length
-  void setColor(Color val) { color_ = val; }
+  void setColor(Color const& val) { color_ = val; }
 
   void setTicLength(double majorl, double minorl); //!< Sets tics lengths in world coordinates
   //! Returns tics lengths
@@ -53,7 +53,7 @@ public:
   void setScale(std::shared_ptr<Protean3D::Scale> scale){ scale_ = scale; } //!< This variant sets a user-defined scale object.
   void setNumbers(bool d) {draw_numbers_ = d;} //!< Turns number drawing on or off
   bool numbers() const {return draw_numbers_;} //!< Returns, if number drawing is on or off
-  void setNumberColor(Protean3D::Color col); //!< Sets the color for axes numbers
+  void setNumberColor(Color const& col); //!< Sets the color for axes numbers
   Protean3D::Color numberColor() const {return numbercolor_;} //!< Returns the color for axes numbers  
   void setNumberAnchor(Protean3D::TextEngine::Anchor a) { scaleNumberAnchor_ = a; } //!< Sets anchor position for numbers
   void adjustNumbers(int val) {numbergap_ = val;} //!< Shifts axis numbers in device coordinates dependent on anchor;

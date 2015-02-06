@@ -27,7 +27,7 @@ namespace Protean3D
 
     void draw();
     void updateData() override {}
-    void setBackgroundColor(Color val); //!< Sets widgets background color
+    void setBackgroundColor(Color const& val); //!< Sets widgets background color
     Color backgroundRGBAColor() const { return bgcolor_; } //!< Returns the widgets background color
 
     //void setTitlePosition(double rely, double relx = 0.5); 

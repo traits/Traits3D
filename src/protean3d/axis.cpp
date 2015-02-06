@@ -138,7 +138,7 @@ void Axis::recalculateTics()
   }
 }
 
-void Axis::setNumberColor(Color col)
+void Axis::setNumberColor(Color const& col)
 {
   numbercolor_ = col;
 }

@@ -72,7 +72,7 @@ void Protean3D::Plot3D::draw()
   text_engine_p->drawText(positions, colors);
 }
 
-void Protean3D::Plot3D::setBackgroundColor(Color val)
+void Protean3D::Plot3D::setBackgroundColor(Color const& val)
 {
   bgcolor_ = val;
 }
