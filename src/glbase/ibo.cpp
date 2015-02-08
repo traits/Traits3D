@@ -15,7 +15,7 @@ Protean3D::GL::IBO::IBO(VAO* vao)
 
 bool Protean3D::GL::IBO::bindData(GLenum draw_type)
 {
-  if (indexes_.empty())
+  if (indexmaker_.container().empty() || indexmaker_.container()[0].empty())
     return false;
 
   vao_->bind();
@@ -27,12 +27,18 @@ bool Protean3D::GL::IBO::bindData(GLenum draw_type)
   if (GL_NO_ERROR != glGetError())
     return false;
 
-  size_t size = indexes_.size();
-  if (!size_ || size_ != size || static_cast<GLenum>(oldtype) != draw_type)
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * size, size ? &indexes_[0] : nullptr, draw_type);
-  else
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint) * size, size ? &indexes_[0] : nullptr);
+  size_t size = indexmaker_.linearSize();
 
+  if (!size_ || size_ != size || static_cast<GLenum>(oldtype) != draw_type)
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(IndexMaker::IndexType) * size, nullptr, draw_type);
+
+  GLintptr offset = 0;
+  for (auto const& a : indexmaker_.container())
+  {
+    size_t len = sizeof(IndexMaker::IndexType) * a.size();
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, len, &a[0]);
+    offset += len;
+  }
 
   if (GL_NO_ERROR != glGetError())
     return false;
@@ -44,7 +50,7 @@ bool Protean3D::GL::IBO::bindData(GLenum draw_type)
 bool Protean3D::GL::IBO::create(size_t xsize, size_t ysize, GLenum primitive_type)
 {
   primitive_type_ = primitive_type;
-  return indexmaker_.create(indexes_, restart_type_, xsize, ysize, primitive_type);
+  return indexmaker_.create(restart_type_, xsize, ysize, primitive_type);
 }
 
 bool Protean3D::GL::IBO::draw(GLenum draw_type)
@@ -52,18 +58,25 @@ bool Protean3D::GL::IBO::draw(GLenum draw_type)
   if (!bindData(draw_type))
     return false;
 
-  if (IndexMaker::RestartType::PrimitiveRestart == restart_type_)
+//#if !defined PROTEAN3D_GL_IS_OPENGL_ES
+//  if (IndexMaker::RestartType::PrimitiveRestart == restart_type_)
+//  {
+//	  glEnable(GL_PRIMITIVE_RESTART);
+//	  glPrimitiveRestartIndex(std::numeric_limits<GLuint>::max()); //todo not available in OpenGL ES!
+//  }
+//#endif
+
+  const IndexMaker::IndexType* ptr = nullptr;
+  for (auto const& a : indexmaker_.container())
   {
-	  glEnable(GL_PRIMITIVE_RESTART);
-	  glPrimitiveRestartIndex(std::numeric_limits<GLuint>::max()); //todo not available in OpenGL ES!
+    glDrawElements(primitive_type_, static_cast<GLsizei>(a.size()), GL_UNSIGNED_INT, ptr); //todo ibo indexing
+    ptr +=  a.size();
   }
-  
-  glDrawElements(primitive_type_, static_cast<GLsizei>(size_), GL_UNSIGNED_INT, 0); //todo ibo indexing
-  
-  if (IndexMaker::RestartType::PrimitiveRestart == restart_type_)
-  {
-    glDisable(GL_PRIMITIVE_RESTART);
-  }    
-    
+//#if !defined PROTEAN3D_GL_IS_OPENGL_ES
+//  if (IndexMaker::RestartType::PrimitiveRestart == restart_type_)
+//  {
+//    glDisable(GL_PRIMITIVE_RESTART);
+//  }
+//#endif
   return true; //todo
 }

@@ -1,6 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
 
 set(QT5CMAKEROOT "v:/lib/qt/qt5/install/x64/lib/cmake" CACHE STRING "Qt cmake root")
+#set(QT5CMAKEROOT "v:/lib/qt/qt5/install/android/x86/lib/cmake" CACHE STRING "Qt cmake root")
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

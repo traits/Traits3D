@@ -15,15 +15,30 @@ namespace GL
 
     enum class RestartType
     {
+      None,
       DegeneratedElements,
       PrimitiveRestart
     };
 
-    bool create(std::vector<GLuint>& result, RestartType& restart_type, GLuint xsize, GLuint ysize, GLenum drawType);
+    using IndexType = GLuint;
+    using Container = std::vector < std::vector<IndexType> >;
+    bool create(RestartType& restart_type, GLuint xsize, GLuint ysize, GLenum primitive_type);
+    const Container& container() const { return container_; }
+    size_t linearSize() const
+    {
+      size_t ret = 0;
+      for (auto const& a : container_)
+        ret += a.size();
+      
+      return ret;
+    }
 
   private:
-    static const GLuint restart_place_holder_;
+    Container container_;
 
+    static const IndexType restart_place_holder_;
+
+    bool createLineStrips(Container& result, GLuint xsize, GLuint ysize);
     bool createRestartLineStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize);
     bool createTriangleStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize);
     bool createRestartTriangleStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize);

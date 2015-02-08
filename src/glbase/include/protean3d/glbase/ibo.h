@@ -27,7 +27,6 @@ namespace Protean3D
     private:
       GLuint id_ = 0;
       size_t size_ = 0; //buffer size
-      std::vector<GLuint> indexes_;
       IndexMaker indexmaker_;
       GLenum primitive_type_ = GL_TRIANGLE_STRIP;
       IndexMaker::RestartType restart_type_ = IndexMaker::RestartType::DegeneratedElements;
