@@ -31,7 +31,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # initialize with true
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
-
 # Target OS
 set(PROTEAN3D_OS "Windows" CACHE STRING "Target OS")
 set_property(CACHE PROTEAN3D_OS PROPERTY STRINGS "Windows")
@@ -44,6 +43,23 @@ option(PROTEAN3D_EXAMPLES_QT "Qt" ON)
 # OpenGL Version Provider
 set(PROTEAN3D_GL_VARIANT "OPENGL" CACHE STRING "OpenGL Variant (OpenGL, OpenGL ES, WebGL)")
 set_property(CACHE PROTEAN3D_GL_VARIANT PROPERTY STRINGS "OPENGL" "OPENGL_ES" "WEBGL")
+
+if ("${PROTEAN3D_GL_VARIANT}"  STREQUAL "OPENGL")
+  set(PROTEAN3D_GL_MAJOR "3" CACHE STRING "OpenGL major number")
+  set_property(CACHE PROTEAN3D_GL_MAJOR PROPERTY STRINGS "2" "3" "4")
+  set(PROTEAN3D_GL_MINOR "3" CACHE STRING "OpenGL minor number")
+  set_property(CACHE PROTEAN3D_GL_MINOR PROPERTY STRINGS "0" "1" "2" "3" "3" "5")
+elseif ("${PROTEAN3D_GL_VARIANT}"  STREQUAL "OPENGL_ES")
+  set(PROTEAN3D_GL_MAJOR "2" CACHE STRING "OpenGL ES major number")
+  set_property(CACHE PROTEAN3D_GL_MAJOR PROPERTY STRINGS "2" "3")
+  set(PROTEAN3D_GL_MINOR "0" CACHE STRING "OpenGL ES minor number")
+  set_property(CACHE PROTEAN3D_GL_MINOR PROPERTY STRINGS "0" "1")
+endif()
+add_definitions(-DPROTEAN3D_GL_IS_${PROTEAN3D_GL_VARIANT})
+add_definitions(-DPROTEAN3D_GL_MAJOR=${PROTEAN3D_GL_MAJOR})
+add_definitions(-DPROTEAN3D_GL_MINOR=${PROTEAN3D_GL_MINOR})
+
+
 
 # Text Engine
 set(PROTEAN3D_TEXT "stb" CACHE STRING "Text Engine")

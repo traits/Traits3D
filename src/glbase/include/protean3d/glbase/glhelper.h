@@ -5,9 +5,13 @@
 #include <algorithm>
 
 #if defined PROTEAN3D_GL_IS_OPENGL
-  #include <glloadgen/GL_3_3/gl_core_3_3.h>
+  #if PROTEAN3D_GL_MAJOR > 3
+    #include <glloadgen/GL_4_2/gl_core_4_2.h>
+  #else
+    #include <glloadgen/GL_3_3/gl_core_3_3.h>
+  #endif
 #elif defined PROTEAN3D_GL_IS_OPENGL_ES
-  #include <GLES3/gl3.h> 
+  #include <GLES3/gl3.h>
 #else
   #include <glloadgen/GL_3_3/gl_core_3_3.h>
 #endif
