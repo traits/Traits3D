@@ -12,12 +12,12 @@
 class Rosenbrock : public Protean3D::SurfacePlot
 {
 public:
-  const size_t xsize = 41;
-  const size_t ysize = 31;
-  const float xmin = -1.73f;
-  const float xmax = 1.5f;
-  const float ymin = -1.5f;
-  const float ymax = 1.5f;
+ size_t xsize = 41;
+ size_t ysize = 31;
+ float xmin = -1.73f;
+ float xmax = 1.5f;
+ float ymin = -1.5f;
+ float ymax = 1.5f;
 
   Rosenbrock()
   {
@@ -44,9 +44,9 @@ public:
     float curr_y = xmin;
 
     auto k = 0;
-    for (auto y = 0; y != ysize; ++y)
+    for (size_t y = 0; y != ysize; ++y)
     {
-      for (auto x = 0; x != xsize; ++x)
+      for (size_t x = 0; x != xsize; ++x)
       {
         data_[k].x = curr_x;
         data_[k].y = curr_y;
@@ -63,7 +63,7 @@ public:
     size_t size = data_.size();
     float fsize = size;
     Protean3D::ColorVector colors(size);
-    for (auto i = 0; i != size; ++i)
+    for (size_t i = 0; i != size; ++i)
     {
       glm::vec4& elem = colors[i];
       elem.r = i / fsize;

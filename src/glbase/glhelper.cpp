@@ -23,7 +23,7 @@ std::vector<glm::vec3> Protean3D::GL::scale(double& exc, std::vector<glm::dvec3>
 std::vector<glm::vec3> Protean3D::GL::scale(std::vector<glm::dvec3> const& val, double excess)
 {
   std::vector<glm::vec3> ret(val.size());
-  for (auto i = 0; i != val.size(); ++i)
+  for (size_t i = 0; i != val.size(); ++i)
   {
     ret[i] = (val[i] / excess);
   }
@@ -33,7 +33,7 @@ std::vector<glm::vec3> Protean3D::GL::scale(std::vector<glm::dvec3> const& val, 
 std::vector<glm::vec3> Protean3D::GL::convert(std::vector<glm::dvec3> const& val)
 {
   std::vector<glm::vec3> ret(val.size());
-  for (auto i = 0; i != val.size(); ++i)
+  for (size_t i = 0; i != val.size(); ++i)
   {
     ret[i] = static_cast<glm::vec3>(val[i]);
   }

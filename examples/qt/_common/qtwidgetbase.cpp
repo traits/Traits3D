@@ -20,7 +20,7 @@ using namespace Protean3D;
   This should be the first call in your derived classes constructors.  
 */
 QtWidgetBase::QtWidgetBase(std::shared_ptr<ExtGLWidget> plot, QWidget * parent, Qt::WindowFlags flags)
-    : plot_p(plot), QOpenGLWidget( parent, flags) 
+    : QOpenGLWidget( parent, flags), plot_p(plot)
 {  
 	lastMouseMovePosition_ = QPoint(0,0);
 	mpressed_ = false;
@@ -507,7 +507,7 @@ void QtWidgetBase::setZoom( double val )
 }
 
 /*!
-  Set up ortogonal or perspective mode and updates widget
+  Set up orthogonal or perspective mode and updates widget
 */
 void QtWidgetBase::setOrtho( bool val )
 {

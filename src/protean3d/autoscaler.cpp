@@ -99,7 +99,6 @@ void LinearAutoScaler::init(double start, double stop, size_t ivals)
   if (start_ > stop_)
   {
     std::swap(start_, stop_);
-    double tmp = start_;
   }
 }
 
@@ -183,7 +182,7 @@ size_t LinearAutoScaler::execute(double& a, double& b, double start, double stop
   double anchor = anchorvalue(start_, c, n); 
   int ival = segments(l_ival, r_ival, start_, stop_, anchor, c, n); 
 
-  if (ival >= intervals_)
+  if (ival >= static_cast<int>(intervals_))
   {
     a = anchor - l_ival * c * pow(10.0,n);
     b = anchor + r_ival * c * pow(10.0,n);
