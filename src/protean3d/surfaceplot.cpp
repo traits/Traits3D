@@ -1,3 +1,4 @@
+#include "protean3d/helper.h"
 #include "protean3d/surfaceplot.h"
 
 /* Create VBO, IBO and VAO objects for the heightmap geometry and bind them to
@@ -38,6 +39,6 @@ bool Protean3D::SurfacePlot::initializeGL()
 {
   if (!Plot3D::initializeGL())
     return false;
-  data_object_p = std::make_unique<GL::DataObject>();
+  data_object_p = Protean3D::make_unique<GL::DataObject>();
   return true;
 }

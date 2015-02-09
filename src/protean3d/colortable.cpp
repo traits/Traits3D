@@ -2,6 +2,9 @@
 #include "protean3d/helper.h"
 #include "protean3d/colortable.h"
 
+// reconciles with insufficient Android NDK (mingw) implementation
+// " 'lround' not member of 'std'"
+using namespace std;
 
 Protean3D::Color Protean3D::ColorTable::color(float z, ColorVector const& vec, float zmin, float zmax)
 {
@@ -10,7 +13,7 @@ Protean3D::Color Protean3D::ColorTable::color(float z, ColorVector const& vec, f
   if (z<zmin || z>zmax || zmax <= zmin || 0==len)
     return Color();
 
-  size_t idx = static_cast<size_t>(std::lround((z - zmin) / (zmax - zmin) * len));
+  size_t idx = static_cast<size_t>(lround((z - zmin) / (zmax - zmin) * len));
 
   return (idx < len) ? vec[idx] : vec.back();
 }
@@ -23,7 +26,7 @@ Protean3D::ColorVector Protean3D::ColorTable::stdColor(size_t len)
   ColorVector colors(len);
 
   float fsize = static_cast<float>(len);
-  for (auto i = 0; i != len; ++i)
+  for (size_t i = 0; i != len; ++i)
   {
     glm::vec4& elem = colors[i];
     elem.r = i / fsize;
@@ -44,7 +47,7 @@ Protean3D::ColorVector Protean3D::ColorTable::createColors(std::vector<glm::vec3
   float zmin = static_cast<float>(hull.minVertex.z);
   float zmax = static_cast<float>(hull.maxVertex.z);
 
-  for (auto i = 0; i != data.size(); ++i)
+  for (size_t i = 0; i != data.size(); ++i)
   {
     Color c = color(data[i].z, color_field, zmin, zmax);
     ret[i] = c;

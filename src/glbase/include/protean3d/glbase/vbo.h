@@ -2,13 +2,13 @@
 
 #include <vector>
 #include "protean3d/glbase/glhelper.h"
+#include "protean3d/glbase/vao.h"
 
 namespace Protean3D
 {
   //! Projects GL namespace
   namespace GL
   {
-    class VAO;
     //! Vertex Buffer Objects
     class VBO
     {
@@ -17,8 +17,8 @@ namespace Protean3D
       virtual ~VBO() = default;
       GLuint id() const { return id_; } //!< VBO index
       
-      bool setData(std::vector<glm::vec3> const& data, bool setdrawtype = false, GLenum drawtype = GL_STATIC_DRAW);
-      bool setData(std::vector<glm::vec4> const& data, bool setdrawtype = false, GLenum drawtype = GL_STATIC_DRAW);
+      bool setData(std::vector<glm::vec3> const& data, GLenum drawtype = GL_STATIC_DRAW);
+      bool setData(std::vector<glm::vec4> const& data, GLenum drawtype = GL_STATIC_DRAW);
 
       bool bindAttribute(GLuint attr_location);
       //! Draw complete buffer as GL_TRIANGLE_STRIP etc.
@@ -68,7 +68,7 @@ namespace Protean3D
       VAO* vao_; // non-owning pointer
 
       template <typename PRIMITIVE>
-      bool setData(std::vector<PRIMITIVE> const& data, bool setdrawtype = false, GLenum drawtype = GL_STATIC_DRAW);
+      bool setData(std::vector<PRIMITIVE> const& data, GLenum drawtype = GL_STATIC_DRAW);
     };
 
 
@@ -82,7 +82,7 @@ namespace Protean3D
      \return true if it succeeds, false if it fails.
      */
     template <typename PRIMITIVE>
-    bool Protean3D::GL::VBO::setData(std::vector<PRIMITIVE> const& data, bool setdrawtype/* = false*/, GLenum drawtype /*= GL_STATIC_DRAW*/)
+    bool Protean3D::GL::VBO::setData(std::vector<PRIMITIVE> const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
     {
       if (data.empty())
         return false;

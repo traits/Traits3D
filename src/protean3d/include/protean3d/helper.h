@@ -36,6 +36,13 @@ inline int round(double d)
   return (d > 0) ? int(d + 0.5) : int(d - 0.5);
 }
 
+// not part of C++11 (missing in some GCC versions, will be added to C++14)
+template<typename T, typename ...Args>
+inline std::unique_ptr<T> make_unique( Args&& ...args )
+{
+    return std::unique_ptr<T>( new T( std::forward<Args>(args)... ) );
+}
+
 template <typename TARGET, typename SOURCE>
 inline std::shared_ptr<TARGET> safe_down_cast(std::shared_ptr<SOURCE> source)
 {

@@ -7,10 +7,10 @@ Protean3D::GL::DataObject::DataObject()
   : GL::Object()
 {
   initShader();
-  vbos_[VBOindex::Position] = std::make_unique<VBO>(&vao_p);
-  vbos_[VBOindex::DataColor] = std::make_unique<VBO>(&vao_p);
-  ibos_[IBOindex::Polygons] = std::make_unique<IBO>(&vao_p);
-  ibos_[IBOindex::Mesh] = std::make_unique<IBO>(&vao_p);
+  vbos_[VBOindex::Position] = Protean3D::make_unique<VBO>(&vao_p);
+  vbos_[VBOindex::DataColor] = Protean3D::make_unique<VBO>(&vao_p);
+  ibos_[IBOindex::Polygons] = Protean3D::make_unique<IBO>(&vao_p);
+  ibos_[IBOindex::Mesh] = Protean3D::make_unique<IBO>(&vao_p);
 }
 
 
@@ -46,7 +46,7 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<glm::vec3> const& da
   if (!ibos_[IBOindex::Polygons]->create(xsize, ysize, GL_TRIANGLE_STRIP))
     return false;
   
-  vbos_[VBOindex::Position]->setData(data, true, drawtype);
+  vbos_[VBOindex::Position]->setData(data, drawtype);
 
   for (auto& s : shader_)
   {

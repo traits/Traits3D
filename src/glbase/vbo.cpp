@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "protean3d/glbase/vao.h"
 #include "protean3d/glbase/vbo.h"
 
@@ -7,7 +8,7 @@ Protean3D::GL::VBO::VBO(VAO* vao)
   if (!vao_)
     throw std::domain_error("Protean3D: VBO construction error");
 
-  GLenum err = glGetError(); //todo temp reset for gl error flag
+  glGetError(); //todo temp reset for gl error flag
   glGenBuffers(1, &id_);
   if (GL_NO_ERROR != glGetError())
     throw std::domain_error("Protean3D: VBO construction error");
@@ -57,20 +58,18 @@ bool Protean3D::GL::VBO::draw(GLenum primitive_type)
   return draw(primitive_type, 0, bsize_ / primitive_size_);
 }
 
-bool Protean3D::GL::VBO::setData(std::vector<glm::vec3> const& data, 
-  bool setdrawtype/* = false*/, GLenum drawtype /*= GL_STATIC_DRAW*/)
+bool Protean3D::GL::VBO::setData(std::vector<glm::vec3> const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
   if (!layout_.match(Layout(3, GL_FLOAT, 0, 0)))
     return false;
 
-  return setData<glm::vec3>(data, setdrawtype, drawtype);
+  return setData<glm::vec3>(data, drawtype);
 }
 
-bool Protean3D::GL::VBO::setData(std::vector<glm::vec4> const& data, 
-  bool setdrawtype/* = false*/, GLenum drawtype /*= GL_STATIC_DRAW*/)
+bool Protean3D::GL::VBO::setData(std::vector<glm::vec4> const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
   if (!layout_.match(Layout(4, GL_FLOAT, 0, 0)))
     return false;
 
-  return setData<glm::vec4>(data, setdrawtype, drawtype);
+  return setData<glm::vec4>(data, drawtype);
 }

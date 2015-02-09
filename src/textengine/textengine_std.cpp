@@ -3,6 +3,7 @@
 #define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
 #include "protean3d/textengine/stb_truetype.h"
 
+#include "protean3d/helper.h"
 #include "protean3d/fonts/stdfonts.h"
 #include "protean3d/glbase/vao.h"
 #include "protean3d/glbase/vbo.h"
@@ -20,6 +21,9 @@ class Protean3D::StandardTextEngine::StbHider
 public:
   std::vector<stbtt_bakedchar> bc_vec;
 };
+
+
+Protean3D::StandardTextEngine::~StandardTextEngine() = default;
 
 Protean3D::StandardTextEngine::StandardTextEngine()
   :VertexCode_(
@@ -52,17 +56,17 @@ Protean3D::StandardTextEngine::StandardTextEngine()
   "}"
   )
 {
-  cdata_ = std::make_unique<Protean3D::StandardTextEngine::StbHider>();
-  tex_atlas_ = std::make_unique<Protean3D::StandardTextEngine::GLHider>();
+  cdata_ = Protean3D::make_unique<Protean3D::StandardTextEngine::StbHider>();
+  tex_atlas_ = Protean3D::make_unique<Protean3D::StandardTextEngine::GLHider>();
 }
 
 bool Protean3D::StandardTextEngine::initializeGL()
 {
-  shader_ = std::make_unique<GL::Shader>();
+  shader_ = Protean3D::make_unique<GL::Shader>();
   if (!shader_->create(VertexCode_, FragmentCode_))
     return false;
-  vao_ = std::make_unique<GL::VAO>();
-  vbo_ = std::make_unique<GL::VBO>(vao_.get());
+  vao_ = Protean3D::make_unique<GL::VAO>();
+  vbo_ = Protean3D::make_unique<GL::VBO>(vao_.get());
 
   const size_t glyph_cnt = 96;
   const float font_height = 24.0f;
@@ -97,7 +101,7 @@ bool Protean3D::StandardTextEngine::setTexts(std::vector<std::string> const& tex
     return false;
 
   texts_.resize(texts.size());
-  for (auto i = 0; i != texts.size(); ++i)
+  for (size_t i = 0; i != texts.size(); ++i)
   {
     texts_[i].text = texts[i];
     texts_[i].hull = Hull(); // reset //todo?
@@ -118,7 +122,7 @@ bool Protean3D::StandardTextEngine::setTexts(std::vector<std::string> const& tex
     float dy = 0;
     for (auto ch : t.text)
     {
-      if (ch >= 32 && ch < 128)
+      if (ch >= 32 /*&& ch < 128*/)
       {
         stbtt_aligned_quad q;
         stbtt_GetBakedQuad(&cdata_->bc_vec[0], 512, 512, ch - 32, &dx, &dy, &q, 1);
@@ -157,7 +161,7 @@ bool Protean3D::StandardTextEngine::drawText(
   if (colors.size() != texts_.size())
     return false;
 
-  for (auto i = 0; i != texts_.size(); ++i)
+  for (size_t i = 0; i != texts_.size(); ++i)
   {
     texts_[i].position = positions[i];
     texts_[i].color = colors[i];

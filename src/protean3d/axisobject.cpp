@@ -1,4 +1,5 @@
 #include <glm/gtc/matrix_transform.hpp>
+#include "protean3d/helper.h"
 #include "protean3d/textengine/textengine_std.h"
 #include "protean3d/axisobject.h"
 
@@ -8,7 +9,7 @@ Protean3D::GL::AxisObject::AxisObject()
 {
   shader_.create(GL::ShaderCode::Vertex::Line, GL::ShaderCode::Fragment::Simple);
 
-  vbo_ = std::make_unique<VBO>(&vao_p);
+  vbo_ = Protean3D::make_unique<VBO>(&vao_p);
   te_ = std::make_shared<StandardTextEngine>();
   te_->initializeGL();
 }
@@ -40,7 +41,7 @@ void Protean3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 con
 
   std::vector<TextEngine::Position> majorpositions_2d(majors_.size());
   std::vector<Color> colors(majors_.size());
-  for (auto i = 0; i != majors_.size(); ++i)
+  for (size_t i = 0; i != majors_.size(); ++i)
   {
     // opposite to tic orientation
     TripleF pos = GL::World2ViewPort(majors_[i] - majorticlength_ * orientation_, mv_matrix, proj_matrix, GL::viewPort());

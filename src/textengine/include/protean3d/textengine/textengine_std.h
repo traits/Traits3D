@@ -16,6 +16,7 @@ namespace Protean3D
   {
   public:
     StandardTextEngine();
+    ~StandardTextEngine();
     bool initializeGL() override;
     bool setTexts(std::vector<std::string> const& texts) override;
     bool drawText(
