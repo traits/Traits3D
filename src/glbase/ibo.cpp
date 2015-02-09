@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "protean3d/glbase/vao.h"
 #include "protean3d/glbase/ibo.h"
 
@@ -7,7 +8,7 @@ Protean3D::GL::IBO::IBO(VAO* vao)
 {
   if (!vao_)
     throw std::domain_error("Protean3D: IBO construction error");
-  GLenum err = glGetError(); //todo temp reset for gl error flag
+  glGetError(); //todo temp reset for gl error flag
   glGenBuffers(1, &id_);
   if (GL_NO_ERROR != glGetError())
     throw std::domain_error("Protean3D: IBO construction error");
@@ -50,7 +51,8 @@ bool Protean3D::GL::IBO::bindData(GLenum draw_type)
 bool Protean3D::GL::IBO::create(size_t xsize, size_t ysize, GLenum primitive_type)
 {
   primitive_type_ = primitive_type;
-  return indexmaker_.create(restart_type_, xsize, ysize, primitive_type);
+  indexmaker_.setRestartBehavior(IndexMaker::RestartType::PrimitiveRestart, std::numeric_limits<IndexMaker::IndexType>::max());
+  return indexmaker_.create(xsize, ysize, primitive_type);
 }
 
 bool Protean3D::GL::IBO::draw(GLenum draw_type)
@@ -58,25 +60,31 @@ bool Protean3D::GL::IBO::draw(GLenum draw_type)
   if (!bindData(draw_type))
     return false;
 
-//#if !defined PROTEAN3D_GL_IS_OPENGL_ES
-//  if (IndexMaker::RestartType::PrimitiveRestart == restart_type_)
-//  {
-//	  glEnable(GL_PRIMITIVE_RESTART);
-//	  glPrimitiveRestartIndex(std::numeric_limits<GLuint>::max()); //todo not available in OpenGL ES!
-//  }
-//#endif
+  
+  if (IndexMaker::RestartType::PrimitiveRestart == indexmaker_.restartType())
+  {
+//todo older OpenGL (ES) versions
+#if defined(PROTEAN3D_GL_IS_OPENGL_ES)
+    glEnable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
+#elif defined(PROTEAN3D_GL_IS_OPENGL)
+    glEnable(GL_PRIMITIVE_RESTART);
+    glPrimitiveRestartIndex(indexmaker_.restartPLaceholder()); //todo not available in OpenGL ES!
+#endif
+  }
 
   const IndexMaker::IndexType* ptr = nullptr;
   for (auto const& a : indexmaker_.container())
   {
-    glDrawElements(primitive_type_, static_cast<GLsizei>(a.size()), GL_UNSIGNED_INT, ptr); //todo ibo indexing
+    glDrawElements(primitive_type_, static_cast<GLsizei>(a.size()), GL_UNSIGNED_INT, ptr);
     ptr +=  a.size();
   }
-//#if !defined PROTEAN3D_GL_IS_OPENGL_ES
-//  if (IndexMaker::RestartType::PrimitiveRestart == restart_type_)
-//  {
-//    glDisable(GL_PRIMITIVE_RESTART);
-//  }
-//#endif
+  if (IndexMaker::RestartType::PrimitiveRestart == indexmaker_.restartType())
+  {
+#if defined(PROTEAN3D_GL_IS_OPENGL_ES)
+    glDisable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
+#elif defined(PROTEAN3D_GL_IS_OPENGL)
+    glDisable(GL_PRIMITIVE_RESTART);
+#endif
+  }
   return true; //todo
 }

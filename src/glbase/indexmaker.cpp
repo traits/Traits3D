@@ -1,16 +1,12 @@
 #include "protean3d/glbase/indexmaker.h"
 
 
-const GLuint Protean3D::GL::IndexMaker::restart_place_holder_ = std::numeric_limits<GLuint>::max();
-
 Protean3D::GL::IndexMaker::IndexMaker()
+  :restart_placeholder_(std::numeric_limits<IndexType>::max())
 {
 }
 
-bool Protean3D::GL::IndexMaker::create( 
-  RestartType& restart_type, 
-  GLuint xsize, GLuint ysize,
-  GLenum primitive_type)
+bool Protean3D::GL::IndexMaker::create(GLuint xsize, GLuint ysize, GLenum primitive_type)
 {
   if (2 > xsize || 2 > ysize /*|| xsize * ysize > ( (GLushort)-1)*/) // path. cases
   {
@@ -19,26 +15,31 @@ bool Protean3D::GL::IndexMaker::create(
   }
 
   container_.resize(1);
-  //restart_type = RestartType::PrimitiveRestart;
-  //switch (primitive_type)
-  //{
-  //case GL_LINE_STRIP:
-  //  return createRestartLineStrips(container_[0], xsize, ysize);
-  //case GL_TRIANGLE_STRIP:
-  //  return createRestartTriangleStrips(container_[0], xsize, ysize);
-  //default:
-  //  return false;
-  //}
-  restart_type = RestartType::DegeneratedElements;
-  switch (primitive_type)
+  if (restart_type_ == RestartType::PrimitiveRestart)
   {
-  case GL_LINE_STRIP:
-    return createLineStrips(container_, xsize, ysize);
-  case GL_TRIANGLE_STRIP:
-    return createTriangleStrips(container_[0], xsize, ysize);
-  default:
-    return false;
+    switch (primitive_type)
+    {
+    case GL_LINE_STRIP:
+      return createRestartLineStrips(container_[0], xsize, ysize);
+    case GL_TRIANGLE_STRIP:
+      return createRestartTriangleStrips(container_[0], xsize, ysize);
+    default:
+      return false;
+    }
   }
+  else if (restart_type_ == RestartType::None)
+  {
+    switch (primitive_type)
+    {
+    case GL_LINE_STRIP:
+      return createLineStrips(container_, xsize, ysize);
+    case GL_TRIANGLE_STRIP:
+      return createTriangleStrips(container_[0], xsize, ysize);
+    default:
+      return false;
+    }
+  }
+  return false;
 }
 
 bool Protean3D::GL::IndexMaker::createLineStrips(Container& result, GLuint xsize, GLuint ysize)
@@ -51,18 +52,18 @@ bool Protean3D::GL::IndexMaker::createLineStrips(Container& result, GLuint xsize
   }
 
   // verticals
-  for (auto y = 0; y != ysize; ++y)
+  for (size_t y = 0; y != ysize; ++y)
   {
     auto start = y * xsize;
-    for (auto x = 0; x != xsize; ++x)
+    for (size_t x = 0; x != xsize; ++x)
     {
       result[y][x] = start + x;
     }
   }
   // horizontal
-  for (auto x = 0; x != xsize; ++x)
+  for (size_t x = 0; x != xsize; ++x)
   {
-    for (auto y = 0; y != ysize; ++y)
+    for (size_t y = 0; y != ysize; ++y)
     {
       result[ysize + x][y] = x + y * xsize;
     }
@@ -79,26 +80,26 @@ bool Protean3D::GL::IndexMaker::createRestartLineStrips(std::vector<GLuint>& res
   result.resize(2*xsize*ysize + ph_count);
 
   // verticals
-  for (auto y = 0; y != ysize; ++y)
+  for (size_t y = 0; y != ysize; ++y)
   {
     auto start = y * xsize;
-    for (auto x = 0; x != xsize; ++x)
+    for (size_t x = 0; x != xsize; ++x)
     {
       result[k++] = start + x;
     }
-    result[k++] = restart_place_holder_;
+    result[k++] = restart_placeholder_;
   }
   // horizontal
-  for (auto x = 0; x != xsize; ++x)
+  for (size_t x = 0; x != xsize; ++x)
   {
-    for (auto y = 0; y != ysize; ++y)
+    for (size_t y = 0; y != ysize; ++y)
     {
       result[k++] = x + y * xsize;
     }
     if (x == xsize-1)
       break;
 
-    result[k++] = restart_place_holder_;
+    result[k++] = restart_placeholder_;
   }
   return true;
 }
@@ -159,7 +160,13 @@ bool Protean3D::GL::IndexMaker::createRestartTriangleStrips(std::vector<GLuint>&
     if (y == ysize - 2)
       break;
 
-    result[colidx + stripesize] = restart_place_holder_;
+    result[colidx + stripesize] = restart_placeholder_;
   }
   return true;
+}
+
+void Protean3D::GL::IndexMaker::setRestartBehavior(RestartType rtype, IndexType placeholder /*= 0*/)
+{
+  restart_type_ = rtype;
+  restart_placeholder_ = placeholder;
 }

@@ -29,7 +29,6 @@ namespace Protean3D
       size_t size_ = 0; //buffer size
       IndexMaker indexmaker_;
       GLenum primitive_type_ = GL_TRIANGLE_STRIP;
-      IndexMaker::RestartType restart_type_ = IndexMaker::RestartType::DegeneratedElements;
       VAO* vao_;
 
       bool bindData(GLenum draw_type);

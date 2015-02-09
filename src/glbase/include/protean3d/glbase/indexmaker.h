@@ -16,13 +16,16 @@ namespace GL
     enum class RestartType
     {
       None,
-      DegeneratedElements,
       PrimitiveRestart
     };
 
     using IndexType = GLuint;
     using Container = std::vector < std::vector<IndexType> >;
-    bool create(RestartType& restart_type, GLuint xsize, GLuint ysize, GLenum primitive_type);
+    void setRestartBehavior(RestartType rtype, IndexType placeholder = 0);  
+    RestartType restartType() const { return restart_type_; }
+    IndexType restartPLaceholder() const { return restart_placeholder_; }
+
+    bool create(GLuint xsize, GLuint ysize, GLenum primitive_type);
     const Container& container() const { return container_; }
     size_t linearSize() const
     {
@@ -36,7 +39,8 @@ namespace GL
   private:
     Container container_;
 
-    static const IndexType restart_place_holder_;
+    IndexType restart_placeholder_;
+    RestartType restart_type_ = RestartType::None;
 
     bool createLineStrips(Container& result, GLuint xsize, GLuint ysize);
     bool createRestartLineStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize);
