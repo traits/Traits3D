@@ -201,10 +201,11 @@ void LogScale::calculate()
   majors_p.clear();
 	minors_p.clear();
 
-  if (start_p < DBL_MIN_10_EXP)
-    start_p = DBL_MIN_10_EXP;
-  if (stop_p > DBL_MAX_10_EXP)
-    stop_p = DBL_MAX_10_EXP;
+
+  if (start_p < std::numeric_limits<double>::min_exponent10)
+    start_p = std::numeric_limits<double>::min_exponent10;
+  if (stop_p > std::numeric_limits<double>::max_exponent10)
+    stop_p = std::numeric_limits<double>::max_exponent10;
 
   double interval = stop_p-start_p;
   if (interval<=0)
