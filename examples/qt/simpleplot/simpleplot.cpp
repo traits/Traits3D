@@ -40,8 +40,8 @@ public:
   {
     float dx = (xmax - xmin) / (xsize - 1);
     float dy = (ymax - ymin) / (ysize - 1);
-    float curr_x = ymin;
-    float curr_y = xmin;
+    float curr_x = xmin;
+    float curr_y = ymin;
 
     auto k = 0;
     for (size_t y = 0; y != ysize; ++y)
