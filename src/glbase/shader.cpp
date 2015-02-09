@@ -42,8 +42,8 @@ bool Protean3D::GL::Shader::compile(GLuint shader_id, std::string const& shader_
     if (infolog_size > 0){
       std::vector<char> shader_error(infolog_size + 1);
       glGetShaderInfoLog(shader_id, infolog_size, NULL, &shader_error[0]);
-      std::string msg(shader_error.begin(),shader_error.end());
-      std::cerr << __FUNCTION__ << ": " << msg << std::endl;
+      last_error_info_ = std::string(shader_error.begin(),shader_error.end());
+      std::cerr << __FUNCTION__ << ": " << last_error_info_ << std::endl;
     }
   }
   return (GL_TRUE == result) ? true : false;
@@ -71,8 +71,8 @@ bool Protean3D::GL::Shader::link(GLuint vertex_shader_id, GLuint fragment_shader
     if (infolog_size > 0){
       std::vector<char> program_error(infolog_size + 1);
       glGetProgramInfoLog(program_id_, infolog_size, NULL, &program_error[0]);
-      std::string msg(program_error.begin(), program_error.end());
-      std::cerr << __FUNCTION__ << ": " << msg << std::endl;
+      last_error_info_ = std::string(program_error.begin(), program_error.end());
+      std::cerr << __FUNCTION__ << ": " << last_error_info_ << std::endl;
     }
   }
   return (result == GL_TRUE) ? true : false;

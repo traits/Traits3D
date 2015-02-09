@@ -49,6 +49,9 @@ namespace Protean3D
       bool link(GLuint vertex_shader_id, GLuint fragment_shader_id);
       bool inUse() const;
       GLuint program_id_;
+
+      std::string last_error_info_;;
+
     };
   } // ns
 } // ns

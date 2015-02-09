@@ -26,6 +26,8 @@ Protean3D::GL::AxisObject::AxisObject()
 
 void Protean3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
 {
+  if (!shader_.initialized())
+      return;
   //todo 
   updateData();
   shader_.bindAttribute(*vbo_, GL::ShaderCode::Vertex::v_coordinates);
