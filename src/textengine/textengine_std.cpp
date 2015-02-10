@@ -3,7 +3,6 @@
 #define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
 #include "protean3d/textengine/stb_truetype.h"
 
-#include "protean3d/helper.h"
 #include "protean3d/fonts/stdfonts.h"
 #include "protean3d/glbase/vao.h"
 #include "protean3d/glbase/vbo.h"
@@ -56,17 +55,17 @@ Protean3D::StandardTextEngine::StandardTextEngine()
   "}"
   )
 {
-  cdata_ = Protean3D::make_unique<Protean3D::StandardTextEngine::StbHider>();
-  tex_atlas_ = Protean3D::make_unique<Protean3D::StandardTextEngine::GLHider>();
+  cdata_ = std::make_unique<Protean3D::StandardTextEngine::StbHider>();
+  tex_atlas_ = std::make_unique<Protean3D::StandardTextEngine::GLHider>();
 }
 
 bool Protean3D::StandardTextEngine::initializeGL()
 {
-  shader_ = Protean3D::make_unique<GL::Shader>();
+  shader_ = std::make_unique<GL::Shader>();
   if (!shader_->create(VertexCode_, FragmentCode_))
     return false;
-  vao_ = Protean3D::make_unique<GL::VAO>();
-  vbo_ = Protean3D::make_unique<GL::VBO>(vao_.get());
+  vao_ = std::make_unique<GL::VAO>();
+  vbo_ = std::make_unique<GL::VBO>(vao_.get());
 
   const size_t glyph_cnt = 96;
   const float font_height = 24.0f;

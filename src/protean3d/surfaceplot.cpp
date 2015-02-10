@@ -39,6 +39,6 @@ bool Protean3D::SurfacePlot::initializeGL()
 {
   if (!Plot3D::initializeGL())
     return false;
-  data_object_p = Protean3D::make_unique<GL::DataObject>();
+  data_object_p = std::make_unique<GL::DataObject>();
   return true;
 }

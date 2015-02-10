@@ -9,7 +9,7 @@ Protean3D::GL::AxisObject::AxisObject()
 {
   shader_.create(GL::ShaderCode::Vertex::Line, GL::ShaderCode::Fragment::Simple);
 
-  vbo_ = Protean3D::make_unique<VBO>(&vao_p);
+  vbo_ = std::make_unique<VBO>(&vao_p);
   te_ = std::make_shared<StandardTextEngine>();
   te_->initializeGL();
 }
