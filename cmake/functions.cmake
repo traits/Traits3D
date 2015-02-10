@@ -36,10 +36,9 @@ endfunction()
 
 function(protean3d_example_creator subdirlist linklibrarylist ideproperty)
   foreach(subdir ${subdirlist})
-    file(GLOB  ${subdir}_SOURCES ${subdir}/*.c*)
-    file(GLOB  ${subdir}_HEADERS ${subdir}/*.h)
+    file(GLOB  ${subdir}_FILES ${subdir}/*)
 
-    add_executable(${subdir}  ${${subdir}_SOURCES} ${${subdir}_HEADERS})
+    add_executable(${subdir}  ${${subdir}_FILES})
     set_property(TARGET ${subdir} PROPERTY FOLDER ${ideproperty})
     target_link_libraries(${subdir} ${linklibrarylist})
     set_target_properties(${subdir} PROPERTIES WIN32_EXECUTABLE false)
