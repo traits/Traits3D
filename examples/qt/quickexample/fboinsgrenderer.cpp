@@ -39,8 +39,9 @@
 ****************************************************************************/
 
 #include "fboinsgrenderer.h"
-#include "logorenderer.h"
+#include "heightmap.h"
 
+#include <QThread>
 #include <QtGui/QOpenGLFramebufferObject>
 
 #include <QtQuick/QQuickWindow>
@@ -51,22 +52,26 @@ class LogoInFboRenderer : public QQuickFramebufferObject::Renderer
 public:
     LogoInFboRenderer()
     {
-        logo.initialize();
+        hm.initializeGL();
+        hm.loadData();
+        hm.setRotation(30, 0, 45);
+        hm.setBackgroundColor(Protean3D::Color(0.7f,0.7f,0.7f,1));
     }
 
     void render() {
-        logo.render();
+        hm.draw();
+        QThread::msleep(50);
         update();
     }
 
     QOpenGLFramebufferObject *createFramebufferObject(const QSize &size) {
         QOpenGLFramebufferObjectFormat format;
         format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
-        format.setSamples(4);
+        format.setSamples(1);
         return new QOpenGLFramebufferObject(size, format);
     }
 
-    LogoRenderer logo;
+    HeightMap hm;
 };
 
 QQuickFramebufferObject::Renderer *FboInSGRenderer::createRenderer() const

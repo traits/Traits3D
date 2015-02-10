@@ -43,7 +43,7 @@
 
 #include <QtQuick/QQuickFramebufferObject>
 
-class LogoRenderer;
+class HeightMap;
 
 class FboInSGRenderer : public QQuickFramebufferObject
 {

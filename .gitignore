@@ -1,4 +1,5 @@
 /___coordinates
 /examples/glfw/heightmap/surface_deformer_ps.glsl
 /examples/glfw/heightmap/surface_deformer_vs.glsl
-/misc/splot.pro.user
+/examples/qt/simpleplot/splot.pro.user
+/examples/qt/quickexample/quickexample.pro.user
