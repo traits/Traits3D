@@ -83,6 +83,7 @@ Item {
             Rotation { id: rotation; axis.x: 0; axis.z: 0; axis.y: 1; angle: 0; origin.x: renderer.width / 2; origin.y: renderer.height / 2; },
             Translate { id: txOut; x: -renderer.width / 2; y: -renderer.height / 2 },
             Scale { id: scale; },
+            Scale { origin.x: 0; origin.y: 0; yScale: -1},
             Translate { id: txIn; x: renderer.width / 2; y: renderer.height / 2 }
         ]
     }

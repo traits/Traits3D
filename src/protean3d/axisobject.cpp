@@ -48,7 +48,7 @@ void Protean3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 con
     // opposite to tic orientation
     TripleF pos = GL::World2ViewPort(majors_[i] - majorticlength_ * orientation_, mv_matrix, proj_matrix, GL::viewPort());
     majorpositions_2d[i] = TextEngine::Position(TupleF(pos.x, pos.y), number_anchor_);
-    colors[i] = Color(0.5, 0.5, 0.5, 1);
+    colors[i] = Color(0.0, 0.3, 0.0, 1);
   }
   if (!colors.empty()) //todo test code only
     colors[colors.size()/2] = Color(0.0, 0.0, 0.7, 1);
