@@ -2,8 +2,8 @@ TEMPLATE = subdirs
 CONFIG += ordered
 SUBDIRS = \
   src \
-  examples/qt/simpleplot \
+#  examples/qt/simpleplot
   examples/qt/quickexample
 
-simpleplot.depends = src
+#simpleplot.depends = src
 quickexample.depends = src

@@ -6,8 +6,8 @@ Protean3D is a successor of my 3D function plotting library [QwtPlot3D](http://q
 It has been rewritten using recent C++ and OpenGL features.
 
 Operating Systems:
-* Windows
-* Linux
-* Android
+  * Windows
+  * Linux
+  * Android
     
 [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
