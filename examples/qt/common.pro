@@ -8,6 +8,7 @@ MOBILITY =
 
 INCLUDEPATH += \
     ../../../src/3rdparty \
+    ../../../src/base/include \
     ../../../src/glbase/include \
     ../../../src/protean3d/include \
     ../../../src/textengine/include \

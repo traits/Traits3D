@@ -23,6 +23,9 @@ endif()
 # glm and glloadgen files
 include_directories(3rdparty)
 
+# types
+include_directories(base/include)
+
 # gl buffer/shader support classes
 include_directories(glbase/include)
 add_subdirectory(glbase)

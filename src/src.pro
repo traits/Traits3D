@@ -19,12 +19,11 @@ LIBS += -lGLESv3
 
 INCLUDEPATH += \
     3rdparty \
+    base/include \
     glbase/include \
     protean3d/include \
     textengine/include \
-    textengine/fontlib\include \
-    _common
-
+    textengine/fontlib\include 
 
 SOURCES -= 3rdparty/glloadgen/GL_3_3/gl_core_3_3.c \
            3rdparty/glloadgen/GL_4_2/gl_core_4_2.c \
