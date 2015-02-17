@@ -17,7 +17,7 @@ Protean3D::GL::DataObject::DataObject()
 bool Protean3D::GL::DataObject::initShader()
 {
   GL::Shader s;
-  
+
   if (!s.create(GL::ShaderCode::Vertex::Line, GL::ShaderCode::Fragment::Simple))
     return false;
 
@@ -35,7 +35,7 @@ bool Protean3D::GL::DataObject::initShader()
 * the specified program object
 */
 bool Protean3D::GL::DataObject::addPositionData(std::vector<TripleF> const& data,
-  size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/) 
+    size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
   if (!addPositionDataCommon(xsize, ysize, data, drawtype))
     return false;
@@ -45,7 +45,7 @@ bool Protean3D::GL::DataObject::addPositionData(std::vector<TripleF> const& data
 }
 
 bool Protean3D::GL::DataObject::addPositionData(TripleVector const& data,
-  size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/)
+    size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
   double excess;
   std::vector<TripleF> fdata = Protean3D::GL::scale(excess, data);
@@ -88,7 +88,7 @@ bool Protean3D::GL::DataObject::addColor(ColorVector const& data)
 {
   if (!vbos_[VBOindex::DataColor]->setData(data))
     return false;
-  
+
   colors_ = data;
   return shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColor], GL::ShaderCode::Vertex::v_in_color);
 }
@@ -107,12 +107,12 @@ void Protean3D::GL::DataObject::draw(glm::mat4 const& proj_matrix, glm::mat4 con
   shader_[ShaderIndex::TriangleStrip].setModelViewMatrix(mv_matrix);
   ibos_[IBOindex::Polygons]->draw(GL_STATIC_DRAW);
 
-  // mesh  
+  // mesh
   shader_[ShaderIndex::Lines].use();
   //shader_p[0].use();
   shader_[ShaderIndex::Lines].setModelViewMatrix(mv_matrix);
-  
-  //todo [educated] hack 
+
+  //todo [educated] hack
   glm::mat4 ttt = proj_matrix;
   ttt[2][2] += 0.0f;
   //ttt[2][2] += 5E-5f;
@@ -147,7 +147,7 @@ void Protean3D::GL::DataObject::calculateBox(std::vector<TripleF> const& data)
 {
   if (data.empty())
     return;
-  TripleVector ddata(data.size()); 
+  TripleVector ddata(data.size());
   std::copy(data.begin(), data.end(), ddata.begin());
 
   hull_ = Protean3D::calculateBox(ddata);

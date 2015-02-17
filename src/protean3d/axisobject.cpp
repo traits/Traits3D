@@ -20,15 +20,15 @@ Protean3D::GL::AxisObject::AxisObject()
 //
 //  shader_.bindAttribute(*vbo_, GL::ShaderCode::Vertex::v_coordinates);
 //  shader_.setUniformVec4(Color(0.0f, 0.5f, 0.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);
-// 
+//
 //  return true;
 //}
 
 void Protean3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
 {
   if (!shader_.initialized())
-      return;
-  //todo 
+    return;
+  //todo
   updateData();
   shader_.bindAttribute(*vbo_, GL::ShaderCode::Vertex::v_coordinates);
   shader_.setUniformVec4(Color(0.0f, 0.5f, 0.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);
@@ -52,15 +52,15 @@ void Protean3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 con
   }
   if (!colors.empty()) //todo test code only
     colors[colors.size()/2] = Color(0.0, 0.0, 0.7, 1);
-  
+
   if (majors_changed_)
     te_->setDoubleStrings(majorvalues_);
   te_->drawText(majorpositions_2d, colors);
 }
 
 bool Protean3D::GL::AxisObject::setValues(
-  Protean3D::Triple const& begin, 
-  Protean3D::Triple const& end, 
+  Protean3D::Triple const& begin,
+  Protean3D::Triple const& end,
   std::vector<Triple> const& majors, std::vector<Triple> const& minors,
   std::vector<double> const& major_values)
 {
@@ -69,9 +69,9 @@ bool Protean3D::GL::AxisObject::setValues(
 
   // take some burden from the text engine, if suitable
   majors_changed_ = majorvalues_ != major_values;
-  if (majors_changed_) 
+  if (majors_changed_)
     majorvalues_ = major_values;
-  
+
   std::vector<Triple> tmp(2);
   tmp[0] = begin;
   tmp[1] = end;

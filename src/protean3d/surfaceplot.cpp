@@ -5,7 +5,7 @@
 * the specified program object
 */
 bool Protean3D::SurfacePlot::addPositionData(std::vector<TripleF> const& data,
-  size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/)
+    size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
   if (!data_object_p->addPositionData(data, xsize, ysize, drawtype))
     return false;
@@ -31,7 +31,7 @@ bool Protean3D::SurfacePlot::updatePositionData(std::vector<TripleF> const& data
     return false;
 
   coordinates_p->init(data_object_p->hull());
-  
+
   return true;
 }
 

@@ -10,56 +10,58 @@ namespace Protean3D
   {
     class DataObject : public GL::Object
     {
-    public:
-      DataObject();
+      public:
+        DataObject();
 
-      void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix) override;
+        void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix) override;
 
-      bool addPositionData(TripleVector const& data,
-        size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
+        bool addPositionData(TripleVector const& data,
+                             size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
 
-      bool updatePositionData(TripleVector const& data);
+        bool updatePositionData(TripleVector const& data);
 
-      bool addPositionData(std::vector<TripleF> const& data,
-        size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
+        bool addPositionData(std::vector<TripleF> const& data,
+                             size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
 
-      bool addPositionDataCommon(size_t xsize, size_t ysize, std::vector<TripleF> const &data, GLenum drawtype);
+        bool addPositionDataCommon(size_t xsize, size_t ysize, std::vector<TripleF> const& data, GLenum drawtype);
 
-      bool updatePositionData(std::vector<TripleF> const& data);
-      bool addColor(ColorVector const& data);
-      bool addMeshColor(Color const& data);
+        bool updatePositionData(std::vector<TripleF> const& data);
+        bool addColor(ColorVector const& data);
+        bool addMeshColor(Color const& data);
 
-      const Protean3D::Box& hull() const { return hull_; }
+        const Protean3D::Box& hull() const
+        {
+          return hull_;
+        }
 
-    private:
-      bool initShader();
-      Protean3D::Box hull_;
-      ColorVector colors_;
+      private:
+        bool initShader();
+        Protean3D::Box hull_;
+        ColorVector colors_;
 
-      enum class VBOindex
-      {
-        Position,
-        DataColor
-      };
-    
-      enum class IBOindex
-      {
-        Mesh,
-        Polygons
-      };
-      
-      enum class ShaderIndex
-      {
-        Lines,
-        TriangleStrip
-      };
+        enum class VBOindex
+        {
+          Position,
+          DataColor
+        };
 
-      std::map<ShaderIndex, Shader> shader_;
-      std::map<VBOindex, std::unique_ptr<VBO>> vbos_;
-      std::map<IBOindex, std::unique_ptr<IBO>> ibos_;
+        enum class IBOindex
+        {
+          Mesh,
+          Polygons
+        };
 
-      void calculateBox(std::vector<TripleF> const& data);
+        enum class ShaderIndex
+        {
+          Lines,
+          TriangleStrip
+        };
+
+        std::map<ShaderIndex, Shader> shader_;
+        std::map<VBOindex, std::unique_ptr<VBO>> vbos_;
+        std::map<IBOindex, std::unique_ptr<IBO>> ibos_;
+
+        void calculateBox(std::vector<TripleF> const& data);
     };
-
   } // ns
 } // ns

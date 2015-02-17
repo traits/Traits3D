@@ -22,22 +22,20 @@ Protean3D::Box Protean3D::calculateBox(TripleVector const& data)
   return hull;
 }
 
-using namespace Protean3D;
-
 #ifndef PROTEAN3D_NOT_FOR_DOXYGEN
 
 namespace {
-  // convex hull
+// convex hull
 
-  typedef double coordinate_type;
+typedef double coordinate_type;
 
-  int ccw(coordinate_type **P, int i, int j, int k) {
-    coordinate_type	a = P[i][0] - P[j][0],
-      b = P[i][1] - P[j][1],
-      c = P[k][0] - P[j][0],
-      d = P[k][1] - P[j][1];
-    return a*d - b*c <= 0;	   /* true if points i, j, k counterclockwise */
-  }
+int ccw(coordinate_type **P, int i, int j, int k) {
+  coordinate_type a = P[i][0] - P[j][0],
+                  b = P[i][1] - P[j][1],
+                  c = P[k][0] - P[j][0],
+                  d = P[k][1] - P[j][1];
+  return a*d - b*c <= 0;     /* true if points i, j, k counterclockwise */
+}
 
 
 #define CMPM(c,A,B) \
@@ -45,35 +43,39 @@ namespace {
   if (v>0) return 1;\
   if (v<0) return -1;
 
-  int cmpl(const void *a, const void *b) {
-    double v;
-    CMPM(0, a, b);
-    CMPM(1, b, a);
-    return 0;
+int cmpl(const void *a, const void *b) {
+  double v;
+  CMPM(0, a, b);
+  CMPM(1, b, a);
+  return 0;
+}
+
+int cmph(const void *a, const void *b) {
+  return cmpl(b, a);
+}
+
+
+int make_chain(coordinate_type** V, int n, int(*cmp)(const void*, const void*)) {
+  int i, j, s = 1;
+  coordinate_type* t;
+
+  qsort(V, n, sizeof(coordinate_type*), cmp);
+  for (i = 2; i < n; i++) {
+    for (j = s; j >= 1 && ccw(V, i, j, j - 1); j--) {}
+    s = j + 1;
+    t = V[s];
+    V[s] = V[i];
+    V[i] = t;
   }
+  return s;
+}
 
-  int cmph(const void *a, const void *b) { return cmpl(b, a); }
-
-
-  int make_chain(coordinate_type** V, int n, int(*cmp)(const void*, const void*)) {
-    int i, j, s = 1;
-    coordinate_type* t;
-
-    qsort(V, n, sizeof(coordinate_type*), cmp);
-    for (i = 2; i < n; i++) {
-      for (j = s; j >= 1 && ccw(V, i, j, j - 1); j--){}
-      s = j + 1;
-      t = V[s]; V[s] = V[i]; V[i] = t;
-    }
-    return s;
-  }
-
-  int _ch2d(coordinate_type **P, int n)  {
-    int u = make_chain(P, n, cmpl);		/* make lower hull */
-    if (!n) return 0;
-    P[n] = P[0];
-    return u + make_chain(P + u, n - u + 1, cmph);	/* make upper hull */
-  }
+int _ch2d(coordinate_type **P, int n)  {
+  int u = make_chain(P, n, cmpl);   /* make lower hull */
+  if (!n) return 0;
+  P[n] = P[0];
+  return u + make_chain(P + u, n - u + 1, cmph);  /* make upper hull */
+}
 
 
 } // ns anon

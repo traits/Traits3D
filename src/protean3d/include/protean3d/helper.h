@@ -9,32 +9,31 @@
 
 namespace Protean3D
 {
+  inline bool equal(double a, double b)
+  {
+    if (!b)
+      return (std::abs(a) <= std::numeric_limits<double>::min());
 
-inline bool equal(double a, double b)
-{
-  if (!b)
-    return (std::abs(a) <= std::numeric_limits<double>::min());
+    return (std::abs(a - b) <=
+            std::min(std::abs(a), std::abs(b)) * std::numeric_limits<double>::epsilon());
+  }
 
-  return (std::abs(a - b) <= 
-    std::min(std::abs(a), std::abs(b)) * std::numeric_limits<double>::epsilon());
-}
+  inline bool isZero(double x)
+  {
+    return equal(x, 0.0);
+  }
 
-inline bool isZero(double x)
-{
-  return equal(x, 0.0);
-}
+  inline bool equal(Triple const& a, Triple const& b)
+  {
+    return equal(a.x, b.x)
+           && equal(a.y, b.y)
+           && equal(a.z, b.z);
+  }
 
-inline bool equal(Triple const& a, Triple const& b)
-{
-  return equal(a.x, b.x)
-    && equal(a.y, b.y)
-    && equal(a.z, b.z);
-}
-
-inline int round(double d)
-{
-  return (d > 0) ? int(d + 0.5) : int(d - 0.5);
-}
+  inline int round(double d)
+  {
+    return (d > 0) ? int(d + 0.5) : int(d - 0.5);
+  }
 
 //// not part of C++11 (missing in some GCC versions, will be added to C++14)
 //template<typename T, typename ...Args>
@@ -43,77 +42,75 @@ inline int round(double d)
 //    return std::unique_ptr<T>( new T( std::forward<Args>(args)... ) );
 //}
 
-template <typename TARGET, typename SOURCE>
-inline std::shared_ptr<TARGET> safe_down_cast(std::shared_ptr<SOURCE> source)
-{
-  return std::dynamic_pointer_cast<TARGET>(source);
-}
+  template <typename TARGET, typename SOURCE>
+  inline std::shared_ptr<TARGET> safe_down_cast(std::shared_ptr<SOURCE> source)
+  {
+    return std::dynamic_pointer_cast<TARGET>(source);
+  }
 
-//! calculates enclosing AABB 
-Box calculateBox(TripleVector const& data);
+  //! calculates enclosing AABB
+  Box calculateBox(TripleVector const& data);
 
 #ifndef PROTEAN3D_NOT_FOR_DOXYGEN
 
-inline Triple normalizedCross(Triple const& u, Triple const& v)
-{
-	Triple n;
+  inline Triple normalizedCross(Triple const& u, Triple const& v)
+  {
+    Triple n;
 
-  /* compute the cross product (u x v for right-handed [ccw]) */
-  n[0] = u[1] * v[2] - u[2] * v[1];
-  n[1] = u[2] * v[0] - u[0] * v[2];
-  n[2] = u[0] * v[1] - u[1] * v[0];
+    /* compute the cross product (u x v for right-handed [ccw]) */
+    n[0] = u[1] * v[2] - u[2] * v[1];
+    n[1] = u[2] * v[0] - u[0] * v[2];
+    n[2] = u[0] * v[1] - u[1] * v[0];
 
-  /* normalize */
-  double l = glm::length(n);
-  if (l)
-	{
-		n /= l;
-	}
-	else
-	{
-		n = Triple(0,0,0);
-	}
-	
-	return n;
-}
+    /* normalize */
+    double l = glm::length(n);
+    if (l)
+    {
+      n /= l;
+    }
+    else
+    {
+      n = Triple(0,0,0);
+    }
 
-inline Triple normalizedCross(Triple const& center, 
-                              Triple const& v0, 
-                              Triple const& v1)
-{
-  return normalizedCross(v0-center, v1-center);
-}
+    return n;
+  }
 
-inline double dotProduct(Triple const& u, Triple const& v)
-{
-	return u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
-}
+  inline Triple normalizedCross(Triple const& center,
+                                Triple const& v0,
+                                Triple const& v1)
+  {
+    return normalizedCross(v0-center, v1-center);
+  }
 
-//! rad to degree
-inline double rad2deg(double rad)
-{
-  return 180*rad/Protean3D::PI;
-}
-  
-//! Angle of line ccw to positive x axis in degree's
-inline double angle(double sx, double sy, double ex, double ey)
-{
-  const double dx = ex - sx;
-  const double dy = ey - sy;
+  inline double dotProduct(Triple const& u, Triple const& v)
+  {
+    return u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
+  }
 
-  const double theta = rad2deg(atan2(dy, dx));
+  //! rad to degree
+  inline double rad2deg(double rad)
+  {
+    return 180*rad/Protean3D::PI;
+  }
 
-  return theta < 0 ? theta + 360 : theta;
-}
+  //! Angle of line ccw to positive x axis in degree's
+  inline double angle(double sx, double sy, double ex, double ey)
+  {
+    const double dx = ex - sx;
+    const double dy = ey - sy;
 
-void convexhull2d( std::vector<size_t>& idx, const std::vector<Tuple>& src );
+    const double theta = rad2deg(atan2(dy, dx));
 
-//! Returns the sum over the sizes of the single cells
-size_t tesselationSize(Protean3D::CellVector const& t);
+    return theta < 0 ? theta + 360 : theta;
+  }
 
+  void convexhull2d( std::vector<size_t>& idx, const std::vector<Tuple>& src );
+
+  //! Returns the sum over the sizes of the single cells
+  size_t tesselationSize(Protean3D::CellVector const& t);
 
 #endif // PROTEAN3D_NOT_FOR_DOXYGEN 
-
 } //ns
 
 

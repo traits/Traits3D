@@ -11,7 +11,6 @@ Protean3D::Plot3D::Plot3D()
 
 Protean3D::Plot3D::~Plot3D()
 {
-
 }
 
 void Protean3D::Plot3D::draw()
@@ -38,9 +37,9 @@ void Protean3D::Plot3D::draw()
     * glm::rotate(modelview_matrix_p, glm::radians(zRotation()), glm::vec3(0.0f, 0.0f, 1.0f))
     * glm::scale(modelview_matrix_p, glm::vec3(zoom() * xScale(), zoom() * yScale(), zoom() * zScale()))
     * glm::translate(modelview_matrix_p, glm::vec3(
-        xShift() - static_cast<float>(center.x),
-        yShift() - static_cast<float>(center.y),
-        zShift() - static_cast<float>(center.z)));
+                       xShift() - static_cast<float>(center.x),
+                       yShift() - static_cast<float>(center.y),
+                       zShift() - static_cast<float>(center.z)));
 
   //setOrtho(false);
   if (beg != end)
@@ -59,7 +58,7 @@ void Protean3D::Plot3D::draw()
   }
 
   projection_matrix_p = glm::translate(projection_matrix_p,
-    glm::vec3(xViewportShift() * 2 * radius, yViewportShift() * 2 * radius, -7 * radius));
+                                       glm::vec3(xViewportShift() * 2 * radius, yViewportShift() * 2 * radius, -7 * radius));
 
   coordinates_p->draw(projection_matrix_p, modelview_matrix_p);
   data_object_p->draw(projection_matrix_p, modelview_matrix_p);
@@ -69,8 +68,8 @@ void Protean3D::Plot3D::draw()
 
   std::vector<TextEngine::Position> positions(1);
   positions[0] = TextEngine::Position(
-    TupleF((vp[2] - vp[0]) / 2, vp[3] - vp[1]-10),
-    TextEngine::Anchor::TopCenter);
+                   TupleF((vp[2] - vp[0]) / 2, vp[3] - vp[1]-10),
+                   TextEngine::Anchor::TopCenter);
   std::vector<Color> colors(1, Color(0.9f, 0, 0.3f, 0.0f));
   text_engine_p->drawText(positions, colors);
 }
@@ -83,11 +82,11 @@ void Protean3D::Plot3D::setBackgroundColor(Color const& val)
 bool Protean3D::Plot3D::initializeGL()
 {
   if (
-       !ExtGLWidget::initializeGL()
-       || !text_engine_p->initializeGL()
-       || !coordinates_p->initializeGL()
+    !ExtGLWidget::initializeGL()
+    || !text_engine_p->initializeGL()
+    || !coordinates_p->initializeGL()
 
-    )
+  )
   {
     gl_is_initialized_p = false;
     return false;
