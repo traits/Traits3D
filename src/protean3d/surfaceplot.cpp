@@ -38,7 +38,11 @@ bool Protean3D::SurfacePlot::updatePositionData(std::vector<glm::vec3> const& da
 bool Protean3D::SurfacePlot::initializeGL()
 {
   if (!Plot3D::initializeGL())
+  {
+    gl_is_initialized_p = false;
     return false;
+  }
   data_object_p = std::make_unique<GL::DataObject>();
+  gl_is_initialized_p = true;
   return true;
 }

@@ -45,7 +45,6 @@ const float Protean3D::ExtGLWidget::eps_ = std::numeric_limits<float>::epsilon()
 */
 ExtGLWidget::ExtGLWidget()
 {  
-  initializedGL_ = false;	
   xRot_ = yRot_ = zRot_ = 0.0f;		// default object rotation
   
 	xShift_ = yShift_ = zShift_ = xVPShift_ = yVPShift_ = 0.0f;
@@ -169,7 +168,7 @@ bool ExtGLWidget::setOrtho( bool val )
 */
 bool ExtGLWidget::initializeGL()
 {
-  if (initializedGL_)
+  if (gl_is_initialized_p)
     return true;
 
   //if (!init_glloader())
@@ -207,7 +206,7 @@ bool ExtGLWidget::initializeGL()
  // setLightComponent(GL_DIFFUSE, 1.0);
  // setLightComponent(GL_SPECULAR, 1.0);
 
-  initializedGL_ = true;	
+  gl_is_initialized_p = true;	
   return true;
 }
 

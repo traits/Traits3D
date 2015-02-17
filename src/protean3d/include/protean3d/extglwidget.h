@@ -16,6 +16,7 @@ public:
   ExtGLWidget ();
   virtual ~ExtGLWidget() {}
 	
+  bool isInitialized() const { return gl_is_initialized_p; }
   virtual bool initializeGL();
   virtual void draw() = 0;
   virtual void updateData() = 0;
@@ -82,6 +83,7 @@ public:
 	void setLightShift( float xVal, float yVal, float zVal, unsigned int idx = 0 );    																														
 
 protected:
+  bool gl_is_initialized_p = false;
   void applyLights();
 
 private:
@@ -105,7 +107,6 @@ private:
   bool lighting_enabled_;
   void applyLight(unsigned idx);
 
-  bool initializedGL_;
   static const float eps_;
 };
 

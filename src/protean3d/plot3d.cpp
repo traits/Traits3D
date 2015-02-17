@@ -16,6 +16,9 @@ Protean3D::Plot3D::~Plot3D()
 
 void Protean3D::Plot3D::draw()
 {
+  if (!isInitialized())
+    return;
+
   this->updateData();
 
   glClearColor(bgcolor_.r, bgcolor_.g, bgcolor_.b, bgcolor_.a);
@@ -79,16 +82,18 @@ void Protean3D::Plot3D::setBackgroundColor(Color const& val)
 
 bool Protean3D::Plot3D::initializeGL()
 {
-  if (!ExtGLWidget::initializeGL())
-    return false;
-  
-  if (!text_engine_p->initializeGL())
-    return false;
+  if (
+       !ExtGLWidget::initializeGL()
+       || !text_engine_p->initializeGL()
+       || !coordinates_p->initializeGL()
 
-  if (!coordinates_p->initializeGL())
+    )
+  {
+    gl_is_initialized_p = false;
     return false;
-  
+  }
   setTitle("Protean3D Plot");
+  gl_is_initialized_p = true;
   return true;
 }
 
