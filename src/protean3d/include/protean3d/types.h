@@ -10,7 +10,7 @@
 #include "glm/vec4.hpp"
 #include "glm/geometric.hpp"
 
-#include "global.h"
+#include "protean3d/global.h"
 //#include "protean3d/gl/helper.h"
 
 // Common namespace for all Protean3D classes
@@ -94,10 +94,10 @@ enum SIDE
   BACK   = 1 << 5
 };
 
-typedef glm::dvec2 Tuple;
-typedef glm::vec2 TupleF;
-typedef glm::dvec3 Triple;
-typedef glm::vec3 TripleF;
+using Tuple = glm::dvec2 ;
+using TupleF = glm::vec2;
+using Triple = glm::dvec3;
+using TripleF = glm::vec3;
 
 //! Box spanned by 2 Triples
 /**
@@ -171,87 +171,24 @@ struct PROTEAN3D_EXPORT FreeVector
 };
 
 //! A free vector field in R^3
-typedef std::vector<FreeVector> FreeVectorField;
+using FreeVectorField = std::vector<FreeVector>;
 
 //! A point field in R^3
-typedef std::vector<Triple> TripleVector;
+using TripleVector = std::vector<Triple>;
 //! Holds indices in a TripleVector interpreted as an oriented (first->second) Edge
-typedef std::pair<unsigned,unsigned> Edge;
+using Edge = std::pair<size_t,size_t>;
 //! Vector of Edges for a graph or cell complex. You need a TripleVector as base for the node data
-typedef std::vector<Edge> EdgeVector;
+using EdgeVector = std::vector<Edge>;
 //! Holds indices in a TripleVector interpreted as counterclockwise node numbering for a convex polygon
-typedef std::vector<unsigned> Cell;
+using Cell = std::vector<size_t>;
 //! Vector of convex polygons. You need a TripleVector as base for the node data
-typedef std::vector<Cell> CellVector;
-//! Returns the sum over the sizes of the single cells
-size_t tesselationSize(Protean3D::CellVector const& t);
-//! Rectangular hull for point cloud
-PROTEAN3D_EXPORT Protean3D::Box hull(TripleVector const& data);
+using CellVector = std::vector<Cell>;
 
 //! Red-Green-Blue-Alpha value
-typedef glm::vec4 Color;
+using Color = glm::vec4;
 
 //! A Color field
-typedef std::vector<Color> ColorVector;
-
-#ifndef PROTEAN3D_NOT_FOR_DOXYGEN
-
-inline Triple normalizedCross(Triple const& u, Triple const& v)
-{
-	Triple n;
-
-  /* compute the cross product (u x v for right-handed [ccw]) */
-  n[0] = u[1] * v[2] - u[2] * v[1];
-  n[1] = u[2] * v[0] - u[0] * v[2];
-  n[2] = u[0] * v[1] - u[1] * v[0];
-
-  /* normalize */
-  double l = glm::length(n);
-  if (l)
-	{
-		n /= l;
-	}
-	else
-	{
-		n = Triple(0,0,0);
-	}
-	
-	return n;
-}
-
-inline Triple normalizedCross(Triple const& center, 
-                              Triple const& v0, 
-                              Triple const& v1)
-{
-  return normalizedCross(v0-center, v1-center);
-}
-
-inline double dotProduct(Triple const& u, Triple const& v)
-{
-	return u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
-}
-
-//! rad to degree
-inline double rad2deg(double rad)
-{
-  return 180*rad/Protean3D::PI;
-}
-  
-//! Angle of line ccw to positive x axis in degree's
-inline double angle(double sx, double sy, double ex, double ey)
-{
-  const double dx = ex - sx;
-  const double dy = ey - sy;
-
-  const double theta = rad2deg(atan2(dy, dx));
-
-  return theta < 0 ? theta + 360 : theta;
-}
-
-void convexhull2d( std::vector<size_t>& idx, const std::vector<Tuple>& src );
-
-#endif // PROTEAN3D_NOT_FOR_DOXYGEN 
-
+using ColorVector = std::vector<Color> ;
 } // ns
 
 

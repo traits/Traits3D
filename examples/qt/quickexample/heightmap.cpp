@@ -35,14 +35,14 @@ bool HeightMap::loadData()
   Protean3D::ColorVector colors(size);
   for (size_t i = 0; i != size; ++i)
   {
-    glm::vec4& elem = colors[i];
+    Protean3D::Color& elem = colors[i];
     elem.r = i / fsize;
     elem.g = i / fsize / 4;
     elem.b = 1 - i / fsize;
     elem.a = 1.0f;
   }
 
-  return addDataColor(colors) && addMeshColor(glm::vec4(0, 0, 0, 0));
+  return addDataColor(colors) && addMeshColor(Protean3D::Color(0, 0, 0, 0));
 }
 
 void HeightMap::updateData()

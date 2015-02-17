@@ -72,14 +72,14 @@ public:
     Protean3D::ColorVector colors(size);
     for (size_t i = 0; i != size; ++i)
     {
-      glm::vec4& elem = colors[i];
+      Protean3D::Color& elem = colors[i];
       elem.r = i / fsize;
       elem.g = i / fsize / 4;
       elem.b = 1 - i / fsize;
       elem.a = 1.0f;
     }
 
-    return addDataColor(colors) && addMeshColor(glm::vec4(0, 0, 0, 0));
+    return addDataColor(colors) && addMeshColor(Protean3D::Color(0, 0, 0, 0));
   }
 
   void updateData() override
@@ -91,7 +91,7 @@ public:
   }
 
 private:
-  std::vector<glm::vec3> data_;
+  std::vector<Protean3D::TripleF> data_;
   double getZ(double x, double y)
   {
     return std::max<float>(-1.0f, log((1-x)*(1-x) + 100 * (y - x*x)*(y - x*x)) / 8);

@@ -4,7 +4,7 @@
 /* Create VBO, IBO and VAO objects for the heightmap geometry and bind them to
 * the specified program object
 */
-bool Protean3D::SurfacePlot::addPositionData(std::vector<glm::vec3> const& data,
+bool Protean3D::SurfacePlot::addPositionData(std::vector<TripleF> const& data,
   size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
   if (!data_object_p->addPositionData(data, xsize, ysize, drawtype))
@@ -20,12 +20,12 @@ bool Protean3D::SurfacePlot::addDataColor(ColorVector const& val)
   return data_object_p->addColor(val);
 }
 
-bool Protean3D::SurfacePlot::addMeshColor(glm::vec4 const& val)
+bool Protean3D::SurfacePlot::addMeshColor(Color const& val)
 {
   return data_object_p->addMeshColor(val);
 }
 
-bool Protean3D::SurfacePlot::updatePositionData(std::vector<glm::vec3> const& data)
+bool Protean3D::SurfacePlot::updatePositionData(std::vector<TripleF> const& data)
 {
   if (!data_object_p->updatePositionData(data))
     return false;

@@ -28,7 +28,7 @@ Protean3D::ColorVector Protean3D::ColorTable::stdColor(size_t len)
   float fsize = static_cast<float>(len);
   for (size_t i = 0; i != len; ++i)
   {
-    glm::vec4& elem = colors[i];
+    Color& elem = colors[i];
     elem.r = i / fsize;
     elem.g = i / fsize / 4;
     elem.b = 1 - i / fsize;
@@ -38,18 +38,18 @@ Protean3D::ColorVector Protean3D::ColorTable::stdColor(size_t len)
   return colors;
 }
 
-Protean3D::ColorVector Protean3D::ColorTable::createColors(std::vector<glm::vec3> const& data, ColorVector const& color_field)
+Protean3D::ColorVector Protean3D::ColorTable::createColors(TripleVector const& data, ColorVector const& color_field)
 {
   ColorVector ret(data.size());
 
-  Box hull = calcHull(data);
+  Box hull = calculateBox(data);
 
   float zmin = static_cast<float>(hull.minVertex.z);
   float zmax = static_cast<float>(hull.maxVertex.z);
 
   for (size_t i = 0; i != data.size(); ++i)
   {
-    Color c = color(data[i].z, color_field, zmin, zmax);
+    Color c = color(static_cast<float>(data[i].z), color_field, zmin, zmax);
     ret[i] = c;
   }
   return ret;

@@ -4,7 +4,7 @@
 #include <limits>
 #include <vector>
 #include <algorithm>
-#include "types.h"
+#include "protean3d/types.h"
 
 
 namespace Protean3D
@@ -49,7 +49,70 @@ inline std::shared_ptr<TARGET> safe_down_cast(std::shared_ptr<SOURCE> source)
   return std::dynamic_pointer_cast<TARGET>(source);
 }
 
-Box calcHull(std::vector<glm::vec3> const& data);
+//! calculates enclosing AABB 
+Box calculateBox(TripleVector const& data);
+
+#ifndef PROTEAN3D_NOT_FOR_DOXYGEN
+
+inline Triple normalizedCross(Triple const& u, Triple const& v)
+{
+	Triple n;
+
+  /* compute the cross product (u x v for right-handed [ccw]) */
+  n[0] = u[1] * v[2] - u[2] * v[1];
+  n[1] = u[2] * v[0] - u[0] * v[2];
+  n[2] = u[0] * v[1] - u[1] * v[0];
+
+  /* normalize */
+  double l = glm::length(n);
+  if (l)
+	{
+		n /= l;
+	}
+	else
+	{
+		n = Triple(0,0,0);
+	}
+	
+	return n;
+}
+
+inline Triple normalizedCross(Triple const& center, 
+                              Triple const& v0, 
+                              Triple const& v1)
+{
+  return normalizedCross(v0-center, v1-center);
+}
+
+inline double dotProduct(Triple const& u, Triple const& v)
+{
+	return u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
+}
+
+//! rad to degree
+inline double rad2deg(double rad)
+{
+  return 180*rad/Protean3D::PI;
+}
+  
+//! Angle of line ccw to positive x axis in degree's
+inline double angle(double sx, double sy, double ex, double ey)
+{
+  const double dx = ex - sx;
+  const double dy = ey - sy;
+
+  const double theta = rad2deg(atan2(dy, dx));
+
+  return theta < 0 ? theta + 360 : theta;
+}
+
+void convexhull2d( std::vector<size_t>& idx, const std::vector<Tuple>& src );
+
+//! Returns the sum over the sizes of the single cells
+size_t tesselationSize(Protean3D::CellVector const& t);
+
+
+#endif // PROTEAN3D_NOT_FOR_DOXYGEN 
 
 } //ns
 

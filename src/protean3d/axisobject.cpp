@@ -19,7 +19,7 @@ Protean3D::GL::AxisObject::AxisObject()
 //  vbo_->create(axes_, GL_STATIC_DRAW); //todo (could be dynamic)
 //
 //  shader_.bindAttribute(*vbo_, GL::ShaderCode::Vertex::v_coordinates);
-//  shader_.setUniformVec4(glm::vec4(0.0f, 0.5f, 0.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);
+//  shader_.setUniformVec4(Color(0.0f, 0.5f, 0.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);
 // 
 //  return true;
 //}
@@ -31,7 +31,7 @@ void Protean3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 con
   //todo 
   updateData();
   shader_.bindAttribute(*vbo_, GL::ShaderCode::Vertex::v_coordinates);
-  shader_.setUniformVec4(glm::vec4(0.0f, 0.5f, 0.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);
+  shader_.setUniformVec4(Color(0.0f, 0.5f, 0.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);
   shader_.use();
   shader_.setProjectionMatrix(proj_matrix);
   shader_.setModelViewMatrix(mv_matrix);

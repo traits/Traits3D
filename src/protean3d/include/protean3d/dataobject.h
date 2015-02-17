@@ -15,10 +15,17 @@ namespace Protean3D
 
       void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix) override;
 
-      bool addPositionData(std::vector<glm::vec3> const& data,
+      bool addPositionData(TripleVector const& data,
         size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
 
-      bool updatePositionData(std::vector<glm::vec3> const& data);
+      bool updatePositionData(TripleVector const& data);
+
+      bool addPositionData(std::vector<TripleF> const& data,
+        size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
+
+      bool addPositionDataCommon(size_t xsize, size_t ysize, std::vector<TripleF> const &data, GLenum drawtype);
+
+      bool updatePositionData(std::vector<TripleF> const& data);
       bool addColor(ColorVector const& data);
       bool addMeshColor(Color const& data);
 
@@ -50,6 +57,8 @@ namespace Protean3D
       std::map<ShaderIndex, Shader> shader_;
       std::map<VBOindex, std::unique_ptr<VBO>> vbos_;
       std::map<IBOindex, std::unique_ptr<IBO>> ibos_;
+
+      void calculateBox(std::vector<TripleF> const& data);
     };
 
   } // ns

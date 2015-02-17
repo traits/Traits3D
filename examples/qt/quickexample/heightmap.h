@@ -11,7 +11,7 @@ public:
 
 private:
   std::vector<GLuint> map_line_indices;
-  std::vector<glm::vec3> map_vertices;
+  std::vector<Protean3D::TripleF> map_vertices;
 
   void init_map();
 
