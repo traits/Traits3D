@@ -27,6 +27,8 @@ public:
   explicit QtWidgetBase(std::shared_ptr<ExtGLWidget> plot, QWidget * parent = 0, Qt::WindowFlags f = 0);
   virtual ~QtWidgetBase();
 
+  void initializeGL() override;
+
   //! Embraces plot().updateData with makeCurrent() and updateGL() 
   void updateData();
 
@@ -92,7 +94,6 @@ public slots:
 
 protected:
   std::shared_ptr<ExtGLWidget> plot_p;
-  void initializeGL() override;
   void paintGL() override;
   void resizeGL( int w, int h ) override;
 

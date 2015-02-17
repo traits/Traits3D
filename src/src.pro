@@ -33,5 +33,5 @@ SOURCES -= 3rdparty/glloadgen/GL_3_3/gl_core_3_3.c \
 HEADERS -= 3rdparty/glloadgen/GL_3_3/gl_core_3_3.h \
            3rdparty/glloadgen/GL_4_2/gl_core_4_2.h
     
-CONFIG += mobility
+CONFIG += mobility debug
 MOBILITY = 

@@ -8,16 +8,17 @@
 #include <qapplication.h>
 #include "qtwidget.hh"
 #include "protean3d/surfaceplot.h"
+#include <QOpenGLContext>
 
 class Rosenbrock : public Protean3D::SurfacePlot
 {
 public:
- size_t xsize = 41;
- size_t ysize = 31;
- float xmin = -1.73f;
- float xmax = 1.5f;
- float ymin = -1.5f;
- float ymax = 1.5f;
+  size_t xsize = 41;
+  size_t ysize = 31;
+  float xmin = -1.73f;
+  float xmax = 1.5f;
+  float ymin = -1.5f;
+  float ymax = 1.5f;
 
   Rosenbrock()
   {
@@ -36,6 +37,12 @@ public:
     }
   }
 
+  bool initializeGL()
+  {
+    SurfacePlot::initializeGL();
+    return loadData();
+  }
+  
   bool loadData()
   {
     float dx = (xmax - xmin) / (xsize - 1);
@@ -99,11 +106,8 @@ int main(int argc, char **argv)
     Protean3D::QtWidget <Rosenbrock>* qtwidget 
       = new Protean3D::QtWidget <Rosenbrock>();
 
+    qtwidget->plot3d->setBackgroundColor(Protean3D::Color(0.95f));
     qtwidget->resize(800, 600);
     qtwidget->show();
-    //todo cannot call before show, because Qt doesn't initialize
-    // OpenGL up to this point
-    qtwidget->plot3d->loadData();
-    qtwidget->plot3d->setBackgroundColor(Protean3D::Color(0.95f));
     return a.exec();
 }

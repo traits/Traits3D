@@ -523,6 +523,7 @@ void QtWidgetBase::setOrtho( bool val )
 */
 void QtWidgetBase::initializeGL()
 {
+  QOpenGLWidget::initializeGL();
   plot_p->initializeGL();
 }
 
