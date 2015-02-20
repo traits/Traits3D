@@ -8,7 +8,7 @@ if(CMAKE_CONFIGURATION_TYPES)
      "Reset the configurations to what we need"
      FORCE)
  endif()
- 
+
 # http://www.volumesoffun.com/tag/cmake/
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -59,8 +59,6 @@ add_definitions(-DPROTEAN3D_GL_IS_${PROTEAN3D_GL_VARIANT})
 add_definitions(-DPROTEAN3D_GL_MAJOR=${PROTEAN3D_GL_MAJOR})
 add_definitions(-DPROTEAN3D_GL_MINOR=${PROTEAN3D_GL_MINOR})
 
-
-
 # Text Engine
 set(PROTEAN3D_TEXT "stb" CACHE STRING "Text Engine")
 set_property(CACHE PROTEAN3D_TEXT PROPERTY STRINGS "stb" "freetype" "Qt")
@@ -69,9 +67,6 @@ if ("${PROTEAN3D_TEXT}"  STREQUAL "stb")
 elseif ("${PROTEAN3D_TEXT}"  STREQUAL "freetype")
   add_definitions(-DTEXTENGINE_FREETYPE)
 endif()
-
-
-
 
 add_subdirectory(src)
 

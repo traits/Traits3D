@@ -35,4 +35,3 @@ list (APPEND MY_LINK_LIBRARIES protean3d ${OPENGL_LIBRARIES} Qt5::Widgets Qt5::Q
 protean3d_example_creator("${SUBDIRS}" "${MY_LINK_LIBRARIES}" "examples/qt")
 
 
-

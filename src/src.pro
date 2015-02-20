@@ -5,7 +5,7 @@ include(src.pri)
 QT       += core gui widgets
 
 #CONFIG += c++11
-QMAKE_CXXFLAGS += -std=c++1y
+QMAKE_CXXFLAGS += -std=c++1y -O0
 
 TARGET = protean3d
 TEMPLATE = lib
