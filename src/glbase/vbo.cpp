@@ -1,20 +1,20 @@
 #include <stdexcept>
-#include "protean3d/glbase/vao.h"
-#include "protean3d/glbase/vbo.h"
+#include "traits3d/glbase/vao.h"
+#include "traits3d/glbase/vbo.h"
 
-Protean3D::GL::VBO::VBO(VAO* vao) 
+Traits3D::GL::VBO::VBO(VAO* vao) 
   :vao_(vao)
 {
   if (!vao_)
-    throw std::domain_error("Protean3D: VBO construction error");
+    throw std::domain_error("Traits3D: VBO construction error");
 
   glGetError(); //todo temp reset for gl error flag
   glGenBuffers(1, &id_);
   if (GL_NO_ERROR != glGetError())
-    throw std::domain_error("Protean3D: VBO construction error");
+    throw std::domain_error("Traits3D: VBO construction error");
 }
 
-bool Protean3D::GL::VBO::bindAttribute(GLuint attr_location)
+bool Traits3D::GL::VBO::bindAttribute(GLuint attr_location)
 {
   vao_->bind();
   glBindBuffer(GL_ARRAY_BUFFER, id_);
@@ -41,7 +41,7 @@ bool Protean3D::GL::VBO::bindAttribute(GLuint attr_location)
 
  \return true if it succeeds, false if it fails.
  */
-bool Protean3D::GL::VBO::draw(GLenum primitive_type, size_t first, size_t count)
+bool Traits3D::GL::VBO::draw(GLenum primitive_type, size_t first, size_t count)
 {
   if ((first + count)*primitive_size_ > bsize_)
     return false;
@@ -53,12 +53,12 @@ bool Protean3D::GL::VBO::draw(GLenum primitive_type, size_t first, size_t count)
   return GL_NO_ERROR == err;
 }
 
-bool Protean3D::GL::VBO::draw(GLenum primitive_type)
+bool Traits3D::GL::VBO::draw(GLenum primitive_type)
 {
   return draw(primitive_type, 0, bsize_ / primitive_size_);
 }
 
-bool Protean3D::GL::VBO::setData(std::vector<glm::vec3> const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
+bool Traits3D::GL::VBO::setData(std::vector<glm::vec3> const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
   if (!layout_.match(Layout(3, GL_FLOAT, 0, 0)))
     return false;
@@ -66,7 +66,7 @@ bool Protean3D::GL::VBO::setData(std::vector<glm::vec3> const& data, GLenum draw
   return setData<glm::vec3>(data, drawtype);
 }
 
-bool Protean3D::GL::VBO::setData(std::vector<glm::vec4> const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
+bool Traits3D::GL::VBO::setData(std::vector<glm::vec4> const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
   if (!layout_.match(Layout(4, GL_FLOAT, 0, 0)))
     return false;

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "protean3d/surfaceplot.h"
+#include "traits3d/surfaceplot.h"
 
-class HeightMap : public Protean3D::SurfacePlot
+class HeightMap : public Traits3D::SurfacePlot
 {
 public:
   HeightMap();
@@ -11,7 +11,7 @@ public:
 
 private:
   std::vector<GLuint> map_line_indices;
-  std::vector<Protean3D::TripleF> map_vertices;
+  std::vector<Traits3D::TripleF> map_vertices;
 
   void init_map();
 

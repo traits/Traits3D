@@ -4,7 +4,7 @@
 
 #include <QMouseEvent>
 
-namespace Protean3D
+namespace Traits3D
 {   
   //! This class creates a (mouse-button,modifier) pair
   class MouseState

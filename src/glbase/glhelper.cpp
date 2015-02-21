@@ -1,6 +1,6 @@
-#include "protean3d/glbase/glhelper.h"
+#include "traits3d/glbase/glhelper.h"
 
-GLfloat Protean3D::GL::excess(std::vector<glm::dvec3> const& val)
+GLfloat Traits3D::GL::excess(std::vector<glm::dvec3> const& val)
 {
   GLfloat ret = 0;
   for (auto v : val)
@@ -11,7 +11,7 @@ GLfloat Protean3D::GL::excess(std::vector<glm::dvec3> const& val)
 }
 
 
-std::vector<glm::vec3> Protean3D::GL::scale(double& exc, std::vector<glm::dvec3> const& val)
+std::vector<glm::vec3> Traits3D::GL::scale(double& exc, std::vector<glm::dvec3> const& val)
 {
   exc = excess(val);
   if (exc > 1)
@@ -20,7 +20,7 @@ std::vector<glm::vec3> Protean3D::GL::scale(double& exc, std::vector<glm::dvec3>
     return convert(val);
 }
 
-std::vector<glm::vec3> Protean3D::GL::scale(std::vector<glm::dvec3> const& val, double excess)
+std::vector<glm::vec3> Traits3D::GL::scale(std::vector<glm::dvec3> const& val, double excess)
 {
   std::vector<glm::vec3> ret(val.size());
   for (size_t i = 0; i != val.size(); ++i)
@@ -30,7 +30,7 @@ std::vector<glm::vec3> Protean3D::GL::scale(std::vector<glm::dvec3> const& val, 
   return ret;
 }
 
-std::vector<glm::vec3> Protean3D::GL::convert(std::vector<glm::dvec3> const& val)
+std::vector<glm::vec3> Traits3D::GL::convert(std::vector<glm::dvec3> const& val)
 {
   std::vector<glm::vec3> ret(val.size());
   for (size_t i = 0; i != val.size(); ++i)

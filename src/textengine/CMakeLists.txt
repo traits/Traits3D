@@ -2,7 +2,7 @@ add_subdirectory(fontlib)
 include_directories(fontlib/include)
 
 file(GLOB  SOURCES *.cpp)
-file(GLOB  HEADERS include/protean3d/textengine/*.h)
+file(GLOB  HEADERS include/traits3d/textengine/*.h)
 
 include_directories(include)
 add_library(textengine STATIC ${SOURCES} ${HEADERS})

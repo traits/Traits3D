@@ -7,10 +7,10 @@
 #include <math.h>
 #include <qapplication.h>
 #include "qtwidget.hh"
-#include "protean3d/surfaceplot.h"
+#include "traits3d/surfaceplot.h"
 #include <QOpenGLContext>
 
-class Rosenbrock : public Protean3D::SurfacePlot
+class Rosenbrock : public Traits3D::SurfacePlot
 {
 public:
   size_t xsize = 41;
@@ -69,17 +69,17 @@ public:
 
     size_t size = data_.size();
     float fsize = size;
-    Protean3D::ColorVector colors(size);
+    Traits3D::ColorVector colors(size);
     for (size_t i = 0; i != size; ++i)
     {
-      Protean3D::Color& elem = colors[i];
+      Traits3D::Color& elem = colors[i];
       elem.r = i / fsize;
       elem.g = i / fsize / 4;
       elem.b = 1 - i / fsize;
       elem.a = 1.0f;
     }
 
-    return addDataColor(colors) && addMeshColor(Protean3D::Color(0, 0, 0, 0));
+    return addDataColor(colors) && addMeshColor(Traits3D::Color(0, 0, 0, 0));
   }
 
   void updateData() override
@@ -91,7 +91,7 @@ public:
   }
 
 private:
-  std::vector<Protean3D::TripleF> data_;
+  std::vector<Traits3D::TripleF> data_;
   double getZ(double x, double y)
   {
     return std::max<float>(-1.0f, log((1-x)*(1-x) + 100 * (y - x*x)*(y - x*x)) / 8);
@@ -103,10 +103,10 @@ int main(int argc, char **argv)
 {
     QApplication a(argc, argv);
     
-    Protean3D::QtWidget <Rosenbrock>* qtwidget 
-      = new Protean3D::QtWidget <Rosenbrock>();
+    Traits3D::QtWidget <Rosenbrock>* qtwidget 
+      = new Traits3D::QtWidget <Rosenbrock>();
 
-    qtwidget->plot3d->setBackgroundColor(Protean3D::Color(0.95f));
+    qtwidget->plot3d->setBackgroundColor(Traits3D::Color(0.95f));
     qtwidget->resize(800, 600);
     qtwidget->show();
     return a.exec();

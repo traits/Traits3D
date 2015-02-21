@@ -7,7 +7,7 @@ REM ############################################################################
 
 :help
 echo Usage: %0 (x86^|armeabi-v7a)
-echo Build  Protean3D Android for x86/armeabi-v7a
+echo Build  Traits3D Android for x86/armeabi-v7a
 echo.
 exit /b
 

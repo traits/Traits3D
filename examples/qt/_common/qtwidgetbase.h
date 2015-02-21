@@ -2,17 +2,17 @@
 
 #include <memory>
 #include "global.h"
-#include "protean3d/glbase/glhelper.h"
+#include "traits3d/glbase/glhelper.h"
 #include <QOpenGLWidget>
 #include "inputdevice.h"
-#include "protean3d/types.h"
-#include "protean3d/extglwidget.h"
+#include "traits3d/types.h"
+#include "traits3d/extglwidget.h"
 
 class QMouseEvent;
 class QWheelEvent;
 class QKeyEvent;
 
-namespace Protean3D
+namespace Traits3D
 {  
 //! An enhanced QOpenGLWidget
 /*!

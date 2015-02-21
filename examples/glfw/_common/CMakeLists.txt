@@ -3,7 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
 set(GLFW_BUILD_DOCS OFF)
 set(GLFW_BUILD_EXAMPLES OFF)
 set(GLFW_BUILD_TESTS OFF)
-add_subdirectory(glfw-${PROTEAN3D_GLFW_VERSION})
+add_subdirectory(glfw-${TRAITS3D_GLFW_VERSION})
 
 # set and hide some GLFW specific variables
 set(USE_MSVC_RUNTIME_LIBRARY_DLL ON)

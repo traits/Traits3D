@@ -80,7 +80,7 @@ bool Example::Window::init(std::string val)
   return true;
 }
 
-Example::Window::Window(std::string val /*= "Protean3D Demo"*/)
+Example::Window::Window(std::string val /*= "Traits3D Demo"*/)
 {
   init(val);
 }

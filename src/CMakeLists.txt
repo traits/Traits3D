@@ -1,18 +1,18 @@
-add_definitions(-DPROTEAN3D_DLL -DPROTEAN3D_MAKEDLL)
+add_definitions(-DTRAITS3D_DLL -DTRAITS3D_MAKEDLL)
 add_definitions(-DGLM_FORCE_RADIANS)
 
 find_package(OpenGL REQUIRED)
 list(APPEND ALL_LIBS ${OPENGL_LIBRARY})
 
 
-if ("${PROTEAN3D_GL_VARIANT}"  STREQUAL "OPENGL")
+if ("${TRAITS3D_GL_VARIANT}"  STREQUAL "OPENGL")
   #adding OpenGL sources
   add_subdirectory(3rdparty)
   # Unresolved stuff from '3rdparty' dir
   # A nuisance, having to do this here 
-  SOURCE_GROUP(GL FILES ${PROTEAN3D_GL_SOURCES})
-  include_directories(${PROTEAN3D_GL_DIR})
-elseif ("${PROTEAN3D_GL_VARIANT}"  STREQUAL "OPENGL_ES")
+  SOURCE_GROUP(GL FILES ${TRAITS3D_GL_SOURCES})
+  include_directories(${TRAITS3D_GL_DIR})
+elseif ("${TRAITS3D_GL_VARIANT}"  STREQUAL "OPENGL_ES")
   list(APPEND CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} $ENV{OPENGLES_MALI}/include)
   list(APPEND CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} $ENV{OPENGLES_MALI}/lib)
   find_package(GLESv3 REQUIRED)
@@ -37,15 +37,15 @@ add_subdirectory(textengine)
 list(APPEND ALL_LIBS fontlib)
 list(APPEND ALL_LIBS textengine)
 
-include_directories(protean3d/include)
+include_directories(traits3d/include)
 
 # adding core sources
-add_subdirectory(protean3d)
+add_subdirectory(traits3d)
 
-add_library(protean3d SHARED ${PROTEAN3D_GL_SOURCES} ${PROTEAN3D_CORE_SOURCES} ${PROTEAN3D_CORE_HEADERS})
-target_link_libraries(protean3d ${ALL_LIBS})
+add_library(traits3d SHARED ${TRAITS3D_GL_SOURCES} ${TRAITS3D_CORE_SOURCES} ${TRAITS3D_CORE_HEADERS})
+target_link_libraries(traits3d ${ALL_LIBS})
 
-install(TARGETS protean3d 
+install(TARGETS traits3d 
     RUNTIME DESTINATION bin 
     LIBRARY DESTINATION bin 
     ARCHIVE DESTINATION lib

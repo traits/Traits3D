@@ -7,9 +7,9 @@ QT       += core gui widgets
 #CONFIG += c++11
 QMAKE_CXXFLAGS += -std=c++1y -O0
 
-TARGET = protean3d
+TARGET = traits3d
 TEMPLATE = lib
-DEFINES += PROTEAN3D_GL_IS_OPENGL_ES
+DEFINES += TRAITS3D_GL_IS_OPENGL_ES
 #todo!
 DEFINES += QT_OPENGL_ES_3 GL_ES_VERSION_3_0
 LIBS += -lGLESv3
@@ -19,7 +19,7 @@ INCLUDEPATH += \
     3rdparty \
     base/include \
     glbase/include \
-    protean3d/include \
+    traits3d/include \
     textengine/include \
     textengine/fontlib\include 
 

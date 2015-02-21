@@ -1,30 +1,30 @@
-#include "protean3d/glbase/glhelper.h"
+#include "traits3d/glbase/glhelper.h"
 
 #define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
-#include "protean3d/textengine/stb_truetype.h"
+#include "traits3d/textengine/stb_truetype.h"
 
-#include "protean3d/fonts/stdfonts.h"
-#include "protean3d/glbase/vao.h"
-#include "protean3d/glbase/vbo.h"
-#include "protean3d/glbase/shader.h"
-#include "protean3d/textengine/textengine_std.h"
+#include "traits3d/fonts/stdfonts.h"
+#include "traits3d/glbase/vao.h"
+#include "traits3d/glbase/vbo.h"
+#include "traits3d/glbase/shader.h"
+#include "traits3d/textengine/textengine_std.h"
 
-class Protean3D::StandardTextEngine::GLHider
+class Traits3D::StandardTextEngine::GLHider
 {
 public:
   GLuint atlas;
 }; 
 
-class Protean3D::StandardTextEngine::StbHider
+class Traits3D::StandardTextEngine::StbHider
 {
 public:
   std::vector<stbtt_bakedchar> bc_vec;
 };
 
 
-Protean3D::StandardTextEngine::~StandardTextEngine() = default;
+Traits3D::StandardTextEngine::~StandardTextEngine() = default;
 
-Protean3D::StandardTextEngine::StandardTextEngine()
+Traits3D::StandardTextEngine::StandardTextEngine()
   :VertexCode_(
 #ifdef GL_ES_VERSION_3_0
   "#version 300 es\n"
@@ -55,11 +55,11 @@ Protean3D::StandardTextEngine::StandardTextEngine()
   "}"
   )
 {
-  cdata_ = std::make_unique<Protean3D::StandardTextEngine::StbHider>();
-  tex_atlas_ = std::make_unique<Protean3D::StandardTextEngine::GLHider>();
+  cdata_ = std::make_unique<Traits3D::StandardTextEngine::StbHider>();
+  tex_atlas_ = std::make_unique<Traits3D::StandardTextEngine::GLHider>();
 }
 
-bool Protean3D::StandardTextEngine::initializeGL()
+bool Traits3D::StandardTextEngine::initializeGL()
 {
   shader_ = std::make_unique<GL::Shader>();
   if (!shader_->create(VertexCode_, FragmentCode_))
@@ -94,7 +94,7 @@ bool Protean3D::StandardTextEngine::initializeGL()
 }
 
 
-bool Protean3D::StandardTextEngine::setTexts(std::vector<std::string> const& texts)
+bool Traits3D::StandardTextEngine::setTexts(std::vector<std::string> const& texts)
 {
   if (texts.empty())
     return false;
@@ -150,7 +150,7 @@ bool Protean3D::StandardTextEngine::setTexts(std::vector<std::string> const& tex
 }
 
 
-bool Protean3D::StandardTextEngine::drawText(
+bool Traits3D::StandardTextEngine::drawText(
   std::vector<TextEngine::Position> const& positions,
   std::vector<glm::vec4> const& colors)
 {

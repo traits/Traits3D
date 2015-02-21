@@ -1,22 +1,22 @@
 #include <numeric>
 #include <iomanip> 
 #include <sstream>
-#include "protean3d/textengine/textengine.h"
+#include "traits3d/textengine/textengine.h"
 
-Protean3D::TextEngine::Hull::Hull()
+Traits3D::TextEngine::Hull::Hull()
   : bl(std::numeric_limits<float>::max(), std::numeric_limits<float>::max())
   , tr(-std::numeric_limits<float>::max(), -std::numeric_limits<float>::max())
 {
 }
 
-bool Protean3D::TextEngine::setText(std::string const& val)
+bool Traits3D::TextEngine::setText(std::string const& val)
 {
   std::vector<std::string> textv(1, val);
   return this->setTexts(textv);
 }
 
 
-bool Protean3D::TextEngine::setDoubleStrings(
+bool Traits3D::TextEngine::setDoubleStrings(
   std::vector<double> const& values,
   int precision/* = 6*/)
 {

@@ -1,5 +1,5 @@
 file(GLOB  SOURCES *.cpp)
-file(GLOB  HEADERS include/protean3d/fonts/*.h)
+file(GLOB  HEADERS include/traits3d/fonts/*.h)
 
 include_directories(include)
 add_library(fontlib STATIC ${SOURCES} ${HEADERS})

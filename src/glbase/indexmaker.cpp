@@ -1,12 +1,12 @@
-#include "protean3d/glbase/indexmaker.h"
+#include "traits3d/glbase/indexmaker.h"
 
 
-Protean3D::GL::IndexMaker::IndexMaker()
+Traits3D::GL::IndexMaker::IndexMaker()
   :restart_placeholder_(std::numeric_limits<IndexType>::max())
 {
 }
 
-bool Protean3D::GL::IndexMaker::create(GLuint xsize, GLuint ysize, GLenum primitive_type)
+bool Traits3D::GL::IndexMaker::create(GLuint xsize, GLuint ysize, GLenum primitive_type)
 {
   if (2 > xsize || 2 > ysize /*|| xsize * ysize > ( (GLushort)-1)*/) // path. cases
   {
@@ -42,7 +42,7 @@ bool Protean3D::GL::IndexMaker::create(GLuint xsize, GLuint ysize, GLenum primit
   return false;
 }
 
-bool Protean3D::GL::IndexMaker::createLineStrips(Container& result, GLuint xsize, GLuint ysize)
+bool Traits3D::GL::IndexMaker::createLineStrips(Container& result, GLuint xsize, GLuint ysize)
 {
   result.resize(xsize+ysize);
   for (size_t i = 0; i != result.size(); ++i)
@@ -71,7 +71,7 @@ bool Protean3D::GL::IndexMaker::createLineStrips(Container& result, GLuint xsize
   return true;
 }
 
-bool Protean3D::GL::IndexMaker::createRestartLineStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize)
+bool Traits3D::GL::IndexMaker::createRestartLineStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize)
 {
   IndexType k = 0;
 
@@ -104,7 +104,7 @@ bool Protean3D::GL::IndexMaker::createRestartLineStrips(std::vector<GLuint>& res
   return true;
 }
 
-bool Protean3D::GL::IndexMaker::createTriangleStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize)
+bool Traits3D::GL::IndexMaker::createTriangleStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize)
 {
   // a single stripe needs 2*xsize describing indexes
   const IndexType stripesize = 2 * xsize;
@@ -138,7 +138,7 @@ bool Protean3D::GL::IndexMaker::createTriangleStrips(std::vector<GLuint>& result
 }
 
 
-bool Protean3D::GL::IndexMaker::createRestartTriangleStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize)
+bool Traits3D::GL::IndexMaker::createRestartTriangleStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize)
 {
   // a single stripe needs 2*xsize describing indexes
   const IndexType stripesize = 2 * xsize;
@@ -165,7 +165,7 @@ bool Protean3D::GL::IndexMaker::createRestartTriangleStrips(std::vector<GLuint>&
   return true;
 }
 
-void Protean3D::GL::IndexMaker::setRestartBehavior(RestartType rtype, IndexType placeholder /*= 0*/)
+void Traits3D::GL::IndexMaker::setRestartBehavior(RestartType rtype, IndexType placeholder /*= 0*/)
 {
   restart_type_ = rtype;
   restart_placeholder_ = placeholder;

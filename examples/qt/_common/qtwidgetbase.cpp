@@ -4,12 +4,12 @@
 #endif
 
 #include <algorithm>
-#include "protean3d/glbase/glhelper.h"
-#include "protean3d/helper.h"
+#include "traits3d/glbase/glhelper.h"
+#include "traits3d/helper.h"
 #include "qtwidgetbase.h"
 
 using namespace std;
-using namespace Protean3D;
+using namespace Traits3D;
 
 #ifndef WHEEL_DELTA
 	#define WHEEL_DELTA 120
@@ -54,7 +54,7 @@ QtWidgetBase::QtWidgetBase(std::shared_ptr<ExtGLWidget> plot, QWidget * parent, 
    setKeySpeed(3,5,5);
 }
 
-Protean3D::QtWidgetBase::~QtWidgetBase()
+Traits3D::QtWidgetBase::~QtWidgetBase()
 {
   makeCurrent();
 }
@@ -527,32 +527,32 @@ void QtWidgetBase::initializeGL()
   plot_p->initializeGL();
 }
 
-void Protean3D::QtWidgetBase::enableLighting( bool val /*= true*/ )
+void Traits3D::QtWidgetBase::enableLighting( bool val /*= true*/ )
 {
   makeCurrent();
   plot_p->enableLighting(val);
 }
 
-void Protean3D::QtWidgetBase::disableLighting( bool val /*= true*/ )
+void Traits3D::QtWidgetBase::disableLighting( bool val /*= true*/ )
 {
   makeCurrent();
   plot_p->disableLighting(val);
   update();
 }
 
-void Protean3D::QtWidgetBase::setLightRotation( double xVal, double yVal, double zVal, unsigned int idx /*= 0 */ )
+void Traits3D::QtWidgetBase::setLightRotation( double xVal, double yVal, double zVal, unsigned int idx /*= 0 */ )
 {
   plot_p->setLightRotation(xVal, yVal, zVal, idx);
   update();
 }
 
-void Protean3D::QtWidgetBase::setLightShift( double xVal, double yVal, double zVal, unsigned int idx /*= 0 */ )
+void Traits3D::QtWidgetBase::setLightShift( double xVal, double yVal, double zVal, unsigned int idx /*= 0 */ )
 {
   plot_p->setLightShift(xVal, yVal, zVal, idx);
   update();
 }
 
-void Protean3D::QtWidgetBase::paintGL()
+void Traits3D::QtWidgetBase::paintGL()
 {
   plot_p->draw();
 }
@@ -560,13 +560,13 @@ void Protean3D::QtWidgetBase::paintGL()
 /*!
   Set up the OpenGL view port
 */
-void Protean3D::QtWidgetBase::resizeGL( int w, int h )
+void Traits3D::QtWidgetBase::resizeGL( int w, int h )
 {
 	glViewport( 0, 0, w, h );
 	plot_p->draw();
 }
 
-void Protean3D::QtWidgetBase::updateData()
+void Traits3D::QtWidgetBase::updateData()
 {
   makeCurrent();
   plot_p->updateData();

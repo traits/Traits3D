@@ -11,7 +11,7 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt5Widgets)
 find_package(Qt5OpenGL)
 find_package(Qt5Quick)
-# add_definitions(-DPROTEAN3D_QT_LABEL)
+# add_definitions(-DTRAITS3D_QT_LABEL)
 # add_subdirectory(src/platform/qt)
 #set(QT_USE_QTOPENGL TRUE)
 
@@ -22,16 +22,16 @@ set_property(TARGET qtwidget PROPERTY FOLDER "examples/qt/common")
 
 # real examples
 
-add_definitions(-DPROTEAN3D_DLL)
-PROTEAN3D_SUBDIRLIST(SUBDIRS ${CMAKE_CURRENT_SOURCE_DIR})
+add_definitions(-DTRAITS3D_DLL)
+TRAITS3D_SUBDIRLIST(SUBDIRS ${CMAKE_CURRENT_SOURCE_DIR})
 
 # no executables to create here
 list(REMOVE_ITEM SUBDIRS _common)
 
-list (APPEND MY_LINK_LIBRARIES protean3d ${OPENGL_LIBRARIES} Qt5::Widgets Qt5::Quick qtwidget)
+list (APPEND MY_LINK_LIBRARIES traits3d ${OPENGL_LIBRARIES} Qt5::Widgets Qt5::Quick qtwidget)
 
 # create single project for every example 
 #(needs this strange syntax to expand lists correctly in cmake function)
-protean3d_example_creator("${SUBDIRS}" "${MY_LINK_LIBRARIES}" "examples/qt")
+example_creator("${SUBDIRS}" "${MY_LINK_LIBRARIES}" "examples/qt")
 
 

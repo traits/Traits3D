@@ -16,7 +16,7 @@ public:
         hm.initializeGL();
         hm.loadData();
         hm.setRotation(30, 0, 45);
-        hm.setBackgroundColor(Protean3D::Color(0.7f,0.7f,0.7f,1));
+        hm.setBackgroundColor(Traits3D::Color(0.7f,0.7f,0.7f,1));
     }
 
     void render() {

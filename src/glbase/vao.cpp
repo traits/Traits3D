@@ -1,18 +1,18 @@
-#include "protean3d/glbase/vao.h"
+#include "traits3d/glbase/vao.h"
 
-Protean3D::GL::VAO::VAO()
+Traits3D::GL::VAO::VAO()
 {
   glGenVertexArrays(1, &id_);
 }
 
 
-Protean3D::GL::VAO::~VAO()
+Traits3D::GL::VAO::~VAO()
 {
   //if (GL_TRUE == glIsVertexArray(id_))
   //  glDeleteVertexArrays(1, &id_);
 }
 
-void Protean3D::GL::VAO::bind()
+void Traits3D::GL::VAO::bind()
 {
   GLuint val;
   glGetIntegerv(GL_VERTEX_ARRAY_BINDING, (GLint*)(&val));
@@ -20,7 +20,7 @@ void Protean3D::GL::VAO::bind()
     glBindVertexArray(id_);
 }
 
-void Protean3D::GL::VAO::unbind()
+void Traits3D::GL::VAO::unbind()
 {
   GLuint val;
   glGetIntegerv(GL_VERTEX_ARRAY_BINDING, (GLint*)(&val));

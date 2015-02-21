@@ -10,7 +10,7 @@ namespace Example
 class EXAMPLE_EXPORT Window
 {
 public:
-  explicit Window(std::string val = "Protean3D Demo");
+  explicit Window(std::string val = "Traits3D Demo");
   virtual ~Window();
   bool onClose() const;
   void update();

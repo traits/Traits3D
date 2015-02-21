@@ -1,12 +1,12 @@
 import os
 
-hdir = 'include' + os.sep + 'protean3d' + os.sep + 'fonts'
-hprefix = 'protean3d/fonts'
+hdir = 'include' + os.sep + 'traits3d' + os.sep + 'fonts'
+hprefix = 'traits3d/fonts'
 
 hfile = open(os.path.join(hdir, "stdfonts.h"),'w')
 hfile.write('#pragma once\n\n')
 hfile.write('#include <string>\n#include <vector>\n\n')
-hfile.write('namespace Protean3D\n{\n')
+hfile.write('namespace Traits3D\n{\n')
 hfile.write('  class Font\n  {\n')
 hfile.write('  public:\n')
 hfile.write('    Font(const unsigned char* buffer = 0, size_t buflen = 0, std::string fname = std::string())\n')
@@ -52,8 +52,8 @@ hfile.write('  };\n} // ns\n')
 hfile.close()
 
 for i in range(len(basenames)):
-    cfile.write('const Protean3D::Font Protean3D::StandardFont::' + basenames[i] + 
-    ' = Protean3D::Font((const unsigned char*)' + basenames[i] + anonsuffix + ', ' + 
+    cfile.write('const Traits3D::Font Traits3D::StandardFont::' + basenames[i] + 
+    ' = Traits3D::Font((const unsigned char*)' + basenames[i] + anonsuffix + ', ' + 
     basenames[i] + sizesuffix + ', "' + caption[i] + '");\n')    
     
 cfile.close()    

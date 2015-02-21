@@ -1,15 +1,15 @@
 #include <vector>
 #include <fstream>
 #include <string>
-#include "protean3d/glbase/vbo.h"
-#include "protean3d/glbase/shader.h"
+#include "traits3d/glbase/vbo.h"
+#include "traits3d/glbase/shader.h"
 
-Protean3D::GL::Shader::Shader()
+Traits3D::GL::Shader::Shader()
   : initialized_(false), program_id_(0)
 {
 }
 
-bool Protean3D::GL::Shader::load(std::string& result, std::string const& path)
+bool Traits3D::GL::Shader::load(std::string& result, std::string const& path)
 {
   result.clear();
   std::ifstream shader_stream(path, std::ios::in);
@@ -24,7 +24,7 @@ bool Protean3D::GL::Shader::load(std::string& result, std::string const& path)
   return false;
 }
 
-bool Protean3D::GL::Shader::compile(GLuint shader_id, std::string const& shader_code)
+bool Traits3D::GL::Shader::compile(GLuint shader_id, std::string const& shader_code)
 {
   GLint result = GL_FALSE;
 
@@ -49,7 +49,7 @@ bool Protean3D::GL::Shader::compile(GLuint shader_id, std::string const& shader_
   return (GL_TRUE == result) ? true : false;
 }
 
-bool Protean3D::GL::Shader::link(GLuint vertex_shader_id, GLuint fragment_shader_id)
+bool Traits3D::GL::Shader::link(GLuint vertex_shader_id, GLuint fragment_shader_id)
 {
   GLint result = GL_FALSE;
 
@@ -78,7 +78,7 @@ bool Protean3D::GL::Shader::link(GLuint vertex_shader_id, GLuint fragment_shader
   return (result == GL_TRUE) ? true : false;
 }
 
-bool Protean3D::GL::Shader::create(std::string const& vertex_code, std::string const& fragment_code)
+bool Traits3D::GL::Shader::create(std::string const& vertex_code, std::string const& fragment_code)
 {
   initialized_ = false;
 
@@ -102,7 +102,7 @@ bool Protean3D::GL::Shader::create(std::string const& vertex_code, std::string c
   return true;
 }
 
-//bool Protean3D::GL::Shader::create()
+//bool Traits3D::GL::Shader::create()
 //{
 //  const char* vsrc =
 //    "attribute highp vec4 vertex;\n"
@@ -126,7 +126,7 @@ bool Protean3D::GL::Shader::create(std::string const& vertex_code, std::string c
 //  return  create(vsrc, fsrc);
 //}
 
-bool Protean3D::GL::Shader::createFromFile(std::string const& vertex_file_path, std::string const& fragment_file_path)
+bool Traits3D::GL::Shader::createFromFile(std::string const& vertex_file_path, std::string const& fragment_file_path)
 {
   std::string vertex_code;
   if (!load(vertex_code, vertex_file_path))
@@ -139,7 +139,7 @@ bool Protean3D::GL::Shader::createFromFile(std::string const& vertex_file_path, 
   return create(vertex_code, fragment_code);
 }
 
-bool Protean3D::GL::Shader::setUniformMatrix(glm::mat4 const& mat, std::string const& name)
+bool Traits3D::GL::Shader::setUniformMatrix(glm::mat4 const& mat, std::string const& name)
 {
   if (name.empty() || !use())
     return false;
@@ -156,7 +156,7 @@ bool Protean3D::GL::Shader::setUniformMatrix(glm::mat4 const& mat, std::string c
 }
 
 
-bool Protean3D::GL::Shader::setUniformVec3(glm::vec3 const& vec, std::string const& name)
+bool Traits3D::GL::Shader::setUniformVec3(glm::vec3 const& vec, std::string const& name)
 {
   if (name.empty() || !use())
     return false;
@@ -172,7 +172,7 @@ bool Protean3D::GL::Shader::setUniformVec3(glm::vec3 const& vec, std::string con
   return true;
 }
 
-bool Protean3D::GL::Shader::setUniformVec4(glm::vec4 const& vec, std::string const& name)
+bool Traits3D::GL::Shader::setUniformVec4(glm::vec4 const& vec, std::string const& name)
 {
   if (name.empty() || !use())
     return false;
@@ -188,18 +188,18 @@ bool Protean3D::GL::Shader::setUniformVec4(glm::vec4 const& vec, std::string con
   return true;
 }
 
-bool Protean3D::GL::Shader::setProjectionMatrix(glm::mat4 const& mat)
+bool Traits3D::GL::Shader::setProjectionMatrix(glm::mat4 const& mat)
 {
   return setUniformMatrix(mat, ShaderCode::Vertex::proj_matrix);
 }
 
 
-bool Protean3D::GL::Shader::setModelViewMatrix(glm::mat4 const& mat)
+bool Traits3D::GL::Shader::setModelViewMatrix(glm::mat4 const& mat)
 {
   return setUniformMatrix(mat, ShaderCode::Vertex::mv_matrix);
 }
 
-bool Protean3D::GL::Shader::use()
+bool Traits3D::GL::Shader::use()
 {
   if (!initialized_)
     return false;
@@ -214,7 +214,7 @@ bool Protean3D::GL::Shader::use()
   return true;
 }
 
-bool Protean3D::GL::Shader::inUse() const
+bool Traits3D::GL::Shader::inUse() const
 {
   if (!initialized_)
     return false;
@@ -227,7 +227,7 @@ bool Protean3D::GL::Shader::inUse() const
   return static_cast<GLuint>(currprog) == program_id_;
 }
 
-bool Protean3D::GL::Shader::bindAttribute(VBO& vbo, std::string const& name)
+bool Traits3D::GL::Shader::bindAttribute(VBO& vbo, std::string const& name)
 {
   if (name.empty())
     return false;

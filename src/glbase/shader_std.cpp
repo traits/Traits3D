@@ -1,14 +1,14 @@
-#include "protean3d/glbase/shader_std.h"
+#include "traits3d/glbase/shader_std.h"
 
-const std::string Protean3D::GL::ShaderCode::Vertex::proj_matrix =   "proj_matrix";
-const std::string Protean3D::GL::ShaderCode::Vertex::mv_matrix =     "mv_matrix";
-const std::string Protean3D::GL::ShaderCode::Vertex::v_in_color =    "v_in_color";
-const std::string Protean3D::GL::ShaderCode::Vertex::v_coordinates = "v_coordinates";
-const std::string Protean3D::GL::ShaderCode::Vertex::v_normals =     "v_normals";
+const std::string Traits3D::GL::ShaderCode::Vertex::proj_matrix =   "proj_matrix";
+const std::string Traits3D::GL::ShaderCode::Vertex::mv_matrix =     "mv_matrix";
+const std::string Traits3D::GL::ShaderCode::Vertex::v_in_color =    "v_in_color";
+const std::string Traits3D::GL::ShaderCode::Vertex::v_coordinates = "v_coordinates";
+const std::string Traits3D::GL::ShaderCode::Vertex::v_normals =     "v_normals";
 
 // Vertex shader
 
-const char* Protean3D::GL::ShaderCode::Vertex::Line =
+const char* Traits3D::GL::ShaderCode::Vertex::Line =
 {
 #ifdef GL_ES_VERSION_3_0
   "#version 300 es\n"
@@ -28,7 +28,7 @@ const char* Protean3D::GL::ShaderCode::Vertex::Line =
   "}"
 };
 
-const char* Protean3D::GL::ShaderCode::Vertex::TriangleStrip =
+const char* Traits3D::GL::ShaderCode::Vertex::TriangleStrip =
 {
 #ifdef GL_ES_VERSION_3_0
   "#version 300 es\n"
@@ -48,7 +48,7 @@ const char* Protean3D::GL::ShaderCode::Vertex::TriangleStrip =
   "}"
 };
 
-const char* Protean3D::GL::ShaderCode::Vertex::LineXYZ =
+const char* Traits3D::GL::ShaderCode::Vertex::LineXYZ =
 {
 #ifdef GL_ES_VERSION_3_0
   "#version 300 es\n"
@@ -69,7 +69,7 @@ const char* Protean3D::GL::ShaderCode::Vertex::LineXYZ =
   "}"
 };
 
-const char* Protean3D::GL::ShaderCode::Vertex::TriangleStripXYZ =
+const char* Traits3D::GL::ShaderCode::Vertex::TriangleStripXYZ =
 {
 #ifdef GL_ES_VERSION_3_0
   "#version 300 es\n"
@@ -93,7 +93,7 @@ const char* Protean3D::GL::ShaderCode::Vertex::TriangleStripXYZ =
 
 // Fragment Shader
 
-const char* Protean3D::GL::ShaderCode::Fragment::Simple =
+const char* Traits3D::GL::ShaderCode::Fragment::Simple =
 {
 #ifdef GL_ES_VERSION_3_0
   "#version 300 es\n"

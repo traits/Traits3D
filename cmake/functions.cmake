@@ -11,7 +11,7 @@ function(create_resources src_dir output_src_dir output_include_dir base_name in
     # Collect input files
     file(GLOB bins ${src_dir}/*)
     
-    file(APPEND ${inc_name} "#pragma once\n\nnamespace Protean3D\n{\nstruct StandardFont\n{\n")
+    file(APPEND ${inc_name} "#pragma once\n\nnamespace Traits3D\n{\nstruct StandardFont\n{\n")
     file(APPEND ${src_name} "#include \"${inc_statement}\"\n\n")
 
     # Iterate through input files
@@ -29,12 +29,12 @@ function(create_resources src_dir output_src_dir output_include_dir base_name in
         string(REGEX REPLACE "(,$)" "" filedata ${filedata})
         # Append data to output file
         file(APPEND ${inc_name} "  static const unsigned char ${filename}[];\n  static const size_t ${filename}_size;\n")
-        file(APPEND ${src_name} "const unsigned char Protean3D::StandardFont::${filename}[] = {${filedata}};\nconst size_t Protean3D::StandardFont::${filename}_size = sizeof(${filename});\n")
+        file(APPEND ${src_name} "const unsigned char Traits3D::StandardFont::${filename}[] = {${filedata}};\nconst size_t Traits3D::StandardFont::${filename}_size = sizeof(${filename});\n")
     endforeach()
     file(APPEND ${inc_name} "};\n} // ns \n")
 endfunction()
 
-function(protean3d_example_creator subdirlist linklibrarylist ideproperty)
+function(example_creator subdirlist linklibrarylist ideproperty)
   foreach(subdir ${subdirlist})
     file(GLOB  ${subdir}_FILES ${subdir}/*.cpp ${subdir}/*.h ${subdir}/*.qml )
     file(GLOB  ${subdir}_QRC_FILES ${subdir}/*.qrc)
