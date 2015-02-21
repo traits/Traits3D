@@ -42,7 +42,7 @@ bool HeightMap::loadData()
     elem.a = 1.0f;
   }
 
-  return addDataColor(colors) && addMeshColor(Traits3D::Color(0, 0, 0, 0));
+  return addDataColor(colors) && addMeshColor(Traits3D::Color(0, 0, 0, 1));
 }
 
 void HeightMap::updateData()
