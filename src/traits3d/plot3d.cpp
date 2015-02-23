@@ -98,7 +98,6 @@ bool Traits3D::Plot3D::initializeGL()
 
 void Traits3D::Plot3D::setTitle(std::string const& val)
 {
-  title_ = val;
-  text_engine_p->clear();
-  text_engine_p->appendText(title_);
+  if (text_engine_p->setTexts(std::vector<std::string>(1,val)))
+    title_ = val;
 }

@@ -144,6 +144,16 @@ bool Traits3D::StandardTextEngine::setText(Text& t, Quads& qv, std::string const
   return true;
 }
 
+bool Traits3D::StandardTextEngine::setTexts(std::vector<std::string> const& texts)
+{
+  clear();
+  for (auto t : texts)
+    if (!appendText(t))
+      return false;
+
+  return true;
+}
+
 bool Traits3D::StandardTextEngine::appendText(std::string const& text)
 {
   Text t;

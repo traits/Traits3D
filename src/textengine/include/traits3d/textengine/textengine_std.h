@@ -19,14 +19,16 @@ namespace Traits3D
     StandardTextEngine();
     ~StandardTextEngine();
     bool initializeGL() override;
+    bool setTexts(std::vector<std::string> const& texts) override;
     bool appendText(std::string const& texts) override;
     bool setText(std::string const& texts, size_t index = 0) override;
-    void clear() override;
 
     bool draw(
       std::vector<TextEngine::Position> const& positions,
       std::vector<Traits3D::Color> const& colors) override;
 
+  protected:
+    void clear() override;
 
   private:
     const std::string VertexCode_;

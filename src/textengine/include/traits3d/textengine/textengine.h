@@ -37,10 +37,9 @@ namespace Traits3D
     virtual ~TextEngine() {};
     virtual bool initializeGL() = 0;
 
+    virtual bool setTexts(std::vector<std::string> const& texts) = 0;
     virtual bool appendText(std::string const& text) = 0;
     virtual bool setText(std::string const& val, size_t index) = 0;
-
-    virtual void clear() = 0;
 
     //! View port origin always bottom-left
     virtual bool draw(
@@ -50,6 +49,7 @@ namespace Traits3D
 
     bool appendDouble(double value, std::streamsize precision = 6);
     bool setDouble(double value, std::streamsize precision = 6, size_t index = 0);
+    static std::string double2text(double value, std::streamsize precision = 6);
 
   protected:
     struct Hull
@@ -67,5 +67,7 @@ namespace Traits3D
       std::string text;
       Traits3D::Color color;
     };
+
+    virtual void clear() = 0;
   };
 }

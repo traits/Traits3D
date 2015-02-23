@@ -55,9 +55,11 @@ void Traits3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 cons
 
   if (majors_changed_)
   {
-    te_->clear();
+    std::vector<std::string> dtext;
     for (auto v : majorvalues_)
-      te_->appendDouble(v);
+      dtext.push_back(TextEngine::double2text(v));
+    
+    te_->setTexts(dtext);
   }
   te_->draw(majorpositions_2d, colors);
 }
