@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "glm/glm.hpp"
+#include "traits3d/types.h"
 
 namespace Traits3D
 {
@@ -35,20 +36,20 @@ namespace Traits3D
 
     virtual ~TextEngine() {};
     virtual bool initializeGL() = 0;
-    virtual bool setTexts(
-      std::vector<std::string> const& texts) = 0;
-    bool setDoubleStrings(
-      std::vector<double> const& values,
-      int precision = 6);
+
+    virtual bool appendText(std::string const& text) = 0;
+    virtual bool setText(std::string const& val, size_t index) = 0;
+
+    virtual void clear() = 0;
 
     //! View port origin always bottom-left
-    virtual bool drawText(
+    virtual bool draw(
       std::vector<Position> const& positions,
-      std::vector<glm::vec4> const& colors
+      std::vector<Traits3D::Color> const& colors
       ) = 0;
 
-    //! convenience functions
-    bool setText(std::string const& val);
+    bool appendDouble(double value, std::streamsize precision = 6);
+    bool setDouble(double value, std::streamsize precision = 6, size_t index = 0);
 
   protected:
     struct Hull
@@ -64,7 +65,7 @@ namespace Traits3D
       Position position;
       Hull hull;
       std::string text;
-      glm::vec4 color;
+      Traits3D::Color color;
     };
   };
 }

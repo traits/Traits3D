@@ -45,6 +45,11 @@ namespace Traits3D
       Traits3D::Triple ticOrientation() const { return orientation_;} //!< Returns tic orientation
       void setSymmetricTics( bool b) { symtics_ = b;} //!< Sets two-sided tics (default is false) 
   
+  //void setLabelString(Protean3D::Label::String const& name);   //!< Sets label content
+  //void setLabelPosition(const Protean3D::Triple& pos, Protean3D::ANCHOR);
+  //void setLabelColor(Protean3D::RGBA col);
+  //void setLabel(bool d) {drawLabel_ = d;} //!< Turns label drawing on or off
+  //void adjustLabel(int val) {labelgap_ = val;} //!< Shifts label in device coordinates dependent on anchor;
       void setScaling(bool d) {draw_tics_ = d;} //!< Turns scale drawing on or off
       bool scaling() const {return draw_tics_;} //!< Returns, if scale drawing is on or off
       void setScale(Traits3D::SCALETYPE);
@@ -93,7 +98,7 @@ namespace Traits3D
       bool autoscale_;
       Traits3D::Color numbercolor_, color_;
 
-      int numbergap_; 
+      int numbergap_/*, labelgap_*/; 
       std::shared_ptr<Traits3D::Scale> scale_;
 
       bool isZ_ = false; // identify z-axis

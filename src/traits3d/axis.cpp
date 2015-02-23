@@ -44,6 +44,7 @@ void Traits3D::Axis::init()
   setNumberAnchor(TextEngine::Anchor::Center);
 
   numbergap_ = 0;
+  //labelgap_ = 0;
 }
 
 void Traits3D::Axis::setPosition(const Triple& beg, const Triple& end)
@@ -141,6 +142,31 @@ void Traits3D::Axis::setNumberColor(Color const& col)
   numbercolor_ = col;
 }
 
+//void Traits3D::Axis::setLabelFont(Protean3D::Label::Font const& font)
+//{
+//  labelfont_ = font;
+//  label_.setFont(labelfont_);
+//}
+//
+//void Traits3D::Axis::setLabelString(Protean3D::Label::String const& name)
+//{
+//  label_.setString(name);
+//}
+//
+///*!
+//  Sets label position in conjunction with an anchoring strategy
+//*/
+//void Traits3D::Axis::setLabelPosition(const Triple& pos, Protean3D::ANCHOR an)
+//{
+//  label_.setPosition(pos, an);
+//}
+//
+////! Sets color for label
+//void Traits3D::Axis::setLabelColor(RGBA col)
+//{
+//  label_.setColor(col);
+//}
+// 
 /*
   Sets one of the predefined scaling types.
   \warning Too small intervals in logarithmic scales lead to

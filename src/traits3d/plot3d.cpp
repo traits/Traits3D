@@ -71,7 +71,7 @@ void Traits3D::Plot3D::draw()
                    TupleF((vp[2] - vp[0]) / 2, vp[3] - vp[1]-10),
                    TextEngine::Anchor::TopCenter);
   std::vector<Color> colors(1, Color(0.9f, 0, 0.3f, 0.0f));
-  text_engine_p->drawText(positions, colors);
+  text_engine_p->draw(positions, colors);
 }
 
 void Traits3D::Plot3D::setBackgroundColor(Color const& val)
@@ -99,5 +99,6 @@ bool Traits3D::Plot3D::initializeGL()
 void Traits3D::Plot3D::setTitle(std::string const& val)
 {
   title_ = val;
-  text_engine_p->setText(title_);
+  text_engine_p->clear();
+  text_engine_p->appendText(title_);
 }

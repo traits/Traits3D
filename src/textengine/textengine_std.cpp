@@ -93,66 +93,74 @@ bool Traits3D::StandardTextEngine::initializeGL()
   return true;
 }
 
-
-bool Traits3D::StandardTextEngine::setTexts(std::vector<std::string> const& texts)
+bool Traits3D::StandardTextEngine::setText(std::string const& text, size_t index /*= 0*/)
 {
-  if (texts.empty())
+  if (index >= texts_.size() || index >= coords_.size())
     return false;
 
-  texts_.resize(texts.size());
-  for (size_t i = 0; i != texts.size(); ++i)
+  return setText(texts_[index], coords_[index], text);
+}
+
+bool Traits3D::StandardTextEngine::setText(Text& t, Quads& qv, std::string const& text)
+{
+  if (text.empty())
+    return false;
+
+  if (text.empty())
+    return false;
+
+  t.text = text;
+  t.hull = Hull(); // reset //todo?
+
+  qv.resize(text.size());
+
+  float dx = 0;
+  float dy = 0;
+  for (auto i = 0; i != t.text.size(); ++i)
   {
-    texts_[i].text = texts[i];
-    texts_[i].hull = Hull(); // reset //todo?
-  }
-
-  size_t char_cnt = 0;
-  for (auto t : texts_)
-    char_cnt += t.text.size();
-
-  coords_.resize(quad_points * char_cnt);
-
-  size_t c = 0;
-  size_t i = 0;
-
-  for (auto& t : texts_)
-  {
-    float dx = 0;
-    float dy = 0;
-    for (auto ch : t.text)
+    auto& ch = t.text[i];
+    if (ch >= 32 /*&& ch < 128*/)
     {
-      if (ch >= 32 /*&& ch < 128*/)
-      {
-        stbtt_aligned_quad q;
-        stbtt_GetBakedQuad(&cdata_->bc_vec[0], 512, 512, ch - 32, &dx, &dy, &q, 1);
+      stbtt_aligned_quad q;
+      stbtt_GetBakedQuad(&cdata_->bc_vec[0], 512, 512, ch - 32, &dx, &dy, &q, 1);
 
-        coords_[c++] = glm::vec4(q.x0, q.y0, q.s0, q.t0);
-        coords_[c++] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
-        coords_[c++] = glm::vec4(q.x1, q.y0, q.s1, q.t0);
-                                   
-        coords_[c++] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
-        coords_[c++] = glm::vec4(q.x1, q.y0, q.s1, q.t0);
-        coords_[c++] = glm::vec4(q.x1, q.y1, q.s1, q.t1);
+      qv[i][0] = glm::vec4(q.x0, q.y0, q.s0, q.t0);
+      qv[i][1] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
+      qv[i][2] = glm::vec4(q.x1, q.y0, q.s1, q.t0);
+      qv[i][3] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
+      qv[i][4] = glm::vec4(q.x1, q.y0, q.s1, q.t0);
+      qv[i][5] = glm::vec4(q.x1, q.y1, q.s1, q.t1);
 
-        if (q.x0 < t.hull.bl.x)
-          t.hull.bl.x = q.x0;
-        if (q.x1 > t.hull.tr.x)
-          t.hull.tr.x = q.x1;
-        if (q.y0 < t.hull.bl.y)
-          t.hull.bl.y = q.y0;
-        if (q.y1 > t.hull.tr.y)
-          t.hull.tr.y = q.y1;
-      }
+      if (q.x0 < t.hull.bl.x)
+        t.hull.bl.x = q.x0;
+      if (q.x1 > t.hull.tr.x)
+        t.hull.tr.x = q.x1;
+      if (q.y0 < t.hull.bl.y)
+        t.hull.bl.y = q.y0;
+      if (q.y1 > t.hull.tr.y)
+        t.hull.tr.y = q.y1;
     }
-    ++i;
   }
   return true;
 }
 
+bool Traits3D::StandardTextEngine::appendText(std::string const& text)
+{
+  Text t;
+  Quads qv;
 
-bool Traits3D::StandardTextEngine::drawText(
+  if (!setText(t, qv, text))
+    return false;
+
+  texts_.push_back(t);
+  coords_.push_back(qv);
+
+  return true;
+}
+
+bool Traits3D::StandardTextEngine::draw(
   std::vector<TextEngine::Position> const& positions,
-  std::vector<glm::vec4> const& colors)
+  std::vector<Traits3D::Color> const& colors)
 {
   if (positions.size() != texts_.size())
     return false;
@@ -166,7 +174,15 @@ bool Traits3D::StandardTextEngine::drawText(
     texts_[i].color = colors[i];
   }
 
-  if ( !vbo_->setData(coords_)
+  std::vector<glm::vec4> coords;
+  for (auto const& text : coords_)
+  {
+    for (auto const& ch : text)
+      coords.insert(coords.end(), ch.begin(), ch.end());
+  }
+
+
+  if ( !vbo_->setData(coords)
     || !shader_->bindAttribute(*vbo_, "coord")
     || !shader_->use()
     )
@@ -239,7 +255,7 @@ bool Traits3D::StandardTextEngine::drawText(
     shader_->setUniformMatrix(pmat, "proj_mat");
     shader_->setUniformVec3(glm::vec3(t.color.r, t.color.g, t.color.b), "color");
 
-    step = quad_points *  t.text.size();
+    step = std::tuple_size<Quad>::value *  t.text.size();
     vbo_->draw(GL_TRIANGLES, sidx, step);
     sidx += step;
   }
@@ -251,4 +267,10 @@ bool Traits3D::StandardTextEngine::drawText(
   glBindTexture(GL_TEXTURE_2D, oldtex);
   glActiveTexture((GLenum)oldactivetex);
   return true;
+}
+
+void Traits3D::StandardTextEngine::clear()
+{
+  texts_.clear();
+  coords_.clear();
 }

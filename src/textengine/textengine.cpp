@@ -9,25 +9,19 @@ Traits3D::TextEngine::Hull::Hull()
 {
 }
 
-bool Traits3D::TextEngine::setText(std::string const& val)
-{
-  std::vector<std::string> textv(1, val);
-  return this->setTexts(textv);
-}
-
-
-bool Traits3D::TextEngine::setDoubleStrings(
-  std::vector<double> const& values,
-  int precision/* = 6*/)
+bool Traits3D::TextEngine::appendDouble(double value, std::streamsize precision /*= 6*/)
 {
   std::ostringstream os;
-  std::vector<std::string> text(values.size());
-  for (size_t i = 0; i != values.size(); ++i)
-  {
-    os << std::setprecision(precision) << values[i];
-    text[i] = os.str();
-    os.clear();
-    os.str(std::string()); // clear stream
-  }
-  return setTexts(text);
+  os << std::setprecision(precision) << value;
+  return this->appendText(os.str());
+
+  //os.clear();
+  //os.str(std::string()); // clear stream
+}
+
+bool Traits3D::TextEngine::setDouble(double value, std::streamsize precision /*= 6*/, size_t index /*= 0*/)
+{
+  std::ostringstream os;
+  os << std::setprecision(precision) << value;
+  return this->setText(os.str(), index);
 }

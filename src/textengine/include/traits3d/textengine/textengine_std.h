@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <array>
 #include "traits3d/textengine/textengine.h"
 
 namespace Traits3D
@@ -18,10 +19,13 @@ namespace Traits3D
     StandardTextEngine();
     ~StandardTextEngine();
     bool initializeGL() override;
-    bool setTexts(std::vector<std::string> const& texts) override;
-    bool drawText(
+    bool appendText(std::string const& texts) override;
+    bool setText(std::string const& texts, size_t index = 0) override;
+    void clear() override;
+
+    bool draw(
       std::vector<TextEngine::Position> const& positions,
-      std::vector<glm::vec4> const& colors) override;
+      std::vector<Traits3D::Color> const& colors) override;
 
 
   private:
@@ -38,9 +42,15 @@ namespace Traits3D
     class StbHider; // pimple stb stuff
     std::unique_ptr <StbHider> cdata_;
 
-    const size_t quad_points = 6; // character quad rendered by 2 triangles
-
     std::vector<Text> texts_;
-    std::vector<glm::vec4> coords_;
+
+    // character quad (6 positions of two describing triangles)
+    using Quad = std::array < glm::vec4, 6 >;
+    // quads for all characters in text
+    using Quads = std::vector < Quad >;
+    // complete text
+    std::vector<Quads> coords_;
+  
+    bool setText(Text& t, Quads& qv, std::string const& text);
   };
 }
