@@ -10,3 +10,4 @@ namespace
 
 const Traits3D::Font Traits3D::StandardFont::OpenSans_Italic = Traits3D::Font((const unsigned char*)OpenSans_Italic_anon__, OpenSans_Italicsize__, "OpenSans Italic");
 const Traits3D::Font Traits3D::StandardFont::OpenSans_Regular = Traits3D::Font((const unsigned char*)OpenSans_Regular_anon__, OpenSans_Regularsize__, "OpenSans Regular");
+const Traits3D::FontMap Traits3D::StandardFont::fontMap = Traits3D::StandardFont::create_map();

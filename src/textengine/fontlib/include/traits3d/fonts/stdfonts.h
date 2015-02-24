@@ -1,23 +1,25 @@
 #pragma once
-
-#include <string>
-#include <vector>
+#include "traits3d/fonts/font.h"
 
 namespace Traits3D
 {
-  class Font
+  class StandardFont  
   {
   public:
-    Font(const unsigned char* buffer = 0, size_t buflen = 0, std::string fname = std::string())
-    :data(buffer, buffer + buflen), name(fname)
-    {}
-    const std::vector<unsigned char> data;
-    const std::string name;
-  };
-
-  struct StandardFont
-  {
+    static const FontMap fontMap;
+  
+  private:
     static const Font OpenSans_Italic;
     static const Font OpenSans_Regular;
+
+    static FontMap create_map()
+    {
+      FontMap m;
+      
+      m[OpenSans_Italic.name] = &OpenSans_Italic;
+      m[OpenSans_Regular.name] = &OpenSans_Regular;
+
+      return m;
+    }
   };
-} // ns
+} // ns  

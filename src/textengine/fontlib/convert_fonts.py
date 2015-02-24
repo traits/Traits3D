@@ -4,16 +4,21 @@ hdir = 'include' + os.sep + 'traits3d' + os.sep + 'fonts'
 hprefix = 'traits3d/fonts'
 
 hfile = open(os.path.join(hdir, "stdfonts.h"),'w')
-hfile.write('#pragma once\n\n')
-hfile.write('#include <string>\n#include <vector>\n\n')
-hfile.write('namespace Traits3D\n{\n')
-hfile.write('  class Font\n  {\n')
-hfile.write('  public:\n')
-hfile.write('    Font(const unsigned char* buffer = 0, size_t buflen = 0, std::string fname = std::string())\n')
-hfile.write('    :data(buffer, buffer + buflen), name(fname)\n    {}\n')
-hfile.write('    const std::vector<unsigned char> data;\n')
-hfile.write('    const std::string name;\n  };\n\n')
-hfile.write('  struct StandardFont\n  {\n')
+
+s = '''#pragma once
+#include "traits3d/fonts/font.h"
+
+namespace Traits3D
+{
+  class StandardFont  
+  {
+  public:
+    static const FontMap fontMap;
+  
+  private:
+'''
+
+hfile.write(s)
 
 cfile = open('stdfonts.cpp','w')
 cfile.write('#include "' + hprefix + "/" + 'stdfonts.h"\n\nnamespace\n{\n')
@@ -48,12 +53,29 @@ for root, dirs, files in os.walk('fonts'):
                 ' = sizeof(' + basename + anonsuffix + ');\n')
 
 cfile.write('} // private\n\n' )           
-hfile.write('  };\n} // ns\n')
-hfile.close()
+
+s = '''
+    static FontMap create_map()
+    {
+      FontMap m;
+      
+'''
+hfile.write(s)
 
 for i in range(len(basenames)):
+    hfile.write('      m[' + basenames[i] + '.name] = &' + basenames[i] + ';\n')
     cfile.write('const Traits3D::Font Traits3D::StandardFont::' + basenames[i] + 
     ' = Traits3D::Font((const unsigned char*)' + basenames[i] + anonsuffix + ', ' + 
-    basenames[i] + sizesuffix + ', "' + caption[i] + '");\n')    
-    
+    basenames[i] + sizesuffix + ', "' + caption[i] + '");\n')        
+
+s = '''
+      return m;
+    }
+  };
+} // ns  
+'''    
+hfile.write(s)
+hfile.close()  
+
+cfile.write('const Traits3D::FontMap Traits3D::StandardFont::fontMap = Traits3D::StandardFont::create_map();\n')  
 cfile.close()    
