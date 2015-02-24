@@ -37,22 +37,24 @@ namespace Traits3D
     std::unique_ptr<GL::Shader> shader_;
     std::unique_ptr<GL::VAO> vao_;
     std::unique_ptr<GL::VBO> vbo_;
-
-    class GLHider; // pimple OpenGL stuff
-    std::unique_ptr<GLHider> tex_atlas_;
     
-    class StbHider; // pimple stb stuff
-    std::unique_ptr <StbHider> cdata_;
-
-    std::vector<Text> texts_;
+    class GlStbHider; // pimple OpenGL & stb stuff
+    std::unique_ptr <GlStbHider> pimpl_;
 
     // character quad (6 positions of two describing triangles)
     using Quad = std::array < glm::vec4, 6 >;
     // quads for all characters in text
     using Quads = std::vector < Quad >;
-    // complete text
-    std::vector<Quads> coords_;
+
+    struct TextQuad
+    {
+      Text text;
+      Quads coordinates;
+    };
+
+    std::vector<TextQuad> textquads_;
   
-    bool setText(Text& t, Quads& qv, std::string const& text);
+    bool setText(TextQuad& tq, std::string const& text);
+    bool createFontTexture(std::string const& font_name, size_t glyph_cnt, float font_height);
   };
 }

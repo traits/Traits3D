@@ -9,15 +9,10 @@
 #include "traits3d/glbase/shader.h"
 #include "traits3d/textengine/textengine_std.h"
 
-class Traits3D::StandardTextEngine::GLHider
+class Traits3D::StandardTextEngine::GlStbHider
 {
 public:
-  GLuint atlas;
-}; 
-
-class Traits3D::StandardTextEngine::StbHider
-{
-public:
+  GLuint texture_atlas;
   std::vector<stbtt_bakedchar> bc_vec;
 };
 
@@ -55,8 +50,9 @@ Traits3D::StandardTextEngine::StandardTextEngine()
   "}"
   )
 {
-  cdata_ = std::make_unique<Traits3D::StandardTextEngine::StbHider>();
-  tex_atlas_ = std::make_unique<Traits3D::StandardTextEngine::GLHider>();
+  //cdata_ = std::make_unique<Traits3D::StandardTextEngine::StbHider>();
+  //tex_atlas_ = std::make_unique<Traits3D::StandardTextEngine::GLHider>();
+  pimpl_ = std::make_unique<Traits3D::StandardTextEngine::GlStbHider>();
 }
 
 bool Traits3D::StandardTextEngine::initializeGL()
@@ -67,48 +63,27 @@ bool Traits3D::StandardTextEngine::initializeGL()
   vao_ = std::make_unique<GL::VAO>();
   vbo_ = std::make_unique<GL::VBO>(vao_.get());
 
-  const size_t glyph_cnt = 96;
-  const float font_height = 24.0f;
-
-  cdata_->bc_vec.resize(glyph_cnt); // ASCII 32..126 is 95 glyphs
-
-  unsigned char temp_bitmap[512 * 512];
-  //if (-1 == stbtt_BakeFontBitmap(&StandardFont::OpenSans_Regular.data[0], 0, font_height,
-  if (-1 == stbtt_BakeFontBitmap(&StandardFont::fontMap.at("OpenSans Regular")->data[0], 0, font_height,
-      temp_bitmap, 512, 512, 32, int(glyph_cnt), &cdata_->bc_vec[0])) // no guarantee this fits!
-  {
-    return false;
-  }
-
-  glGenTextures(1, &tex_atlas_->atlas);
-
-  GLint oldtex = 0;
-  glGetIntegerv(GL_TEXTURE_BINDING_2D, &oldtex);
-  glBindTexture(GL_TEXTURE_2D, tex_atlas_->atlas);
-  // GL_RED here, because GL_ALPHA is not longer supported from newer OpenGL versions
-  // requires change from .a to .r component in fragment shader too
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 512, 512, 0, GL_RED, GL_UNSIGNED_BYTE, temp_bitmap);
-  // temp_bitmap free-able from this point
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glBindTexture(GL_TEXTURE_2D, oldtex);
-  return true;
+  return createFontTexture("OpenSans Regular", 96, 24);
 }
 
 bool Traits3D::StandardTextEngine::setText(std::string const& text, size_t index /*= 0*/)
 {
-  if (index >= texts_.size() || index >= coords_.size())
+  if (index >= textquads_.size())
     return false;
 
-  return setText(texts_[index], coords_[index], text);
+  return setText(textquads_[index], text);
 }
 
-bool Traits3D::StandardTextEngine::setText(Text& t, Quads& qv, std::string const& text)
+bool Traits3D::StandardTextEngine::setText(TextQuad& tq, std::string const& text)
 {
   if (text.empty())
     return false;
 
   if (text.empty())
     return false;
+
+  Text& t = tq.text;
+  Quads& qv = tq.coordinates;
 
   t.text = text;
   t.hull = Hull(); // reset //todo?
@@ -123,7 +98,7 @@ bool Traits3D::StandardTextEngine::setText(Text& t, Quads& qv, std::string const
     if (ch >= 32 /*&& ch < 128*/)
     {
       stbtt_aligned_quad q;
-      stbtt_GetBakedQuad(&cdata_->bc_vec[0], 512, 512, ch - 32, &dx, &dy, &q, 1);
+      stbtt_GetBakedQuad(&pimpl_->bc_vec[0], 512, 512, ch - 32, &dx, &dy, &q, 1);
 
       qv[i][0] = glm::vec4(q.x0, q.y0, q.s0, q.t0);
       qv[i][1] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
@@ -157,15 +132,12 @@ bool Traits3D::StandardTextEngine::setTexts(std::vector<std::string> const& text
 
 bool Traits3D::StandardTextEngine::appendText(std::string const& text)
 {
-  Text t;
-  Quads qv;
+  TextQuad tv;
 
-  if (!setText(t, qv, text))
+  if (!setText(tv, text))
     return false;
 
-  texts_.push_back(t);
-  coords_.push_back(qv);
-
+  textquads_.push_back(tv);
   return true;
 }
 
@@ -173,25 +145,20 @@ bool Traits3D::StandardTextEngine::draw(
   std::vector<TextEngine::Position> const& positions,
   std::vector<Traits3D::Color> const& colors)
 {
-  if (positions.size() != texts_.size())
+  if (positions.size() != textquads_.size())
     return false;
   
-  if (colors.size() != texts_.size())
+  if (colors.size() != textquads_.size())
     return false;
 
-  for (size_t i = 0; i != texts_.size(); ++i)
-  {
-    texts_[i].position = positions[i];
-    texts_[i].color = colors[i];
-  }
-
   std::vector<glm::vec4> coords;
-  for (auto const& text : coords_)
+  for (size_t i = 0; i != textquads_.size(); ++i)
   {
-    for (auto const& ch : text)
+    textquads_[i].text.position = positions[i];
+    textquads_[i].text.color = colors[i];
+    for (auto ch : textquads_[i].coordinates)
       coords.insert(coords.end(), ch.begin(), ch.end());
   }
-
 
   if ( !vbo_->setData(coords)
     || !shader_->bindAttribute(*vbo_, "coord")
@@ -206,7 +173,7 @@ bool Traits3D::StandardTextEngine::draw(
   glGetIntegerv(GL_ACTIVE_TEXTURE, &oldactivetex);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, tex_atlas_->atlas);
+  glBindTexture(GL_TEXTURE_2D, pimpl_->texture_atlas);
   GLuint texture_sampler = glGetUniformLocation(shader_->programId(), "tex");
   glUniform1i(texture_sampler, 0);
 
@@ -222,8 +189,9 @@ bool Traits3D::StandardTextEngine::draw(
   size_t step = 0;
 
   glm::vec2 tpos;
-  for (auto t : texts_)
+  for (auto tq : textquads_)
   {
+    auto t = tq.text;
     tpos = t.position.coordinates;
     switch (t.position.anchor)
     {
@@ -282,6 +250,40 @@ bool Traits3D::StandardTextEngine::draw(
 
 void Traits3D::StandardTextEngine::clear()
 {
-  texts_.clear();
-  coords_.clear();
+  textquads_.clear();
+}
+
+bool Traits3D::StandardTextEngine::createFontTexture(std::string const& font_name, size_t glyph_cnt, float font_height)
+{
+  pimpl_->bc_vec.resize(glyph_cnt); // ASCII 32..126 is 95 glyphs
+
+  const int bmsize = 512;
+  unsigned char bitmap[bmsize * bmsize];
+
+  try // map.at()
+  {
+    if (-1 == stbtt_BakeFontBitmap(&StandardFont::fontMap.at(font_name)->data[0], 0, font_height,
+      bitmap, bmsize, bmsize, 32, int(glyph_cnt), &pimpl_->bc_vec[0])) // no guarantee this fits!
+    {
+      return false;
+    }
+  }
+  catch (std::out_of_range&)
+  {
+    return false;
+  }
+
+
+  glGenTextures(1, &pimpl_->texture_atlas);
+
+  GLint oldtex = 0;
+  glGetIntegerv(GL_TEXTURE_BINDING_2D, &oldtex);
+  glBindTexture(GL_TEXTURE_2D, pimpl_->texture_atlas);
+  // GL_RED here, because GL_ALPHA is not longer supported from newer OpenGL versions
+  // requires change from .a to .r component in fragment shader too
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, GLsizei(bmsize), GLsizei(bmsize), 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
+  // temp_bitmap free-able from this point
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glBindTexture(GL_TEXTURE_2D, oldtex);
+  return true;
 }
