@@ -38,8 +38,8 @@ namespace Traits3D
     std::unique_ptr<GL::VAO> vao_;
     std::unique_ptr<GL::VBO> vbo_;
     
-    class GlStbHider; // pimple OpenGL & stb stuff
-    std::unique_ptr <GlStbHider> pimpl_;
+    class FontAtlas; // pimple stb stuff
+    std::vector<std::shared_ptr <FontAtlas> > font_atlases_;
 
     // character quad (6 positions of two describing triangles)
     using Quad = std::array < glm::vec4, 6 >;
@@ -55,6 +55,6 @@ namespace Traits3D
     std::vector<TextQuad> textquads_;
   
     bool setText(TextQuad& tq, std::string const& text);
-    bool createFontTexture(std::string const& font_name, size_t glyph_cnt, float font_height);
+    bool requestFontTexture(size_t& index, std::string const& font_name, size_t glyph_cnt, int font_height);
   };
 }

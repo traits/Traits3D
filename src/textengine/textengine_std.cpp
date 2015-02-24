@@ -9,11 +9,13 @@
 #include "traits3d/glbase/shader.h"
 #include "traits3d/textengine/textengine_std.h"
 
-class Traits3D::StandardTextEngine::GlStbHider
+class Traits3D::StandardTextEngine::FontAtlas
 {
 public:
   GLuint texture_atlas;
   std::vector<stbtt_bakedchar> bc_vec;
+  std::string font_name;
+  int font_height = 0;
 };
 
 
@@ -50,9 +52,6 @@ Traits3D::StandardTextEngine::StandardTextEngine()
   "}"
   )
 {
-  //cdata_ = std::make_unique<Traits3D::StandardTextEngine::StbHider>();
-  //tex_atlas_ = std::make_unique<Traits3D::StandardTextEngine::GLHider>();
-  pimpl_ = std::make_unique<Traits3D::StandardTextEngine::GlStbHider>();
 }
 
 bool Traits3D::StandardTextEngine::initializeGL()
@@ -63,7 +62,9 @@ bool Traits3D::StandardTextEngine::initializeGL()
   vao_ = std::make_unique<GL::VAO>();
   vbo_ = std::make_unique<GL::VBO>(vao_.get());
 
-  return createFontTexture("OpenSans Regular", 96, 24);
+  size_t idx;
+  requestFontTexture(idx, "OpenSans Italic", 96, 24);
+  return requestFontTexture(idx, "OpenSans Regular", 96, 24);
 }
 
 bool Traits3D::StandardTextEngine::setText(std::string const& text, size_t index /*= 0*/)
@@ -98,7 +99,7 @@ bool Traits3D::StandardTextEngine::setText(TextQuad& tq, std::string const& text
     if (ch >= 32 /*&& ch < 128*/)
     {
       stbtt_aligned_quad q;
-      stbtt_GetBakedQuad(&pimpl_->bc_vec[0], 512, 512, ch - 32, &dx, &dy, &q, 1);
+      stbtt_GetBakedQuad(&font_atlases_[0]->bc_vec[0], 512, 512, ch - 32, &dx, &dy, &q, 1);
 
       qv[i][0] = glm::vec4(q.x0, q.y0, q.s0, q.t0);
       qv[i][1] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
@@ -173,7 +174,7 @@ bool Traits3D::StandardTextEngine::draw(
   glGetIntegerv(GL_ACTIVE_TEXTURE, &oldactivetex);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, pimpl_->texture_atlas);
+  glBindTexture(GL_TEXTURE_2D, font_atlases_[0]->texture_atlas);
   GLuint texture_sampler = glGetUniformLocation(shader_->programId(), "tex");
   glUniform1i(texture_sampler, 0);
 
@@ -253,17 +254,38 @@ void Traits3D::StandardTextEngine::clear()
   textquads_.clear();
 }
 
-bool Traits3D::StandardTextEngine::createFontTexture(std::string const& font_name, size_t glyph_cnt, float font_height)
-{
-  pimpl_->bc_vec.resize(glyph_cnt); // ASCII 32..126 is 95 glyphs
+bool Traits3D::StandardTextEngine::requestFontTexture(size_t& index, std::string const& font_name, size_t glyph_cnt, int font_height)
+{  
+  auto it = std::find_if(font_atlases_.begin(), font_atlases_.end(), 
+    [&font_name, font_height](std::shared_ptr<FontAtlas> e) 
+    {
+      return font_name == e->font_name && e->font_height == font_height; 
+    }
+  );
+  
+  if (it == font_atlases_.end())
+  {
+    font_atlases_.push_back(std::make_shared<FontAtlas>());
+    index = font_atlases_.size() - 1;
+  }
+  else 
+  {
+    index = it - font_atlases_.begin();
+    if ((*it)->bc_vec.size() == glyph_cnt)
+      return true;
+  }
+
+  std::shared_ptr<FontAtlas> curr = font_atlases_[index];
+
+  curr->bc_vec.resize(glyph_cnt); // ASCII 32..126 is 95 glyphs
 
   const int bmsize = 512;
   unsigned char bitmap[bmsize * bmsize];
 
   try // map.at()
   {
-    if (-1 == stbtt_BakeFontBitmap(&StandardFont::fontMap.at(font_name)->data[0], 0, font_height,
-      bitmap, bmsize, bmsize, 32, int(glyph_cnt), &pimpl_->bc_vec[0])) // no guarantee this fits!
+    if (-1 == stbtt_BakeFontBitmap(&StandardFont::fontMap.at(font_name)->data[0], 0, static_cast<float>(font_height),
+      bitmap, bmsize, bmsize, 32, int(glyph_cnt), &curr->bc_vec[0])) // no guarantee this fits!
     {
       return false;
     }
@@ -273,12 +295,13 @@ bool Traits3D::StandardTextEngine::createFontTexture(std::string const& font_nam
     return false;
   }
 
-
-  glGenTextures(1, &pimpl_->texture_atlas);
+  curr->font_name = font_name;
+  curr->font_height = font_height;
+  glGenTextures(1, &curr->texture_atlas);
 
   GLint oldtex = 0;
   glGetIntegerv(GL_TEXTURE_BINDING_2D, &oldtex);
-  glBindTexture(GL_TEXTURE_2D, pimpl_->texture_atlas);
+  glBindTexture(GL_TEXTURE_2D, curr->texture_atlas);
   // GL_RED here, because GL_ALPHA is not longer supported from newer OpenGL versions
   // requires change from .a to .r component in fragment shader too
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, GLsizei(bmsize), GLsizei(bmsize), 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
