@@ -61,30 +61,34 @@ bool Traits3D::StandardTextEngine::initializeGL()
     return false;
   vao_ = std::make_unique<GL::VAO>();
   vbo_ = std::make_unique<GL::VBO>(vao_.get());
-
-  size_t idx;
-  requestFontTexture(idx, "OpenSans Italic", 96, 24);
-  return requestFontTexture(idx, "OpenSans Regular", 96, 24);
+  return true;
 }
 
 bool Traits3D::StandardTextEngine::setText(std::string const& text, size_t index /*= 0*/)
 {
-  if (index >= textquads_.size())
+  if (index >= quadded_texts_.size())
     return false;
 
-  return setText(textquads_[index], text);
+  return setText(quadded_texts_[index], text);
 }
 
-bool Traits3D::StandardTextEngine::setText(TextQuad& tq, std::string const& text)
+bool Traits3D::StandardTextEngine::setText(QuaddedText& qt, std::string const& text)
 {
   if (text.empty())
     return false;
 
-  if (text.empty())
-    return false;
+  if (qt.atlas.get() == nullptr)
+  {
+    size_t idx;
+    if (!requestFontTexture(idx, "OpenSans Regular", 96, 24))
+      return false;
 
-  Text& t = tq.text;
-  Quads& qv = tq.coordinates;
+    qt.atlas = font_atlases_[idx];
+  }
+
+  Text& t = qt.text;
+  Quads& qv = qt.coordinates;
+  FontAtlas& atlas = *qt.atlas;
 
   t.text = text;
   t.hull = Hull(); // reset //todo?
@@ -99,7 +103,7 @@ bool Traits3D::StandardTextEngine::setText(TextQuad& tq, std::string const& text
     if (ch >= 32 /*&& ch < 128*/)
     {
       stbtt_aligned_quad q;
-      stbtt_GetBakedQuad(&font_atlases_[0]->bc_vec[0], 512, 512, ch - 32, &dx, &dy, &q, 1);
+      stbtt_GetBakedQuad(&atlas.bc_vec[0], 512, 512, ch - 32, &dx, &dy, &q, 1);
 
       qv[i][0] = glm::vec4(q.x0, q.y0, q.s0, q.t0);
       qv[i][1] = glm::vec4(q.x0, q.y1, q.s0, q.t1);
@@ -133,12 +137,12 @@ bool Traits3D::StandardTextEngine::setTexts(std::vector<std::string> const& text
 
 bool Traits3D::StandardTextEngine::appendText(std::string const& text)
 {
-  TextQuad tv;
+  QuaddedText qt;
 
-  if (!setText(tv, text))
+  if (!setText(qt, text))
     return false;
 
-  textquads_.push_back(tv);
+  quadded_texts_.push_back(qt);
   return true;
 }
 
@@ -146,18 +150,18 @@ bool Traits3D::StandardTextEngine::draw(
   std::vector<TextEngine::Position> const& positions,
   std::vector<Traits3D::Color> const& colors)
 {
-  if (positions.size() != textquads_.size())
+  if (positions.size() != quadded_texts_.size())
     return false;
   
-  if (colors.size() != textquads_.size())
+  if (colors.size() != quadded_texts_.size())
     return false;
 
   std::vector<glm::vec4> coords;
-  for (size_t i = 0; i != textquads_.size(); ++i)
+  for (size_t i = 0; i != quadded_texts_.size(); ++i)
   {
-    textquads_[i].text.position = positions[i];
-    textquads_[i].text.color = colors[i];
-    for (auto ch : textquads_[i].coordinates)
+    quadded_texts_[i].text.position = positions[i];
+    quadded_texts_[i].text.color = colors[i];
+    for (auto ch : quadded_texts_[i].coordinates)
       coords.insert(coords.end(), ch.begin(), ch.end());
   }
 
@@ -174,9 +178,6 @@ bool Traits3D::StandardTextEngine::draw(
   glGetIntegerv(GL_ACTIVE_TEXTURE, &oldactivetex);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, font_atlases_[0]->texture_atlas);
-  GLuint texture_sampler = glGetUniformLocation(shader_->programId(), "tex");
-  glUniform1i(texture_sampler, 0);
 
   GL::State blend(GL_BLEND, GL_TRUE), depth_test(GL_DEPTH_TEST, GL_FALSE);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -190,9 +191,9 @@ bool Traits3D::StandardTextEngine::draw(
   size_t step = 0;
 
   glm::vec2 tpos;
-  for (auto tq : textquads_)
+  for (auto qt : quadded_texts_)
   {
-    auto t = tq.text;
+    auto t = qt.text;
     tpos = t.position.coordinates;
     switch (t.position.anchor)
     {
@@ -235,6 +236,11 @@ bool Traits3D::StandardTextEngine::draw(
     shader_->setUniformMatrix(pmat, "proj_mat");
     shader_->setUniformVec3(glm::vec3(t.color.r, t.color.g, t.color.b), "color");
 
+    
+    glBindTexture(GL_TEXTURE_2D, qt.atlas->texture_atlas);
+    GLuint texture_sampler = glGetUniformLocation(shader_->programId(), "tex");
+    glUniform1i(texture_sampler, 0);
+
     step = std::tuple_size<Quad>::value *  t.text.size();
     vbo_->draw(GL_TRIANGLES, sidx, step);
     sidx += step;
@@ -251,7 +257,7 @@ bool Traits3D::StandardTextEngine::draw(
 
 void Traits3D::StandardTextEngine::clear()
 {
-  textquads_.clear();
+  quadded_texts_.clear();
 }
 
 bool Traits3D::StandardTextEngine::requestFontTexture(size_t& index, std::string const& font_name, size_t glyph_cnt, int font_height)

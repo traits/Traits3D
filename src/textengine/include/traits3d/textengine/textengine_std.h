@@ -46,15 +46,16 @@ namespace Traits3D
     // quads for all characters in text
     using Quads = std::vector < Quad >;
 
-    struct TextQuad
+    struct QuaddedText
     {
       Text text;
       Quads coordinates;
+      std::shared_ptr<FontAtlas> atlas;
     };
 
-    std::vector<TextQuad> textquads_;
+    std::vector<QuaddedText> quadded_texts_;
   
-    bool setText(TextQuad& tq, std::string const& text);
+    bool setText(QuaddedText& qt, std::string const& text);
     bool requestFontTexture(size_t& index, std::string const& font_name, size_t glyph_cnt, int font_height);
   };
 }
