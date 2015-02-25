@@ -9,20 +9,20 @@ Traits3D::TextEngine::Hull::Hull()
 {
 }
 
-bool Traits3D::TextEngine::appendDouble(double value, std::streamsize precision /*= 6*/)
+bool Traits3D::TextEngine::appendDouble(double value, FontInfo const& font_info)
 {
-  return this->appendText(double2text(value, precision));
+  return this->appendText(double2text(value), font_info);
 }
 
-bool Traits3D::TextEngine::setDouble(double value, std::streamsize precision /*= 6*/, size_t index /*= 0*/)
+bool Traits3D::TextEngine::setDouble(double value, size_t index /*= 0*/)
 {
-  return this->setText(double2text(value,precision), index);
+  return this->setText(double2text(value), index);
 }
 
-std::string Traits3D::TextEngine::double2text(double value, std::streamsize precision /*= 6*/)
+std::string Traits3D::TextEngine::double2text(double value)
 {
   std::ostringstream os;
-  os << std::setprecision(precision) << value;
+  os << std::setprecision(dprecision_) << value;
   return os.str();
 
   //os.clear();

@@ -7,6 +7,8 @@
 
 namespace Traits3D
 {
+  class FontInfo;
+
   class TextEngine
   {
   public:
@@ -37,8 +39,8 @@ namespace Traits3D
     virtual ~TextEngine() {};
     virtual bool initializeGL() = 0;
 
-    virtual bool setTexts(std::vector<std::string> const& texts) = 0;
-    virtual bool appendText(std::string const& text) = 0;
+    virtual bool setTexts(std::vector<std::string> const& texts, std::vector<FontInfo> const& font_info) = 0;
+    virtual bool appendText(std::string const& text, FontInfo const& font_info) = 0;
     virtual bool setText(std::string const& val, size_t index) = 0;
 
     //! View port origin always bottom-left
@@ -47,9 +49,10 @@ namespace Traits3D
       std::vector<Traits3D::Color> const& colors
       ) = 0;
 
-    bool appendDouble(double value, std::streamsize precision = 6);
-    bool setDouble(double value, std::streamsize precision = 6, size_t index = 0);
-    static std::string double2text(double value, std::streamsize precision = 6);
+    void setDoublePrecision(std::streamsize val) { dprecision_ = val; }
+    bool appendDouble(double value, FontInfo const& font_info);
+    bool setDouble(double value, size_t index = 0);
+    std::string double2text(double value);
 
   protected:
     struct Hull
@@ -69,5 +72,8 @@ namespace Traits3D
     };
 
     virtual void clear() = 0;
+
+  private:
+    std::streamsize dprecision_ = 6;
   };
 }

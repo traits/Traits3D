@@ -98,6 +98,6 @@ bool Traits3D::Plot3D::initializeGL()
 
 void Traits3D::Plot3D::setTitle(std::string const& val)
 {
-  if (text_engine_p->setTexts(std::vector<std::string>(1,val)))
+  if (text_engine_p->setTexts(std::vector<std::string>(1, val), std::vector<FontInfo>(1, FontInfo("OpenSans Italic", 24))))
     title_ = val;
 }

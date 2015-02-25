@@ -56,10 +56,13 @@ void Traits3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 cons
   if (majors_changed_)
   {
     std::vector<std::string> dtext;
+    std::vector<FontInfo> finfo;
     for (auto v : majorvalues_)
-      dtext.push_back(TextEngine::double2text(v));
-    
-    te_->setTexts(dtext);
+    {
+      dtext.push_back(te_->double2text(v));
+      finfo.push_back(FontInfo("OpenSans Regular", 24));
+    }
+    te_->setTexts(dtext, finfo);
   }
   te_->draw(majorpositions_2d, colors);
 }

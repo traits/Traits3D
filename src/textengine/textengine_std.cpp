@@ -8,7 +8,6 @@
 #include "traits3d/glbase/shader.h"
 #include "traits3d/textengine/textengine_std.h"
 
-
 class Traits3D::StandardTextEngine::FontAtlas
 {
 public:
@@ -69,18 +68,18 @@ bool Traits3D::StandardTextEngine::setText(std::string const& text, size_t index
   if (index >= quadded_texts_.size())
     return false;
 
-  return setText(quadded_texts_[index], text);
+  return createQuaddedText(quadded_texts_[index], text, quadded_texts_[index].font_info);
 }
 
-bool Traits3D::StandardTextEngine::setText(QuaddedText& qt, std::string const& text)
+bool Traits3D::StandardTextEngine::createQuaddedText(QuaddedText& qt, std::string const& text, FontInfo const& font_info)
 {
   if (text.empty())
     return false;
 
-  if (qt.atlas.get() == nullptr)
+  //if (qt.atlas.get() == nullptr)
   {
     size_t idx;
-    if (!requestFontTexture(idx, "OpenSans Regular", 96, 24))
+    if (!requestFontTexture(idx, font_info.font_name, 96, font_info.font_height))
       return false;
 
     qt.atlas = font_atlases_[idx];
@@ -125,21 +124,24 @@ bool Traits3D::StandardTextEngine::setText(QuaddedText& qt, std::string const& t
   return true;
 }
 
-bool Traits3D::StandardTextEngine::setTexts(std::vector<std::string> const& texts)
+bool Traits3D::StandardTextEngine::setTexts(std::vector<std::string> const& texts, std::vector<FontInfo> const& font_info)
 {
+  if (texts.size() != font_info.size())
+    return false;
+
   clear();
-  for (auto t : texts)
-    if (!appendText(t))
+  for (size_t i = 0; i != texts.size(); ++i)
+    if (!appendText(texts[i], font_info[i]))
       return false;
 
   return true;
 }
 
-bool Traits3D::StandardTextEngine::appendText(std::string const& text)
+bool Traits3D::StandardTextEngine::appendText(std::string const& text, FontInfo const& font_info)
 {
   QuaddedText qt;
 
-  if (!setText(qt, text))
+  if (!createQuaddedText(qt, text, font_info))
     return false;
 
   quadded_texts_.push_back(qt);
@@ -260,7 +262,7 @@ void Traits3D::StandardTextEngine::clear()
   quadded_texts_.clear();
 }
 
-bool Traits3D::StandardTextEngine::requestFontTexture(size_t& index, std::string const& font_name, size_t glyph_cnt, int font_height)
+bool Traits3D::StandardTextEngine::requestFontTexture(size_t& index, std::string const& font_name, size_t glyph_cnt, size_t font_height)
 {  
   auto it = std::find_if(font_atlases_.begin(), font_atlases_.end(), 
     [&font_name, font_height](std::shared_ptr<FontAtlas> e) 
@@ -302,7 +304,7 @@ bool Traits3D::StandardTextEngine::requestFontTexture(size_t& index, std::string
   }
 
   curr->font_name = font_name;
-  curr->font_height = font_height;
+  curr->font_height = static_cast<int>(font_height);
   glGenTextures(1, &curr->texture_atlas);
 
   GLint oldtex = 0;

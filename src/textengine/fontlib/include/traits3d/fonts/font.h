@@ -37,5 +37,4 @@ namespace Traits3D
     class StandardFonts;
     static void appendFont(const Font* val);
   };
-
 } // ns
