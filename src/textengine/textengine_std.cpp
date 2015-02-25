@@ -3,11 +3,11 @@
 #define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
 #include "traits3d/textengine/stb_truetype.h"
 
-#include "traits3d/fonts/stdfonts.h"
 #include "traits3d/glbase/vao.h"
 #include "traits3d/glbase/vbo.h"
 #include "traits3d/glbase/shader.h"
 #include "traits3d/textengine/textengine_std.h"
+
 
 class Traits3D::StandardTextEngine::FontAtlas
 {
@@ -97,7 +97,7 @@ bool Traits3D::StandardTextEngine::setText(QuaddedText& qt, std::string const& t
 
   float dx = 0;
   float dy = 0;
-  for (auto i = 0; i != t.text.size(); ++i)
+  for (size_t i = 0; i != t.text.size(); ++i)
   {
     auto& ch = t.text[i];
     if (ch >= 32 /*&& ch < 128*/)
@@ -290,7 +290,7 @@ bool Traits3D::StandardTextEngine::requestFontTexture(size_t& index, std::string
 
   try // map.at()
   {
-    if (-1 == stbtt_BakeFontBitmap(&StandardFont::fontMap.at(font_name)->data[0], 0, static_cast<float>(font_height),
+    if (-1 == stbtt_BakeFontBitmap(&Font::repository().at(font_name)->data[0], 0, static_cast<float>(font_height),
       bitmap, bmsize, bmsize, 32, int(glyph_cnt), &curr->bc_vec[0])) // no guarantee this fits!
     {
       return false;

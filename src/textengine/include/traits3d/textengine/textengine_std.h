@@ -2,6 +2,8 @@
 
 #include <memory>
 #include <array>
+
+#include "traits3d/fonts/stdfonts.h"
 #include "traits3d/textengine/textengine.h"
 
 namespace Traits3D

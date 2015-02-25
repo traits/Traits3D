@@ -6,22 +6,22 @@ hprefix = 'traits3d/fonts'
 hfile = open(os.path.join(hdir, "stdfonts.h"),'w')
 
 s = '''#pragma once
+
+// generated private class - don't touch
+
 #include "traits3d/fonts/font.h"
 
 namespace Traits3D
 {
-  class StandardFont  
+  class Font::StandardFonts  
   {
-  public:
-    static const FontMap fontMap;
-  
   private:
 '''
 
 hfile.write(s)
 
 cfile = open('stdfonts.cpp','w')
-cfile.write('#include "' + hprefix + "/" + 'stdfonts.h"\n\nnamespace\n{\n')
+cfile.write('// generated private class - don\'t touch\n\n#include "' + hprefix + "/" + 'stdfonts.h"\n\nnamespace\n{\n')
 
 basenames = []
 caption = []
@@ -55,27 +55,22 @@ for root, dirs, files in os.walk('fonts'):
 cfile.write('} // private\n\n' )           
 
 s = '''
-    static FontMap create_map()
+  public:
+    static void append_to_repository()
     {
-      FontMap m;
-      
 '''
 hfile.write(s)
 
 for i in range(len(basenames)):
-    hfile.write('      m[' + basenames[i] + '.name] = &' + basenames[i] + ';\n')
-    cfile.write('const Traits3D::Font Traits3D::StandardFont::' + basenames[i] + 
+    hfile.write('      Font::appendFont(&' + basenames[i] + ');\n')
+    cfile.write('const Traits3D::Font Traits3D::Font::StandardFonts::' + basenames[i] + 
     ' = Traits3D::Font((const unsigned char*)' + basenames[i] + anonsuffix + ', ' + 
     basenames[i] + sizesuffix + ', "' + caption[i] + '");\n')        
 
-s = '''
-      return m;
-    }
+s = '''    }
   };
 } // ns  
 '''    
 hfile.write(s)
 hfile.close()  
-
-cfile.write('const Traits3D::FontMap Traits3D::StandardFont::fontMap = Traits3D::StandardFont::create_map();\n')  
 cfile.close()    

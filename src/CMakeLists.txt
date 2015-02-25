@@ -31,7 +31,8 @@ include_directories(glbase/include)
 add_subdirectory(glbase)
 list(APPEND ALL_LIBS glbase)
 
-# text engine
+# fonts, text engine
+include_directories(textengine/fontlib/include)
 include_directories(textengine/include)
 add_subdirectory(textengine)
 list(APPEND ALL_LIBS fontlib)

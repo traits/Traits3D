@@ -1,25 +1,22 @@
 #pragma once
+
+// generated private class - don't touch
+
 #include "traits3d/fonts/font.h"
 
 namespace Traits3D
 {
-  class StandardFont  
+  class Font::StandardFonts  
   {
-  public:
-    static const FontMap fontMap;
-  
   private:
     static const Font OpenSans_Italic;
     static const Font OpenSans_Regular;
 
-    static FontMap create_map()
+  public:
+    static void append_to_repository()
     {
-      FontMap m;
-      
-      m[OpenSans_Italic.name] = &OpenSans_Italic;
-      m[OpenSans_Regular.name] = &OpenSans_Regular;
-
-      return m;
+      Font::appendFont(&OpenSans_Italic);
+      Font::appendFont(&OpenSans_Regular);
     }
   };
 } // ns  
