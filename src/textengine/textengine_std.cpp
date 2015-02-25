@@ -14,7 +14,7 @@ public:
   GLuint texture_atlas;
   std::vector<stbtt_bakedchar> bc_vec;
   std::string font_name;
-  int font_height = 0;
+  size_t font_height = 0;
 };
 
 
@@ -304,7 +304,7 @@ bool Traits3D::StandardTextEngine::requestFontTexture(size_t& index, std::string
   }
 
   curr->font_name = font_name;
-  curr->font_height = static_cast<int>(font_height);
+  curr->font_height = font_height;
   glGenTextures(1, &curr->texture_atlas);
 
   GLint oldtex = 0;
