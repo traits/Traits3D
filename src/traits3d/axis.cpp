@@ -20,37 +20,18 @@ void Traits3D::Axis::init()
 {
   scale_ = std::shared_ptr<Scale>(new LinearScale);
 
-  beg_ = Triple(0.0, 0.0, 0.0);
-  end_ = beg_;
+  number_font_ = FontInfo("OpenSans Regular", 24);
+  label_font_ = FontInfo("OpenSans Italic", 36);
 
-  majorintervals_ = 0;
-  minorintervals_ = 0;
-  setMajors(1);
-  setMinors(1);
-  setLimits(0,0);
-
-  setTicOrientation(0.0, 0.0, 0.0);
-  setTicLength(0.0, 0.0);
-  setColor(Color(0,0,0,0));
-  //setLineWidth(1.0);
-  symtics_ = false;
-  draw_numbers_ = false;
-  draw_label_ = false;
-
-  draw_tics_ = false;
-  autoscale_ = true;
-  numbercolor_ = Color(0, 0, 0, 0);
-
-  setNumberAnchor(TextEngine::Anchor::Center);
-
-  numbergap_ = 0;
-  //labelgap_ = 0;
+  tic_orientation_ = Triple(1.0, 0.0, 0.0);
+  scale_number_anchor_ = TextEngine::Anchor::Center;
+  label_anchor_ = TextEngine::Anchor::Center;
 }
 
 void Traits3D::Axis::setPosition(const Triple& beg, const Triple& end)
 {
-  beg_ = beg;
-  end_ = end;
+  axis_origin_ = beg;
+  axis_end_ = end;
 }
 
 void Traits3D::Axis::setMajors(size_t val)
@@ -74,8 +55,8 @@ void Traits3D::Axis::setMinors(size_t val)
 
 void Traits3D::Axis::setTicLength(double majorl, double minorl)
 {
-  lmaj_ = majorl;
-  lmin_ = minorl;
+  len_major_tics_ = majorl;
+  len_minor_tics_ = minorl;
 }
 
 void Traits3D::Axis::setTicOrientation(double tx, double ty, double tz)
@@ -85,7 +66,9 @@ void Traits3D::Axis::setTicOrientation(double tx, double ty, double tz)
 
 void Traits3D::Axis::setTicOrientation(const Triple& val)
 {
-  orientation_ = glm::normalize(val);
+  tic_orientation_ = (equal(val, Triple(0.0,0.0,0.0)))
+  ? Triple(1.0, 0.0, 0.0)
+  : glm::normalize(val);
 }
 
 bool Traits3D::Axis::prepTicCalculation(Triple& startpoint)
@@ -109,7 +92,7 @@ bool Traits3D::Axis::prepTicCalculation(Triple& startpoint)
   scale_->setMajorLimits(autostart_,autostop_);
   scale_->calculate();
 
-  startpoint = end_ - beg_;
+  startpoint = axis_end_ - axis_origin_;
 
   return true;
 }
@@ -117,8 +100,8 @@ bool Traits3D::Axis::prepTicCalculation(Triple& startpoint)
 void Traits3D::Axis::recalculateTics()
 {
   Triple runningpoint;
-  majorpos_.clear();
-  minorpos_.clear();
+  major_positions_.clear();
+  minor_positions_.clear();
 
   if (!draw_tics_ || false == prepTicCalculation(runningpoint))
     return;
@@ -128,45 +111,50 @@ void Traits3D::Axis::recalculateTics()
   for (i = 0; i != scale_->majors_p.size(); ++i)
   {
     double t = (scale_->majors_p[i] - start_) / (stop_-start_);
-    majorpos_.push_back(beg_ + t * runningpoint);
+    major_positions_.push_back(axis_origin_ + t * runningpoint);
   }
   for (i = 0; i != scale_->minors_p.size(); ++i)
   {
     double t = (scale_->minors_p[i] - start_) / (stop_-start_);
-    minorpos_.push_back(beg_ + t * runningpoint);
+    minor_positions_.push_back(axis_origin_ + t * runningpoint);
   }
+}
+
+void Traits3D::Axis::setNumberFont(Traits3D::FontInfo const& font_info)
+{
+  number_font_ = font_info;
 }
 
 void Traits3D::Axis::setNumberColor(Color const& col)
 {
-  numbercolor_ = col;
+  number_color_ = col;
 }
 
-//void Traits3D::Axis::setLabelFont(Protean3D::Label::Font const& font)
-//{
-//  labelfont_ = font;
-//  label_.setFont(labelfont_);
-//}
-//
-//void Traits3D::Axis::setLabelString(Protean3D::Label::String const& name)
-//{
-//  label_.setString(name);
-//}
-//
-///*!
-//  Sets label position in conjunction with an anchoring strategy
-//*/
-//void Traits3D::Axis::setLabelPosition(const Triple& pos, Protean3D::ANCHOR an)
-//{
-//  label_.setPosition(pos, an);
-//}
-//
-////! Sets color for label
-//void Traits3D::Axis::setLabelColor(RGBA col)
-//{
-//  label_.setColor(col);
-//}
-// 
+void Traits3D::Axis::setLabelFont(Traits3D::FontInfo const& font_info)
+{
+  label_font_ = font_info;
+}
+
+void Traits3D::Axis::setLabelText(std::string const& val)
+{
+  label_text_ = val;
+}
+
+/*!
+  Sets label position in conjunction with an anchoring strategy
+*/
+void Traits3D::Axis::setLabelPosition(const Traits3D::Triple& pos, Traits3D::TextEngine::Anchor a)
+{
+  label_position_ = pos;
+  label_anchor_ = a;
+}
+
+//! Sets color for label
+void Traits3D::Axis::setLabelColor(Traits3D::Color const& val)
+{
+  label_color_ = val;
+}
+ 
 /*
   Sets one of the predefined scaling types.
   \warning Too small intervals in logarithmic scales lead to
@@ -192,11 +180,14 @@ void Traits3D::Axis::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matr
 {
   //todo performance!
   recalculateTics();
-  globject_p->setSymmetricTics(symtics_);
-  globject_p->setTicOrientation(orientation_);
-  globject_p->setTicLength(lmaj_, lmin_);
-  globject_p->setValues(beg_, end_, majorpos_, minorpos_, scale_->majors_p);
-  globject_p->setNumberAnchor(scaleNumberAnchor_);
+  globject_p->setSymmetricTics(symmetric_tics_);
+  globject_p->setTicOrientation(tic_orientation_);
+  globject_p->setTicLength(len_major_tics_, len_minor_tics_);
+  globject_p->setValues(axis_origin_, axis_end_, major_positions_, minor_positions_, scale_->majors_p);
+  globject_p->setNumberAnchor(scale_number_anchor_);
+  globject_p->setLabelFont(label_font_);
+  globject_p->setNumberFont(number_font_);
+
   //end todo
   globject_p->draw(proj_matrix, mv_matrix);
 }

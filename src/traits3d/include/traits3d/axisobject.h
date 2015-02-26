@@ -3,6 +3,7 @@
 #include <memory>
 #include "traits3d/globject.h"
 #include "traits3d/types.h"
+#include "traits3d/fonts/fontinfo.h"
 #include "traits3d/textengine/textengine.h"
 
 namespace Traits3D
@@ -24,6 +25,8 @@ namespace Traits3D
         void setSymmetricTics(bool val);
         void setTicLength(double majorticlen, double minorticlen);
         void setNumberAnchor(TextEngine::Anchor a) {number_anchor_ = a;}
+        void setNumberFont(Traits3D::FontInfo const& font_info);
+        void setLabelFont(Traits3D::FontInfo const& font_info);
 
       private:
         GL::Shader shader_;
@@ -44,8 +47,10 @@ namespace Traits3D
         std::shared_ptr<TextEngine> te_;
 
         bool updateData();
-
         bool majors_changed_ = true;
+
+        FontInfo label_font_info_;
+        FontInfo number_font_info_;
     };
   } // ns
 } // ns

@@ -60,7 +60,7 @@ void Traits3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 cons
     for (auto v : majorvalues_)
     {
       dtext.push_back(te_->double2text(v));
-      finfo.push_back(FontInfo("OpenSans Regular", 24));
+      finfo.push_back(number_font_info_);
     }
     te_->setTexts(dtext, finfo);
   }
@@ -161,4 +161,14 @@ void Traits3D::GL::AxisObject::setTicLength(double majorticlen, double minorticl
   majorticlength_ = static_cast<float>(majorticlen);
   minorticlength_ = static_cast<float>(minorticlen);
   modified_ = true;
+}
+
+void Traits3D::GL::AxisObject::setNumberFont(Traits3D::FontInfo const& font_info)
+{
+  number_font_info_ = font_info;
+}
+
+void Traits3D::GL::AxisObject::setLabelFont(Traits3D::FontInfo const& font_info)
+{
+  label_font_info_ = font_info;
 }
