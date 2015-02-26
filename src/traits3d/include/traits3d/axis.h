@@ -113,9 +113,9 @@ namespace Traits3D
 
     FontInfo number_font_;
     FontInfo label_font_;
-    Color number_color_;
-    Color label_color_;
-    Color axis_color_;
+    Color number_color_ = Color(0.0f, 0.0f, 0.0f, 1.0f);
+    Color label_color_ = Color(0.0f, 0.0f, 0.0f, 1.0f);
+    Color axis_color_ = Color(0.0f, 0.0f, 0.0f, 1.0f);
     int number_gap_ = 0;
     int label_gap_ = 0;
       

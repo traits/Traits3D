@@ -48,7 +48,7 @@ void Traits3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 cons
     // opposite to tic orientation
     TripleF pos = GL::World2ViewPort(majors_[i] - majorticlength_ * orientation_, mv_matrix, proj_matrix, GL::viewPort());
     majorpositions_2d[i] = TextEngine::Position(TupleF(pos.x, pos.y), number_anchor_);
-    colors[i] = Color(0.0, 0.3, 0.0, 1);
+    colors[i] = number_color_;
   }
   if (!colors.empty()) //todo test code only
     colors[colors.size()/2] = Color(0.0, 0.0, 0.7, 1);
@@ -171,4 +171,40 @@ void Traits3D::GL::AxisObject::setNumberFont(Traits3D::FontInfo const& font_info
 void Traits3D::GL::AxisObject::setLabelFont(Traits3D::FontInfo const& font_info)
 {
   label_font_info_ = font_info;
+}
+
+void Traits3D::GL::AxisObject::setColor(Traits3D::Color const& val)
+{
+  axis_color_ = val;
+}
+
+void Traits3D::GL::AxisObject::setLabelText(std::string const& val)
+{
+  label_text_ = val;
+}
+
+void Traits3D::GL::AxisObject::setLabelPosition(Traits3D::Triple const& pos, Traits3D::TextEngine::Anchor a)
+{
+  label_position_ = pos;
+  label_anchor_ = a;
+}
+
+void Traits3D::GL::AxisObject::setLabelColor(Traits3D::Color const& val)
+{
+  label_color_ = val;
+}
+
+void Traits3D::GL::AxisObject::adjustLabel(int val)
+{
+  label_gap_ = val;
+}
+
+void Traits3D::GL::AxisObject::setNumberColor(Traits3D::Color const& val)
+{
+  number_color_ = val;
+}
+
+void Traits3D::GL::AxisObject::adjustNumbers(int val)
+{
+  number_gap_ = val;
 }
