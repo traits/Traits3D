@@ -3,6 +3,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src/base/include)
 include_directories(${PROJECT_SOURCE_DIR}/src/glbase/include)
 include_directories(${PROJECT_SOURCE_DIR}/src/traits3d/include)
 include_directories(${PROJECT_SOURCE_DIR}/src/textengine/include)
+include_directories(${PROJECT_SOURCE_DIR}/src/textengine/fontlib/include)
 
 if (TRAITS3D_EXAMPLES_QT)
     add_subdirectory(qt)
