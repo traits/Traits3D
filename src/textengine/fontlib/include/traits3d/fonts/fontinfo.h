@@ -11,7 +11,7 @@ namespace Traits3D
       : font_name(f_name), font_height(f_height)
     {}
 
-    const std::string font_name;
-    const size_t font_height;
+    std::string font_name;
+    size_t font_height;
   };
 } // ns
