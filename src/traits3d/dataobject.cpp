@@ -90,7 +90,7 @@ bool Traits3D::GL::DataObject::addColor(ColorVector const& data)
     return false;
 
   colors_ = data;
-  return shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColor], GL::ShaderCode::Vertex::v_in_color);
+  return true;
 }
 
 bool Traits3D::GL::DataObject::addMeshColor(Color const& data)
@@ -101,6 +101,14 @@ bool Traits3D::GL::DataObject::addMeshColor(Color const& data)
 
 void Traits3D::GL::DataObject::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
 {
+  // have to rebind here
+  shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColor], GL::ShaderCode::Vertex::v_in_color);
+  for (auto& s : shader_)
+  {
+    if (!s.second.bindAttribute(*vbos_[VBOindex::Position], GL::ShaderCode::Vertex::v_coordinates))
+      return;
+  }
+
   // polygons
   shader_[ShaderIndex::TriangleStrip].use();
   shader_[ShaderIndex::TriangleStrip].setProjectionMatrix(proj_matrix);
@@ -109,7 +117,6 @@ void Traits3D::GL::DataObject::draw(glm::mat4 const& proj_matrix, glm::mat4 cons
 
   // mesh
   shader_[ShaderIndex::Lines].use();
-  //shader_p[0].use();
   shader_[ShaderIndex::Lines].setModelViewMatrix(mv_matrix);
 
   //todo [educated] hack
