@@ -52,7 +52,7 @@ bool Traits3D::GL::IBO::create(size_t xsize, size_t ysize, GLenum primitive_type
 {
   primitive_type_ = primitive_type;
   indexmaker_.setRestartBehavior(IndexMaker::RestartType::PrimitiveRestart, std::numeric_limits<IndexMaker::IndexType>::max());
-  return indexmaker_.create(xsize, ysize, primitive_type);
+  return indexmaker_.create(static_cast<GLuint>(xsize), static_cast<GLuint>(ysize), primitive_type);
 }
 
 bool Traits3D::GL::IBO::draw(GLenum draw_type)

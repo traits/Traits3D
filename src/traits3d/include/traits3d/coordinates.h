@@ -58,7 +58,6 @@ namespace Traits3D
 	    void drawMinorGridLines(); //!< Draws a grid between the minor tics on the site
       void drawMajorGridLines(Traits3D::Axis&, Traits3D::Axis&); //! Helper
       void drawMinorGridLines(Traits3D::Axis&, Traits3D::Axis&); //! Helper
-      void recalculateAxesTics();
 
 	    bool autodecoration_;
 	    bool majorgridlines_, minorgridlines_;

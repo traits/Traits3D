@@ -152,9 +152,9 @@ void Traits3D::Coordinates::chooseAxes(
     src[i] = Tuple(beg[i].x, beg[i].y);
     src[axes.size()+i] = Tuple(end[i].x, end[i].y);
 
-    axes[i].setScaling(false);
-    //axes[i].setNumbers(false);
-    //axes[i].setLabel(false);
+    axes[i].showTics(false);
+    axes[i].showNumbers(false);
+    axes[i].showLabel(false);
   }
 
   std::vector<size_t> idx;
@@ -318,9 +318,9 @@ void Traits3D::Coordinates::autoDecorateExposedAxis(Axis& ax, Triple const& proj
   if (isZero(s))
     return;
 
-  ax.setScaling(true);
-  ax.setNumbers(true);
-  //ax.setLabel(true);
+  ax.showTics(true);
+  ax.showNumbers(true);
+  ax.showLabel(true);
 
 
   // anchor position changes for critical angle of 5 degrees between label and projected axis
@@ -410,12 +410,6 @@ void Traits3D::Coordinates::setAutoScale(bool val)
 {
   for (unsigned i=0; i!=axes.size(); ++i)
     axes[i].setAutoScale(val);
-}
-
-void Traits3D::Coordinates::recalculateAxesTics()
-{
-  for (unsigned i=0; i!=axes.size(); ++i)
-    axes[i].recalculateTics();
 }
 
 void Traits3D::Coordinates::setStandardScale()

@@ -61,5 +61,7 @@ namespace Traits3D
   
     bool createQuaddedText(QuaddedText& qt, std::string const& text, FontInfo const& font_info);
     bool requestFontTexture(size_t& index, std::string const& font_name, size_t glyph_cnt, size_t font_height);
+
+    bool data_changed_ = true;
   };
 }

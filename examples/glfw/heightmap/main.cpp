@@ -19,6 +19,7 @@ int main()
     return -1;
 
   hm.setRotation(30, 0, 45);
+  hm.setBackgroundColor(Traits3D::Color(1,1,1,1));
 
   /* main loop */
   double last_update_time = glfwGetTime();

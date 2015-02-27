@@ -50,9 +50,8 @@ namespace Traits3D
       ) = 0;
 
     void setDoublePrecision(std::streamsize val) { dprecision_ = val; }
-    bool appendDouble(double value, FontInfo const& font_info);
-    bool setDouble(double value, size_t index = 0);
     std::string double2text(double value);
+    static void adjustPosition(Position& pos, float shift);
 
   protected:
     struct Hull

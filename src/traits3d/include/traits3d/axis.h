@@ -38,6 +38,10 @@ namespace Traits3D
     double length() const { return glm::distance(axis_origin_,axis_end_); } //!< Returns axis' length
     void setColor(Color const& val) { axis_color_ = val; }
 
+    void setScale(SCALETYPE val);
+    void setScale(std::shared_ptr<Scale> val){ scale_ = val; } //!< This variant sets a user-defined scale object.
+    void showTics(bool val) { show_tics_ = val; } //!< Turns scale drawing on or off
+    bool hasTics() const { return show_tics_; } //!< Returns, if scale drawing is on or off
     void setTicLength(double majorl, double minorl); //!< Sets tics lengths in world coordinates
     //! Returns tics lengths
     void ticLength(double& majorl, double& minorl) const { majorl = len_major_tics_; minorl = len_minor_tics_; }
@@ -45,28 +49,24 @@ namespace Traits3D
     void setTicOrientation(const Triple& val); //!< Same function as above
     Triple ticOrientation() const { return tic_orientation_;} //!< Returns tic orientation
     void setSymmetricTics( bool b) { symmetric_tics_ = b;} //!< Sets two-sided tics (default is false) 
+    void setAutoScale(bool val = true) { autoscale_ = val; } //!< Turns auto-scaling on or off
+    bool autoScale() const { return autoscale_; } //!< actual auto-scaling mode
+
     //! Sets font for axis label
+    void showLabel(bool d) { show_label_ = d; } //!< Turns label drawing on or off
     void setLabelFont(FontInfo const& font_info); //!< Sets font for axis label
-  
     void setLabelText(std::string const& val);   //!< Sets label content
     void setLabelPosition(const Triple& pos, TextEngine::Anchor a);
     void setLabelColor(Color const& val);
-    void setLabel(bool d) {draw_label_ = d;} //!< Turns label drawing on or off
     void adjustLabel(int val) {label_gap_ = val;} //!< Shifts label in device coordinates dependent on anchor;
       
-    void setScaling(bool d) {draw_tics_ = d;} //!< Turns scale drawing on or off
-    bool scaling() const {return draw_tics_;} //!< Returns, if scale drawing is on or off
-    void setScale(SCALETYPE);
-    void setScale(std::shared_ptr<Scale> scale){ scale_ = scale; } //!< This variant sets a user-defined scale object.
-    void setNumbers(bool d) {draw_numbers_ = d;} //!< Turns number drawing on or off
-    bool numbers() const {return draw_numbers_;} //!< Returns, if number drawing is on or off
+    void showNumbers(bool d) {show_numbers_ = d;} //!< Turns number drawing on or off
+    bool numbers() const {return show_numbers_;} //!< Returns, if number drawing is on or off
     void setNumberColor(Color const& col); //!< Sets the color for axes numbers
     Color numberColor() const {return number_color_;} //!< Returns the color for axes numbers  
     void setNumberFont(FontInfo const& font_info); //!< Sets font for numbering
     void setNumberAnchor(TextEngine::Anchor a) { scale_number_anchor_ = a; } //!< Sets anchor position for numbers
     void adjustNumbers(int val) {number_gap_ = val;} //!< Shifts axis numbers in device coordinates dependent on anchor;
-    void setAutoScale(bool val = true) {autoscale_ = val;} //!< Turns auto-scaling on or off
-    bool autoScale() const { return autoscale_;} //!< actual auto-scaling mode
 
     void setMajors(size_t val); //!< Requests major intervals (maybe changed, if auto-scaling is present)
     void setMinors(size_t val); //!< Requests minor intervals
@@ -77,7 +77,6 @@ namespace Traits3D
   
     void setLimits(double start, double stop) {start_=start; stop_=stop;} //!< Sets interval
     void limits(double& start, double& stop) const {start = start_; stop = stop_;} //!< Returns axis interval
-    void recalculateTics(); //!< Enforces recalculation of tic mark positions
   
   protected:
     std::shared_ptr<GL::AxisObject> globject_p;
@@ -85,6 +84,7 @@ namespace Traits3D
   private:
     void init();
     bool prepTicCalculation(Triple& startpoint);
+    void recalculateTics(); //!< Enforces recalculation of tic mark positions
 
     bool is_z_ = false; // identify z-axis
 
@@ -105,9 +105,9 @@ namespace Traits3D
     size_t majorintervals_ = 1;
     size_t minorintervals_ = 1;
 
-    bool draw_numbers_ = false;
-    bool draw_tics_ = false;
-    bool draw_label_ = false;
+    bool show_numbers_ = false;
+    bool show_tics_ = false;
+    bool show_label_ = false;
     bool symmetric_tics_ = false;
     bool autoscale_ = true;
 

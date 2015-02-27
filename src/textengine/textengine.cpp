@@ -1,22 +1,13 @@
 #include <numeric>
 #include <iomanip> 
 #include <sstream>
+#include "traits3d/helper.h"
 #include "traits3d/textengine/textengine.h"
 
 Traits3D::TextEngine::Hull::Hull()
   : bl(std::numeric_limits<float>::max(), std::numeric_limits<float>::max())
   , tr(-std::numeric_limits<float>::max(), -std::numeric_limits<float>::max())
 {
-}
-
-bool Traits3D::TextEngine::appendDouble(double value, FontInfo const& font_info)
-{
-  return this->appendText(double2text(value), font_info);
-}
-
-bool Traits3D::TextEngine::setDouble(double value, size_t index /*= 0*/)
-{
-  return this->setText(double2text(value), index);
 }
 
 std::string Traits3D::TextEngine::double2text(double value)
@@ -27,4 +18,48 @@ std::string Traits3D::TextEngine::double2text(double value)
 
   //os.clear();
   //os.str(std::string()); // clear stream
+}
+
+void Traits3D::TextEngine::adjustPosition(Position& pos, float shift)
+{
+  if (isZero(shift))
+    return;
+
+  glm::vec2& c = pos.coordinates;
+  switch (pos.anchor)
+  {
+  case Anchor::BottomLeft:
+    c.x += shift;
+    c.y += shift;
+    break;
+  case Anchor::BottomCenter:
+    c.y += shift;
+    break;
+  case Anchor::BottomRight:
+    c.x -= shift;
+    c.y += shift;
+    break;
+  case Anchor::CenterLeft:
+    c.x += shift;
+    break;
+  case Anchor::Center:
+    //ret;
+    break;
+  case Anchor::CenterRight:
+    c.x -= shift;
+    break;
+  case Anchor::TopLeft:
+    c.x += shift;
+    c.y -= shift;
+    break;
+  case Anchor::TopCenter:
+    c.y -= shift;
+    break;
+  case Anchor::TopRight:
+    c.x -= shift;
+    c.y -= shift;
+    break;
+  default:
+    break;
+  }
 }

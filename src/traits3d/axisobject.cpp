@@ -28,6 +28,7 @@ void Traits3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 cons
 {
   if (!shader_.initialized())
     return;
+  
   //todo
   updateData();
   shader_.bindAttribute(*vbo_, GL::ShaderCode::Vertex::v_coordinates);
@@ -37,34 +38,47 @@ void Traits3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 cons
   shader_.setModelViewMatrix(mv_matrix);
   vbo_->draw(GL_LINES);
 
-
-  if (majors_.size() != majorvalues_.size()) // sanity
+  if (majors_.size() != major_values_.size()) // sanity
     return;
 
-  std::vector<TextEngine::Position> majorpositions_2d(majors_.size());
-  std::vector<Color> colors(majors_.size());
-  for (size_t i = 0; i != majors_.size(); ++i)
-  {
-    // opposite to tic orientation
-    TripleF pos = GL::World2ViewPort(majors_[i] - majorticlength_ * orientation_, mv_matrix, proj_matrix, GL::viewPort());
-    majorpositions_2d[i] = TextEngine::Position(TupleF(pos.x, pos.y), number_anchor_);
-    colors[i] = number_color_;
-  }
-  if (!colors.empty()) //todo test code only
-    colors[colors.size()/2] = Color(0.0, 0.0, 0.7, 1);
+  std::vector<std::string> texts;
+  std::vector<FontInfo> finfo;
+  std::vector<Color> colors;
+  std::vector<TextEngine::Position> positions_2d;
 
-  if (majors_changed_)
+  glm::ivec4 vp = GL::viewPort(); // call this one sparingly
+
+  if (show_label_)
   {
-    std::vector<std::string> dtext;
-    std::vector<FontInfo> finfo;
-    for (auto v : majorvalues_)
-    {
-      dtext.push_back(te_->double2text(v));
-      finfo.push_back(number_font_info_);
-    }
-    te_->setTexts(dtext, finfo);
+    TripleF center = begin_ + (end_ - begin_) / 2.0f;
+    TripleF pos = GL::World2ViewPort(center, mv_matrix, proj_matrix, vp);
+    texts.push_back(label_text_);
+    finfo.push_back(label_font_info_);
+    colors.push_back(label_color_);
+    positions_2d.push_back(TextEngine::Position(TupleF(pos.x, pos.y), TextEngine::Anchor::Center));
   }
-  te_->draw(majorpositions_2d, colors);
+  if (show_numbers_ && !majors_.empty())
+  {
+    size_t idx = positions_2d.size();
+    size_t newsize = idx + majors_.size();
+    positions_2d.resize(newsize);
+    colors.resize(newsize);
+    texts.resize(newsize);
+    finfo.resize(newsize);
+    for (size_t i = 0; i != majors_.size(); ++i)
+    {
+      // opposite to tic orientation
+      TripleF pos = GL::World2ViewPort(majors_[i] - majorticlength_ * orientation_, mv_matrix, proj_matrix, vp);
+      positions_2d[i+idx] = TextEngine::Position(TupleF(pos.x, pos.y), number_anchor_);
+      TextEngine::adjustPosition(positions_2d[i+idx], static_cast<float>(number_gap_));
+      texts[i + idx] = te_->double2text(major_values_[i]);
+      finfo[i + idx] = number_font_info_;
+      colors[i + idx] = number_color_;
+    }
+  }
+
+  te_->setTexts(texts, finfo);
+  te_->draw(positions_2d, colors);
 }
 
 bool Traits3D::GL::AxisObject::setValues(
@@ -76,10 +90,7 @@ bool Traits3D::GL::AxisObject::setValues(
   if (major_values.size() != majors.size())
     return false;
 
-  // take some burden from the text engine, if suitable
-  majors_changed_ = majorvalues_ != major_values;
-  if (majors_changed_)
-    majorvalues_ = major_values;
+  major_values_ = major_values;
 
   std::vector<Triple> tmp(2);
   tmp[0] = begin;
@@ -134,18 +145,21 @@ bool Traits3D::GL::AxisObject::updateData()
   data[0] = begin_;
   data[1] = end_;
 
-  size_t idx = 2;
-  for (auto m : majors_)
+  if (show_tics_)
   {
-    data[idx++] = (symtics_) ? m - majorticlength_ * orientation_ : m;
-    data[idx++] = m + majorticlength_ * orientation_;
+    size_t idx = 2;
+    for (auto m : majors_)
+    {
+      data[idx++] = (symtics_) ? m - majorticlength_ * orientation_ : m;
+      data[idx++] = m + majorticlength_ * orientation_;
+    }
+    for (auto m : minors_)
+    {
+      data[idx++] = (symtics_) ? m - minorticlength_ * orientation_ : m;
+      data[idx++] = m + minorticlength_ * orientation_;
+    }
   }
-  for (auto m : minors_)
-  {
-    data[idx++] = (symtics_) ? m - minorticlength_ * orientation_ : m;
-    data[idx++] = m + minorticlength_ * orientation_;
-  }
-
+  
   if (!vbo_->setData(data))
     return false;
 
@@ -207,4 +221,28 @@ void Traits3D::GL::AxisObject::setNumberColor(Traits3D::Color const& val)
 void Traits3D::GL::AxisObject::adjustNumbers(int val)
 {
   number_gap_ = val;
+}
+
+void Traits3D::GL::AxisObject::showTics(bool val)
+{
+  if (val != show_tics_)
+    modified_ = true;
+
+  show_tics_ = val;
+}
+
+void Traits3D::GL::AxisObject::showLabel(bool val)
+{
+  if (val != show_label_)
+    modified_ = true;
+
+  show_label_ = val;
+}
+
+void Traits3D::GL::AxisObject::showNumbers(bool val)
+{
+  if (val != show_numbers_)
+    modified_ = true;
+
+  show_numbers_ = val;
 }

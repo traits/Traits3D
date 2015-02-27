@@ -14,4 +14,14 @@ namespace Traits3D
     std::string font_name;
     size_t font_height;
   };
+
+  inline bool operator==(FontInfo const& a, FontInfo const& b)
+  {
+    return a.font_height == b.font_height && a.font_name == b.font_name;
+  }
+
+  inline bool operator!=(FontInfo const& a, FontInfo const& b)
+  {
+    return !operator==(a, b);
+  }
 } // ns

@@ -26,6 +26,7 @@ void Traits3D::Axis::init()
   tic_orientation_ = Triple(1.0, 0.0, 0.0);
   scale_number_anchor_ = TextEngine::Anchor::Center;
   label_anchor_ = TextEngine::Anchor::Center;
+  label_text_ = "X";
 }
 
 void Traits3D::Axis::setPosition(const Triple& beg, const Triple& end)
@@ -103,7 +104,7 @@ void Traits3D::Axis::recalculateTics()
   major_positions_.clear();
   minor_positions_.clear();
 
-  if (!draw_tics_ || false == prepTicCalculation(runningpoint))
+  if (false == prepTicCalculation(runningpoint))
     return;
 
   unsigned int i;
@@ -180,22 +181,34 @@ void Traits3D::Axis::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matr
 {
   //todo performance!
   recalculateTics();
-  globject_p->setSymmetricTics(symmetric_tics_);
-  globject_p->setTicOrientation(tic_orientation_);
-  globject_p->setTicLength(len_major_tics_, len_minor_tics_);
   globject_p->setValues(axis_origin_, axis_end_, major_positions_, minor_positions_, scale_->majors_p);
   globject_p->setColor(axis_color_);
 
-  globject_p->setLabelFont(label_font_);
-  globject_p->setLabelText(label_text_);
-  globject_p->setLabelPosition(label_position_, label_anchor_);
-  globject_p->setLabelColor(label_color_);
-  globject_p->adjustLabel(label_gap_);
+  globject_p->showLabel(show_label_);
 
-  globject_p->setNumberFont(number_font_);
-  globject_p->setNumberColor(number_color_);
-  globject_p->setNumberAnchor(scale_number_anchor_);
-  globject_p->adjustNumbers(number_gap_);
+  if (show_label_)
+  {
+    globject_p->setLabelFont(label_font_);
+    globject_p->setLabelText(label_text_);
+    globject_p->setLabelPosition(label_position_, label_anchor_);
+    globject_p->setLabelColor(label_color_);
+    globject_p->adjustLabel(label_gap_);
+  }
+
+  globject_p->showTics(show_tics_);
+  globject_p->setSymmetricTics(symmetric_tics_);
+  globject_p->setTicOrientation(tic_orientation_);
+  globject_p->setTicLength(len_major_tics_, len_minor_tics_);
+
+  globject_p->showNumbers(show_numbers_);
+  
+  if (show_numbers_)
+  {
+    globject_p->setNumberFont(number_font_);
+    globject_p->setNumberColor(number_color_);
+    globject_p->setNumberAnchor(scale_number_anchor_);
+    globject_p->adjustNumbers(number_gap_);
+  }
 
   //end todo
   globject_p->draw(proj_matrix, mv_matrix);

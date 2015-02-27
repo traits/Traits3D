@@ -68,6 +68,10 @@ bool Traits3D::StandardTextEngine::setText(std::string const& text, size_t index
   if (index >= quadded_texts_.size())
     return false;
 
+  if (quadded_texts_[index].text.text == text)
+    return true;
+
+  data_changed_ = true;
   return createQuaddedText(quadded_texts_[index], text, quadded_texts_[index].font_info);
 }
 
@@ -129,10 +133,26 @@ bool Traits3D::StandardTextEngine::setTexts(std::vector<std::string> const& text
   if (texts.size() != font_info.size())
     return false;
 
-  clear();
-  for (size_t i = 0; i != texts.size(); ++i)
-    if (!appendText(texts[i], font_info[i]))
-      return false;
+  data_changed_ = quadded_texts_.size() != texts.size();
+  if (!data_changed_)
+  {
+    for (size_t i = 0; i != texts.size(); ++i)
+    {
+      if (texts[i] != quadded_texts_[i].text.text || font_info[i] != quadded_texts_[i].font_info)
+      {
+        data_changed_ = true;
+        break;
+      }
+    }
+  }
+
+  if (data_changed_)
+  {
+	  clear();
+	  for (size_t j = 0; j != texts.size(); ++j)
+	    if (!appendText(texts[j], font_info[j]))
+	      return false;
+  }
 
   return true;
 }
@@ -145,6 +165,7 @@ bool Traits3D::StandardTextEngine::appendText(std::string const& text, FontInfo 
     return false;
 
   quadded_texts_.push_back(qt);
+  data_changed_ = true;
   return true;
 }
 
@@ -152,26 +173,32 @@ bool Traits3D::StandardTextEngine::draw(
   std::vector<TextEngine::Position> const& positions,
   std::vector<Traits3D::Color> const& colors)
 {
-  if (positions.size() != quadded_texts_.size())
-    return false;
+  if (quadded_texts_.empty())
+    return true;
   
-  if (colors.size() != quadded_texts_.size())
+  if (positions.size() != quadded_texts_.size()
+    ||colors.size() != quadded_texts_.size())
     return false;
 
-  std::vector<glm::vec4> coords;
-  for (size_t i = 0; i != quadded_texts_.size(); ++i)
+  if (data_changed_)
   {
-    quadded_texts_[i].text.position = positions[i];
-    quadded_texts_[i].text.color = colors[i];
-    for (auto ch : quadded_texts_[i].coordinates)
-      coords.insert(coords.end(), ch.begin(), ch.end());
-  }
+    std::vector<glm::vec4> coords;
+    for (size_t i = 0; i != quadded_texts_.size(); ++i)
+    {
+      quadded_texts_[i].text.position = positions[i];
+      quadded_texts_[i].text.color = colors[i];
+      for (auto ch : quadded_texts_[i].coordinates)
+        coords.insert(coords.end(), ch.begin(), ch.end());
+    }
 
-  if ( !vbo_->setData(coords)
-    || !shader_->bindAttribute(*vbo_, "coord")
-    || !shader_->use()
-    )
-    return false;
+    if (!vbo_->setData(coords)
+      || !shader_->bindAttribute(*vbo_, "coord")
+      || !shader_->use()
+      )
+      return false;
+
+    data_changed_ = false;
+  }
 
 
   GLint oldtex = 0;
@@ -260,6 +287,7 @@ bool Traits3D::StandardTextEngine::draw(
 void Traits3D::StandardTextEngine::clear()
 {
   quadded_texts_.clear();
+  data_changed_ = true;
 }
 
 bool Traits3D::StandardTextEngine::requestFontTexture(size_t& index, std::string const& font_name, size_t glyph_cnt, size_t font_height)
