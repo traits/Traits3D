@@ -7,7 +7,7 @@
 bool Traits3D::SurfacePlot::addPositionData(std::vector<TripleF> const& data,
     size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
-  if (!data_object_p->addPositionData(data, xsize, ysize, drawtype))
+  if (!data_object_p->setPositionData(data, xsize, ysize, drawtype))
     return false;
 
   coordinates_p->init(data_object_p->hull());
@@ -17,12 +17,12 @@ bool Traits3D::SurfacePlot::addPositionData(std::vector<TripleF> const& data,
 // todo check size against position vector[s]
 bool Traits3D::SurfacePlot::addDataColor(ColorVector const& val)
 {
-  return data_object_p->addColor(val);
+  return data_object_p->setColor(val);
 }
 
 bool Traits3D::SurfacePlot::addMeshColor(Color const& val)
 {
-  return data_object_p->addMeshColor(val);
+  return data_object_p->setMeshColor(val);
 }
 
 bool Traits3D::SurfacePlot::updatePositionData(std::vector<TripleF> const& data)

@@ -34,7 +34,7 @@ bool Traits3D::GL::DataObject::initShader()
 /* Create VBO, IBO and VAO objects for the heightmap geometry and bind them to
 * the specified program object
 */
-bool Traits3D::GL::DataObject::addPositionData(std::vector<TripleF> const& data,
+bool Traits3D::GL::DataObject::setPositionData(std::vector<TripleF> const& data,
     size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
   if (!addPositionDataCommon(xsize, ysize, data, drawtype))
@@ -44,7 +44,7 @@ bool Traits3D::GL::DataObject::addPositionData(std::vector<TripleF> const& data,
   return true;
 }
 
-bool Traits3D::GL::DataObject::addPositionData(TripleVector const& data,
+bool Traits3D::GL::DataObject::setPositionData(TripleVector const& data,
     size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
   double excess;
@@ -84,7 +84,7 @@ bool Traits3D::GL::DataObject::updatePositionData(TripleVector const& data)
 }
 
 // todo check size against position vector[s]
-bool Traits3D::GL::DataObject::addColor(ColorVector const& data)
+bool Traits3D::GL::DataObject::setColor(ColorVector const& data)
 {
   if (!vbos_[VBOindex::DataColor]->setData(data))
     return false;
@@ -93,7 +93,7 @@ bool Traits3D::GL::DataObject::addColor(ColorVector const& data)
   return true;
 }
 
-bool Traits3D::GL::DataObject::addMeshColor(Color const& data)
+bool Traits3D::GL::DataObject::setMeshColor(Color const& data)
 {
   return shader_[ShaderIndex::Lines].setUniformVec4(data, GL::ShaderCode::Vertex::v_in_color);
 }
@@ -117,13 +117,11 @@ void Traits3D::GL::DataObject::draw(glm::mat4 const& proj_matrix, glm::mat4 cons
 
   // mesh
   shader_[ShaderIndex::Lines].use();
-  shader_[ShaderIndex::Lines].setModelViewMatrix(mv_matrix);
-
-  //todo [educated] hack
-  glm::mat4 ttt = proj_matrix;
-  ttt[2][2] += 0.0f;
+  ////todo [educated] hack
+  //glm::mat4 ttt = proj_matrix;
   //ttt[2][2] += 5E-5f;
-  shader_[ShaderIndex::Lines].setProjectionMatrix(ttt);
+  //shader_[ShaderIndex::Lines].setProjectionMatrix(ttt);
+  shader_[ShaderIndex::Lines].setProjectionMatrix(proj_matrix);
   shader_[ShaderIndex::Lines].setModelViewMatrix(mv_matrix);
   ibos_[IBOindex::Mesh]->draw(GL_STATIC_DRAW);
 }
@@ -142,11 +140,6 @@ bool Traits3D::GL::DataObject::addPositionDataCommon(size_t xsize, size_t ysize,
   if (!vbos_[VBOindex::Position]->setData(data, drawtype))
     return false;
 
-  for (auto& s : shader_)
-  {
-    if (!s.second.bindAttribute(*vbos_[VBOindex::Position], GL::ShaderCode::Vertex::v_coordinates))
-      return false;
-  }
   return true;
 }
 

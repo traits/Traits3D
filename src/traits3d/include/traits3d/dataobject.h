@@ -15,19 +15,16 @@ namespace Traits3D
 
         void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix) override;
 
-        bool addPositionData(TripleVector const& data,
+        bool setPositionData(TripleVector const& data,
                              size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
-
         bool updatePositionData(TripleVector const& data);
 
-        bool addPositionData(std::vector<TripleF> const& data,
+        bool setPositionData(std::vector<TripleF> const& data,
                              size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
-
-        bool addPositionDataCommon(size_t xsize, size_t ysize, std::vector<TripleF> const& data, GLenum drawtype);
-
         bool updatePositionData(std::vector<TripleF> const& data);
-        bool addColor(ColorVector const& data);
-        bool addMeshColor(Color const& data);
+        
+        bool setColor(ColorVector const& data);
+        bool setMeshColor(Color const& data);
 
         const Traits3D::Box& hull() const
         {
@@ -62,6 +59,7 @@ namespace Traits3D
         std::map<IBOindex, std::unique_ptr<IBO>> ibos_;
 
         void calculateBox(std::vector<TripleF> const& data);
+        bool addPositionDataCommon(size_t xsize, size_t ysize, std::vector<TripleF> const& data, GLenum drawtype);
     };
   } // ns
 } // ns
