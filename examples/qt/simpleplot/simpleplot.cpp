@@ -26,7 +26,7 @@ public:
     setRotation(30, 0, 15);
     setScale(1, 1, 1);
     setShift(0.15f, 0, 0);
-    setZoom(0.9f);     
+    setZoom(0.9f);    
     //setScale(1.0, 1.0, 0.5);
     
     //coordinates_p->setStyle(FRAME);
@@ -79,7 +79,7 @@ public:
       elem.a = 1.0f;
     }
 
-    return addDataColor(colors) && addMeshColor(Traits3D::Color(0, 0, 0, 0));
+    return addDataColor(colors) && addMeshColor(Traits3D::Color(0.0, 0.5, 0.5, 0));
   }
 
   void updateData() override

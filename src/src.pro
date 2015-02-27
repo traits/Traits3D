@@ -5,7 +5,7 @@ include(src.pri)
 QT       += core gui widgets
 
 #CONFIG += c++11
-QMAKE_CXXFLAGS += -std=c++1y -O0
+QMAKE_CXXFLAGS += -std=c++1y -O0 -fno-strict-aliasing
 
 TARGET = traits3d
 TEMPLATE = lib
