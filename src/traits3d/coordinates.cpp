@@ -75,6 +75,19 @@ void Traits3D::Coordinates::init(Traits3D::Triple first, Traits3D::Triple second
   axes[Z4].setTicOrientation(ori,0,0);
   axes[Z3].setTicOrientation(ori,0,0);
 
+  axes[X1].setLabelText("X");
+  axes[X2].setLabelText("X");
+  axes[X3].setLabelText("X");
+  axes[X4].setLabelText("X");
+  axes[Y1].setLabelText("Y");
+  axes[Y2].setLabelText("Y");
+  axes[Y3].setLabelText("Y");
+  axes[Y4].setLabelText("Y");
+  axes[Z1].setLabelText("Z");
+  axes[Z2].setLabelText("Z");
+  axes[Z3].setLabelText("Z");
+  axes[Z4].setLabelText("Z");
+
   setStyle(style_);
 }
 

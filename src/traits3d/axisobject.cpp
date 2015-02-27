@@ -50,12 +50,19 @@ void Traits3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 cons
 
   if (show_label_)
   {
-    TripleF center = begin_ + (end_ - begin_) / 2.0f;
-    TripleF pos = GL::World2ViewPort(center, mv_matrix, proj_matrix, vp);
     texts.push_back(label_text_);
     finfo.push_back(label_font_info_);
     colors.push_back(label_color_);
-    positions_2d.push_back(TextEngine::Position(TupleF(pos.x, pos.y), TextEngine::Anchor::Center));
+
+    TripleF center = begin_ + (end_ - begin_) / 2.0f;
+    TripleF ticend = center - majorticlength_ * orientation_;
+    float max_label_width = 10;
+    float label_height = 15;
+    float rap = (max_label_width + label_gap_ + label_height) / (ticend - center).length();
+    TripleF pos = center - majorticlength_ * orientation_ * (1 + rap);
+    pos = GL::World2ViewPort(pos, mv_matrix, proj_matrix, vp);
+    positions_2d.push_back(TextEngine::Position(TupleF(pos.x, pos.y), number_anchor_));
+    TextEngine::adjustPosition(positions_2d[0], static_cast<float>(label_gap_ + number_gap_));
   }
   if (show_numbers_ && !majors_.empty())
   {
