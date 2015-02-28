@@ -220,7 +220,7 @@ MeshMainWindow::MeshMainWindow( QWidget* parent )
 
   grids_->setEnabled(false);
 
-  functionCB->setCurrentIndex(1);
+  //functionCB->setCurrentIndex(1);
   Box->setChecked(true);
   pickCoordSystem(Box);
 }
@@ -261,18 +261,16 @@ void MeshMainWindow::createFunction(QString const& name)
     widget_->plot3d->coordinates()->axes[i].setMinors(5);
   }
 
+  std::shared_ptr<Function> function;
+
   if (name == QString("Rosenbrock")) 
   {
-    Rosenbrock rosenbrock;
+    function = std::make_shared<Rosenbrock>();
     
-    rosenbrock.setDomainResolution(50,51);
-    rosenbrock.setDomain(-1.73,1.55,-1.5,1.95);
-    rosenbrock.setRange(-100, 1000);
+    function->setDomainResolution(50, 51);
+    function->setDomain(-1.73, 1.55, -1.5, 1.95);
+    function->setRange(-100, 1000);
     
-    std::vector<Traits3D::TripleF> data = Traits3D::GL::convert(rosenbrock.data());
-
-    widget_->plot3d->addPositionData(data, rosenbrock.xSize(), rosenbrock.ySize(), GL_STATIC_DRAW);
-
     widget_->plot3d->coordinates()->axes[Z1].setScale(LOG10SCALE);
     widget_->plot3d->coordinates()->axes[Z2].setScale(LOG10SCALE);
     widget_->plot3d->coordinates()->axes[Z3].setScale(LOG10SCALE);
@@ -281,32 +279,40 @@ void MeshMainWindow::createFunction(QString const& name)
   }
   else if (name == QString("Hat")) 
   {
-    Hat hat;
+    function = std::make_shared<Hat>();
     
-    hat.setDomainResolution(51, 72);
-    hat.setDomain(-1.5,1.5,-1.5,1.5);
+    function->setDomainResolution(51, 72);
+    function->setDomain(-1.5, 1.5, -1.5, 1.5);
   }
   else if (name == QString("Ripple")) 
   {
-    Ripple ripple;
-    ripple.setDomainResolution(120, 120);
+    function = std::make_shared<Ripple>();
+    function->setDomainResolution(120, 120);
   }
   else if (name == QString("Saddle")) 
   {
-    Saddle saddle;
+    function = std::make_shared<Saddle>();
     
-    saddle.setDomainResolution(71, 71);
+    function->setDomainResolution(71, 71);
     double dom = 2.5;
-    saddle.setDomain(-dom, dom, -dom, dom);
+    function->setDomain(-dom, dom, -dom, dom);
   }
   else if (name == QString("Sombrero")) 
   {
-    Mex mex;
+    function = std::make_shared<Mex>();
     
-    mex.setDomainResolution(91, 91);
+    function->setDomainResolution(91, 91);
     double dom = 15;
-    mex.setDomain(-dom, dom, -dom, dom);
+    function->setDomain(-dom, dom, -dom, dom);
   }
+
+  if (function.get() != nullptr)
+  {
+    std::vector<TripleF> data = Traits3D::GL::convert(function->data());
+    widget_->plot3d->addPositionData(data, function->xSize(), function->ySize(), GL_STATIC_DRAW);
+    resetColors();
+  }
+
 
 //  double a = widget_->plot3d->facets().first;
 //  double b = widget_->plot3d->facets().second;
@@ -337,26 +343,35 @@ void MeshMainWindow::createFunction(QString const& name)
 void MeshMainWindow::createPSurface(QString const& name)
 {
   widget_->makeCurrent();
-  if (name == QString("Torus")) 
+
+  std::shared_ptr<ParametricSurface> surface;
+  if (name == QString("Torus"))
   {
-    Torus sf;
+    surface = std::make_shared<Torus>();
   }
   else if (name == QString("Seashell")) 
   {
-    Seashell ss;
+    surface = std::make_shared<Seashell>();
   }
   else if (name == QString("Boy")) 
   {
-    Boy boy;
+    surface = std::make_shared<Boy>();
   }
   else if (name == QString("Dini")) 
   {
-    Dini dini;
+    surface = std::make_shared<Dini>();
   }
   for (unsigned i=0; i!=widget_->plot3d->coordinates()->axes.size(); ++i)
   {
     widget_->plot3d->coordinates()->axes[i].setMajors(7);
     widget_->plot3d->coordinates()->axes[i].setMinors(5);
+  }
+
+  if (surface.get() != nullptr)
+  {
+    std::vector<TripleF> data = Traits3D::GL::convert(surface->data());
+    widget_->plot3d->addPositionData(data, surface->uSize(), surface->vSize(), GL_STATIC_DRAW);
+    resetColors();
   }
 
 //  double a = widget_->plot3d->facets().first;
