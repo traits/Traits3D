@@ -29,6 +29,7 @@ namespace Traits3D
       void updateData() override {}
       void setBackgroundColor(Color const& val); //!< Sets widgets background color
       Color backgroundRGBAColor() const {return bgcolor_;} //!< Returns the widgets background color
+      std::shared_ptr<Coordinates> coordinates() { return coordinates_p; }
 
       //void setTitlePosition(double rely, double relx = 0.5);
       void setTitle(std::string const& val); //!< Set caption text (one row only)

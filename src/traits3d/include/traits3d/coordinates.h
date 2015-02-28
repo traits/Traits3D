@@ -24,8 +24,18 @@ namespace Traits3D
                     Traits3D::AXIS frame_3 = Traits3D::Z1);
       Traits3D::COORDINATESTYLE style() const { return style_;}   //!< Return style oft the coordinate system 
       void setPosition(Traits3D::Triple first, Traits3D::Triple second); //!< first == front_left_bottom, second == back_right_top
+      void setAxesColor(Traits3D::Color const& val); //!< Set common color for all axes
+      //! Set common font for all axis numberings
+      void setNumberFont(Traits3D::FontInfo const& font);
+      //! Set common color for all axis numberings
+      void setNumberColor(Traits3D::Color const& val);
       void setStandardScale(); //!< Sets an linear axis with real number items
   
+      //! Set common font for all axis labels
+      void setLabelFont(Traits3D::FontInfo const& font);
+      //! Set common color for all axis labels
+      void setLabelColor(Traits3D::Color const& val);
+
       //! Set length for tic marks
       void setTicLength(double major, double minor);
       //! Switch autoscaling of axes

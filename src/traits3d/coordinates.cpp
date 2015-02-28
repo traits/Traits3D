@@ -419,16 +419,51 @@ void Traits3D::Coordinates::setPosition(Triple first, Triple second)
   second_ = second;
 }
 
+
+void Traits3D::Coordinates::setAxesColor(Traits3D::Color const& val)
+{
+  for (auto& a : axes)
+    a.setColor(val);
+}
+
+
+void Traits3D::Coordinates::setNumberFont(Traits3D::FontInfo const& font)
+{
+  for (auto& a : axes)
+    a.setNumberFont(font);
+}
+
+
+void Traits3D::Coordinates::setNumberColor(Traits3D::Color const& val)
+{
+  for (auto& a : axes)
+    a.setNumberColor(val);
+}
+
 void Traits3D::Coordinates::setAutoScale(bool val)
 {
-  for (unsigned i=0; i!=axes.size(); ++i)
-    axes[i].setAutoScale(val);
+  for (auto& a : axes)
+    a.setAutoScale(val);
 }
 
 void Traits3D::Coordinates::setStandardScale()
 {
-  for (unsigned i=0; i!=axes.size(); ++i)
-    axes[i].setScale(LINEARSCALE);
+  for (auto& a : axes)
+    a.setScale(LINEARSCALE);
+}
+
+
+void Traits3D::Coordinates::setLabelFont(Traits3D::FontInfo const& font)
+{
+  for (auto& a : axes)
+    a.setLabelFont(font);
+}
+
+
+void Traits3D::Coordinates::setLabelColor(Traits3D::Color const& val)
+{
+  for (auto& a : axes)
+    a.setLabelColor(val);
 }
 
 void Traits3D::Coordinates::setStyle(Traits3D::COORDINATESTYLE s, Traits3D::AXIS frame_1,
