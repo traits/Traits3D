@@ -42,7 +42,7 @@
 //
 //class LightingDlg : public QDialog, protected Ui::Dialog
 //{
-//	Q_OBJECT
+//  Q_OBJECT
 //    
 //public:
 //  LightingDlg(QWidget *parent=0);
@@ -51,11 +51,11 @@
 //  void assign(Protean3D::QtWidget<Protean3D::SurfacePlot>* pl);
 //  
 //public slots:
-//	void setDistance(int);
-//	void setEmission(int);
-//	void setDiff(int);
-//	void setSpec(int);
-//	void setShin(int);
+//  void setDistance(int);
+//  void setEmission(int);
+//  void setDiff(int);
+//  void setSpec(int);
+//  void setShin(int);
 //  void reset();
 //  void setRotation(double x, double y, double z);
 //

@@ -102,8 +102,8 @@
 //void Pointer::draw()
 //{
 //  GLint mode;
-//	glGetIntegerv(GL_MATRIX_MODE, &mode);
-//	glMatrixMode( GL_MODELVIEW );
+//  glGetIntegerv(GL_MATRIX_MODE, &mode);
+//  glMatrixMode( GL_MODELVIEW );
 //  glPushMatrix();
 //  
 //  glColor3d(1,0,0);
@@ -113,7 +113,7 @@
 //  glEnd();
 //
 //  glPopMatrix();
-//	glMatrixMode(mode);
+//  glMatrixMode(mode);
 //}
 //
 //
@@ -130,12 +130,12 @@
 //
 //  grid->addWidget( plot_, 0, 0 );
 //
-//	connect( stdlight, SIGNAL( clicked() ), this, SLOT( reset() ) );
-//	connect( distSL, SIGNAL(valueChanged(int)), this, SLOT(setDistance(int)) );
-//	connect( emissSL, SIGNAL(valueChanged(int)), this, SLOT(setEmission(int)) );
-//	connect( ambdiffSL, SIGNAL(valueChanged(int)), this, SLOT(setDiff(int)) );
-//	connect( specSL, SIGNAL(valueChanged(int)), this, SLOT(setSpec(int)) );
-//	connect( shinSL, SIGNAL(valueChanged(int)), this, SLOT(setShin(int)) );
+//  connect( stdlight, SIGNAL( clicked() ), this, SLOT( reset() ) );
+//  connect( distSL, SIGNAL(valueChanged(int)), this, SLOT(setDistance(int)) );
+//  connect( emissSL, SIGNAL(valueChanged(int)), this, SLOT(setEmission(int)) );
+//  connect( ambdiffSL, SIGNAL(valueChanged(int)), this, SLOT(setDiff(int)) );
+//  connect( specSL, SIGNAL(valueChanged(int)), this, SLOT(setSpec(int)) );
+//  connect( shinSL, SIGNAL(valueChanged(int)), this, SLOT(setShin(int)) );
 //  connect( plot_, SIGNAL(rotationChanged(double, double, double)), this, SLOT(setRotation(double, double, double)) );
 //}
 //

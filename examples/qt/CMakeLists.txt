@@ -28,7 +28,7 @@ TRAITS3D_SUBDIRLIST(SUBDIRS ${CMAKE_CURRENT_SOURCE_DIR})
 # no executables to create here
 list(REMOVE_ITEM SUBDIRS _common)
 list(REMOVE_ITEM SUBDIRS resources)
-list(REMOVE_ITEM SUBDIRS mesh) # temporarily
+# list(REMOVE_ITEM SUBDIRS mesh) # temporarily
 
 list (APPEND MY_LINK_LIBRARIES traits3d ${OPENGL_LIBRARIES} Qt5::Widgets Qt5::Quick qtwidget)
 
