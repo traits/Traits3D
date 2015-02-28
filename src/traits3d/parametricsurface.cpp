@@ -58,11 +58,11 @@ bool Traits3D::ParametricSurface::updateData()
 
   data_p.resize(umesh_p * vmesh_p);
 
-	/* get the data */
+  /* get the data */
 
-	double du = (maxu_p - minu_p) / (umesh_p - 1);
-	double dv = (maxv_p - minv_p) / (vmesh_p - 1);
-	
+  double du = (maxu_p - minu_p) / (umesh_p - 1);
+  double dv = (maxv_p - minv_p) / (vmesh_p - 1);
+  
   Triple& hmax = hull_p.maxVertex;
   Triple& hmin = hull_p.minVertex;
 
@@ -114,5 +114,5 @@ bool Traits3D::ParametricSurface::updateData()
 
   hull_p = Box(tmin, tmax);
 
-	return true;
+  return true;
 }

@@ -60,31 +60,31 @@ const std::vector<double>& Traits3D::Function::data()
 
 bool Traits3D::Function::updateData()
 {
-	if ((umesh_p < 2) || (vmesh_p < 2) )
-		return false;
-	
+  if ((umesh_p < 2) || (vmesh_p < 2) )
+    return false;
+  
   data_p.resize(umesh_p * vmesh_p);
-	
-	/* get the data */
+  
+  /* get the data */
 
   Triple& hmax = hull_p.maxVertex;
   Triple& hmin = hull_p.minVertex;
 
-	double dx = (hmax.x - hmin.x) / (umesh_p - 1);
-	double dy = (hmax.y - hmin.y) / (vmesh_p - 1);
-	
+  double dx = (hmax.x - hmin.x) / (umesh_p - 1);
+  double dy = (hmax.y - hmin.y) / (vmesh_p - 1);
+  
   double zmin = std::numeric_limits<double>::max();
   double zmax = -zmin;
 
-	for (size_t iy = 0; iy != vmesh_p; ++iy) 
-	{
+  for (size_t iy = 0; iy != vmesh_p; ++iy) 
+  {
     size_t row_idx = iy*umesh_p;
-		for (size_t ix = 0; ix != umesh_p; ++ix) 
-		{
+    for (size_t ix = 0; ix != umesh_p; ++ix) 
+    {
       size_t idx = row_idx + ix;
       data_p[idx] = operator()(hmin.x + ix*dx, hmin.y + iy*dy);
-			
-			if (data_p[idx] > hmax.z)
+      
+      if (data_p[idx] > hmax.z)
         data_p[idx] = hmax.z;
       else if (data_p[idx] < hmin.z)
         data_p[idx] = hmin.z;
@@ -95,7 +95,7 @@ bool Traits3D::Function::updateData()
       if (zmax < data_p[idx])
         zmax = data_p[idx];
     }
-	}
+  }
 
   hmin.z = zmin;
   hmax.z = zmax;
