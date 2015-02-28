@@ -23,10 +23,10 @@ namespace Traits3D
     size_t ySize() const { return vmesh_p; }
 
     //! Returns data, created by updateData()
-    const std::vector<double>& data();
+    const TripleVector& data();
 
   protected:
-    std::vector<double> data_p;
+    TripleVector data_p;
 
     //! Creates data representation (consecutive row vectors for this standard implementation).
     bool updateData() override;

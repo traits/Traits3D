@@ -26,28 +26,6 @@ public:
   {
     return std::max<float>(-1.0f, log((1 - x)*(1 - x) + 100 * (y - x*x)*(y - x*x)) / 8);
   }
-
-  std::vector<Traits3D::TripleF> fullData()
-  {
-    const std::vector<double>& dvec = data();
-
-    std::vector<Traits3D::TripleF> fdata(dvec.size());
-
-    Traits3D::Box h = hull();
-    double dx = (h.maxVertex.x - h.minVertex.x) / (xSize() - 1);
-    double dy = (h.maxVertex.y - h.minVertex.y) / (ySize() - 1);
-
-
-    for (size_t i = 0; i != dvec.size(); ++i)
-    {
-      fdata[i] = Traits3D::TripleF(
-        static_cast<float>(h.minVertex.x + dx*(i % xSize())),
-        static_cast<float>(h.minVertex.y + dy*(i / xSize())),
-        static_cast<float>(dvec[i])
-        );
-    }
-    return fdata;
-  }
 };
 
 class Rosenbrock : public Traits3D::SurfacePlot
@@ -79,7 +57,7 @@ public:
   
   bool loadData()
   {
-    std::vector<Traits3D::TripleF> data = broeckchen.fullData();
+    std::vector<Traits3D::TripleF> data = Traits3D::GL::convert(broeckchen.data());
 
     if (!addPositionData(data, broeckchen.xSize(), broeckchen.ySize(), GL_STATIC_DRAW))
       return false;

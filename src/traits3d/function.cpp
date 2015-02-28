@@ -49,7 +49,7 @@ bool Traits3D::Function::setRange(double min_z, double max_z)
 }
 
 
-const std::vector<double>& Traits3D::Function::data()
+const Traits3D::TripleVector& Traits3D::Function::data()
 {
   if (dirty_data_p)
     if (updateData())
@@ -82,18 +82,22 @@ bool Traits3D::Function::updateData()
     for (size_t ix = 0; ix != umesh_p; ++ix) 
     {
       size_t idx = row_idx + ix;
-      data_p[idx] = operator()(hmin.x + ix*dx, hmin.y + iy*dy);
-      
-      if (data_p[idx] > hmax.z)
-        data_p[idx] = hmax.z;
-      else if (data_p[idx] < hmin.z)
-        data_p[idx] = hmin.z;
+      Triple& d = data_p[idx];
 
-      if (zmin > data_p[idx])
-        zmin = data_p[idx];
+      d.x = hmin.x + ix*dx;
+      d.y = hmin.y + iy*dy;
+      d.z = operator()(d.x, d.y);
+      
+      if (d.z > hmax.z)
+        d.z = hmax.z;
+      else if (d.z < hmin.z)
+        d.z = hmin.z;
+
+      if (zmin > d.z)
+        zmin = d.z;
     
-      if (zmax < data_p[idx])
-        zmax = data_p[idx];
+      if (zmax < d.z)
+        zmax = d.z;
     }
   }
 
