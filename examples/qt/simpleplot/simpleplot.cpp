@@ -7,22 +7,58 @@
 #include <math.h>
 #include <qapplication.h>
 #include "qtwidget.hh"
+#include "traits3d/function.h"
 #include "traits3d/surfaceplot.h"
 #include <QOpenGLContext>
+
+
+class Broeckchen : public Traits3D::Function
+{
+public:
+  Broeckchen()
+  {
+    setMeshSize(41, 31);
+    setDomain(-0.5, 1.5, -1.5, 1.5);
+    //setRange(-10, 20);
+  }
+
+  double operator()(double x, double y)
+  {
+    return std::max<float>(-1.0f, log((1 - x)*(1 - x) + 100 * (y - x*x)*(y - x*x)) / 8);
+  }
+
+  std::vector<Traits3D::TripleF> fullData()
+  {
+    const std::vector<double>& dvec = data();
+
+    std::vector<Traits3D::TripleF> fdata(dvec.size());
+
+    size_t xsize = uMeshSize();
+    size_t ysize = vMeshSize();
+    Traits3D::Box h = hull();
+    double dx = (h.maxVertex.x - h.minVertex.x) / (xsize - 1);
+    double dy = (h.maxVertex.y - h.minVertex.y) / (ysize - 1);
+
+
+    for (size_t i = 0; i != dvec.size(); ++i)
+    {
+      fdata[i] = Traits3D::TripleF(
+        static_cast<float>(h.minVertex.x + dx*(i % xsize)),
+        static_cast<float>(h.minVertex.y + dy*(i / xsize)),
+        static_cast<float>(dvec[i])
+        );
+    }
+    return fdata;
+  }
+};
 
 class Rosenbrock : public Traits3D::SurfacePlot
 {
 public:
-  size_t xsize = 41;
-  size_t ysize = 31;
-  float xmin = -1.73f;
-  float xmax = 1.5f;
-  float ymin = -1.5f;
-  float ymax = 1.5f;
+  Broeckchen broeckchen;
 
   Rosenbrock()
   {
-    data_.resize(xsize*ysize);
     setRotation(30, 0, 15);
     setScale(1, 1, 1);
     setShift(0.15f, 0, 0);
@@ -45,29 +81,16 @@ public:
   
   bool loadData()
   {
-    float dx = (xmax - xmin) / (xsize - 1);
-    float dy = (ymax - ymin) / (ysize - 1);
-    float curr_x = xmin;
-    float curr_y = ymin;
+    std::vector<Traits3D::TripleF> data = broeckchen.fullData();
 
-    auto k = 0;
-    for (size_t y = 0; y != ysize; ++y)
-    {
-      for (size_t x = 0; x != xsize; ++x)
-      {
-        data_[k].x = curr_x;
-        data_[k].y = curr_y;
-        data_[k].z = getZ(x,y);
-        curr_x += dx;
-        ++k;
-      }
-      curr_y += dy;
-      curr_x = xmin;
-    }
-    if (!addPositionData(data_, xsize, ysize, GL_STATIC_DRAW))
+    size_t xsize = broeckchen.uMeshSize();
+    size_t ysize = broeckchen.vMeshSize();
+
+
+    if (!addPositionData(data, xsize, ysize, GL_STATIC_DRAW))
       return false;
 
-    size_t size = data_.size();
+    size_t size = data.size();
     float fsize = size;
     Traits3D::ColorVector colors(size);
     for (size_t i = 0; i != size; ++i)
@@ -82,20 +105,13 @@ public:
     return addDataColor(colors) && addMeshColor(Traits3D::Color(0.0, 0.5, 0.5, 0));
   }
 
-  void updateData() override
-  {
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //glEnable(GL_LINE_SMOOTH);
-    updatePositionData(data_);
-  }
-
-private:
-  std::vector<Traits3D::TripleF> data_;
-  double getZ(double x, double y)
-  {
-    return std::max<float>(-1.0f, log((1-x)*(1-x) + 100 * (y - x*x)*(y - x*x)) / 8);
-  }
+  //void updateData() override
+  //{
+  //  //glEnable(GL_BLEND);
+  //  //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  //  //glEnable(GL_LINE_SMOOTH);
+  //  updatePositionData(data_);
+  //}
 };
 
 
