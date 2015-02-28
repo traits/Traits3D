@@ -15,11 +15,11 @@ namespace Traits3D
     Function(); //!< Constructs Function object w/o assigned SurfacePlot.
 	  virtual double operator()(double x, double y) = 0; //!< Overwrite this.
 		
-    bool setDomain(double min_x, double max_x, double min_y, double max_y, bool update = true); //!< Sets x-y domain boundaries.
-    bool setRange(double min_z, double max_z, bool update = true);
+    bool setDomain(double min_x, double max_x, double min_y, double max_y); //!< Sets x-y domain boundaries.
+    bool setRange(double min_z, double max_z);
 
     //! Returns data, created by updateData()
-    const std::vector<double>& data() const { return data_p; }
+    const std::vector<double>& data();
 
   protected:
     std::vector<double> data_p;

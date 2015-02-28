@@ -9,7 +9,7 @@ Traits3D::Function::Function()
 /**
 \return false for pathological cases (min >= max), true else 
 */
-bool Traits3D::Function::setDomain(double min_x, double max_x, double min_y, double max_y, bool update /*= true*/)
+bool Traits3D::Function::setDomain(double min_x, double max_x, double min_y, double max_y)
 {
   if (min_x >= max_x || min_y >= max_y)
     return false;
@@ -23,9 +23,7 @@ bool Traits3D::Function::setDomain(double min_x, double max_x, double min_y, dou
   hull_p.minVertex.y = min_y;
   hull_p.maxVertex.y = max_y;
 
-  if (update)
-    if (!updateData())
-      return false;
+  dirty_data_p = true;
 
   return true;
 }
@@ -34,7 +32,7 @@ bool Traits3D::Function::setDomain(double min_x, double max_x, double min_y, dou
 /**
 \return false for pathological cases (min >= max), true else
 */
-bool Traits3D::Function::setRange(double min_z, double max_z, bool update /*= true*/)
+bool Traits3D::Function::setRange(double min_z, double max_z)
 {
   if ((min_z >= max_z))
     return false;
@@ -42,14 +40,22 @@ bool Traits3D::Function::setRange(double min_z, double max_z, bool update /*= tr
   if (equal(min_z, hull_p.minVertex.z) && equal(max_z, hull_p.maxVertex.z))
     return true;
 
-  if (update)
-    if (!updateData())
-      return false;
-
   hull_p.minVertex.z = min_z;
   hull_p.maxVertex.z = max_z;
 
+  dirty_data_p = true;
+
   return true;
+}
+
+
+const std::vector<double>& Traits3D::Function::data()
+{
+  if (dirty_data_p)
+    if (updateData())
+      dirty_data_p = false;
+
+  return data_p;
 }
 
 bool Traits3D::Function::updateData()
@@ -94,6 +100,6 @@ bool Traits3D::Function::updateData()
   hmin.z = zmin;
   hmax.z = zmax;
 
-	return true;
+  return true;
 }
 

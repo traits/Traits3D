@@ -12,7 +12,17 @@ void Traits3D::ParametricSurface::setPeriodic(bool u, bool v)
   vperiodic_p = v;
 }
 
-bool Traits3D::ParametricSurface::setDomain(double min_u, double max_u, double min_v, double max_v, bool update /*= true*/)
+
+const Traits3D::TripleVector& Traits3D::ParametricSurface::data()
+{
+  if (dirty_data_p)
+    if (updateData())
+      dirty_data_p = false;
+
+  return data_p;
+}
+
+bool Traits3D::ParametricSurface::setDomain(double min_u, double max_u, double min_v, double max_v)
 {
   if (min_u >= max_u || min_v >= max_v)
     return false;
@@ -25,23 +35,19 @@ bool Traits3D::ParametricSurface::setDomain(double min_u, double max_u, double m
   minv_p = min_v;
   maxv_p = max_v;
 
-  if (update)
-    if (!updateData())
-      return false;
-
+  dirty_data_p = true;
   return true;
 }
 
-bool Traits3D::ParametricSurface::setHull(Traits3D::Box const& hull, bool update /*= true*/)
+bool Traits3D::ParametricSurface::setHull(Traits3D::Box const& hull)
 {
   if (equal(hull, hull_p))
     return true;
 
   hull_p = hull;
 
-  if (update)
-    if (!updateData())
-      return false;
+  dirty_data_p = true;
+  return true;
 }
 
 
