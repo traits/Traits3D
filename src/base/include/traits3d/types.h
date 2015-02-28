@@ -21,11 +21,11 @@ const double PI = 3.14159265358979323846264338328;
 //! Plotting style
 enum PLOTSTYLE
 {
-	NOPLOT     , //!< No visible data
-	WIREFRAME  , //!< Wireframe style
-	HIDDENLINE , //!< Hidden Line style
-	FILLED     , //!< Color filled polygons w/o edges 
-	FILLEDMESH , //!< Color filled polygons w/ separately colored edges
+  NOPLOT     , //!< No visible data
+  WIREFRAME  , //!< Wireframe style
+  HIDDENLINE , //!< Hidden Line style
+  FILLED     , //!< Color filled polygons w/o edges 
+  FILLEDMESH , //!< Color filled polygons w/ separately colored edges
   POINTS     , //!< User defined style (used by Enrichments)
   USER         //!< User defined style (used by Enrichments)
 };
@@ -33,32 +33,32 @@ enum PLOTSTYLE
 //! Shading style
 enum SHADINGSTYLE
 {
-	FLAT,      //!< Flat shading (OpenGL)
-	GOURAUD    //!< Gouraud Shading (OpenGL)
+  FLAT,      //!< Flat shading (OpenGL)
+  GOURAUD    //!< Gouraud Shading (OpenGL)
 };
 
 //! Style of Coordinate system
 enum COORDINATESTYLE
 {
-	NOCOORDINATES,  //!< Coordinate system is not visible 
-	BOX,            //!< Boxed
-	FRAME		        //!< Frame - 3 visible axes
+  NOCOORDINATES,  //!< Coordinate system is not visible 
+  BOX,            //!< Boxed
+  FRAME            //!< Frame - 3 visible axes
 };
 
 //! Different types of axis scales
 enum SCALETYPE
 {
-	LINEARSCALE,//!< Linear scaling 
-	LOG10SCALE,	//!< Logarithmic scaling (base 10)
+  LINEARSCALE,//!< Linear scaling 
+  LOG10SCALE,  //!< Logarithmic scaling (base 10)
   USERSCALE   //!< User-defined (for extensions)
 };
 
 //! Plotting style for floor data (projections)
 enum FLOORSTYLE
 {
-	NOFLOOR,   //!< Empty floor
-	FLOORISO,  //!< Isoline projections visible
-	FLOORDATA //!< Projected polygons visible
+  NOFLOOR,   //!< Empty floor
+  FLOORISO,  //!< Isoline projections visible
+  FLOORDATA //!< Projected polygons visible
 };
 
 //! The 12 axes
@@ -67,18 +67,18 @@ enum FLOORSTYLE
 */
 enum AXIS
 {
-	X1 = 0,   //!<  1st x-axis
-	X2 = 3,   //!<  2nd x-axis
-	X3 = 4,   //!<  3th x-axis
-	X4 = 5,   //!<  4th x-axis
-	Y1 = 1,   //!<  1st y-axis
-	Y2 = 8,   //!<  2nd y-axis
-	Y3 = 7,   //!<  3th y-axis
-	Y4 = 6,   //!<  4th y-axis
-	Z1 = 2,   //!<  1st z-axis
-	Z2 = 9,   //!<  2nd z-axis
-	Z3 = 11,  //!<  3th z-axis
-	Z4 = 10   //!<  4th z-axis
+  X1 = 0,   //!<  1st x-axis
+  X2 = 3,   //!<  2nd x-axis
+  X3 = 4,   //!<  3th x-axis
+  X4 = 5,   //!<  4th x-axis
+  Y1 = 1,   //!<  1st y-axis
+  Y2 = 8,   //!<  2nd y-axis
+  Y3 = 7,   //!<  3th y-axis
+  Y4 = 6,   //!<  4th y-axis
+  Z1 = 2,   //!<  1st z-axis
+  Z2 = 9,   //!<  2nd z-axis
+  Z3 = 11,  //!<  3th z-axis
+  Z4 = 10   //!<  4th z-axis
 };
 
 //! The 6 sides
@@ -107,27 +107,27 @@ minVertex[2] <= maxVertex[2]\n
 */
 struct TRAITS3D_EXPORT Box
 {
-	//! Construct degenerated Box with minVertex components set to max(double) and maxVertex comp's to min(double)
-	Box()
+  //! Construct degenerated Box with minVertex components set to max(double) and maxVertex comp's to min(double)
+  Box()
     : Box(
        Triple(std::numeric_limits<Triple::value_type>::max()),
        Triple(std::numeric_limits<Triple::value_type>::min())
          )
-	{
-	}
+  {
+  }
 
-	//! Construct initialized Box
-	/**
-		minv -> minVertex\n
-		maxv -> maxVertex\n
-	*/
-	Box(Triple minv, Triple maxv)
-	: minVertex(minv), maxVertex(maxv)
-	{
-	}
-	
-	Triple minVertex;
-	Triple maxVertex;
+  //! Construct initialized Box
+  /**
+    minv -> minVertex\n
+    maxv -> maxVertex\n
+  */
+  Box(Triple minv, Triple maxv)
+  : minVertex(minv), maxVertex(maxv)
+  {
+  }
+  
+  Triple minVertex;
+  Triple maxVertex;
 };
 
 inline Box sum(const Box& a, const Box& b)
@@ -147,26 +147,26 @@ inline Box sum(const Box& a, const Box& b)
 
 //! Free vector
 /**
-	FreeVectors represent objects like normal vectors and other vector fields inside R^3 
+  FreeVectors represent objects like normal vectors and other vector fields inside R^3 
 */
 struct TRAITS3D_EXPORT FreeVector
 {
-	FreeVector()
-	{
-	}
+  FreeVector()
+  {
+  }
 
-	//! Construct initialized vector
-	/**
-		b -> base\n
-		e -> top\n
-	*/
-	FreeVector(Triple b, Triple t)
-	: base(b), top(t)
-	{
-	}
-	
-	Triple base;
-	Triple top;
+  //! Construct initialized vector
+  /**
+    b -> base\n
+    e -> top\n
+  */
+  FreeVector(Triple b, Triple t)
+  : base(b), top(t)
+  {
+  }
+  
+  Triple base;
+  Triple top;
 };
 
 //! A free vector field in R^3
