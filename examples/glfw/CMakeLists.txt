@@ -7,11 +7,7 @@ set (GLFW_BUILD_DOCS OFF)
 set (TRAITS3D_GLFW_VERSION "3.1")
 include_directories(_common)
 include_directories(_common/glfw-${TRAITS3D_GLFW_VERSION}/include)
-
 add_subdirectory(_common)
-file(GLOB TRAITS3D_GL_DIR_SOURCES ${TRAITS3D_GL_DIR}/*.*)
-add_library(glloader_glfw STATIC ${TRAITS3D_GL_DIR_SOURCES})
-set_property(TARGET glloader_glfw PROPERTY FOLDER "examples/glfw/common")
 
 # not before this point
 add_definitions(-DGLFW_INCLUDE_NONE)

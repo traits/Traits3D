@@ -1,3 +1,4 @@
+include_directories(${TRAITS3D_GL_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/src/3rdparty)
 include_directories(${PROJECT_SOURCE_DIR}/src/base/include)
 include_directories(${PROJECT_SOURCE_DIR}/src/glbase/include)

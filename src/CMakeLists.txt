@@ -8,10 +8,8 @@ list(APPEND ALL_LIBS ${OPENGL_LIBRARY})
 if ("${TRAITS3D_GL_VARIANT}"  STREQUAL "OPENGL")
   #adding OpenGL sources
   add_subdirectory(3rdparty)
-  # Unresolved stuff from '3rdparty' dir
-  # A nuisance, having to do this here 
-  SOURCE_GROUP(GL FILES ${TRAITS3D_GL_SOURCES})
-  include_directories(${TRAITS3D_GL_DIR})
+  include_directories(${TRAITS3D_GL_DIR}/include)
+  list(APPEND ALL_LIBS glimpl)
 elseif ("${TRAITS3D_GL_VARIANT}"  STREQUAL "OPENGL_ES")
   list(APPEND CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} $ENV{OPENGLES_MALI}/include)
   list(APPEND CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} $ENV{OPENGLES_MALI}/lib)
@@ -20,7 +18,7 @@ elseif ("${TRAITS3D_GL_VARIANT}"  STREQUAL "OPENGL_ES")
   list(APPEND ALL_LIBS ${GLESv3_LIBRARIES})
 endif()
 
-# glm and glloadgen files
+# glm files
 include_directories(3rdparty)
 
 # types and basic stuff

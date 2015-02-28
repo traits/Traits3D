@@ -1,11 +1,1 @@
-if ("${TRAITS3D_GL_VARIANT}"  STREQUAL "OPENGL")
-  if ("${TRAITS3D_GL_MAJOR}"  GREATER 3)
-    set(TRAITS3D_GL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/glloadgen/GL_4_2 CACHE INTERNAL "OpenGL interface files" FORCE)
-  else()
-    set(TRAITS3D_GL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/glloadgen/GL_3_3 CACHE INTERNAL "OpenGL interface files" FORCE)  
-  endif()
-  FILE(GLOB TRAITS3D_GL_SOURCES ${TRAITS3D_GL_DIR}/*.c)    
-  set (TRAITS3D_GL_SOURCES ${TRAITS3D_GL_SOURCES} PARENT_SCOPE)
-elseif ("${TRAITS3D_GL_VARIANT}"  STREQUAL "OPENGL_ES")
-  # ES sources  
-endif()
+add_subdirectory(glloadgen)
