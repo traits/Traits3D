@@ -49,8 +49,23 @@ Traits3D::ColorVector Traits3D::ColorTable::createColors(TripleVector const& dat
 
   for (size_t i = 0; i != data.size(); ++i)
   {
-    Color c = color(static_cast<float>(data[i].z), color_field, zmin, zmax);
-    ret[i] = c;
+    ret[i] = color(static_cast<float>(data[i].z), color_field, zmin, zmax);
+  }
+  return ret;
+}
+
+Traits3D::ColorVector Traits3D::ColorTable::createColors(std::vector<Traits3D::TripleF> const& data, ColorVector const& color_field)
+{
+  ColorVector ret(data.size());
+
+  Box hull = calculateBox(data);
+
+  float zmin = static_cast<float>(hull.minVertex.z);
+  float zmax = static_cast<float>(hull.maxVertex.z);
+
+  for (size_t i = 0; i != data.size(); ++i)
+  {
+    ret[i] = color(data[i].z, color_field, zmin, zmax);
   }
   return ret;
 }

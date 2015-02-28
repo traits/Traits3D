@@ -33,6 +33,7 @@ namespace Traits3D
 
       //void setTitlePosition(double rely, double relx = 0.5);
       void setTitle(std::string const& val); //!< Set caption text (one row only)
+      void setTitleColor(Color const& val); //!< Set caption text (one row only)
 
     protected:
       Box hull_p;
@@ -48,5 +49,6 @@ namespace Traits3D
     private:
       Color bgcolor_;
       std::string title_;
+      Color title_color_ = Color(0, 0, 0, 1);
   };
 } // ns

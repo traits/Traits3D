@@ -70,7 +70,7 @@ void Traits3D::Plot3D::draw()
   positions[0] = TextEngine::Position(
                    TupleF((vp[2] - vp[0]) / 2, vp[3] - vp[1]-10),
                    TextEngine::Anchor::TopCenter);
-  std::vector<Color> colors(1, Color(0.9f, 0, 0.3f, 0.0f));
+  std::vector<Color> colors(1, title_color_);
   text_engine_p->draw(positions, colors);
 }
 
@@ -92,6 +92,7 @@ bool Traits3D::Plot3D::initializeGL()
     return false;
   }
   setTitle("Traits3D Plot");
+  setTitleColor(Color(0.9f, 0, 0.3f, 0.0f));
   gl_is_initialized_p = true;
   return true;
 }
@@ -100,4 +101,9 @@ void Traits3D::Plot3D::setTitle(std::string const& val)
 {
   if (text_engine_p->setTexts(std::vector<std::string>(1, val), std::vector<FontInfo>(1, FontInfo("OpenSans Italic", 24))))
     title_ = val;
+}
+
+void Traits3D::Plot3D::setTitleColor(Traits3D::Color const& val)
+{
+  title_color_ = val;
 }

@@ -12,8 +12,8 @@ namespace Traits3D
                            size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
 
       bool updatePositionData(std::vector<TripleF> const& data);
-      bool addDataColor(ColorVector const& val);
+      bool setDataColor(ColorVector const& val);
       ColorVector createColors(std::vector<TripleF> const& data, ColorVector const& color_field);
-      bool addMeshColor(Color const& val);
+      bool setMeshColor(Color const& val);
   };
 } // ns

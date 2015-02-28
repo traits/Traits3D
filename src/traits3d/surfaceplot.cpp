@@ -15,12 +15,12 @@ bool Traits3D::SurfacePlot::addPositionData(std::vector<TripleF> const& data,
 }
 
 //todo check size against position vector[s]
-bool Traits3D::SurfacePlot::addDataColor(ColorVector const& val)
+bool Traits3D::SurfacePlot::setDataColor(ColorVector const& val)
 {
   return data_object_p->setColor(val);
 }
 
-bool Traits3D::SurfacePlot::addMeshColor(Color const& val)
+bool Traits3D::SurfacePlot::setMeshColor(Color const& val)
 {
   return data_object_p->setMeshColor(val);
 }

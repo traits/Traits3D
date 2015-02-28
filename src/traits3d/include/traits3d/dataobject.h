@@ -35,6 +35,7 @@ namespace Traits3D
         bool initShader();
         Traits3D::Box hull_;
         ColorVector colors_;
+        std::vector<TripleF> data_;
 
         enum class VBOindex
         {
