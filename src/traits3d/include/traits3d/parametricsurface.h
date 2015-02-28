@@ -21,9 +21,12 @@ public:
 
   //! Provide information about periodicity of the 'u' resp. 'v' domains.
   void setPeriodic(bool u, bool v); 
-
   bool uPeriodic() const { return uperiodic_p; }
   bool vPeriodic() const { return vperiodic_p; }
+  
+  bool setDomainResolution(size_t u_size, size_t v_size) { return setMeshSizeImpl(u_size, v_size); }
+  size_t uSize() const { return umesh_p; }
+  size_t vSize() const { return vmesh_p; }
 
   //! Returns data, created by updateData()
   const TripleVector& data();

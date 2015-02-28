@@ -18,6 +18,10 @@ namespace Traits3D
     bool setDomain(double min_x, double max_x, double min_y, double max_y); //!< Sets x-y domain boundaries.
     bool setRange(double min_z, double max_z);
 
+    bool setDomainResolution(size_t x_size, size_t y_size){ return setMeshSizeImpl(x_size, y_size); }
+    size_t xSize() const { return umesh_p; }
+    size_t ySize() const { return vmesh_p; }
+
     //! Returns data, created by updateData()
     const std::vector<double>& data();
 

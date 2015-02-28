@@ -17,7 +17,7 @@ class Broeckchen : public Traits3D::Function
 public:
   Broeckchen()
   {
-    setMeshSize(41, 31);
+    setDomainResolution(41, 31);
     setDomain(-0.5, 1.5, -1.5, 1.5);
     //setRange(-10, 20);
   }
@@ -33,18 +33,16 @@ public:
 
     std::vector<Traits3D::TripleF> fdata(dvec.size());
 
-    size_t xsize = uMeshSize();
-    size_t ysize = vMeshSize();
     Traits3D::Box h = hull();
-    double dx = (h.maxVertex.x - h.minVertex.x) / (xsize - 1);
-    double dy = (h.maxVertex.y - h.minVertex.y) / (ysize - 1);
+    double dx = (h.maxVertex.x - h.minVertex.x) / (xSize() - 1);
+    double dy = (h.maxVertex.y - h.minVertex.y) / (ySize() - 1);
 
 
     for (size_t i = 0; i != dvec.size(); ++i)
     {
       fdata[i] = Traits3D::TripleF(
-        static_cast<float>(h.minVertex.x + dx*(i % xsize)),
-        static_cast<float>(h.minVertex.y + dy*(i / xsize)),
+        static_cast<float>(h.minVertex.x + dx*(i % xSize())),
+        static_cast<float>(h.minVertex.y + dy*(i / xSize())),
         static_cast<float>(dvec[i])
         );
     }
@@ -83,11 +81,7 @@ public:
   {
     std::vector<Traits3D::TripleF> data = broeckchen.fullData();
 
-    size_t xsize = broeckchen.uMeshSize();
-    size_t ysize = broeckchen.vMeshSize();
-
-
-    if (!addPositionData(data, xsize, ysize, GL_STATIC_DRAW))
+    if (!addPositionData(data, broeckchen.xSize(), broeckchen.ySize(), GL_STATIC_DRAW))
       return false;
 
     size_t size = data.size();

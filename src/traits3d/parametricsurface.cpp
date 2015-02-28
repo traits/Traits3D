@@ -116,3 +116,4 @@ bool Traits3D::ParametricSurface::updateData()
 
   return true;
 }
+
