@@ -16,11 +16,9 @@ public:
   //! Overwrite this
   virtual Traits3D::Triple operator()(double u, double v) = 0; 
 
-  bool setDomain(double minu, double maxu, double minv, double maxv); //!< Sets u-v domain boundaries.
-  void setHull(Traits3D::Box const&); //!< Limit the mappings value range to the box 
+  bool setDomain(double minu, double maxu, double minv, double maxv, bool update = true); //!< Sets u-v domain boundaries.
+  bool setHull(Traits3D::Box const& hull, bool update = true); //!< Limit the mappings value range to the box 
 
-  //! Creates data representation.
-  bool updateData() override;
   //! Provide information about periodicity of the 'u' resp. 'v' domains.
   void setPeriodic(bool u, bool v); 
 
@@ -35,6 +33,9 @@ protected:
   bool vperiodic_p = true;
   TripleVector data_p;
   double minu_p, maxu_p, minv_p, maxv_p;
+
+  //! Creates data representation.
+  bool updateData() override;
 };
 
 } // ns

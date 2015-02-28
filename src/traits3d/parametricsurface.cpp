@@ -1,3 +1,4 @@
+#include "traits3d/helper.h"
 #include "traits3d/parametricsurface.h"
 
 Traits3D::ParametricSurface::ParametricSurface()
@@ -11,22 +12,36 @@ void Traits3D::ParametricSurface::setPeriodic(bool u, bool v)
   vperiodic_p = v;
 }
 
-bool Traits3D::ParametricSurface::setDomain(double min_u, double max_u, double min_v, double max_v)
+bool Traits3D::ParametricSurface::setDomain(double min_u, double max_u, double min_v, double max_v, bool update /*= true*/)
 {
   if (min_u >= max_u || min_v >= max_v)
     return false;
+
+  if (equal(min_u, minu_p) && equal(max_u, maxu_p) && equal(min_v, minv_p) && equal(max_u, maxu_p))
+    return true;
 
   minu_p = min_u;
   maxu_p = max_u;
   minv_p = min_v;
   maxv_p = max_v;
 
+  if (update)
+    if (!updateData())
+      return false;
+
   return true;
 }
 
-void Traits3D::ParametricSurface::setHull(Traits3D::Box const& p)
+bool Traits3D::ParametricSurface::setHull(Traits3D::Box const& hull, bool update /*= true*/)
 {
-  hull_p = p;
+  if (equal(hull, hull_p))
+    return true;
+
+  hull_p = hull;
+
+  if (update)
+    if (!updateData())
+      return false;
 }
 
 

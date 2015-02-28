@@ -1,3 +1,4 @@
+#include "traits3d/helper.h"
 #include "traits3d/function.h"
 
 Traits3D::Function::Function()
@@ -8,15 +9,23 @@ Traits3D::Function::Function()
 /**
 \return false for pathological cases (min >= max), true else 
 */
-bool Traits3D::Function::setDomain(double min_x, double max_x, double min_y, double max_y)
+bool Traits3D::Function::setDomain(double min_x, double max_x, double min_y, double max_y, bool update /*= true*/)
 {
   if (min_x >= max_x || min_y >= max_y)
     return false;
+
+  if ( equal(min_x, hull_p.minVertex.x) && equal(max_x, hull_p.maxVertex.x)
+    && equal(min_x, hull_p.minVertex.y) && equal(max_x, hull_p.maxVertex.y))
+    return true;
 
   hull_p.minVertex.x = min_x;
   hull_p.maxVertex.x = max_x;
   hull_p.minVertex.y = min_y;
   hull_p.maxVertex.y = max_y;
+
+  if (update)
+    if (!updateData())
+      return false;
 
   return true;
 }
@@ -25,10 +34,17 @@ bool Traits3D::Function::setDomain(double min_x, double max_x, double min_y, dou
 /**
 \return false for pathological cases (min >= max), true else
 */
-bool Traits3D::Function::limitRange(double min_z, double max_z)
+bool Traits3D::Function::setRange(double min_z, double max_z, bool update /*= true*/)
 {
   if ((min_z >= max_z))
     return false;
+
+  if (equal(min_z, hull_p.minVertex.z) && equal(max_z, hull_p.maxVertex.z))
+    return true;
+
+  if (update)
+    if (!updateData())
+      return false;
 
   hull_p.minVertex.z = min_z;
   hull_p.maxVertex.z = max_z;

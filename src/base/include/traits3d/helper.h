@@ -26,8 +26,14 @@ namespace Traits3D
   inline bool equal(Triple const& a, Triple const& b)
   {
     return equal(a.x, b.x)
-           && equal(a.y, b.y)
-           && equal(a.z, b.z);
+      && equal(a.y, b.y)
+      && equal(a.z, b.z);
+  }
+
+  inline bool equal(Box const& a, Box const& b)
+  {
+    return equal(a.minVertex, b.minVertex)
+      && equal(a.maxVertex, b.maxVertex);
   }
 
   inline int round(double d)
