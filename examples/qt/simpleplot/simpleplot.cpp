@@ -62,19 +62,7 @@ public:
     if (!addPositionData(data, broeckchen.xSize(), broeckchen.ySize(), GL_STATIC_DRAW))
       return false;
 
-    size_t size = data.size();
-    float fsize = size;
-    Traits3D::ColorVector colors(size);
-    for (size_t i = 0; i != size; ++i)
-    {
-      Traits3D::Color& elem = colors[i];
-      elem.r = i / fsize;
-      elem.g = i / fsize / 4;
-      elem.b = 1 - i / fsize;
-      elem.a = 1.0f;
-    }
-
-    return addDataColor(colors) && addMeshColor(Traits3D::Color(0.0, 0.5, 0.5, 0));
+    return setDataColor(Traits3D::ColorTable::stdColor(100)) && setMeshColor(Traits3D::Color(0.0, 0.5, 0.5, 0));
   }
 
   //void updateData() override

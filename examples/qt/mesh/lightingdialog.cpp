@@ -7,7 +7,7 @@
 //#include "lightingdialog.h"
 //
 //using namespace std;
-//using namespace Protean3D;
+//using namespace Traits3D;
 //
 //class Sphere : public ParametricSurface
 //{
@@ -17,7 +17,7 @@
 //  :ParametricSurface(pw)
 //  {
 //    setMesh(41,31);
-//    setDomain(0,2*Protean3D::PI,0,Protean3D::PI);
+//    setDomain(0,2*Traits3D::PI,0,Traits3D::PI);
 //    setPeriodic(false,false);
 //  }
 //
@@ -70,13 +70,13 @@
 //  plot().setRotation(0,0,0);
 //  plot().setTitle("Use your mouse buttons and keyboard");
 //  plot().setTitleFont(QFont("Arial", 8, QFont::Bold));
-//  plot().setTitleColor(RGBA(0.9,0.9,0.9));
+//  plot().setTitleColor(Traits3D::Color(0.9,0.9,0.9));
 //  plot().setSmoothMesh(true);
 //  plot().setZoom(0.9);
 //  plot().setCoordinateStyle(NOCOORD);
-//  plot().setMeshColor(RGBA(0.6,0.6,0.6,0.3));
+//  plot().setMeshColor(Traits3D::Color(0.6,0.6,0.6,0.3));
 //  plot().setPlotStyle(FILLEDMESH);
-//  plot().setBackgroundColor(RGBA(0,0,0));
+//  plot().setBackgroundColor(Traits3D::Color(0,0,0));
 //
 //  updateData();
 //}
@@ -193,7 +193,7 @@
 //  data_plot_->updateGL();
 //}
 //
-//void LightingDlg::assign(Protean3D::QtWidget<Protean3D::SurfacePlot>* pl) 
+//void LightingDlg::assign(Traits3D::QtWidget<Traits3D::SurfacePlot>* pl) 
 //{
 //  if (!pl) 
 //    return;

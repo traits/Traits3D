@@ -2,41 +2,41 @@
 
 //#include <math.h>
 //#include <qapplication.h>
-//#include "protean3d/parametricsurface.h"
-//#include "protean3d/qtwidget.hh"
-//#include "protean3d/enrichment.h"
-//#include "protean3d/color.h"
+//#include "traits3d/parametricsurface.h"
+//#include "traits3d/qtwidget.hh"
+//#include "traits3d/enrichment.h"
+//#include "traits3d/color.h"
 //
 //#include "ui_lightingdialogbase.h"
 //
-//class Pointer : public Protean3D::UserEnrichment
+//class Pointer : public Traits3D::UserEnrichment
 //{
 //public:
 //  explicit Pointer(double rad);
 //  
 //  void configure(double rad);
 //  void draw();
-//  void setPos(double x, double y, double z) {pos_ = Protean3D::Triple(x,y,z);}
+//  void setPos(double x, double y, double z) {pos_ = Traits3D::Triple(x,y,z);}
 //
 //private:
 //  double radius_;
-//  Protean3D::Triple pos_;
+//  Traits3D::Triple pos_;
 //};
 //
-//struct SColor : public Protean3D::Color
+//struct SColor : public Traits3D::Color
 //{
-//  Protean3D::RGBA operator()(double, double, double) const {return Protean3D::RGBA(0.8,0,0,0.5);}
+//  Traits3D::Color operator()(double, double, double) const {return Traits3D::Color(0.8,0,0,0.5);}
 //};
 //
-//typedef Protean3D::SurfacePlot SPlot; // moc/VC6 issue in Qt4
+//typedef Traits3D::SurfacePlot SPlot; // moc/VC6 issue in Qt4
 //
-//class Plot : public Protean3D::QtWidget<Protean3D::SurfacePlot>
+//class Plot : public Traits3D::QtWidget<Traits3D::SurfacePlot>
 //{
 //  Q_OBJECT
 //    
 //public:
 //  Plot(QWidget* parent);
-//  std::shared_ptr<Protean3D::Enrichment> stick;
+//  std::shared_ptr<Traits3D::Enrichment> stick;
 //  void reset();
 //};
 //
@@ -48,7 +48,7 @@
 //  LightingDlg(QWidget *parent=0);
 //  ~LightingDlg();
 //
-//  void assign(Protean3D::QtWidget<Protean3D::SurfacePlot>* pl);
+//  void assign(Traits3D::QtWidget<Traits3D::SurfacePlot>* pl);
 //  
 //public slots:
 //  void setDistance(int);
@@ -61,7 +61,7 @@
 //
 //private:
 //  Plot* plot_;
-//  Protean3D::QtWidget<Protean3D::SurfacePlot>* data_plot_;
+//  Traits3D::QtWidget<Traits3D::SurfacePlot>* data_plot_;
 //};
 //
 //    

@@ -1,19 +1,17 @@
-#ifndef __EXAMPLE_H__
-#define __EXAMPLE_H__
+#pragma once
 
-#include <math.h>
-#include <protean3d/parametricsurface.h>
-#include <protean3d/function.h>
+#include <cmath>
+#include "traits3d/parametricsurface.h"
+#include "traits3d/function.h"
 
-using namespace Protean3D;
+using namespace Traits3D;
 
 
 class Rosenbrock : public Function
 {
 public:
 
-  Rosenbrock(SurfacePlot& pw)
-  :Function(pw)
+  Rosenbrock()
   {
   }
 
@@ -28,8 +26,7 @@ class Hat : public Function
 {
 public:
 
-  Hat(SurfacePlot& pw)
-  :Function(pw)
+  Hat()
   {
     //setMinZ(0.3);     
     setDomain(0,10,0,10);
@@ -47,8 +44,7 @@ class Ripple : public Function
 {
 public:
 
-  Ripple(SurfacePlot& pw)
-  :Function(pw)
+  Ripple()
   {
     double l = 12; 
     setDomain(-l,l,-l,l);
@@ -56,8 +52,8 @@ public:
   
   double operator()(double x, double y)
   {
-    return (cos(sqrt(x*x+y*y) + cos(sqrt(((x+.913*2*Protean3D::PI)*(x+.913*2*Protean3D::PI))+y*y)) 
-      + cos(sqrt(((x-.913*2*Protean3D::PI)*(x-.913*2*Protean3D::PI))+(y*y))))*4);
+    return (cos(sqrt(x*x+y*y) + cos(sqrt(((x+.913*2*Traits3D::PI)*(x+.913*2*Traits3D::PI))+y*y)) 
+      + cos(sqrt(((x-.913*2*Traits3D::PI)*(x-.913*2*Traits3D::PI))+(y*y))))*4);
   }
 };
 
@@ -66,7 +62,6 @@ class Saddle : public Function
 public:
 
   Saddle()
-  :Function()
   {
   //  setMaxZ(0.8);     
   }
@@ -83,7 +78,6 @@ class Mex : public Function
 public:
 
   Mex()
-  :Function()
   {
   //  setMaxZ(0.8);
   }
@@ -92,7 +86,7 @@ public:
   {
     double n = sqrt(x*x+y*y); 
 
-    if (n < DBL_MIN)
+    if (n < std::numeric_limits<double>::min())
       return 20;
     
     return 20 * sin(sqrt(x*x+y*y)) / n;
@@ -104,11 +98,10 @@ class Torus : public ParametricSurface
 {
 public:
 
-  Torus(SurfacePlot& pw)
-  :ParametricSurface(pw)
+  Torus()
   {
-    setMesh(41,31);
-    setDomain(-2*Protean3D::PI, 0,-2*Protean3D::PI,0);
+    setDomainResolution(41,31);
+    setDomain(-2*Traits3D::PI, 0,-2*Traits3D::PI,0);
     setPeriodic(true,true);
   }
 
@@ -128,11 +121,10 @@ class Seashell : public ParametricSurface
 {
 public:
 
-  Seashell(SurfacePlot& pw)
-  :ParametricSurface(pw)
+  Seashell()
   {
-    setMesh(41,131);
-    setDomain(0,2*Protean3D::PI,0,2*Protean3D::PI);
+    setDomainResolution(41, 131);
+    setDomain(0,2*Traits3D::PI,0,2*Traits3D::PI);
     setPeriodic(true,true);
   }
 
@@ -145,7 +137,7 @@ public:
     double c = 0.5;
     int n = 3;
 
-    double f = v/(2*Protean3D::PI);
+    double f = v/(2*Traits3D::PI);
 
     x = a*(1-f)*cos(n*v)*(1+cos(u)) + c*cos(n*v) ;
     y = a*(1-f)*sin(n*v)*(1+cos(u)) + c*sin(n*v) ;
@@ -158,11 +150,10 @@ class Boy : public ParametricSurface
 {
 public:
 
-  Boy(SurfacePlot& pw)
-  :ParametricSurface(pw)
+  Boy()
   {
-    setMesh(141,131);
-    setDomain(0,Protean3D::PI,0,Protean3D::PI);
+    setDomainResolution(141, 131);
+    setDomain(0,Traits3D::PI,0,Traits3D::PI);
     setPeriodic(true,true);
   }
 
@@ -185,11 +176,10 @@ class Dini : public ParametricSurface
 {
 public:
 
-  Dini(SurfacePlot& pw)
-  :ParametricSurface(pw)
+  Dini()
   {
-    setMesh(141,35);
-    setDomain(0,5*Protean3D::PI,0.001, 2);
+    setDomainResolution(141, 35);
+    setDomain(0,5*Traits3D::PI,0.001, 2);
     setPeriodic(true,true);
   }
 
@@ -208,5 +198,3 @@ public:
     return Triple(x,y,z);
   }
 };
-
-#endif

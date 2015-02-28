@@ -91,6 +91,9 @@ namespace Traits3D
 
       glBindBuffer(GL_ARRAY_BUFFER, id_);
 
+      //todo hack caused inside mesh example
+      while (GL_NO_ERROR != glGetError());
+
       GLint oldtype;
       glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_USAGE, &oldtype);
       if (GL_NO_ERROR != glGetError())

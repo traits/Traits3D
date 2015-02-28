@@ -30,19 +30,9 @@ bool HeightMap::loadData()
   if (!addPositionData(map_vertices, MAP_NUM_VERTICES_X, MAP_NUM_VERTICES_Y, GL_DYNAMIC_DRAW))
     return false;
 
-  size_t size = map_vertices.size();
-  float fsize = static_cast<float>(size);
-  Traits3D::ColorVector colors(size);
-  for (size_t i = 0; i != size; ++i)
-  {
-    Traits3D::Color& elem = colors[i];
-    elem.r = i / fsize;
-    elem.g = i / fsize / 4;
-    elem.b = 1 - i / fsize;
-    elem.a = 1.0f;
-  }
+  Traits3D::ColorVector colors = Traits3D::ColorTable::stdColor(100);
 
-  return addDataColor(colors) && addMeshColor(Traits3D::Color(0, 0, 0, 1));
+  return setDataColor(colors) && setMeshColor(Traits3D::Color(0, 0, 0, 1));
 }
 
 void HeightMap::updateData()

@@ -12,12 +12,6 @@ int main( int argc, char **argv )
 {
   QApplication::setColorSpec( QApplication::CustomColor );
   QApplication app(argc,argv);
-
-  if ( !QGLFormat::hasOpenGL() ) 
-  {
-    qWarning( "This system has no OpenGL support. Exiting." );     
-    return -1;
-  }
     
   MeshMainWindow mainwindow;
   mainwindow.resize(1024,768);
