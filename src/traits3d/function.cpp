@@ -5,14 +5,35 @@ Traits3D::Function::Function()
 {
 }
 
-void Traits3D::Function::setMinZ(double val)
+/**
+\return false for pathological cases (min >= max), true else 
+*/
+bool Traits3D::Function::setDomain(double min_x, double max_x, double min_y, double max_y)
 {
-	range_p.minVertex.z = val;
+  if (min_x >= max_x || min_y >= max_y)
+    return false;
+
+  hull_p.minVertex.x = min_x;
+  hull_p.maxVertex.x = max_x;
+  hull_p.minVertex.y = min_y;
+  hull_p.maxVertex.y = max_y;
+
+  return true;
 }
 
-void Traits3D::Function::setMaxZ(double val)
+
+/**
+\return false for pathological cases (min >= max), true else
+*/
+bool Traits3D::Function::limitRange(double min_z, double max_z)
 {
-	range_p.maxVertex.z = val;
+  if ((min_z >= max_z))
+    return false;
+
+  hull_p.minVertex.z = min_z;
+  hull_p.maxVertex.z = max_z;
+
+  return true;
 }
 
 bool Traits3D::Function::updateData()
@@ -24,33 +45,38 @@ bool Traits3D::Function::updateData()
 	
 	/* get the data */
 
-  if (maxu_p > range_p.maxVertex.x)
-    maxu_p = range_p.maxVertex.x;
-  else if (minu_p < range_p.minVertex.x)
-    minu_p = range_p.minVertex.x;
-  
-  if (maxv_p > range_p.maxVertex.y)
-    maxv_p = range_p.maxVertex.y;
-  else if (minv_p < range_p.minVertex.y)
-    minv_p = range_p.minVertex.y;
+  Triple& hmax = hull_p.maxVertex;
+  Triple& hmin = hull_p.minVertex;
 
-	double dx = (maxu_p - minu_p) / (umesh_p - 1);
-	double dy = (maxv_p - minv_p) / (vmesh_p - 1);
+	double dx = (hmax.x - hmin.x) / (umesh_p - 1);
+	double dy = (hmax.y - hmin.y) / (vmesh_p - 1);
 	
+  double zmin = std::numeric_limits<double>::max();
+  double zmax = -zmin;
+
 	for (size_t iy = 0; iy != vmesh_p; ++iy) 
 	{
     size_t row_idx = iy*umesh_p;
 		for (size_t ix = 0; ix != umesh_p; ++ix) 
 		{
       size_t idx = row_idx + ix;
-      data_p[idx] = operator()(minu_p + ix*dx, minv_p + iy*dy);
+      data_p[idx] = operator()(hmin.x + ix*dx, hmin.y + iy*dy);
 			
-			if (data_p[idx] > range_p.maxVertex.z)
-        data_p[idx] = range_p.maxVertex.z;
-      else if (data_p[idx] < range_p.minVertex.z)
-        data_p[idx] = range_p.minVertex.z;
-		}
+			if (data_p[idx] > hmax.z)
+        data_p[idx] = hmax.z;
+      else if (data_p[idx] < hmin.z)
+        data_p[idx] = hmin.z;
+
+      if (zmin > data_p[idx])
+        zmin = data_p[idx];
+    
+      if (zmax < data_p[idx])
+        zmax = data_p[idx];
+    }
 	}
+
+  hmin.z = zmin;
+  hmax.z = zmax;
 
 	return true;
 }

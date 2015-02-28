@@ -15,8 +15,8 @@ namespace Traits3D
     Function(); //!< Constructs Function object w/o assigned SurfacePlot.
 	  virtual double operator()(double x, double y) = 0; //!< Overwrite this.
 		
-	  void setMinZ(double val); //!< Sets minimal z value.
-	  void setMaxZ(double val); //!< Sets maximal z value.
+    bool setDomain(double min_x, double max_x, double min_y, double max_y); //!< Sets x-y domain boundaries.
+    bool limitRange(double min_z, double max_z);
 
 	  //! Creates data representation (consecutive row vectors for this standard implementation).
 	  bool updateData() override;

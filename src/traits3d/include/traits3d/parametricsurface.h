@@ -15,7 +15,11 @@ public:
   ParametricSurface(); //!< Constructs ParametricSurface object.
   //! Overwrite this
   virtual Traits3D::Triple operator()(double u, double v) = 0; 
-	//! Creates data representation.
+
+  bool setDomain(double minu, double maxu, double minv, double maxv); //!< Sets u-v domain boundaries.
+  void setHull(Traits3D::Box const&); //!< Limit the mappings value range to the box 
+
+  //! Creates data representation.
   bool updateData() override;
   //! Provide information about periodicity of the 'u' resp. 'v' domains.
   void setPeriodic(bool u, bool v); 
@@ -30,6 +34,7 @@ protected:
   bool uperiodic_p = true;
   bool vperiodic_p = true;
   TripleVector data_p;
+  double minu_p, maxu_p, minv_p, maxv_p;
 };
 
 } // ns

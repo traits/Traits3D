@@ -31,7 +31,6 @@ bool Traits3D::SurfacePlot::updatePositionData(std::vector<TripleF> const& data)
     return false;
 
   coordinates_p->init(data_object_p->hull());
-
   return true;
 }
 
