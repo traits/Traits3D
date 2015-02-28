@@ -20,16 +20,16 @@ static void mouse_callback(GLFWwindow* window, int button, int action, int modif
 {
   if (action == GLFW_PRESS)
   {
-	  if (button == GLFW_MOUSE_BUTTON_RIGHT)
-	  {
-	    // ... some code
-	  }
-	  else if (button == GLFW_MOUSE_BUTTON_LEFT)
-	  {
+    if (button == GLFW_MOUSE_BUTTON_RIGHT)
+    {
+      // ... some code
+    }
+    else if (button == GLFW_MOUSE_BUTTON_LEFT)
+    {
       double x, y;
       glfwGetCursorPos(window, &x, &y);
       std::cerr << "x: " << x << "  y: " << y << std::endl;
-	  }
+    }
   }
   //else // GLFW_RELEASE
   //{

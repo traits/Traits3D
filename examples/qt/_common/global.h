@@ -7,7 +7,7 @@
 #if defined(_WIN32) || defined(_WIN64)  
   #if defined(_MSC_VER) /* MSVC Compiler */
     #pragma warning(disable: 4251) // dll interface required for stl templates
-	   //pragma warning(disable: 4244) // 'conversion' conversion from 'type1' to 'type2', possible loss of data
+    //pragma warning(disable: 4244) // 'conversion' conversion from 'type1' to 'type2', possible loss of data
     #pragma warning(disable: 4786) // truncating debug info after 255 characters
     #pragma warning(disable: 4660) // template-class specialization 'identifier' is already instantiated
     #if (_MSC_VER >= 1400) /* VS8 - not sure about VC7 */

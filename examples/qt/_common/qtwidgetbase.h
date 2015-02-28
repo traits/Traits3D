@@ -34,62 +34,62 @@ public:
 
   // input devices
 
-	void assignMouse(MouseState xrot, MouseState yrot, MouseState zrot,
-									 MouseState xscale, MouseState yscale, MouseState zscale,
-									 MouseState zoom, MouseState xshift, MouseState yshift);
-	
-	bool mouseEnabled() const; //!< Returns true, if the widget accept mouse input from the user
-	void assignKeyboard(
+  void assignMouse(MouseState xrot, MouseState yrot, MouseState zrot,
+                   MouseState xscale, MouseState yscale, MouseState zscale,
+                   MouseState zoom, MouseState xshift, MouseState yshift);
+  
+  bool mouseEnabled() const; //!< Returns true, if the widget accept mouse input from the user
+  void assignKeyboard(
      KeyboardState xrot_n, KeyboardState xrot_p
     ,KeyboardState yrot_n, KeyboardState yrot_p
     ,KeyboardState zrot_n, KeyboardState zrot_p
-		,KeyboardState xscale_n, KeyboardState xscale_p 
+    ,KeyboardState xscale_n, KeyboardState xscale_p 
     ,KeyboardState yscale_n, KeyboardState yscale_p
     ,KeyboardState zscale_n, KeyboardState zscale_p
-		,KeyboardState zoom_n, KeyboardState zoom_p
+    ,KeyboardState zoom_n, KeyboardState zoom_p
     ,KeyboardState xshift_n, KeyboardState xshift_p
     ,KeyboardState yshift_n, KeyboardState yshift_p
     );
-	
-	bool keyboardEnabled() const; //!< Returns true, if the widget accept keyboard input from the user
+  
+  bool keyboardEnabled() const; //!< Returns true, if the widget accept keyboard input from the user
   //! Sets speed for keyboard driven transformations
   void setKeySpeed(double rot, double scale, double shift); 
   //! Gets speed for keyboard driven transformations
   void keySpeed(double& rot, double& scale, double& shift) const;   
 
 signals:
-	//! Emitted, if the rotation is changed
+  //! Emitted, if the rotation is changed
   void rotationChanged( double xAngle, double yAngle, double zAngle ); 
-	//! Emitted, if the shift is changed
-	void shiftChanged( double xShift, double yShift, double zShift );
-	//! Emitted, if the viewport shift is changed
-	void vieportShiftChanged( double xShift, double yShift );
-	//! Emitted, if the scaling is changed
+  //! Emitted, if the shift is changed
+  void shiftChanged( double xShift, double yShift, double zShift );
+  //! Emitted, if the viewport shift is changed
+  void vieportShiftChanged( double xShift, double yShift );
+  //! Emitted, if the scaling is changed
   void scaleChanged( double xScale, double yScale, double zScale );
-	//! Emitted, if the zoom is changed
-	void zoomChanged(double);
-	//! Emitted, if the projection mode is changed
+  //! Emitted, if the zoom is changed
+  void zoomChanged(double);
+  //! Emitted, if the projection mode is changed
   void projectionChanged(bool);
 
 public slots:
-	void setRotation( double xVal, double yVal, double zVal ); 																														
-	void setShift( double xVal, double yVal, double zVal );    																														
-	void setViewportShift( double xVal, double yVal );         																														
-	void setScale( double xVal, double yVal, double zVal );    																														
-	void setZoom( double );                                    																														
-  void setOrtho(bool);                                       																														
+  void setRotation( double xVal, double yVal, double zVal );                                                             
+  void setShift( double xVal, double yVal, double zVal );                                                                
+  void setViewportShift( double xVal, double yVal );                                                                     
+  void setScale( double xVal, double yVal, double zVal );                                                                
+  void setZoom( double );                                                                                                
+  void setOrtho(bool);                                                                                                   
   
-	void enableMouse(bool val=true); //!< Enable mouse input   																														
-	void disableMouse(bool val =true); //!< Disable mouse input																														
-	void enableKeyboard(bool val=true); //!< Enable keyboard input   																														
-	void disableKeyboard(bool val =true); //!< Disable keyboard input																														
+  void enableMouse(bool val=true); //!< Enable mouse input                                                               
+  void disableMouse(bool val =true); //!< Disable mouse input                                                            
+  void enableKeyboard(bool val=true); //!< Enable keyboard input                                                               
+  void disableKeyboard(bool val =true); //!< Disable keyboard input                                                            
 
   void enableLighting(bool val = true); //!< Turn Lighting on or off
   void disableLighting(bool val = true); //!< Turn Lighting on or off
   //! Rotate lightsource[idx]
-  void setLightRotation( double xVal, double yVal, double zVal, unsigned int idx = 0 ); 																														
+  void setLightRotation( double xVal, double yVal, double zVal, unsigned int idx = 0 );                                                             
   //! Shift lightsource[idx]
-	void setLightShift( double xVal, double yVal, double zVal, unsigned int idx = 0 );    																														
+  void setLightShift( double xVal, double yVal, double zVal, unsigned int idx = 0 );                                                                
 
 
 protected:
@@ -97,52 +97,52 @@ protected:
   void paintGL() override;
   void resizeGL( int w, int h ) override;
 
-private:	
+private:  
   // mouse
   QPoint lastMouseMovePosition_;
-	bool mpressed_;
+  bool mpressed_;
 
-	MouseState xrot_mstate_, 
-			yrot_mstate_, 
-			zrot_mstate_, 
-			xscale_mstate_, 
-			yscale_mstate_, 
-			zscale_mstate_,
+  MouseState xrot_mstate_, 
+      yrot_mstate_, 
+      zrot_mstate_, 
+      xscale_mstate_, 
+      yscale_mstate_, 
+      zscale_mstate_,
       zoom_mstate_,
-			xshift_mstate_,
-			yshift_mstate_;
+      xshift_mstate_,
+      yshift_mstate_;
 
-	bool mouse_input_enabled_;
+  bool mouse_input_enabled_;
 
   void mousePressEvent( QMouseEvent *e );
   void mouseReleaseEvent( QMouseEvent *e );
   void mouseMoveEvent( QMouseEvent *e );
-  void wheelEvent( QWheelEvent *e );		
+  void wheelEvent( QWheelEvent *e );    
   void keyPressEvent( QKeyEvent *e );
 
-	void setRotationMouse(MouseState bstate, double accel, QPoint diff);
-	void setScaleMouse(MouseState bstate, double accel, QPoint diff);
-	void setShiftMouse(MouseState bstate, double accel, QPoint diff);
+  void setRotationMouse(MouseState bstate, double accel, QPoint diff);
+  void setScaleMouse(MouseState bstate, double accel, QPoint diff);
+  void setShiftMouse(MouseState bstate, double accel, QPoint diff);
 
   // keyboard
-	bool kpressed_;
+  bool kpressed_;
 
-	KeyboardState xrot_kstate_[2], 
-			yrot_kstate_[2], 
-			zrot_kstate_[2], 
-			xscale_kstate_[2], 
-			yscale_kstate_[2], 
-			zscale_kstate_[2],
+  KeyboardState xrot_kstate_[2], 
+      yrot_kstate_[2], 
+      zrot_kstate_[2], 
+      xscale_kstate_[2], 
+      yscale_kstate_[2], 
+      zscale_kstate_[2],
       zoom_kstate_[2],
-			xshift_kstate_[2],
-			yshift_kstate_[2];
+      xshift_kstate_[2],
+      yshift_kstate_[2];
 
-	bool kbd_input_enabled_;
+  bool kbd_input_enabled_;
   double kbd_rot_speed_, kbd_scale_speed_, kbd_shift_speed_;
 
-	void setRotationKeyboard(KeyboardState kseq, double speed);
-	void setScaleKeyboard(KeyboardState kseq, double speed);
-	void setShiftKeyboard(KeyboardState kseq, double speed);
+  void setRotationKeyboard(KeyboardState kseq, double speed);
+  void setScaleKeyboard(KeyboardState kseq, double speed);
+  void setShiftKeyboard(KeyboardState kseq, double speed);
 };
 
 

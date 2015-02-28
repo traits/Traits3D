@@ -12,7 +12,7 @@ using namespace std;
 using namespace Traits3D;
 
 #ifndef WHEEL_DELTA
-	#define WHEEL_DELTA 120
+  #define WHEEL_DELTA 120
 #endif
 
 
@@ -22,22 +22,22 @@ using namespace Traits3D;
 QtWidgetBase::QtWidgetBase(std::shared_ptr<ExtGLWidget> plot, QWidget * parent, Qt::WindowFlags flags)
     : QOpenGLWidget( parent, flags), plot_p(plot)
 {  
-	lastMouseMovePosition_ = QPoint(0,0);
-	mpressed_ = false;
-	mouse_input_enabled_ = true;
-	
+  lastMouseMovePosition_ = QPoint(0,0);
+  mpressed_ = false;
+  mouse_input_enabled_ = true;
+  
   kbd_input_enabled_ = true;
 
   setFocusPolicy(Qt::StrongFocus);
   assignMouse(Qt::LeftButton, 
-							MouseState(Qt::LeftButton, Qt::ShiftModifier),
-							Qt::LeftButton, 
-							MouseState(Qt::LeftButton, Qt::AltModifier), 
-							MouseState(Qt::LeftButton, Qt::AltModifier), 
-							MouseState(Qt::LeftButton, Qt::AltModifier | Qt::ShiftModifier),
-							MouseState(Qt::LeftButton, Qt::AltModifier | Qt::ControlModifier),
-							MouseState(Qt::LeftButton, Qt::ControlModifier), 
-							MouseState(Qt::LeftButton, Qt::ControlModifier)
+              MouseState(Qt::LeftButton, Qt::ShiftModifier),
+              Qt::LeftButton, 
+              MouseState(Qt::LeftButton, Qt::AltModifier), 
+              MouseState(Qt::LeftButton, Qt::AltModifier), 
+              MouseState(Qt::LeftButton, Qt::AltModifier | Qt::ShiftModifier),
+              MouseState(Qt::LeftButton, Qt::AltModifier | Qt::ControlModifier),
+              MouseState(Qt::LeftButton, Qt::ControlModifier), 
+              MouseState(Qt::LeftButton, Qt::ControlModifier)
               );
 
 
@@ -60,72 +60,72 @@ Traits3D::QtWidgetBase::~QtWidgetBase()
 }
 
 /**
-	Standard mouse button Function. Prepares the call to mouseMoveEvent
-	\see mouseMoveEvent()
+  Standard mouse button Function. Prepares the call to mouseMoveEvent
+  \see mouseMoveEvent()
 */
 void QtWidgetBase::mousePressEvent( QMouseEvent *e )
 {
-	lastMouseMovePosition_ = e->pos();
-	mpressed_ = true;
+  lastMouseMovePosition_ = e->pos();
+  mpressed_ = true;
 }
 
 /**
-	Standard mouse button Function. Completes the call to mouseMoveEvent
-	\see mouseMoveEvent()
+  Standard mouse button Function. Completes the call to mouseMoveEvent
+  \see mouseMoveEvent()
 */
 void QtWidgetBase::mouseReleaseEvent( QMouseEvent* )
 {
-	mpressed_ = false;
+  mpressed_ = false;
 }
 
 /**
-	Standard mouse button Function
-	\see assignMouse()
+  Standard mouse button Function
+  \see assignMouse()
 */
 void QtWidgetBase::mouseMoveEvent( QMouseEvent *e )
 {
-	if (!mpressed_ || !mouseEnabled())
+  if (!mpressed_ || !mouseEnabled())
   {
     e->ignore();
-		return;
+    return;
   }
-	
+  
   MouseState bstate(e->buttons(),e->modifiers());
-	QPoint diff = e->pos() - lastMouseMovePosition_;
+  QPoint diff = e->pos() - lastMouseMovePosition_;
 
-	setRotationMouse(bstate, 3, diff);	
-	setScaleMouse(bstate, 5, diff);	
-	setShiftMouse(bstate, 2, diff);	
-		
-	lastMouseMovePosition_ = e->pos();
+  setRotationMouse(bstate, 3, diff);  
+  setScaleMouse(bstate, 5, diff);  
+  setShiftMouse(bstate, 2, diff);  
+    
+  lastMouseMovePosition_ = e->pos();
 }
 
 void QtWidgetBase::setRotationMouse(MouseState bstate, double accel, QPoint diff)
 {
-	// Rotation
+  // Rotation
   double w = std::max<int>(1,width());
   double h = std::max<int>(1,height());
-		
-	double relx = accel*360 * diff.x() / w; 
-	double relyz = accel*360 * diff.y() / h; 
-	
-	double new_xrot = plot_p->xRotation();
-	double new_yrot = plot_p->yRotation();
-	double new_zrot = plot_p->zRotation();
-	
-	if ( bstate == xrot_mstate_ )
-		new_xrot = round(plot_p->xRotation() + relyz) % 360; 
-	if ( bstate == yrot_mstate_ )
-		new_yrot = round(plot_p->yRotation() + relx) % 360; 
-	if ( bstate == zrot_mstate_ )
-		new_zrot = round(plot_p->zRotation() + relx) % 360; 
-		
-	setRotation(new_xrot, new_yrot, new_zrot); 
+    
+  double relx = accel*360 * diff.x() / w; 
+  double relyz = accel*360 * diff.y() / h; 
+  
+  double new_xrot = plot_p->xRotation();
+  double new_yrot = plot_p->yRotation();
+  double new_zrot = plot_p->zRotation();
+  
+  if ( bstate == xrot_mstate_ )
+    new_xrot = round(plot_p->xRotation() + relyz) % 360; 
+  if ( bstate == yrot_mstate_ )
+    new_yrot = round(plot_p->yRotation() + relx) % 360; 
+  if ( bstate == zrot_mstate_ )
+    new_zrot = round(plot_p->zRotation() + relx) % 360; 
+    
+  setRotation(new_xrot, new_yrot, new_zrot); 
 }
 
 void QtWidgetBase::setScaleMouse(MouseState bstate, double accel, QPoint diff)
 {
-	// Scale
+  // Scale
   double w = std::max<int>(1,width());
   double h = std::max<int>(1,height());
 
@@ -151,68 +151,68 @@ void QtWidgetBase::setScaleMouse(MouseState bstate, double accel, QPoint diff)
 
 void QtWidgetBase::setShiftMouse(MouseState bstate, double accel, QPoint diff)
 {
-	// Shift
-	double w = std::max<int>(1,width());
-	double h = std::max<int>(1,height());
+  // Shift
+  double w = std::max<int>(1,width());
+  double h = std::max<int>(1,height());
 
-	double relx = diff.x() * accel / w; 
-	double relyz = diff.y() * accel / h;
+  double relx = diff.x() * accel / w; 
+  double relyz = diff.y() * accel / h;
 
-	double new_xshift = plot_p->xViewportShift();
-	double new_yshift = plot_p->yViewportShift();
+  double new_xshift = plot_p->xViewportShift();
+  double new_yshift = plot_p->yViewportShift();
 
-	if ( bstate == xshift_mstate_)
-		new_xshift = plot_p->xViewportShift() + relx;
-	if ( bstate == yshift_mstate_)
-		new_yshift = plot_p->yViewportShift() - relyz;
+  if ( bstate == xshift_mstate_)
+    new_xshift = plot_p->xViewportShift() + relx;
+  if ( bstate == yshift_mstate_)
+    new_yshift = plot_p->yViewportShift() - relyz;
 
-	setViewportShift(new_xshift, new_yshift); 
+  setViewportShift(new_xshift, new_yshift); 
 }
 
 /**
-	Standard wheel Function - zoom (wheel only) or z-scale (shift+wheel)
+  Standard wheel Function - zoom (wheel only) or z-scale (shift+wheel)
 */
 void QtWidgetBase::wheelEvent( QWheelEvent *e )
 {
-	if (!mouseEnabled())
-		return;
-	
-	double accel = 0.05;
-	
-	double step =  accel * e->delta() / WHEEL_DELTA ;
-	step = exp(step)-1;
+  if (!mouseEnabled())
+    return;
+  
+  double accel = 0.05;
+  
+  double step =  accel * e->delta() / WHEEL_DELTA ;
+  step = exp(step)-1;
 
-	if ( e->modifiers() & Qt::ShiftModifier )
+  if ( e->modifiers() & Qt::ShiftModifier )
     plot_p->setScale(plot_p->xScale(),plot_p->yScale(), std::max<double>(0.0,plot_p->zScale() + step));
-	else
-		plot_p->setZoom(max<double>(0.0,plot_p->zoom() + step ));
+  else
+    plot_p->setZoom(max<double>(0.0,plot_p->zoom() + step ));
   
   update();
 }
 
 /**
-	Sets the key/mousebutton combination for data/coordinatesystem moves inside the widget\n\n
-	default behaviour:\n
+  Sets the key/mousebutton combination for data/coordinatesystem moves inside the widget\n\n
+  default behaviour:\n
 
-	\verbatim
-	rotate around x axis: Qt::LeftButton 
-	rotate around y axis: Qt::LeftButton | Qt::ShiftButton
-	rotate around z axis: Qt::LeftButton 
-	scale x:              Qt::LeftButton | Qt::AltButton 
-	scale y:              Qt::LeftButton | Qt::AltButton 
-	scale z:              Qt::LeftButton | Qt::AltButton | Qt::ShiftButton
-	zoom:                 Qt::LeftButton | Qt::AltButton | Qt::ControlButton
-	shifting along x:     Qt::LeftButton | Qt::ControlButton 
-	shifting along z:     Qt::LeftButton | Qt::ControlButton
-	\endverbatim
+  \verbatim
+  rotate around x axis: Qt::LeftButton 
+  rotate around y axis: Qt::LeftButton | Qt::ShiftButton
+  rotate around z axis: Qt::LeftButton 
+  scale x:              Qt::LeftButton | Qt::AltButton 
+  scale y:              Qt::LeftButton | Qt::AltButton 
+  scale z:              Qt::LeftButton | Qt::AltButton | Qt::ShiftButton
+  zoom:                 Qt::LeftButton | Qt::AltButton | Qt::ControlButton
+  shifting along x:     Qt::LeftButton | Qt::ControlButton 
+  shifting along z:     Qt::LeftButton | Qt::ControlButton
+  \endverbatim
 
-	mouseMoveEvent() evaluates this function - if overridden, their usefulness becomes somehow limited
+  mouseMoveEvent() evaluates this function - if overridden, their usefulness becomes somehow limited
 */
 void QtWidgetBase::assignMouse(MouseState xrot, MouseState yrot, MouseState zrot,
-											 MouseState xscale, MouseState yscale, MouseState zscale,
-											 MouseState zoom, MouseState xshift, MouseState yshift)
+                       MouseState xscale, MouseState yscale, MouseState zscale,
+                       MouseState zoom, MouseState xshift, MouseState yshift)
 {
-	xrot_mstate_   = 	xrot;  
+  xrot_mstate_   =   xrot;  
   yrot_mstate_   =  yrot;  
   zrot_mstate_   =  zrot;  
   xscale_mstate_ =  xscale;
@@ -238,142 +238,142 @@ bool QtWidgetBase::mouseEnabled() const {return mouse_input_enabled_;}
 
 
 /**
-	Standard keyboard handler. Uses the settings from setRotationKeyboard
-	in order to perform rotations, shifts etc.
+  Standard keyboard handler. Uses the settings from setRotationKeyboard
+  in order to perform rotations, shifts etc.
 */
 void QtWidgetBase::keyPressEvent( QKeyEvent *e )
 {
-	if (!keyboardEnabled())
+  if (!keyboardEnabled())
   {
     e->ignore();
     return;
-  }	
+  }  
 
   KeyboardState keyseq(e->key(), e->modifiers());
-	setRotationKeyboard(keyseq, kbd_rot_speed_);	
-	setScaleKeyboard(keyseq, kbd_scale_speed_);	
-	setShiftKeyboard(keyseq, kbd_shift_speed_);	
+  setRotationKeyboard(keyseq, kbd_rot_speed_);  
+  setScaleKeyboard(keyseq, kbd_scale_speed_);  
+  setShiftKeyboard(keyseq, kbd_shift_speed_);  
 }
 
 void QtWidgetBase::setRotationKeyboard(KeyboardState kseq, double speed)
 {
-	// Rotation
-	double w = max(1,width());
-	double h = max(1,height());
-		
-	double relx = speed*360 / w; 
-	double relyz = speed*360 / h; 
-	
-	double new_xrot = plot_p->xRotation();
-	double new_yrot = plot_p->yRotation();
-	double new_zrot = plot_p->zRotation();
-	
-	if ( kseq == xrot_kstate_[0] )
-		new_xrot = round(plot_p->xRotation() + relyz) % 360; 
-	if ( kseq == xrot_kstate_[1] )
-		new_xrot = round(plot_p->xRotation() - relyz) % 360; 
-	if ( kseq == yrot_kstate_[0] )
-		new_yrot = round(plot_p->yRotation() + relx) % 360; 
-	if ( kseq == yrot_kstate_[1] )
-		new_yrot = round(plot_p->yRotation() - relx) % 360; 
-	if ( kseq == zrot_kstate_[0] )
-		new_zrot = round(plot_p->zRotation() + relx) % 360; 
-	if ( kseq == zrot_kstate_[1] )
-		new_zrot = round(plot_p->zRotation() - relx) % 360; 
-		
-	setRotation(new_xrot, new_yrot, new_zrot); 
+  // Rotation
+  double w = max(1,width());
+  double h = max(1,height());
+    
+  double relx = speed*360 / w; 
+  double relyz = speed*360 / h; 
+  
+  double new_xrot = plot_p->xRotation();
+  double new_yrot = plot_p->yRotation();
+  double new_zrot = plot_p->zRotation();
+  
+  if ( kseq == xrot_kstate_[0] )
+    new_xrot = round(plot_p->xRotation() + relyz) % 360; 
+  if ( kseq == xrot_kstate_[1] )
+    new_xrot = round(plot_p->xRotation() - relyz) % 360; 
+  if ( kseq == yrot_kstate_[0] )
+    new_yrot = round(plot_p->yRotation() + relx) % 360; 
+  if ( kseq == yrot_kstate_[1] )
+    new_yrot = round(plot_p->yRotation() - relx) % 360; 
+  if ( kseq == zrot_kstate_[0] )
+    new_zrot = round(plot_p->zRotation() + relx) % 360; 
+  if ( kseq == zrot_kstate_[1] )
+    new_zrot = round(plot_p->zRotation() - relx) % 360; 
+    
+  setRotation(new_xrot, new_yrot, new_zrot); 
 }
 
 void QtWidgetBase::setScaleKeyboard(KeyboardState kseq, double speed)
 {
-	// Scale
-		double w = max<int>(1,width());
-		double h = max<int>(1,height());
+  // Scale
+    double w = max<int>(1,width());
+    double h = max<int>(1,height());
 
-		double relx = speed / w; relx = exp(relx) - 1;
-		double relyz = speed / h; relyz = exp(relyz) - 1; 
+    double relx = speed / w; relx = exp(relx) - 1;
+    double relyz = speed / h; relyz = exp(relyz) - 1; 
 
-		double new_xscale = plot_p->xScale();
-		double new_yscale = plot_p->yScale();
-		double new_zscale = plot_p->zScale();
+    double new_xscale = plot_p->xScale();
+    double new_yscale = plot_p->yScale();
+    double new_zscale = plot_p->zScale();
 
-		if ( kseq == xscale_kstate_[0])
-			new_xscale = max(0.0,plot_p->xScale() + relx);
-		if ( kseq == xscale_kstate_[1])
-			new_xscale = max(0.0,plot_p->xScale() - relx);
-		if ( kseq == yscale_kstate_[0])
-			new_yscale = max(0.0,plot_p->yScale() - relyz);
-		if ( kseq == yscale_kstate_[1])
-			new_yscale = max(0.0,plot_p->yScale() + relyz);
-		if ( kseq == zscale_kstate_[0])
-			new_zscale = max(0.0,plot_p->zScale() - relyz);
-		if ( kseq == zscale_kstate_[1])
-			new_zscale = max(0.0,plot_p->zScale() + relyz);
+    if ( kseq == xscale_kstate_[0])
+      new_xscale = max(0.0,plot_p->xScale() + relx);
+    if ( kseq == xscale_kstate_[1])
+      new_xscale = max(0.0,plot_p->xScale() - relx);
+    if ( kseq == yscale_kstate_[0])
+      new_yscale = max(0.0,plot_p->yScale() - relyz);
+    if ( kseq == yscale_kstate_[1])
+      new_yscale = max(0.0,plot_p->yScale() + relyz);
+    if ( kseq == zscale_kstate_[0])
+      new_zscale = max(0.0,plot_p->zScale() - relyz);
+    if ( kseq == zscale_kstate_[1])
+      new_zscale = max(0.0,plot_p->zScale() + relyz);
 
-		setScale(new_xscale, new_yscale, new_zscale); 
+    setScale(new_xscale, new_yscale, new_zscale); 
 
-		if ( kseq == zoom_kstate_[0])
+    if ( kseq == zoom_kstate_[0])
       plot_p->setZoom(std::max<double>(0.0,plot_p->zoom() - relyz));
-		if ( kseq == zoom_kstate_[1])
+    if ( kseq == zoom_kstate_[1])
       plot_p->setZoom(std::max<double>(0.0,plot_p->zoom() + relyz));
 }
 
 void QtWidgetBase::setShiftKeyboard(KeyboardState kseq, double speed)
 {
-	// Shift
+  // Shift
   double w = std::max<int>(1,width());
   double h = std::max<int>(1,height());
 
-	double relx = speed / w; 
-	double relyz = speed / h;
+  double relx = speed / w; 
+  double relyz = speed / h;
 
-	double new_xshift = plot_p->xViewportShift();
-	double new_yshift = plot_p->yViewportShift();
+  double new_xshift = plot_p->xViewportShift();
+  double new_yshift = plot_p->yViewportShift();
 
-	if ( kseq == xshift_kstate_[0])
-		new_xshift = plot_p->xViewportShift() + relx;
-	if ( kseq == xshift_kstate_[1])
-		new_xshift = plot_p->xViewportShift() - relx;
-	if ( kseq == yshift_kstate_[0])
-		new_yshift = plot_p->yViewportShift() - relyz;
-	if ( kseq == yshift_kstate_[1])
-		new_yshift = plot_p->yViewportShift() + relyz;
+  if ( kseq == xshift_kstate_[0])
+    new_xshift = plot_p->xViewportShift() + relx;
+  if ( kseq == xshift_kstate_[1])
+    new_xshift = plot_p->xViewportShift() - relx;
+  if ( kseq == yshift_kstate_[0])
+    new_yshift = plot_p->yViewportShift() - relyz;
+  if ( kseq == yshift_kstate_[1])
+    new_yshift = plot_p->yViewportShift() + relyz;
 
-	setViewportShift(new_xshift, new_yshift); 
+  setViewportShift(new_xshift, new_yshift); 
 }
 
 /**
-	Sets the keybutton combination for data/coordinatesystem moves inside the widget\n\n
-	default behaviour:\n
+  Sets the keybutton combination for data/coordinatesystem moves inside the widget\n\n
+  default behaviour:\n
 
-	\verbatim
-	rotate around x axis: [Key_Down, Key_Up] 
-	rotate around y axis: SHIFT+[Key_Right, Key_Left]
-	rotate around z axis: [Key_Right, Key_Left] 
-	scale x:              ALT+[Key_Right, Key_Left] 
-	scale y:              ALT+[Key_Up, Key_Down] 
-	scale z:              ALT+SHIFT[Key_Down, Key_Up] 
-	zoom:                 ALT+CTRL+[Key_Down, Key_Up]
-	shifting along x:     CTRL+[Key_Right, Key_Left] 
-	shifting along z:     CTRL+[Key_Down, Key_Up]
-	\endverbatim
+  \verbatim
+  rotate around x axis: [Key_Down, Key_Up] 
+  rotate around y axis: SHIFT+[Key_Right, Key_Left]
+  rotate around z axis: [Key_Right, Key_Left] 
+  scale x:              ALT+[Key_Right, Key_Left] 
+  scale y:              ALT+[Key_Up, Key_Down] 
+  scale z:              ALT+SHIFT[Key_Down, Key_Up] 
+  zoom:                 ALT+CTRL+[Key_Down, Key_Up]
+  shifting along x:     CTRL+[Key_Right, Key_Left] 
+  shifting along z:     CTRL+[Key_Down, Key_Up]
+  \endverbatim
 */
 void QtWidgetBase::assignKeyboard(
        KeyboardState xrot_n, KeyboardState xrot_p
       ,KeyboardState yrot_n, KeyboardState yrot_p
       ,KeyboardState zrot_n, KeyboardState zrot_p
-			,KeyboardState xscale_n, KeyboardState xscale_p 
+      ,KeyboardState xscale_n, KeyboardState xscale_p 
       ,KeyboardState yscale_n, KeyboardState yscale_p
       ,KeyboardState zscale_n, KeyboardState zscale_p
-			,KeyboardState zoom_n, KeyboardState zoom_p
+      ,KeyboardState zoom_n, KeyboardState zoom_p
       ,KeyboardState xshift_n, KeyboardState xshift_p
       ,KeyboardState yshift_n, KeyboardState yshift_p
       )
 {
-	xrot_kstate_[0]   =  xrot_n;  
+  xrot_kstate_[0]   =  xrot_n;  
   yrot_kstate_[0]   =  yrot_n;  
   zrot_kstate_[0]   =  zrot_n;  
-	xrot_kstate_[1]   =  xrot_p;  
+  xrot_kstate_[1]   =  xrot_p;  
   yrot_kstate_[1]   =  yrot_p;  
   zrot_kstate_[1]   =  zrot_p;  
   
@@ -427,83 +427,83 @@ void QtWidgetBase::keySpeed(double& rot, double& scale, double& shift) const
 
 /**
   Set the rotation angle of the object. If you look along the respective axis towards ascending values,
-	the rotation is performed in mathematical \e negative sense 
-	\param xVal angle in \e degree to rotate around the X axis
-	\param yVal angle in \e degree to rotate around the Y axis
-	\param zVal angle in \e degree to rotate around the Z axis
+  the rotation is performed in mathematical \e negative sense 
+  \param xVal angle in \e degree to rotate around the X axis
+  \param yVal angle in \e degree to rotate around the Y axis
+  \param zVal angle in \e degree to rotate around the Z axis
 */
 void QtWidgetBase::setRotation( double xVal, double yVal, double zVal )
 {
   if (!plot_p->setRotation(xVal, yVal, zVal))
     return;
-	
+  
   update();
-	emit rotationChanged(xVal, yVal, zVal);
+  emit rotationChanged(xVal, yVal, zVal);
 }
 
 /**
   Set the shift in object (world) coordinates.
-	\param xVal shift along (world) X axis
-	\param yVal shift along (world) Y axis
-	\param zVal shift along (world) Z axis
-	\see setViewportShift()
+  \param xVal shift along (world) X axis
+  \param yVal shift along (world) Y axis
+  \param zVal shift along (world) Z axis
+  \see setViewportShift()
 */
 void QtWidgetBase::setShift( double xVal, double yVal, double zVal )
 {
   if(!plot_p->setShift(xVal, yVal, zVal))
     return;
-	
+  
   update();
-	emit shiftChanged(xVal, yVal, zVal);
+  emit shiftChanged(xVal, yVal, zVal);
 }
 
 /**
   Performs shifting along screen axes.
-	The shift moves points inside a sphere, 
+  The shift moves points inside a sphere, 
   which encloses the unscaled and unzoomed data
-	by multiples of the spheres diameter
-	
-	\param xVal shift along (view) X axis
-	\param yVal shift along (view) Y axis
-	\see setShift()
+  by multiples of the spheres diameter
+  
+  \param xVal shift along (view) X axis
+  \param yVal shift along (view) Y axis
+  \see setShift()
 */
 void QtWidgetBase::setViewportShift( double xVal, double yVal )
 {
   if(!plot_p->setViewportShift(xVal, yVal))
     return;
-	
+  
   update();
-	emit vieportShiftChanged(xVal, yVal);
+  emit vieportShiftChanged(xVal, yVal);
 }
 
 /**
   Set the scale in object (world) coordinates.
-	\param xVal scaling for X values
-	\param yVal scaling for Y values
-	\param zVal scaling for Z values 
+  \param xVal scaling for X values
+  \param yVal scaling for Y values
+  \param zVal scaling for Z values 
 
-	A respective value of 1 represents no scaling;
+  A respective value of 1 represents no scaling;
 */
 void QtWidgetBase::setScale( double xVal, double yVal, double zVal )
 {
   if(!plot_p->setScale(xVal, yVal, zVal))
     return;
 
-	update();
-	emit scaleChanged(xVal, yVal, zVal);
+  update();
+  emit scaleChanged(xVal, yVal, zVal);
 }
 
 /**
   Set the (zoom in addition to scale).
-	\param val zoom value (value == 1 indicates no zooming)
+  \param val zoom value (value == 1 indicates no zooming)
 */
 void QtWidgetBase::setZoom( double val )
 {
   if (!plot_p->setZoom(val))
     return;
 
- 	update();
-	emit zoomChanged(val);
+   update();
+  emit zoomChanged(val);
 }
 
 /*!
@@ -514,8 +514,8 @@ void QtWidgetBase::setOrtho( bool val )
   if (!plot_p->setOrtho(val))
     return;
 
-  update();	
-	emit projectionChanged(val);
+  update();  
+  emit projectionChanged(val);
 }
 
 /*!
@@ -562,8 +562,8 @@ void Traits3D::QtWidgetBase::paintGL()
 */
 void Traits3D::QtWidgetBase::resizeGL( int w, int h )
 {
-	glViewport( 0, 0, w, h );
-	plot_p->draw();
+  glViewport( 0, 0, w, h );
+  plot_p->draw();
 }
 
 void Traits3D::QtWidgetBase::updateData()
