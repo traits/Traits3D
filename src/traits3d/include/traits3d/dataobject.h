@@ -58,7 +58,6 @@ namespace Traits3D
         std::map<VBOindex, std::unique_ptr<VBO>> vbos_;
         std::map<IBOindex, std::unique_ptr<IBO>> ibos_;
 
-        void calculateBox(std::vector<TripleF> const& data);
         bool addPositionDataCommon(size_t xsize, size_t ysize, std::vector<TripleF> const& data, GLenum drawtype);
     };
   } // ns

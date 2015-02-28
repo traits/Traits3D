@@ -40,7 +40,7 @@ bool Traits3D::GL::DataObject::setPositionData(std::vector<TripleF> const& data,
   if (!addPositionDataCommon(xsize, ysize, data, drawtype))
     return false;
 
-  calculateBox(data);
+  hull_ = Traits3D::calculateBox(data);
   return true;
 }
 
@@ -59,7 +59,7 @@ bool Traits3D::GL::DataObject::setPositionData(TripleVector const& data,
 
 bool Traits3D::GL::DataObject::updatePositionData(std::vector<TripleF> const& data)
 {
-  calculateBox(data);
+  hull_ = Traits3D::calculateBox(data);
 
   TripleVector ddata(data.size());
   std::copy(data.begin(), data.end(), ddata.begin());
@@ -83,7 +83,7 @@ bool Traits3D::GL::DataObject::updatePositionData(TripleVector const& data)
   return vbos_[VBOindex::Position]->setData(fdata);
 }
 
-// todo check size against position vector[s]
+//todo check size against position vector[s]
 bool Traits3D::GL::DataObject::setColor(ColorVector const& data)
 {
   if (!vbos_[VBOindex::DataColor]->setData(data))
@@ -143,13 +143,4 @@ bool Traits3D::GL::DataObject::addPositionDataCommon(size_t xsize, size_t ysize,
   return true;
 }
 
-void Traits3D::GL::DataObject::calculateBox(std::vector<TripleF> const& data)
-{
-  if (data.empty())
-    return;
-  TripleVector ddata(data.size());
-  std::copy(data.begin(), data.end(), ddata.begin());
-
-  hull_ = Traits3D::calculateBox(ddata);
-}
 

@@ -8,8 +8,8 @@ Traits3D::GridMapping::GridMapping()
   hull_p = Box(Triple(-d, -d, -d), Triple(d, d, d));
 }
 
-void Traits3D::GridMapping::setMeshSize(size_t columns, size_t rows)
+void Traits3D::GridMapping::setMeshSize(size_t u_size, size_t v_size)
 {
-	umesh_p = columns;
-	vmesh_p = rows;
+  umesh_p = u_size;
+  vmesh_p = v_size;
 }

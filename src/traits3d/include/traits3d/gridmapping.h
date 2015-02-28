@@ -13,7 +13,7 @@ namespace Traits3D
   public:
     GridMapping(); //!< Constructs GridMapping object.
 
-    void setMeshSize(size_t columns, size_t rows); //!< Sets number of rows and columns. 
+    void setMeshSize(size_t u_size, size_t v_size); //!< Sets number of rows (u) and columns (v). 
     const Box& hull() const { return hull_p; } //!< Return the mappings effective x-y-z hull
     size_t uMeshSize() const { return umesh_p; }
     size_t vMeshSize() const { return vmesh_p; }

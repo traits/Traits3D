@@ -1,26 +1,5 @@
 #include "traits3d/helper.h"
 
-Traits3D::Box Traits3D::calculateBox(TripleVector const& data)
-{
-  Traits3D::Box hull;
-  for (auto p : data)
-  {
-    if (p.x < hull.minVertex.x)
-      hull.minVertex.x = p.x;
-    if (p.y < hull.minVertex.y)
-      hull.minVertex.y = p.y;
-    if (p.z < hull.minVertex.z)
-      hull.minVertex.z = p.z;
-
-    if (p.x > hull.maxVertex.x)
-      hull.maxVertex.x = p.x;
-    if (p.y > hull.maxVertex.y)
-      hull.maxVertex.y = p.y;
-    if (p.z > hull.maxVertex.z)
-      hull.maxVertex.z = p.z;
-  }
-  return hull;
-}
 
 #ifndef TRAITS3D_NOT_FOR_DOXYGEN
 
