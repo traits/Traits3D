@@ -1,0 +1,31 @@
+<RCC>
+    <qresource>
+        <file>../resources/images/box.png</file>
+        <file>../resources/images/filecell.png</file>
+        <file>../resources/images/fileopen.png</file>
+        <file>../resources/images/filledmesh.png</file>
+        <file>../resources/images/floordata.png</file>
+        <file>../resources/images/floorempty.png</file>
+        <file>../resources/images/flooriso.png</file>
+        <file>../resources/images/floormesh.png</file>
+        <file>../resources/images/frame.png</file>
+        <file>../resources/images/grid.png</file>
+        <file>../resources/images/gridb.png</file>
+        <file>../resources/images/gridc.png</file>
+        <file>../resources/images/gridf.png</file>
+        <file>../resources/images/gridfr.png</file>
+        <file>../resources/images/gridl.png</file>
+        <file>../resources/images/gridr.png</file>
+        <file>../resources/images/hiddenline.png</file>
+        <file>../resources/images/icon.png</file>
+        <file>../resources/images/movie.png</file>
+        <file>../resources/images/nodata.png</file>
+        <file>../resources/images/none.png</file>
+        <file>../resources/images/normals.png</file>
+        <file>../resources/images/polygon.png</file>
+        <file>../resources/images/ploticon.png</file>
+        <file>../resources/images/savecontent.png</file>
+        <file>../resources/images/scattered.png</file>
+        <file>../resources/images/wireframe.png</file>
+    </qresource>
+</RCC>
