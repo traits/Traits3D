@@ -52,6 +52,8 @@ public:
   bool initializeGL()
   {
     SurfacePlot::initializeGL();
+    setTitle("Simple Plot");
+    setBackgroundColor(Traits3D::Color(0.95f));
     return loadData();
   }
   
@@ -79,11 +81,9 @@ int main(int argc, char **argv)
 {
     QApplication a(argc, argv);
     
-    Traits3D::QtWidget <Rosenbrock>* qtwidget 
-      = new Traits3D::QtWidget <Rosenbrock>();
+    Traits3D::QtWidget <Rosenbrock> rosenbrock;
 
-    qtwidget->plot3d->setBackgroundColor(Traits3D::Color(0.95f));
-    qtwidget->resize(800, 600);
-    qtwidget->show();
+    rosenbrock.resize(800, 600);
+    rosenbrock.show();
     return a.exec();
 }

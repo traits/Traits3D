@@ -17,6 +17,7 @@ public:
         hm.loadData();
         hm.setRotation(30, 0, 45);
         hm.setBackgroundColor(Traits3D::Color(0.0f, 197/255.0f, 205/255.0f, 1.0f)); // turquoise3
+        hm.setTitle("Embedded FBO Plot");
     }
 
     void render() {
