@@ -92,7 +92,7 @@ bool Traits3D::Plot3D::initializeGL()
     return false;
   }
   setTitle("Traits3D Plot");
-  setTitleColor(Color(0.9f, 0, 0.3f, 0.0f));
+  setTitleColor(Color(0.9f, 0, 0.3f, 1.0f));
   gl_is_initialized_p = true;
   return true;
 }
