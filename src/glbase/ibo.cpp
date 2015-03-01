@@ -59,7 +59,6 @@ bool Traits3D::GL::IBO::draw(GLenum draw_type)
 {
   if (!bindData(draw_type))
     return false;
-
   
   if (IndexMaker::RestartType::PrimitiveRestart == indexmaker_.restartType())
   {

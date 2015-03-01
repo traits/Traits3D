@@ -9,7 +9,9 @@ Traits3D::GL::AxisObject::AxisObject()
 {
   shader_.create(GL::ShaderCode::Vertex::Line, GL::ShaderCode::Fragment::Simple);
 
-  vbo_ = std::make_unique<VBO>(&vao_p);
+  vbo_ = std::make_unique<VBO>(&vao_p, 3);
+  shader_.bindAttribute(*vbo_, GL::ShaderCode::Vertex::v_coordinates);
+  
   te_ = std::make_shared<StandardTextEngine>();
   te_->initializeGL();
 }
@@ -31,7 +33,6 @@ void Traits3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 cons
   
   //todo
   updateData();
-  shader_.bindAttribute(*vbo_, GL::ShaderCode::Vertex::v_coordinates);
   shader_.setUniformVec4(Color(0.0f, 0.5f, 0.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);
   shader_.use();
   shader_.setProjectionMatrix(proj_matrix);

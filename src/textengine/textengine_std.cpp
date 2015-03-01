@@ -59,8 +59,8 @@ bool Traits3D::StandardTextEngine::initializeGL()
   if (!shader_->create(VertexCode_, FragmentCode_))
     return false;
   vao_ = std::make_unique<GL::VAO>();
-  vbo_ = std::make_unique<GL::VBO>(vao_.get());
-  return true;
+  vbo_ = std::make_unique<GL::VBO>(vao_.get(), 4);
+  return shader_->bindAttribute(*vbo_, "coord");
 }
 
 bool Traits3D::StandardTextEngine::setText(std::string const& text, size_t index /*= 0*/)
@@ -191,15 +191,11 @@ bool Traits3D::StandardTextEngine::draw(
         coords.insert(coords.end(), ch.begin(), ch.end());
     }
 
-    if (!vbo_->setData(coords)
-      || !shader_->bindAttribute(*vbo_, "coord")
-      || !shader_->use()
-      )
+    if (!vbo_->setData(coords) || !shader_->use())
       return false;
 
     data_changed_ = false;
   }
-
 
   GLint oldtex = 0;
   glGetIntegerv(GL_TEXTURE_BINDING_2D, &oldtex);

@@ -2,7 +2,7 @@
 #include "traits3d/glbase/vao.h"
 #include "traits3d/glbase/vbo.h"
 
-Traits3D::GL::VBO::VBO(VAO* vao) 
+Traits3D::GL::VBO::VBO(VAO* vao, char layout_components)
   :vao_(vao)
 {
   if (!vao_)
@@ -12,6 +12,8 @@ Traits3D::GL::VBO::VBO(VAO* vao)
   glGenBuffers(1, &id_);
   if (GL_NO_ERROR != glGetError())
     throw std::domain_error("Traits3D: VBO construction error");
+
+  setLayout(Layout(layout_components));
 }
 
 bool Traits3D::GL::VBO::bindAttribute(GLuint attr_location)
@@ -46,6 +48,7 @@ bool Traits3D::GL::VBO::draw(GLenum primitive_type, size_t first, size_t count)
   if ((first + count)*primitive_size_ > bsize_)
     return false;
 
+  vao_->bind();
   glDrawArrays(primitive_type, static_cast<GLint>(first), static_cast<GLsizei>(count));
 
   GLenum err = glGetError();

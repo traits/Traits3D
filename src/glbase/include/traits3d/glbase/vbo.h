@@ -13,8 +13,40 @@ namespace Traits3D
     class VBO
     {
     public:
-      explicit VBO(VAO* vao);
+      class Layout
+      {
+      public:
+        explicit Layout(char c = 0, GLenum t = GL_FLOAT, GLsizei s = 0, unsigned o = 0)
+          : components(c), type(t), stride(s), offset(o)
+        {}
+        char components; // 1..4
+        GLenum type; // GL_BYTE, GL_UNSIGNED_BYTE, GL_FLOAT //TODO GL_HALF_FLOAT 
+        GLsizei stride;
+        size_t offset; // offset in byte 
+
+        bool match(const Layout& layout) const
+        {
+          if (initialized() && layout != *this)
+            return false;
+
+          return true;
+        }
+
+      private:
+        bool operator!=(const Layout& r) const
+        {
+          return components != r.components
+            || type != r.type
+            || stride != r.stride  //todo
+            || offset != r.offset; //todo
+        }
+
+        bool initialized() const { return 0 < components; }
+      };
+
+      explicit VBO(VAO* vao, char layout_components);
       virtual ~VBO() = default;
+      void setLayout(Layout const& val) { layout_ = Layout(val); }
       GLuint id() const { return id_; } //!< VBO index
       
       bool setData(std::vector<glm::vec3> const& data, GLenum drawtype = GL_STATIC_DRAW);
@@ -27,38 +59,6 @@ namespace Traits3D
       bool draw(GLenum primitive_type, size_t first, size_t count);
 
     private:
-      class Layout
-      {
-      public:
-        explicit Layout(char c = 0, GLenum t = GL_FLOAT, GLsizei s = 0, unsigned o = 0)
-          : components(c), type(t), stride(s), offset(o)
-        {}
-        char components; // 1..4
-        GLenum type; // GL_BYTE, GL_UNSIGNED_BYTE, GL_FLOAT //TODO GL_HALF_FLOAT 
-        GLsizei stride;
-        size_t offset; // offset in byte 
-
-        bool match(const Layout& layout)
-        {
-          if (initialized() && layout != *this)
-            return false;
-
-          *this = layout;
-          return true;
-        }
-
-      private: 
-        bool operator!=(const Layout& r) const
-        {
-          return components != r.components
-            || type != r.type
-            || stride != r.stride  //todo
-            || offset != r.offset; //todo
-        }
-
-        bool initialized() const { return 0 < components; }
-      };
-
       GLuint id_;
       Layout layout_;
       size_t bsize_ = 0; //buffer size in byte

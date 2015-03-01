@@ -7,12 +7,19 @@ Traits3D::GL::DataObject::DataObject()
   : GL::Object()
 {
   initShader();
-  vbos_[VBOindex::Position] = std::make_unique<VBO>(&vao_p);
-  vbos_[VBOindex::DataColor] = std::make_unique<VBO>(&vao_p);
+  vbos_[VBOindex::Position] = std::make_unique<VBO>(&vao_p, 3);
+  vbos_[VBOindex::DataColor] = std::make_unique<VBO>(&vao_p, 4);
+
+  shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColor], GL::ShaderCode::Vertex::v_in_color);
+  for (auto& s : shader_)
+  {
+    if (!s.second.bindAttribute(*vbos_[VBOindex::Position], GL::ShaderCode::Vertex::v_coordinates))
+      return;
+  }
+
   ibos_[IBOindex::Polygons] = std::make_unique<IBO>(&vao_p);
   ibos_[IBOindex::Mesh] = std::make_unique<IBO>(&vao_p);
 }
-
 
 bool Traits3D::GL::DataObject::initShader()
 {
@@ -64,7 +71,8 @@ bool Traits3D::GL::DataObject::updatePositionData(std::vector<TripleF> const& da
   data_ = data;
 
   ColorVector colors = Traits3D::ColorTable::createColors(data, colors_);
-  vbos_[VBOindex::DataColor]->setData(colors);
+  if (!vbos_[VBOindex::DataColor]->setData(colors))
+    return false;
 
   return vbos_[VBOindex::Position]->setData(data_);
 }
@@ -77,7 +85,8 @@ bool Traits3D::GL::DataObject::updatePositionData(TripleVector const& data)
   data_ = Traits3D::GL::scale(excess, data);
 
   ColorVector colors = Traits3D::ColorTable::createColors(data, colors_);
-  vbos_[VBOindex::DataColor]->setData(colors);
+  if (!vbos_[VBOindex::DataColor]->setData(colors))
+    return false;
 
   return vbos_[VBOindex::Position]->setData(data_);
 }
@@ -101,14 +110,6 @@ bool Traits3D::GL::DataObject::setMeshColor(Color const& data)
 
 void Traits3D::GL::DataObject::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
 {
-  // have to rebind here
-  shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColor], GL::ShaderCode::Vertex::v_in_color);
-  for (auto& s : shader_)
-  {
-    if (!s.second.bindAttribute(*vbos_[VBOindex::Position], GL::ShaderCode::Vertex::v_coordinates))
-      return;
-  }
-
   // polygons
   shader_[ShaderIndex::TriangleStrip].use();
   shader_[ShaderIndex::TriangleStrip].setProjectionMatrix(proj_matrix);
