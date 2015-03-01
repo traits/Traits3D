@@ -14,11 +14,30 @@ namespace Traits3D
     public:
       VAO();
       virtual ~VAO();
-      void bind();
+
+      //! RAII VAO binding for IBO/VBO internal usage
+      class Binder
+      {
+      private:
+        VAO* vao_;
+
+      public:
+        explicit Binder(VAO* vao)
+          :vao_(vao)
+        {
+          if (vao_)
+            vao_->bind();
+        }
+        ~Binder()
+        {
+          if (vao_)
+            vao_->unbind();
+        }
+      };
 
     private:
       GLuint id_ = 0;
-
+      void bind();
       void unbind();
     };
 

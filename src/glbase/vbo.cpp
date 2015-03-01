@@ -18,7 +18,8 @@ Traits3D::GL::VBO::VBO(VAO* vao, char layout_components)
 
 bool Traits3D::GL::VBO::bindAttribute(GLuint attr_location)
 {
-  vao_->bind();
+  VAO::Binder vb(vao_);
+
   glBindBuffer(GL_ARRAY_BUFFER, id_);
 
   char* ptr = nullptr;
@@ -48,12 +49,11 @@ bool Traits3D::GL::VBO::draw(GLenum primitive_type, size_t first, size_t count)
   if ((first + count)*primitive_size_ > bsize_)
     return false;
 
-  vao_->bind();
+  VAO::Binder vb(vao_);
+
   glDrawArrays(primitive_type, static_cast<GLint>(first), static_cast<GLsizei>(count));
 
-  GLenum err = glGetError();
-
-  return GL_NO_ERROR == err;
+  return GL_NO_ERROR == glGetError();
 }
 
 bool Traits3D::GL::VBO::draw(GLenum primitive_type)

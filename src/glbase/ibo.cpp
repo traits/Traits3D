@@ -19,7 +19,7 @@ bool Traits3D::GL::IBO::bindData(GLenum draw_type)
   if (indexmaker_.container().empty() || indexmaker_.container()[0].empty())
     return false;
 
-  vao_->bind();
+  VAO::Binder vb(vao_);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_);
  
@@ -60,6 +60,8 @@ bool Traits3D::GL::IBO::draw(GLenum draw_type)
   if (!bindData(draw_type))
     return false;
   
+  VAO::Binder vb(vao_);
+
   if (IndexMaker::RestartType::PrimitiveRestart == indexmaker_.restartType())
   {
 //todo older OpenGL (ES) versions

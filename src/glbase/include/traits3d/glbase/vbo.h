@@ -87,7 +87,7 @@ namespace Traits3D
       if (data.empty())
         return false;
 
-      vao_->bind();
+      VAO::Binder vb(vao_);
 
       glBindBuffer(GL_ARRAY_BUFFER, id_);
 
