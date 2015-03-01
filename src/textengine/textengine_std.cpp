@@ -180,22 +180,30 @@ bool Traits3D::StandardTextEngine::draw(
     ||colors.size() != quadded_texts_.size())
     return false;
 
+  if (!shader_->use())
+    return false;
+
+  for (size_t i = 0; i != quadded_texts_.size(); ++i)
+  {
+    quadded_texts_[i].text.position = positions[i];
+    quadded_texts_[i].text.color = colors[i];
+  }
+
   if (data_changed_)
   {
     std::vector<glm::vec4> coords;
     for (size_t i = 0; i != quadded_texts_.size(); ++i)
     {
-      quadded_texts_[i].text.position = positions[i];
-      quadded_texts_[i].text.color = colors[i];
       for (auto ch : quadded_texts_[i].coordinates)
         coords.insert(coords.end(), ch.begin(), ch.end());
     }
 
-    if (!vbo_->setData(coords) || !shader_->use())
+    if (!vbo_->setData(coords))
       return false;
 
     data_changed_ = false;
   }
+
 
   GLint oldtex = 0;
   glGetIntegerv(GL_TEXTURE_BINDING_2D, &oldtex);
