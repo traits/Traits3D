@@ -33,7 +33,7 @@ void Traits3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 cons
   
   //todo
   updateData();
-  shader_.setUniformVec4(Color(0.0f, 0.5f, 0.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);
+  shader_.setUniformVec4(axis_color_, GL::ShaderCode::Vertex::v_in_color);
   shader_.use();
   shader_.setProjectionMatrix(proj_matrix);
   shader_.setModelViewMatrix(mv_matrix);
