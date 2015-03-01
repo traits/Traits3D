@@ -633,7 +633,8 @@ void MeshMainWindow::pickLighting()
 void MeshMainWindow::pickDataColor()
 {
   //resetColors();
-  QString s =  QFileDialog::getOpenFileName( this, "", "./../../../src/examples/qt/resources/colormaps", "Colormap files (*.map *.MAP)");
+  //QString s =  QFileDialog::getOpenFileName( this, "", "./../../../src/examples/qt/resources/colormaps", "Colormap files (*.map *.MAP)");
+  QString s =  QFileDialog::getOpenFileName( this, "", "assets:/colormaps", "Colormap files (*.map *.MAP)");
   adaptDataColors(s);
 }
 
