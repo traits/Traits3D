@@ -50,22 +50,37 @@ void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const& mesh_dat
   if (mesh_data.empty())
     return;
 
-  float delta = 0.1f;
+  float delta = 0.05f;
 
-  std::vector<TripleF> mdata_;
-  mdata_.resize(2 * (mesh_data.size()));
+  std::vector<TripleF> mdata;
+  mdata.resize(2 * (mesh_data.size()));
 
-  for (size_t y = 0; y < ysize; y += 1)
+  for (size_t y = 0; y < ysize; y += 2)
   {
     size_t row = y*xsize;
     for (size_t x = 0; x < xsize; ++x)
     {
-      mdata_[2 * row + x] = mesh_data[row + x];
-      mdata_[2 * row + xsize + x] = (y != ysize - 1) ? mesh_data[row + x] + delta*(mesh_data[row + x + xsize] - mesh_data[row + x]) : mesh_data[row + x];
+      mdata[2 * row + x] = mesh_data[row + x];
+      mdata[2 * row + xsize + x] = (y != ysize - 1) 
+        ? mesh_data[row + x] + delta*glm::normalize(mesh_data[row + x + xsize] - mesh_data[row + x]) 
+        : mesh_data[row + x];
     }
   }
+  //size_t start = 2*mesh_data.size();
+  //for (size_t x = 0; x < xsize; x += 1)
+  //{
+  //  for (size_t y = ysize-1; y >= 0; --y)
+  //  {
+  //    size_t row = y*xsize;
+  //    mdata[start+2*row+x] = mesh_data[row + x];
+  //    mdata[] = (y != ysize - 1)
+  //      ? mesh_data[row + x] + delta*(mesh_data[row + x + xsize] - mesh_data[row + x])
+  //      : mesh_data[row + x];
+  //  }
+  //}
 
-  if (!vbo_->setData(mdata_, GL_STATIC_DRAW))
+
+  if (!vbo_->setData(mdata, GL_STATIC_DRAW))
     return;
 
   std::vector<IndexMaker::IndexType> midata;
@@ -82,6 +97,19 @@ void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const& mesh_dat
       break;
     midata.push_back(std::numeric_limits<IndexMaker::IndexType>::max());
   }
+
+  //for (auto x = 0; x < 2 * xsize - 1; x += 2)
+  //{
+  //  auto col = x;
+  //  for (auto y = ysize-1; y > 0; --y)
+  //  {
+  //    midata.push_back(y * xsize + x);
+  //    midata.push_back(y * xsize + x + 1);
+  //  }
+  //  if (x == 2 * xsize - 2)
+  //    break;
+  //  midata.push_back(std::numeric_limits<IndexMaker::IndexType>::max());
+  //}
 
   ibo_->setData(midata, true);
 }
