@@ -99,6 +99,7 @@ bool Traits3D::GL::DataObject::setColor(ColorVector const& data)
     return false;
 
   colors_ = data;
+
   return true;
 }
 
@@ -110,11 +111,17 @@ bool Traits3D::GL::DataObject::setMeshColor(Color const& data)
 
 void Traits3D::GL::DataObject::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
 {
+  shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColor], GL::ShaderCode::Vertex::v_in_color);
+  shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::Position], GL::ShaderCode::Vertex::v_coordinates);
+
   // polygons
   shader_[ShaderIndex::TriangleStrip].use();
   shader_[ShaderIndex::TriangleStrip].setProjectionMatrix(proj_matrix);
   shader_[ShaderIndex::TriangleStrip].setModelViewMatrix(mv_matrix);
-  ibos_[IBOindex::Polygons]->draw(GL_STATIC_DRAW);
+  //ibos_[IBOindex::Polygons]->draw(GL_STATIC_DRAW);
+
+  mesh_renderer_.draw(proj_matrix, mv_matrix);
+  return;
 
   // mesh
   shader_[ShaderIndex::Lines].use();
@@ -140,6 +147,9 @@ bool Traits3D::GL::DataObject::addPositionDataCommon(size_t xsize, size_t ysize,
 
   if (!vbos_[VBOindex::Position]->setData(data, drawtype))
     return false;
+
+
+  mesh_renderer_.createData(data, xsize, ysize);
 
   return true;
 }

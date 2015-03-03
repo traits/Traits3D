@@ -2,7 +2,8 @@
 
 #include <memory>
 #include <map>
-#include "globject.h"
+#include "traits3d/glbase/meshrenderer.h"
+#include "traits3d/globject.h"
 
 namespace Traits3D
 {
@@ -58,6 +59,8 @@ namespace Traits3D
         std::map<ShaderIndex, Shader> shader_;
         std::map<VBOindex, std::unique_ptr<VBO>> vbos_;
         std::map<IBOindex, std::unique_ptr<IBO>> ibos_;
+
+        GL::MeshRenderer mesh_renderer_;
 
         bool addPositionDataCommon(size_t xsize, size_t ysize, std::vector<TripleF> const& data, GLenum drawtype);
     };
