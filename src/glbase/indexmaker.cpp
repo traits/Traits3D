@@ -6,7 +6,7 @@ Traits3D::GL::IndexMaker::IndexMaker()
 {
 }
 
-bool Traits3D::GL::IndexMaker::create(GLuint xsize, GLuint ysize, GLenum primitive_type)
+bool Traits3D::GL::IndexMaker::create(IndexType xsize, IndexType ysize, GLenum primitive_type)
 {
   if (2 > xsize || 2 > ysize /*|| xsize * ysize > ( (GLushort)-1)*/) // path. cases
   {
@@ -42,28 +42,28 @@ bool Traits3D::GL::IndexMaker::create(GLuint xsize, GLuint ysize, GLenum primiti
   return false;
 }
 
-bool Traits3D::GL::IndexMaker::createLineStrips(Container& result, GLuint xsize, GLuint ysize)
+bool Traits3D::GL::IndexMaker::createLineStrips(Container& result, IndexType xsize, IndexType ysize)
 {
   result.resize(xsize+ysize);
-  for (size_t i = 0; i != result.size(); ++i)
+  for (IndexType i = 0; i != result.size(); ++i)
   {
     // first verticals than horizontals
     result[i].resize(i < ysize ? xsize : ysize);
   }
 
   // verticals
-  for (size_t y = 0; y != ysize; ++y)
+  for (IndexType y = 0; y != ysize; ++y)
   {
     auto start = y * xsize;
-    for (size_t x = 0; x != xsize; ++x)
+    for (IndexType x = 0; x != xsize; ++x)
     {
       result[y][x] = start + x;
     }
   }
   // horizontal
-  for (size_t x = 0; x != xsize; ++x)
+  for (IndexType x = 0; x != xsize; ++x)
   {
-    for (size_t y = 0; y != ysize; ++y)
+    for (IndexType y = 0; y != ysize; ++y)
     {
       result[ysize + x][y] = x + y * xsize;
     }
@@ -71,7 +71,7 @@ bool Traits3D::GL::IndexMaker::createLineStrips(Container& result, GLuint xsize,
   return true;
 }
 
-bool Traits3D::GL::IndexMaker::createRestartLineStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize)
+bool Traits3D::GL::IndexMaker::createRestartLineStrips(LinearizedContainer& result, IndexType xsize, IndexType ysize)
 {
   IndexType k = 0;
 
@@ -80,19 +80,19 @@ bool Traits3D::GL::IndexMaker::createRestartLineStrips(std::vector<GLuint>& resu
   result.resize(2*xsize*ysize + ph_count);
 
   // verticals
-  for (size_t y = 0; y != ysize; ++y)
+  for (IndexType y = 0; y != ysize; ++y)
   {
     auto start = y * xsize;
-    for (size_t x = 0; x != xsize; ++x)
+    for (IndexType x = 0; x != xsize; ++x)
     {
       result[k++] = start + x;
     }
     result[k++] = restart_placeholder_;
   }
   // horizontal
-  for (size_t x = 0; x != xsize; ++x)
+  for (IndexType x = 0; x != xsize; ++x)
   {
-    for (size_t y = 0; y != ysize; ++y)
+    for (IndexType y = 0; y != ysize; ++y)
     {
       result[k++] = x + y * xsize;
     }
@@ -104,7 +104,7 @@ bool Traits3D::GL::IndexMaker::createRestartLineStrips(std::vector<GLuint>& resu
   return true;
 }
 
-bool Traits3D::GL::IndexMaker::createTriangleStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize)
+bool Traits3D::GL::IndexMaker::createTriangleStrips(LinearizedContainer& result, IndexType xsize, IndexType ysize)
 {
   // a single stripe needs 2*xsize describing indexes
   const IndexType stripesize = 2 * xsize;
@@ -138,7 +138,7 @@ bool Traits3D::GL::IndexMaker::createTriangleStrips(std::vector<GLuint>& result,
 }
 
 
-bool Traits3D::GL::IndexMaker::createRestartTriangleStrips(std::vector<GLuint>& result, GLuint xsize, GLuint ysize)
+bool Traits3D::GL::IndexMaker::createRestartTriangleStrips(LinearizedContainer& result, IndexType xsize, IndexType ysize)
 {
   // a single stripe needs 2*xsize describing indexes
   const IndexType stripesize = 2 * xsize;

@@ -23,6 +23,7 @@ namespace Traits3D
       
       bool create(size_t xsize, size_t ysize, GLenum primitive_type);
       bool draw(GLenum draw_type);
+      void setData(IndexMaker::LinearizedContainer const& indexes, bool primitive_restart);
 
     private:
       GLuint id_ = 0;

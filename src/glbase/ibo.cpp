@@ -89,3 +89,13 @@ bool Traits3D::GL::IBO::draw(GLenum draw_type)
   }
   return true; //todo
 }
+
+void Traits3D::GL::IBO::setData(Traits3D::GL::IndexMaker::LinearizedContainer const& indexes, bool primitive_restart)
+{
+
+  indexmaker_.setRestartBehavior(
+    primitive_restart ? Traits3D::GL::IndexMaker::RestartType::PrimitiveRestart 
+                      : Traits3D::GL::IndexMaker::RestartType::None
+    , std::numeric_limits < IndexMaker::IndexType>::max());
+  indexmaker_.setRawData(indexes);
+}
