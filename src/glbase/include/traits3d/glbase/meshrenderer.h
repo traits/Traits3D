@@ -15,7 +15,8 @@ namespace Traits3D
     class MeshRenderer
     {
     public:
-      static const char* Traits3D::GL::MeshRenderer::VertexCode;
+      static const char* Traits3D::GL::MeshRenderer::VertexCoreCode;
+      static const char* Traits3D::GL::MeshRenderer::VertexSeamCode;
       static const char* Traits3D::GL::MeshRenderer::FragmentCode;
 
       MeshRenderer();
@@ -24,11 +25,13 @@ namespace Traits3D
       void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix);
     
     private:
-      Shader shader_;
       VAO vao_;
-      std::unique_ptr<VBO> vbo_;
-      std::unique_ptr<IBO> ibo_core_;
-      std::unique_ptr<IBO> ibo_border_;
+      Shader core_shader_;
+      Shader seam_shader_;
+      std::unique_ptr<VBO> core_vbo_;
+      std::unique_ptr<VBO> seam_color_vbo_;
+      std::unique_ptr<IBO> core_ibo_;
+      std::unique_ptr<IBO> seam_ibo_;
     };
   } // ns
 } // ns
