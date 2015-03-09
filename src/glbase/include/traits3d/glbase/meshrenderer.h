@@ -28,7 +28,7 @@ namespace Traits3D
       VAO vao_;
       std::unique_ptr<VBO> vbo_;
       std::unique_ptr<IBO> ibo_core_;
-//      std::unique_ptr<IBO> ibo_border_;
+      std::unique_ptr<IBO> ibo_border_;
     };
   } // ns
 } // ns

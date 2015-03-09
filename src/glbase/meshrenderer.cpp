@@ -44,7 +44,7 @@ Traits3D::GL::MeshRenderer::MeshRenderer()
 
   vbo_ = std::make_unique<VBO>(&vao_, 3);
   ibo_core_ = std::make_unique<IBO>(&vao_);
-//  ibo_border_ = std::make_unique<IBO>(&vao_); // Saum
+  ibo_border_ = std::make_unique<IBO>(&vao_); // Saum
 }
 
 void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const& mesh_data, IndexMaker::IndexType xsize, IndexMaker::IndexType ysize)
@@ -53,7 +53,7 @@ void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const& mesh_dat
     return;
 
   const IndexMaker::IndexType len_data = xsize*ysize;
-  float delta[] = { 0.05f, 0.02f };
+  float delta[] = { 0.02f, 0.008f };
 
   std::vector<TripleF> mdata(5 * len_data - 4 * xsize + 4 * len_data - 4 * ysize);
 
@@ -69,17 +69,16 @@ void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const& mesh_dat
   for (auto i = 0; i != len_data - xsize; ++i)
   {
     w[0] = delta[0] * glm::normalize(mesh_data[i + xsize] - mesh_data[i]);
-    w[1] = w[0] * (1+delta[1]);
+    w[1] = (delta[0] + delta[1]) * glm::normalize(mesh_data[i + xsize] - mesh_data[i]);
 
     // upper core
     mdata[len_data + i] = mesh_data[i] + w[0];
     // lower core
-    mdata[2 * len_data - xsize + i] = mesh_data[i] - w[0];
-
+    mdata[2 * len_data - xsize + i] = mesh_data[i+xsize] - w[0];
     // upper rim
-    mdata[3 * len_data - 2 * xsize + i] = mesh_data[i] + w[0];
+    mdata[3 * len_data - 2 * xsize + i] = mesh_data[i] + w[1];
     // lower rim
-    mdata[4 * len_data - 3 * xsize + i] = mesh_data[i] - w[0];
+    mdata[4 * len_data - 3 * xsize + i] = mesh_data[i+xsize] - w[1];
   }
 
   auto start = 5 * len_data - 4 * xsize;
@@ -105,56 +104,80 @@ void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const& mesh_dat
     }    
   }
 
-
   if (!vbo_->setData(mdata, GL_STATIC_DRAW))
     return;
 
   // indexes
+  std::vector<IndexMaker::IndexType> midata(8*len_data);
 
-  std::vector<IndexMaker::IndexType> midata;
-
+  i = 0;
   start = len_data; // top core data start
   for (auto y = 0; y < ysize - 1; ++y)
   {
     auto row = y*xsize;
     for (auto x = 0; x < xsize; ++x)
     {
-      midata.push_back(row + x);
-      midata.push_back(start + row + x);
+      midata[i++] = row + x;
+      midata[i++] = start + row + x;
     }
-    midata.push_back(std::numeric_limits<IndexMaker::IndexType>::max());
+    midata[i++] = std::numeric_limits<IndexMaker::IndexType>::max();
   }
-  //start = (2*ysize-1)*xsize ; // bottom core data start
-  //for (auto y = 1; y < ysize; ++y)
-  //{
-  //  auto row = y*xsize;
-  //  for (auto x = 0; x < xsize; ++x)
-  //  {
-  //    midata.push_back(start + row + x);
-  //    midata.push_back(row + x);
-  //  }
-  //  midata.push_back(std::numeric_limits<IndexMaker::IndexType>::max());
-  //}
+  start = 2 * len_data - xsize; // bottom core data start
+  for (auto y = 0; y < ysize - 1; ++y)
+  {
+    auto row = y*xsize;
+    for (auto x = 0; x < xsize; ++x)
+    {
+      midata[i++] = start + row + x;
+      midata[i++] = row + xsize + x;
+    }
+    midata[i++] = std::numeric_limits<IndexMaker::IndexType>::max();
+  }
 
-  //for (auto x = 0; x < 2 * xsize - 1; x += 2)
-  //{
-  //  auto col = x;
-  //  for (auto y = ysize-1; y > 0; --y)
-  //  {
-  //    midata.push_back(y * xsize + x);
-  //    midata.push_back(y * xsize + x + 1);
-  //  }
-  //  if (x == 2 * xsize - 2)
-  //    break;
-  //  midata.push_back(std::numeric_limits<IndexMaker::IndexType>::max());
-  //}
 
+  midata.resize(i - 1);
   ibo_core_->setData(midata, true);
-  //ibo_border_->setData(midata, true);
+
+
+  // rim
+
+  i = 0;
+  midata.resize(8 * len_data);
+
+  auto start0 = len_data; // upper core
+  auto start1 = 3 * len_data - 2 * xsize; // upper rim
+  for (auto y = 0; y < ysize - 1; ++y)
+  {
+    auto row = y*xsize;
+    for (auto x = 0; x < xsize; ++x)
+    {
+      midata[i++] = start0 + row + x;
+      midata[i++] = start1 + row + x;
+    }
+    midata[i++] = std::numeric_limits<IndexMaker::IndexType>::max();
+  }
+
+  start0 = 2 * len_data - xsize; // lower core
+  start1 = 4 * len_data - 3 * xsize; // lower rim
+  for (auto y = 0; y < ysize - 1; ++y)
+  {
+    auto row = y*xsize;
+    for (auto x = 0; x < xsize; ++x)
+    {
+      midata[i++] = start1 + row + x;
+      midata[i++] = start0 + row + x;
+    }
+    midata[i++] = std::numeric_limits<IndexMaker::IndexType>::max();
+  }
+
+  midata.resize(i - 1);
+  ibo_border_->setData(midata, true);
 }
 
 void Traits3D::GL::MeshRenderer::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
 {
+
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   Color color(0, 0.8f, 0, 1);
   shader_.use();
 
@@ -164,4 +187,7 @@ void Traits3D::GL::MeshRenderer::draw(glm::mat4 const& proj_matrix, glm::mat4 co
   shader_.setModelViewMatrix(mv_matrix);
 
   ibo_core_->draw(GL_STATIC_DRAW);
+
+  shader_.setUniformVec4(Color(0,0,0.8f,1), GL::ShaderCode::Vertex::v_in_color);
+  ibo_border_->draw(GL_STATIC_DRAW);
 }
