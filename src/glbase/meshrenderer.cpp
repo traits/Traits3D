@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "traits3d/glbase/meshrenderer.h"
 
 
@@ -42,61 +43,98 @@ Traits3D::GL::MeshRenderer::MeshRenderer()
     return; //todo throw
 
   vbo_ = std::make_unique<VBO>(&vao_, 3);
-  ibo_ = std::make_unique<IBO>(&vao_);
+  ibo_core_ = std::make_unique<IBO>(&vao_);
+//  ibo_border_ = std::make_unique<IBO>(&vao_); // Saum
 }
 
 void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const& mesh_data, IndexMaker::IndexType xsize, IndexMaker::IndexType ysize)
 {
-  if (mesh_data.empty())
+  if (mesh_data.empty() || mesh_data.size() != xsize*ysize)
     return;
 
-  float delta = 0.05f;
+  const IndexMaker::IndexType len_data = xsize*ysize;
+  float delta[] = { 0.05f, 0.02f };
 
-  std::vector<TripleF> mdata;
-  mdata.resize(2 * (mesh_data.size()));
+  std::vector<TripleF> mdata(5 * len_data - 4 * xsize + 4 * len_data - 4 * ysize);
 
-  for (size_t y = 0; y < ysize; y += 2)
+  // original data
+  std::copy(mesh_data.begin(), mesh_data.end(), mdata.begin());
+  
+  
+  // additional data for core and rims
+  
+  TripleF w[2];
+
+  // x direction
+  for (auto i = 0; i != len_data - xsize; ++i)
   {
-    size_t row = y*xsize;
-    for (size_t x = 0; x < xsize; ++x)
-    {
-      mdata[2 * row + x] = mesh_data[row + x];
-      mdata[2 * row + xsize + x] = (y != ysize - 1) 
-        ? mesh_data[row + x] + delta*glm::normalize(mesh_data[row + x + xsize] - mesh_data[row + x]) 
-        : mesh_data[row + x];
-    }
+    w[0] = delta[0] * glm::normalize(mesh_data[i + xsize] - mesh_data[i]);
+    w[1] = w[0] * (1+delta[1]);
+
+    // upper core
+    mdata[len_data + i] = mesh_data[i] + w[0];
+    // lower core
+    mdata[2 * len_data - xsize + i] = mesh_data[i] - w[0];
+
+    // upper rim
+    mdata[3 * len_data - 2 * xsize + i] = mesh_data[i] + w[0];
+    // lower rim
+    mdata[4 * len_data - 3 * xsize + i] = mesh_data[i] - w[0];
   }
-  //size_t start = 2*mesh_data.size();
-  //for (size_t x = 0; x < xsize; x += 1)
-  //{
-  //  for (size_t y = ysize-1; y >= 0; --y)
-  //  {
-  //    size_t row = y*xsize;
-  //    mdata[start+2*row+x] = mesh_data[row + x];
-  //    mdata[] = (y != ysize - 1)
-  //      ? mesh_data[row + x] + delta*(mesh_data[row + x + xsize] - mesh_data[row + x])
-  //      : mesh_data[row + x];
-  //  }
-  //}
+
+  auto start = 5 * len_data - 4 * xsize;
+  // y direction
+  auto i = 0;
+  for (auto x = 0; x != xsize - 1; ++x)
+  {
+    for (auto y = 0; y != ysize; ++y)
+    {
+      auto row = y*xsize;
+      w[0] = delta[0] * glm::normalize(mesh_data[row + x + 1] - mesh_data[row + x]);
+      w[1] = w[0] * (1 + delta[1]);
+
+      // right core
+      mdata[start + i] = mesh_data[row + x] + w[0];
+      // left core
+      mdata[start + len_data - ysize + i] = mesh_data[row + x + 1] - w[0];
+      // right rim
+      mdata[start + 2 * (len_data - ysize) + i] = mesh_data[row + x + 1] - w[1];
+      // left rim
+      mdata[start + 3 * (len_data - ysize) + i] = mesh_data[row + x] + w[1];
+      ++i;
+    }    
+  }
 
 
   if (!vbo_->setData(mdata, GL_STATIC_DRAW))
     return;
 
+  // indexes
+
   std::vector<IndexMaker::IndexType> midata;
 
-  for (auto y = 0; y < 2 * ysize - 1; y += 2)
+  start = len_data; // top core data start
+  for (auto y = 0; y < ysize - 1; ++y)
   {
     auto row = y*xsize;
     for (auto x = 0; x < xsize; ++x)
     {
-      midata.push_back(2 * row + x);
-      midata.push_back(2 * row + xsize + x);
+      midata.push_back(row + x);
+      midata.push_back(start + row + x);
     }
-    if (y == 2 * ysize - 2)
-      break;
     midata.push_back(std::numeric_limits<IndexMaker::IndexType>::max());
   }
+  //start = (2*ysize-1)*xsize ; // bottom core data start
+  //for (auto y = 1; y < ysize; ++y)
+  //{
+  //  auto row = y*xsize;
+  //  for (auto x = 0; x < xsize; ++x)
+  //  {
+  //    midata.push_back(start + row + x);
+  //    midata.push_back(row + x);
+  //  }
+  //  midata.push_back(std::numeric_limits<IndexMaker::IndexType>::max());
+  //}
 
   //for (auto x = 0; x < 2 * xsize - 1; x += 2)
   //{
@@ -111,7 +149,8 @@ void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const& mesh_dat
   //  midata.push_back(std::numeric_limits<IndexMaker::IndexType>::max());
   //}
 
-  ibo_->setData(midata, true);
+  ibo_core_->setData(midata, true);
+  //ibo_border_->setData(midata, true);
 }
 
 void Traits3D::GL::MeshRenderer::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
@@ -124,5 +163,5 @@ void Traits3D::GL::MeshRenderer::draw(glm::mat4 const& proj_matrix, glm::mat4 co
   shader_.setProjectionMatrix(proj_matrix);
   shader_.setModelViewMatrix(mv_matrix);
 
-  ibo_->draw(GL_STATIC_DRAW);
+  ibo_core_->draw(GL_STATIC_DRAW);
 }

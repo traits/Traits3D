@@ -27,7 +27,8 @@ namespace Traits3D
       Shader shader_;
       VAO vao_;
       std::unique_ptr<VBO> vbo_;
-      std::unique_ptr<IBO> ibo_;
+      std::unique_ptr<IBO> ibo_core_;
+//      std::unique_ptr<IBO> ibo_border_;
     };
   } // ns
 } // ns
