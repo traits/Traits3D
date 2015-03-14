@@ -12,6 +12,7 @@
 <gpu_program name="color_prog"  filename="mesh.glsl"/>
 
 <script name="init_scene" run_mode="INIT" filename="init.lua"/>
-<script name="update_scene" run_mode="FRAME"  filename="update.lua"/>>
+<script name="update_scene" run_mode="FRAME"  filename="update.lua"/>
+<script name="resize_scene" run_mode="SIZE"  filename="resize.lua"/>
     
 </glsl_hacker>
