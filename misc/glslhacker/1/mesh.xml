@@ -4,7 +4,7 @@
 	
 <window name="win3d01" title="Mesh" 
         width="800" height="600" 
-        gl_version_major="3" 
+        gl_version_major="4" 
         gl_version_minor="2" 
         gl_core_profile="0"
         build_opengl_extensions_list="0" />

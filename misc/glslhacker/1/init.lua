@@ -3,7 +3,7 @@ winW, winH = gh_window.getsize(0)
 local aspect = winW / winH
 camera = gh_camera.create_persp(60, aspect, 1.0, 1000.0)
 gh_camera.set_viewport(camera, 0, 0, winW, winH)
-gh_camera.set_position(camera, 20, 20, 80)
+gh_camera.set_position(camera, 20, 40, 110)
 gh_camera.set_lookat(camera, 0, 0, 0, 1)
 gh_camera.setupvec(camera, 0, 1, 0, 0)
 
