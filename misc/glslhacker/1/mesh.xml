@@ -2,73 +2,16 @@
 
 <glsl_hacker>
 	
-  <window name="win3d01" title="Mesh" 
-          width="800" height="600" 
-          gl_version_major="3" gl_version_minor="2" gl_core_profile="0"
-          build_opengl_extensions_list="0" />
+<window name="win3d01" title="Mesh" 
+        width="800" height="600" 
+        gl_version_major="3" 
+        gl_version_minor="2" 
+        gl_core_profile="0"
+        build_opengl_extensions_list="0" />
 
+<gpu_program name="color_prog"  filename="mesh.glsl"/>
 
-<gpu_program name="color_prog" >
-  <raw_data_vs><![CDATA[	 
-#version 150    
-in vec4 gxl3d_Position;
-in vec4 gxl3d_Color;
-uniform mat4 gxl3d_ModelViewProjectionMatrix;
-out vec4 Vertex_Color;
-void main()
-{
-  gl_Position = gxl3d_ModelViewProjectionMatrix * gxl3d_Position;		
-  Vertex_Color = gxl3d_Color;
-}
-  ]]></raw_data_vs>
-  <raw_data_ps><![CDATA[	 
-#version 150
-in vec4 Vertex_Color;
-out vec4 FragColor;
-void main (void)
-{
-  FragColor = Vertex_Color;
-}
-  ]]></raw_data_ps>
-</gpu_program>
-
-<script name="init_scene" run_mode="INIT" >
-		<raw_data><![CDATA[	
-winW, winH = gh_window.getsize(0)
-
-local aspect = winW / winH
-camera = gh_camera.create_persp(60, aspect, 1.0, 1000.0)
-gh_camera.set_viewport(camera, 0, 0, winW, winH)
-gh_camera.set_position(camera, 20, 20, 80)
-gh_camera.set_lookat(camera, 0, 0, 0, 1)
-gh_camera.setupvec(camera, 0, 1, 0, 0)
-
-color_prog = gh_node.getid("color_prog")
-
-grid = gh_utils.grid_create()
-gh_utils.grid_set_geometry_params(grid, 100, 100, 20, 20)
-gh_utils.grid_set_lines_color(grid, 0.7, 0.7, 0.7, 1.0)
-gh_utils.grid_set_main_lines_color(grid, 1.0, 1.0, 0.0, 1.0)
-gh_utils.grid_set_main_x_axis_color(grid, 1.0, 0.0, 0.0, 1.0)
-gh_utils.grid_set_main_z_axis_color(grid, 0.0, 0.0, 1.0, 1.0)
-local display_main_lines = 1
-local display_lines = 1
-gh_utils.grid_set_display_lines_options(grid, display_main_lines, display_lines)
-
-		]]></raw_data>
-	</script> 
-  
-	<script name="update_scene" run_mode="FRAME" >
-		<raw_data><![CDATA[	
-
-gh_camera.bind(camera)
-gh_renderer.clear_color_depth_buffers(0.2, 0.2, 0.2, 1.0, 1.0)
-
-gh_gpu_program.bind(color_prog)
-gh_object.render(grid)
-
-		]]></raw_data>
-	</script> 
-  
-  
+<script name="init_scene" run_mode="INIT" filename="init.lua"/>
+<script name="update_scene" run_mode="FRAME"  filename="update.lua"/>>
+    
 </glsl_hacker>
