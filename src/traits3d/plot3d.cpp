@@ -28,7 +28,7 @@ void Traits3D::Plot3D::draw()
   Triple center = beg + (end - beg) * 0.5;
   float radius = static_cast<float>(glm::distance(center,beg)); //todo
 
-  modelview_matrix_p = glm::mat4(1.0f);
+  glm::mat4 modelview_matrix_p = glm::mat4(1.0f);
 
   modelview_matrix_p =
     modelview_matrix_p
@@ -40,6 +40,8 @@ void Traits3D::Plot3D::draw()
                        xShift() - static_cast<float>(center.x),
                        yShift() - static_cast<float>(center.y),
                        zShift() - static_cast<float>(center.z)));
+
+  glm::mat4 projection_matrix_p = glm::mat4(1.0f);
 
   //setOrtho(false);
   if (beg != end)
@@ -60,8 +62,10 @@ void Traits3D::Plot3D::draw()
   projection_matrix_p = glm::translate(projection_matrix_p,
                                        glm::vec3(xViewportShift() * 2 * radius, yViewportShift() * 2 * radius, -7 * radius));
 
-  coordinates_p->draw(projection_matrix_p, modelview_matrix_p);
-  data_object_p->draw(projection_matrix_p, modelview_matrix_p);
+  matrices_p.set(projection_matrix_p, modelview_matrix_p);
+
+  coordinates_p->draw(matrices_p);
+  data_object_p->draw(matrices_p);
 
   //todo
   glm::ivec4 vp = GL::viewPort();

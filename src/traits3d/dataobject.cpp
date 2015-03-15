@@ -1,4 +1,5 @@
 #include <glm/gtc/matrix_transform.hpp>
+#include "traits3d/glbase/matrixstack.h"
 #include "traits3d/helper.h"
 #include "traits3d/colortable.h"
 #include "traits3d/dataobject.h"
@@ -99,7 +100,6 @@ bool Traits3D::GL::DataObject::setColor(ColorVector const& data)
     return false;
 
   colors_ = data;
-
   return true;
 }
 
@@ -109,15 +109,14 @@ bool Traits3D::GL::DataObject::setMeshColor(Color const& data)
 }
 
 
-void Traits3D::GL::DataObject::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
+void Traits3D::GL::DataObject::draw(MatrixStack const& matrices)
 {
   shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColor], GL::ShaderCode::Vertex::v_in_color);
   shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::Position], GL::ShaderCode::Vertex::v_coordinates);
 
   // polygons
   shader_[ShaderIndex::TriangleStrip].use();
-  shader_[ShaderIndex::TriangleStrip].setProjectionMatrix(proj_matrix);
-  shader_[ShaderIndex::TriangleStrip].setModelViewMatrix(mv_matrix);
+  shader_[ShaderIndex::TriangleStrip].setMatrices(matrices);
   //ibos_[IBOindex::Polygons]->draw(GL_STATIC_DRAW);
 
   mesh_renderer_.draw(proj_matrix, mv_matrix);
@@ -129,8 +128,7 @@ void Traits3D::GL::DataObject::draw(glm::mat4 const& proj_matrix, glm::mat4 cons
   //glm::mat4 ttt = proj_matrix;
   //ttt[2][2] += 5E-5f;
   //shader_[ShaderIndex::Lines].setProjectionMatrix(ttt);
-  shader_[ShaderIndex::Lines].setProjectionMatrix(proj_matrix);
-  shader_[ShaderIndex::Lines].setModelViewMatrix(mv_matrix);
+  shader_[ShaderIndex::Lines].setMatrices(matrices);
   ibos_[IBOindex::Mesh]->draw(GL_STATIC_DRAW);
 }
 

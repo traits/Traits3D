@@ -47,7 +47,7 @@ namespace Traits3D
       void setAutoDecoration(bool val = true) {autodecoration_ = val;}
       bool autoDecoration() const { return autodecoration_;}
 
-      void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix);
+      void draw(GL::MatrixStack const& matrices);
   
       //! Defines whether a grid between the major and/or minor tics should be drawn
       void setGridLines(bool majors, bool minors, int sides = Traits3D::NOSIDEGRID); 

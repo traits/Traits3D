@@ -177,7 +177,7 @@ void Traits3D::Axis::setScale(Traits3D::SCALETYPE val)
   }
 }
 
-void Traits3D::Axis::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
+void Traits3D::Axis::draw(GL::MatrixStack const& matrices)
 {
   //todo performance!
   recalculateTics();
@@ -211,7 +211,7 @@ void Traits3D::Axis::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matr
   }
 
   //end todo
-  globject_p->draw(proj_matrix, mv_matrix);
+  globject_p->draw(matrices);
 }
 
 bool Traits3D::Axis::initializeGL()
