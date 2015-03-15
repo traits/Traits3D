@@ -112,7 +112,7 @@ void Traits3D::Coordinates::setTicLength(double major, double minor)
     a.setTicLength(major, minor);
 }
 
-void Traits3D::Coordinates::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
+void Traits3D::Coordinates::draw(GL::MatrixStack const& matrices)
 {
   //GL::StateBewarer sb(GL_LINE_SMOOTH, true);
   //
@@ -120,17 +120,14 @@ void Traits3D::Coordinates::draw(glm::mat4 const& proj_matrix, glm::mat4 const& 
   //  sb.turnOff();
   //
 
-  glm::dmat4 d_proj = proj_matrix;
-  glm::dmat4 d_mv = mv_matrix;
-
   if (autoDecoration())
   {
-    chooseAxes(proj_matrix, mv_matrix, GL::viewPort());
+    chooseAxes(matrices.proj(), matrices.mv(), GL::viewPort());
   }
 
   for (auto it : aidx_)
   {
-    axes[it].draw(proj_matrix, mv_matrix);
+    axes[it].draw(matrices);
   }
 
   //if( style_ == NOCOORDINATES)

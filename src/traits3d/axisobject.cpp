@@ -1,4 +1,5 @@
 #include <glm/gtc/matrix_transform.hpp>
+#include "traits3d/glbase/matrixstack.h"
 #include "traits3d/helper.h"
 #include "traits3d/textengine/textengine_std.h"
 #include "traits3d/axisobject.h"
@@ -26,7 +27,7 @@ Traits3D::GL::AxisObject::AxisObject()
 //  return true;
 //}
 
-void Traits3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
+void Traits3D::GL::AxisObject::draw(GL::MatrixStack const& matrices)
 {
   if (!shader_.initialized())
     return;
@@ -35,8 +36,7 @@ void Traits3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 cons
   updateData();
   shader_.setUniformVec4(axis_color_, GL::ShaderCode::Vertex::v_in_color);
   shader_.use();
-  shader_.setProjectionMatrix(proj_matrix);
-  shader_.setModelViewMatrix(mv_matrix);
+  shader_.setMatrices(matrices);
   vbo_->draw(GL_LINES);
 
   if (majors_.size() != major_values_.size()) // sanity
@@ -61,7 +61,7 @@ void Traits3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 cons
     float label_height = 15;
     float rap = (max_label_width + label_gap_ + label_height) / (ticend - center).length();
     TripleF pos = center - majorticlength_ * orientation_ * (1 + rap);
-    pos = GL::World2ViewPort(pos, mv_matrix, proj_matrix, vp);
+    pos = GL::World2ViewPort(pos, matrices.mv(), matrices.proj(), vp);
     positions_2d.push_back(TextEngine::Position(TupleF(pos.x, pos.y), number_anchor_));
     TextEngine::adjustPosition(positions_2d[0], static_cast<float>(label_gap_ + number_gap_));
   }
@@ -76,7 +76,7 @@ void Traits3D::GL::AxisObject::draw(glm::mat4 const& proj_matrix, glm::mat4 cons
     for (size_t i = 0; i != majors_.size(); ++i)
     {
       // opposite to tic orientation
-      TripleF pos = GL::World2ViewPort(majors_[i] - majorticlength_ * orientation_, mv_matrix, proj_matrix, vp);
+      TripleF pos = GL::World2ViewPort(majors_[i] - majorticlength_ * orientation_, matrices.mv(), matrices.proj(), vp);
       positions_2d[i+idx] = TextEngine::Position(TupleF(pos.x, pos.y), number_anchor_);
       TextEngine::adjustPosition(positions_2d[i+idx], static_cast<float>(number_gap_));
       texts[i + idx] = te_->double2text(major_values_[i]);
