@@ -210,17 +210,16 @@ void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const& mesh_dat
   seam_ibo_->setData(midata, true);
 }
 
-void Traits3D::GL::MeshRenderer::draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix)
+void Traits3D::GL::MeshRenderer::draw(MatrixStack const& matrices)
 {
-
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   Color color(0, 0.8f, 0, 1);
   core_shader_.use();
   core_shader_.bindAttribute(*core_vbo_, GL::ShaderCode::Vertex::v_coordinates);
   core_shader_.setUniformVec4(color, GL::ShaderCode::Vertex::v_in_color);
-  core_shader_.setProjectionMatrix(proj_matrix);
-  core_shader_.setModelViewMatrix(mv_matrix);
-
+  //core_shader_.setProjectionMatrix(proj_matrix);
+  
+  core_shader_.setMatrices(matrices);
   core_ibo_->draw(GL_STATIC_DRAW);
 
   GL::State blend(GL_BLEND, GL_TRUE);
@@ -229,7 +228,6 @@ void Traits3D::GL::MeshRenderer::draw(glm::mat4 const& proj_matrix, glm::mat4 co
   seam_shader_.use();
   seam_shader_.bindAttribute(*core_vbo_, GL::ShaderCode::Vertex::v_coordinates);
   seam_shader_.bindAttribute(*seam_color_vbo_, GL::ShaderCode::Vertex::v_in_color);
-  seam_shader_.setProjectionMatrix(proj_matrix);
-  seam_shader_.setModelViewMatrix(mv_matrix);
+  seam_shader_.setMatrices(matrices);
   seam_ibo_->draw(GL_STATIC_DRAW);
 }

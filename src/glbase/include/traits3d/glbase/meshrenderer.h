@@ -22,7 +22,7 @@ namespace Traits3D
       MeshRenderer();
       
       void createData(std::vector<TripleF> const& mesh_data, IndexMaker::IndexType xsize, IndexMaker::IndexType ysize);
-      void draw(glm::mat4 const& proj_matrix, glm::mat4 const& mv_matrix);
+      void draw(MatrixStack const& matrices);
     
     private:
       VAO vao_;

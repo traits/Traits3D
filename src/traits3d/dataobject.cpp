@@ -118,9 +118,16 @@ void Traits3D::GL::DataObject::draw(MatrixStack const& matrices)
   shader_[ShaderIndex::TriangleStrip].use();
   shader_[ShaderIndex::TriangleStrip].setMatrices(matrices);
   //ibos_[IBOindex::Polygons]->draw(GL_STATIC_DRAW);
+  
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  //ibos_[IBOindex::Polygons]->draw(GL_STATIC_DRAW);
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-  mesh_renderer_.draw(proj_matrix, mv_matrix);
-  return;
+  glEnable(GL_POLYGON_OFFSET_FILL);
+  glPolygonOffset(-1, -1);  
+  mesh_renderer_.draw(matrices);
+  glDisable(GL_POLYGON_OFFSET_FILL);
+  //return;
 
   // mesh
   shader_[ShaderIndex::Lines].use();
