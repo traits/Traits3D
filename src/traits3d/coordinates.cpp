@@ -1,4 +1,5 @@
 #include <glm/gtc/type_ptr.hpp>
+#include "traits3d/glbase/transformation.h"
 #include "traits3d/helper.h"
 #include "traits3d/coordinates.h"
 
@@ -112,7 +113,7 @@ void Traits3D::Coordinates::setTicLength(double major, double minor)
     a.setTicLength(major, minor);
 }
 
-void Traits3D::Coordinates::draw(GL::MatrixStack const& matrices)
+void Traits3D::Coordinates::draw(GL::Transformation const& matrices)
 {
   //GL::StateBewarer sb(GL_LINE_SMOOTH, true);
   //

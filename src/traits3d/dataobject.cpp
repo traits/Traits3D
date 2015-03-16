@@ -1,5 +1,5 @@
 #include <glm/gtc/matrix_transform.hpp>
-#include "traits3d/glbase/matrixstack.h"
+#include "traits3d/glbase/transformation.h"
 #include "traits3d/helper.h"
 #include "traits3d/colortable.h"
 #include "traits3d/dataobject.h"
@@ -109,7 +109,7 @@ bool Traits3D::GL::DataObject::setMeshColor(Color const& data)
 }
 
 
-void Traits3D::GL::DataObject::draw(MatrixStack const& matrices)
+void Traits3D::GL::DataObject::draw(Transformation const& matrices)
 {
   shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColor], GL::ShaderCode::Vertex::v_in_color);
   shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::Position], GL::ShaderCode::Vertex::v_coordinates);

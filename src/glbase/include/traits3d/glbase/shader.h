@@ -10,7 +10,7 @@ namespace Traits3D
   namespace GL
   {
     class VBO;
-    class MatrixStack;
+    class Transformation;
 
     //! Shader program, containing various GLSL shaders
     class Shader
@@ -41,7 +41,7 @@ namespace Traits3D
       bool setUniformVec4(glm::vec4 const& vec, std::string const& name);
       bool setUniformMatrix(glm::mat4 const& mat, std::string const& name);
       //! Set projection & model-view matrix
-      bool setMatrices(MatrixStack const& matrices);
+      bool setMatrices(Transformation const& matrices);
 
     private:  
       bool initialized_;

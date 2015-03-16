@@ -177,7 +177,7 @@ void Traits3D::Axis::setScale(Traits3D::SCALETYPE val)
   }
 }
 
-void Traits3D::Axis::draw(GL::MatrixStack const& matrices)
+void Traits3D::Axis::draw(GL::Transformation const& matrices)
 {
   //todo performance!
   recalculateTics();

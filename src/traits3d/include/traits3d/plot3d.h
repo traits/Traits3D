@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include "traits3d/glbase/matrixstack.h"
+#include "traits3d/glbase/transformation.h"
 #include "traits3d/colortable.h"
 #include "traits3d/coordinates.h"
 #include "traits3d/dataobject.h"
@@ -44,7 +44,7 @@ namespace Traits3D
       // labels
       std::shared_ptr<TextEngine> text_engine_p;
 
-      GL::MatrixStack matrices_p;
+      GL::Transformation matrices_p;
 
     private:
       Color bgcolor_;

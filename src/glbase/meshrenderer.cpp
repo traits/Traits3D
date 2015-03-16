@@ -210,7 +210,7 @@ void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const& mesh_dat
   seam_ibo_->setData(midata, true);
 }
 
-void Traits3D::GL::MeshRenderer::draw(MatrixStack const& matrices)
+void Traits3D::GL::MeshRenderer::draw(Transformation const& matrices)
 {
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   Color color(0, 0.8f, 0, 1);

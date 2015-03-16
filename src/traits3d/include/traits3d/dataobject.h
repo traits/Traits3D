@@ -14,7 +14,7 @@ namespace Traits3D
       public:
         DataObject();
 
-        void draw(MatrixStack const& matrices) override;
+        void draw(Transformation const& matrices) override;
 
         bool setPositionData(TripleVector const& data,
                              size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);

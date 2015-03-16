@@ -1,7 +1,6 @@
 #pragma once
 
 #include "traits3d/glbase/glhelper.h"
-#include "traits3d/glbase/matrixstack.h"
 #include "traits3d/scale.h"
 #include "traits3d/autoscaler.h"
 #include "traits3d/axisobject.h"
@@ -23,7 +22,7 @@ namespace Traits3D
     virtual ~Axis(); // dtor
   
     virtual bool initializeGL();
-    void draw(GL::MatrixStack const& matrices);
+    void draw(GL::Transformation const& matrices);
 
     /** 
     Used to tag the axis as a z-axis. This information is used to draw correct labels.

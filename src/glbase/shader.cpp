@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string>
 #include "traits3d/glbase/vbo.h"
-#include "traits3d/glbase/matrixstack.h"
+#include "traits3d/glbase/transformation.h"
 #include "traits3d/glbase/shader.h"
 
 Traits3D::GL::Shader::Shader()
@@ -189,7 +189,7 @@ bool Traits3D::GL::Shader::setUniformVec4(glm::vec4 const& vec, std::string cons
   return true;
 }
 
-bool Traits3D::GL::Shader::setMatrices(Traits3D::GL::MatrixStack const& matrices)
+bool Traits3D::GL::Shader::setMatrices(Traits3D::GL::Transformation const& matrices)
 {
   return 
     setUniformMatrix(matrices.proj(), ShaderCode::Vertex::proj_matrix)

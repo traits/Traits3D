@@ -8,11 +8,11 @@ namespace Traits3D
   namespace GL
   {
     //! Index Buffer Objects
-    class MatrixStack
+    class Transformation
     {
     public:
-      MatrixStack();
-      ~MatrixStack() = default;
+      Transformation();
+      ~Transformation() = default;
 
       glm::mat4 const& mv() const { return mv_; };
       glm::mat4 const& proj() const { return proj_; };

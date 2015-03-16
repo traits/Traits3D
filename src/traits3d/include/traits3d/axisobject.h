@@ -17,7 +17,7 @@ namespace Traits3D
       public:
         AxisObject();
 
-        void draw(GL::MatrixStack const& matrices) override;
+        void draw(GL::Transformation const& matrices) override;
         bool setValues(Traits3D::Triple const& begin, Traits3D::Triple const& end,
                        std::vector<Triple> const& majors, std::vector<Triple> const& minors,
                        std::vector<double> const& major_values);

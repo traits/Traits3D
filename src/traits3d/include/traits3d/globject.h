@@ -9,14 +9,14 @@ namespace Traits3D
 {
   namespace GL
   {
-    class MatrixStack;
+    class Transformation;
 
     class Object
     {
       public:
         Object();
         virtual ~Object() = default;
-        virtual void draw(MatrixStack const& matrices) = 0;
+        virtual void draw(Transformation const& matrices) = 0;
 
       protected:
         GL::VAO vao_p;

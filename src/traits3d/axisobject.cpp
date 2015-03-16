@@ -1,5 +1,5 @@
 #include <glm/gtc/matrix_transform.hpp>
-#include "traits3d/glbase/matrixstack.h"
+#include "traits3d/glbase/transformation.h"
 #include "traits3d/helper.h"
 #include "traits3d/textengine/textengine_std.h"
 #include "traits3d/axisobject.h"
@@ -27,7 +27,7 @@ Traits3D::GL::AxisObject::AxisObject()
 //  return true;
 //}
 
-void Traits3D::GL::AxisObject::draw(GL::MatrixStack const& matrices)
+void Traits3D::GL::AxisObject::draw(GL::Transformation const& matrices)
 {
   if (!shader_.initialized())
     return;
