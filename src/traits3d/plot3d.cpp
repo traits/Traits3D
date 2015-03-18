@@ -1,4 +1,5 @@
 #include <glm/gtc/matrix_transform.hpp>
+#include "traits3d/helper.h"
 #include "traits3d/textengine/textengine_std.h"
 #include "traits3d/plot3d.h"
 
@@ -28,41 +29,71 @@ void Traits3D::Plot3D::draw()
   Triple center = beg + (end - beg) * 0.5;
   float radius = static_cast<float>(glm::distance(center,beg)); //todo
 
+  if (isZero(radius))
+    return;
+
+  // mv transformation
+
   glm::mat4 modelview_matrix_p = glm::mat4(1.0f);
-
-  modelview_matrix_p =
-    modelview_matrix_p
-    * glm::rotate(modelview_matrix_p, glm::radians(xRotation() - 90), glm::vec3(1.0f, 0.0f, 0.0f))
+  
+  glm::mat4 m_rot = glm::rotate(modelview_matrix_p, glm::radians(xRotation() - 90), glm::vec3(1.0f, 0.0f, 0.0f))
     * glm::rotate(modelview_matrix_p, glm::radians(yRotation()), glm::vec3(0.0f, 1.0f, 0.0f))
-    * glm::rotate(modelview_matrix_p, glm::radians(zRotation()), glm::vec3(0.0f, 0.0f, 1.0f))
-    * glm::scale(modelview_matrix_p, glm::vec3(zoom() * xScale(), zoom() * yScale(), zoom() * zScale()))
-    * glm::translate(modelview_matrix_p, glm::vec3(
-                       xShift() - static_cast<float>(center.x),
-                       yShift() - static_cast<float>(center.y),
-                       zShift() - static_cast<float>(center.z)));
+    * glm::rotate(modelview_matrix_p, glm::radians(zRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
+  
+  glm::mat4 m_scale = glm::scale(modelview_matrix_p, zoom() * glm::vec3(xScale(), yScale(), zScale()));
+  
+  glm::mat4 m_translate = glm::translate(modelview_matrix_p, glm::vec3(
+    xShift() - static_cast<float>(center.x),
+    yShift() - static_cast<float>(center.y),
+    zShift() - static_cast<float>(center.z)
+    ));
 
-  glm::mat4 projection_matrix_p = glm::mat4(1.0f);
+  modelview_matrix_p *= m_rot * m_scale * m_translate;
+
+
+  // scaling/zooming influence
+
+  glm::mat4 Inverse = glm::inverse(modelview_matrix_p); //todo optimize
+
+  std::array<float, 3> scales;
+  scales[0] = xScale();
+  scales[1] = yScale();
+  scales[2] = zScale();
+
+  float smax = radius * zoom() * (*std::max_element(scales.cbegin(), scales.cend()));
+
+  // find ray along current camera-center line of sight for setting back the camera 
+  //glm::vec4 bv = Inverse * glm::vec4(0, 0, 0, 1); // unit vector of original camera viewing direction (towards negative z direction)
+  //glm::vec4 cv = Inverse * glm::vec4(0, 0, 1, 1); // ... 2nd defining point
+  //glm::vec4 a = radius * glm::normalize(cv - bv);
+  
+  glm::vec3 cam_shift = -7.0f * radius * glm::vec3(
+    glm::normalize(Inverse * (glm::vec4(0, 0, 1, 0)))
+    );
+
+  modelview_matrix_p = glm::translate(modelview_matrix_p, cam_shift);
+  float c_dist = static_cast<float>(glm::length(cam_shift)); //todo
+
+  float l(-1), r(1), b(-1), t(1), n(1), f(100);
 
   //setOrtho(false);
   if (beg != end)
   {
-    if (ortho())
-      projection_matrix_p = glm::ortho(-radius, +radius, -radius, +radius, 0.1f * radius, 40 * radius);
-    else
-      projection_matrix_p = glm::frustum(-radius, +radius, -radius, +radius, 5 * radius, 400 * radius);
-  }
-  else
-  {
-    if (ortho())
-      projection_matrix_p = glm::ortho(-1.0, 1.0, -1.0, 1.0, 10.0, 100.0);
-    else
-      projection_matrix_p = glm::frustum(-1.0, 1.0, -1.0, 1.0, 10.0, 100.0);
+    l = -radius;
+    r = radius;
+    b = -radius;
+    t = radius;
+    n = 3 * smax;
+    f = 8 * smax;
   }
 
-  projection_matrix_p = glm::translate(projection_matrix_p,
-                                       glm::vec3(xViewportShift() * 2 * radius, yViewportShift() * 2 * radius, -7 * radius));
-
-  matrices_p.set(projection_matrix_p, modelview_matrix_p);
+  l -= xViewportShift() * 2 * radius;
+  r -= xViewportShift() * 2 * radius;
+  b -= yViewportShift() * 2 * radius;
+  t -= yViewportShift() * 2 * radius;
+ 
+  glm::mat4 projection_matrix_p = ortho() ? glm::ortho(l, r, b, t, n, f) : glm::frustum(l, r, b, t, n, f);
+  matrices_p.set(projection_matrix_p, modelview_matrix_p, ortho(), l, r, b, t, n, f);
 
   coordinates_p->draw(matrices_p);
   data_object_p->draw(matrices_p);
@@ -70,6 +101,25 @@ void Traits3D::Plot3D::draw()
   //todo
   glm::ivec4 vp = GL::viewPort();
 
+
+  std::string title("r: ");
+  title += text_engine_p->double2text(radius)
+    + ", zoom: "
+    + text_engine_p->double2text(zoom())
+    + ", xs: "
+    + text_engine_p->double2text(xScale())
+    + ", ys: "
+    + text_engine_p->double2text(yScale())
+    + ", zs: "
+    + text_engine_p->double2text(zScale())
+    +", n: "
+    + text_engine_p->double2text(n)
+    + ", f: "
+    + text_engine_p->double2text(f)
+  +", cdist: "
+    + text_engine_p->double2text(c_dist);
+
+  setTitle(title);
   std::vector<TextEngine::Position> positions(1);
   positions[0] = TextEngine::Position(
                    TupleF((vp[2] - vp[0]) / 2, vp[3] - vp[1]-10),
