@@ -114,10 +114,16 @@ namespace Traits3D
     return u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
   }
 
-  //! rad to degree
-  inline double rad2deg(double rad)
+  //! radians to degree
+  inline double rad2deg(double val)
   {
-    return 180*rad/Traits3D::PI;
+    return 180 * val / Traits3D::PI;
+  }
+
+  //! degree to radians
+  inline double deg2rad(double val)
+  {
+    return val * Traits3D::PI / 180;
   }
 
   //! Angle of line ccw to positive x axis in degree's

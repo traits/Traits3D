@@ -16,7 +16,8 @@ namespace Traits3D
 
       glm::mat4 const& mv() const { return mv_; }
       glm::mat4 const& proj() const { return proj_; }
-      void set(glm::mat4 const& proj, glm::mat4 const& mv, bool ortho, float l, float r, float b, float t, float n, float f);
+      void setModelView(glm::mat4 const& mv);
+      void setProjection(bool ortho, float l, float r, float b, float t, float n, float f);
 
       float proj_l() const { return p_l_; }
       float proj_r() const { return p_r_; }
@@ -26,12 +27,9 @@ namespace Traits3D
       float proj_f() const { return p_f_; }
 
     private:
-      glm::mat4 mv_;
-      glm::mat4 rotate_;
-      glm::mat4 translate_;
-      glm::mat4 scale_;
-      
+      glm::mat4 mv_;      
       glm::mat4 proj_;
+
       bool ortho_ = true;
       float p_l_ = 0.0f;
       float p_r_ = 0.0f;
