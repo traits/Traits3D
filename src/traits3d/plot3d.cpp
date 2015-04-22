@@ -127,6 +127,14 @@ bool Traits3D::Plot3D::initializeGL()
   return true;
 }
 
+/*!
+Set style of coordinate system
+*/
+void Traits3D::Plot3D::setCoordinateStyle(Traits3D::COORDINATESTYLE st)
+{
+  coordinates_p->setStyle(st);
+}
+
 void Traits3D::Plot3D::setTitle(std::string const& val)
 {
   if (text_engine_p->setTexts(std::vector<std::string>(1, val), std::vector<FontInfo>(1, FontInfo("OpenSans Italic", 24))))

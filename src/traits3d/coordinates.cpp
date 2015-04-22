@@ -473,8 +473,7 @@ void Traits3D::Coordinates::setStyle(Traits3D::COORDINATESTYLE s, Traits3D::AXIS
   {
   case NOCOORDINATES:
   {
-    for (size_t i = 0; i != axes.size(); ++i)
-      detach(i);
+    aidx_.clear();
   }
   break;
   case BOX:
@@ -485,8 +484,7 @@ void Traits3D::Coordinates::setStyle(Traits3D::COORDINATESTYLE s, Traits3D::AXIS
   break;
   case FRAME:
   {
-    for (size_t i = 0; i != axes.size(); ++i)
-      detach(i);
+    aidx_.clear();
     if (!autoDecoration())
     {
       attach(frame_1);

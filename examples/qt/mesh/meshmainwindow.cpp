@@ -403,42 +403,42 @@ void MeshMainWindow::createPSurface(QString const& name)
 
 void MeshMainWindow::pickCoordSystem( QAction* action)
 {
-  //if (!action || !widget_)
-  //  return;
+  if (!action || !widget_)
+    return;
 
-  //active_coordinate_system_ = action;
-  //
-  //widget_->plot3d->setTitle("Traits3D (Use Ctrl-Alt-Shift-LeftBtn-Wheel or keyboard)");
+  active_coordinate_system_ = action;
+
+  widget_->plot3d->setTitle("Traits3D (Use Ctrl-Alt-Shift-LeftBtn-Wheel or keyboard)");
 
   //if (!widget_->plot3d->hasData())
   //{
   //  double l = 0.6;
-  //  widget_->plot3d->createCoordinateSystem(Triple(-l,-l,-l), Triple(l,l,l));
-  //  for (unsigned i=0; i!=widget_->plot3d->coordinates()->axes.size(); ++i)
+  //  widget_->plot3d->createCoordinateSystem(Triple(-l, -l, -l), Triple(l, l, l));
+  //  for (unsigned i = 0; i != widget_->plot3d->coordinates()->axes.size(); ++i)
   //  {
   //    widget_->plot3d->coordinates()->axes[i].setMajors(4);
   //    widget_->plot3d->coordinates()->axes[i].setMinors(5);
   //  }
-  //}      
-
-  //if (action == Box || action == Frame)
-  //{
-  //  if (action == Box)
-  //    widget_->plot3d->setCoordinateStyle(BOX);
-  //  if (action == Frame)
-  //    widget_->plot3d->setCoordinateStyle(FRAME);
-
-  //  widget_->update();
-  //  grids_->setEnabled(true);
   //}
-  //else if (action == None)
-  //{
-  //  widget_->plot3d->setTitle("Traits3D (Use Ctrl-Alt-Shift-LeftBtn-Wheel or keyboard)");
-  //  widget_->plot3d->setCoordinateStyle(NOCOORD);
 
-  //  widget_->update();
-  //  grids_->setEnabled(false);
-  //}
+  if (action == Box || action == Frame)
+  {
+    if (action == Box)
+      widget_->plot3d->setCoordinateStyle(BOX);
+    if (action == Frame)
+      widget_->plot3d->setCoordinateStyle(FRAME);
+
+    widget_->update();
+    grids_->setEnabled(true);
+  }
+  else if (action == None)
+  {
+    widget_->plot3d->setTitle("Traits3D (Use Ctrl-Alt-Shift-LeftBtn-Wheel or keyboard)");
+    widget_->plot3d->setCoordinateStyle(NOCOORDINATES);
+
+    widget_->update();
+    grids_->setEnabled(false);
+  }
 }
 
 void MeshMainWindow::pickPlotStyle( QAction* action )
