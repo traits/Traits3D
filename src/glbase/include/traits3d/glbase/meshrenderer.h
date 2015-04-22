@@ -21,6 +21,7 @@ namespace Traits3D
 
       MeshRenderer();
       
+      void createData2(std::vector<TripleF> const& mesh_data, IndexMaker::IndexType xsize, IndexMaker::IndexType ysize);
       void createData(std::vector<TripleF> const& mesh_data, IndexMaker::IndexType xsize, IndexMaker::IndexType ysize);
       void draw(Transformation const& matrices);
     
@@ -29,9 +30,13 @@ namespace Traits3D
       Shader core_shader_;
       Shader seam_shader_;
       std::unique_ptr<VBO> core_vbo_;
+      std::unique_ptr<VBO> offset_vbo_;
       std::unique_ptr<VBO> seam_color_vbo_;
       std::unique_ptr<IBO> core_ibo_;
       std::unique_ptr<IBO> seam_ibo_;
+
+      static const std::string v_core_delta_;
+      static const std::string v_seam_delta_;
     };
   } // ns
 } // ns

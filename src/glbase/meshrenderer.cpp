@@ -1,6 +1,9 @@
 #include <algorithm>
 #include "traits3d/glbase/meshrenderer.h"
 
+const std::string Traits3D::GL::MeshRenderer::v_core_delta_ = "v_core_delta";
+const std::string Traits3D::GL::MeshRenderer::v_seam_delta_ = "v_seam_delta";
+
 
 const char* Traits3D::GL::MeshRenderer::VertexCoreCode =
 {
@@ -67,7 +70,41 @@ Traits3D::GL::MeshRenderer::MeshRenderer()
   core_vbo_ = std::make_unique<VBO>(&vao_, 3);
   seam_color_vbo_ = std::make_unique<VBO>(&vao_, 4);
   core_ibo_ = std::make_unique<IBO>(&vao_);
+  offset_vbo_ = std::make_unique<VBO>(&vao_, 3);
   seam_ibo_ = std::make_unique<IBO>(&vao_); // Saum
+}
+
+void Traits3D::GL::MeshRenderer::createData2(std::vector<TripleF> const& mesh_data, IndexMaker::IndexType xsize, IndexMaker::IndexType ysize)
+{
+  if (mesh_data.empty() || mesh_data.size() != xsize*ysize)
+    return;
+
+  const IndexMaker::IndexType len_data = mesh_data.size();
+
+  // mesh data
+  std::vector<TripleF> mdata(len_data-xsize);
+  std::copy(mesh_data.begin()+xsize, mesh_data.end(), mdata.begin());
+  if (!core_vbo_->setData(mdata, GL_STATIC_DRAW))
+    return;
+
+  // offsets
+  std::vector<TripleF> odata(mdata);
+  for (auto k = 0; k != odata.size(); ++k)
+  {
+    odata[k] -= mesh_data[k];
+  }
+  if (!offset_vbo_->setData(odata, GL_STATIC_DRAW))
+    return;
+
+  //// indexes
+  //
+  //std::vector<IndexMaker::IndexType> midata(xsize*(ysize-1) + );
+
+  //for (auto k = xsize; k != len_data; ++k)
+  //{
+  //  midata[k] = 
+  //}
+
 }
 
 void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const& mesh_data, IndexMaker::IndexType xsize, IndexMaker::IndexType ysize)
