@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "traits3d/globject.h"
+#include "traits3d/glbase/globject.h"
 #include "traits3d/types.h"
 #include "traits3d/fonts/fontinfo.h"
 #include "traits3d/textengine/textengine.h"

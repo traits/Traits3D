@@ -3,7 +3,7 @@
 #include <memory>
 #include <map>
 #include "traits3d/glbase/meshrenderer.h"
-#include "traits3d/globject.h"
+#include "traits3d/glbase/globject.h"
 
 namespace Traits3D
 {

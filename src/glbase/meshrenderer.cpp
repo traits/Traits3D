@@ -67,11 +67,11 @@ Traits3D::GL::MeshRenderer::MeshRenderer()
   if (!seam_shader_.create(VertexSeamCode, FragmentCode))
     return; //todo throw
 
-  core_vbo_ = std::make_unique<VBO>(&vao_, 3);
-  seam_color_vbo_ = std::make_unique<VBO>(&vao_, 4);
-  core_ibo_ = std::make_unique<IBO>(&vao_);
-  offset_vbo_ = std::make_unique<VBO>(&vao_, 3);
-  seam_ibo_ = std::make_unique<IBO>(&vao_); // Saum
+  core_vbo_ = std::make_unique<VBO>(&vao_p, 3);
+  seam_color_vbo_ = std::make_unique<VBO>(&vao_p, 4);
+  core_ibo_ = std::make_unique<IBO>(&vao_p);
+  offset_vbo_ = std::make_unique<VBO>(&vao_p, 3);
+  seam_ibo_ = std::make_unique<IBO>(&vao_p); // Saum
 }
 
 void Traits3D::GL::MeshRenderer::createData2(std::vector<TripleF> const& mesh_data, IndexMaker::IndexType xsize, IndexMaker::IndexType ysize)

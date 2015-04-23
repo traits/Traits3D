@@ -597,24 +597,24 @@ void Traits3D::Coordinates::drawMinorGridLines()
 
 void Traits3D::Coordinates::drawMajorGridLines(Axis& a0, Axis& a1)
 {
-// Triple d = a1.begin()-a0.begin();
+  Triple d = a1.begin() - a0.begin();
 
-// for (unsigned int i=0; i!=a0.majorPositions().size(); ++i)
-  //{
-  //  glVertex3d( a0.majorPositions()[i].x, a0.majorPositions()[i].y, a0.majorPositions()[i].z );
-  //  glVertex3d( a0.majorPositions()[i].x + d.x, a0.majorPositions()[i].y + d.y, a0.majorPositions()[i].z +d.z);
-  //}
+  for (size_t i=0; i!=a0.majorPositions().size(); ++i)
+  {
+    //glVertex3d( a0.majorPositions()[i].x, a0.majorPositions()[i].y, a0.majorPositions()[i].z );
+    //glVertex3d( a0.majorPositions()[i].x + d.x, a0.majorPositions()[i].y + d.y, a0.majorPositions()[i].z +d.z);
+  }
 }
 
 void Traits3D::Coordinates::drawMinorGridLines(Axis& a0, Axis& a1)
 {
-// Triple d = a1.begin()-a0.begin();
+  Triple d = a1.begin() - a0.begin();
 
-// for (unsigned int i=0; i!=a0.minorPositions().size(); ++i)
-  //{
-  //  glVertex3d( a0.minorPositions()[i].x, a0.minorPositions()[i].y, a0.minorPositions()[i].z );
-  //  glVertex3d( a0.minorPositions()[i].x + d.x, a0.minorPositions()[i].y + d.y, a0.minorPositions()[i].z +d.z);
-  //}
+  for (size_t i = 0; i != a0.minorPositions().size(); ++i)
+  {
+    //glVertex3d(a0.minorPositions()[i].x, a0.minorPositions()[i].y, a0.minorPositions()[i].z);
+    //glVertex3d(a0.minorPositions()[i].x + d.x, a0.minorPositions()[i].y + d.y, a0.minorPositions()[i].z + d.z);
+  }
 }
 
 void Traits3D::Coordinates::attach(size_t idx)
