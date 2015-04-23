@@ -123,7 +123,7 @@ void Traits3D::Coordinates::draw(GL::Transformation const& matrices)
 
   if (autoDecoration())
   {
-    chooseAxes(matrices.proj(), matrices.mv(), GL::viewPort());
+    chooseAxes(matrices, GL::viewPort());
   }
 
   for (auto it : aidx_)
@@ -145,11 +145,14 @@ void Traits3D::Coordinates::draw(GL::Transformation const& matrices)
 
 //! build convex hull (6 axes: 2 x, 2 y, 2 z) and choose one of them at a time for scales, labels etc.
 void Traits3D::Coordinates::chooseAxes(
-  glm::dmat4 const& proj_matrix, glm::dmat4 const& mv_matrix, glm::ivec4 const& viewport)
+  GL::Transformation const& matrices, glm::ivec4 const& viewport)
 {
   TripleVector beg(axes.size());
   TripleVector end(axes.size());
   std::vector<Tuple> src(2*axes.size());
+
+  glm::dmat4 const& proj_matrix = matrices.proj(); 
+  glm::dmat4 const& mv_matrix = matrices.mv();
 
   size_t i;
   // collect axes viewport coordinates and initialize
