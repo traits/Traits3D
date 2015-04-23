@@ -5,6 +5,11 @@
 
 namespace Traits3D
 {
+  namespace GL
+  {
+    class GridRenderer;
+  }
+
   //! A coordinate system with different styles (BOX, FRAME)
   class TRAITS3D_EXPORT Coordinates
   {
@@ -31,6 +36,8 @@ namespace Traits3D
       void setNumberColor(Traits3D::Color const& val);
       void setStandardScale(); //!< Sets an linear axis with real number items
   
+      //! Sets color for the grid lines
+      void setGridLineColor(Traits3D::Color const& val) { gridlinecolor_ = val; }
       //! Set common font for all axis labels
       void setLabelFont(Traits3D::FontInfo const& font);
       //! Set common color for all axis labels
@@ -64,14 +71,16 @@ namespace Traits3D
     
       void chooseAxes(GL::Transformation const& matrices, glm::ivec4 const& viewport);
       void autoDecorateExposedAxis(Axis& ax, Triple const& projected_ax, bool left);
-      void drawMajorGridLines(); //!< Draws a grid between the major tics on the site
-      void drawMinorGridLines(); //!< Draws a grid between the minor tics on the site
-      void drawMajorGridLines(Traits3D::Axis&, Traits3D::Axis&); //! Helper
-      void drawMinorGridLines(Traits3D::Axis&, Traits3D::Axis&); //! Helper
+      void drawMajorGridLines(GL::Transformation const& matrices); //!< Draws a grid between the major tics on the site
+      void drawMinorGridLines(GL::Transformation const& matrices); //!< Draws a grid between the minor tics on the site
+      void drawMajorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b1, GL::Transformation const& matrices); //! Helper
+      void drawMinorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b1, GL::Transformation const& matrices); //! Helper
 
       bool autodecoration_;
       bool majorgridlines_, minorgridlines_;
       int  sides_;
+      std::shared_ptr<GL::GridRenderer> grid_renderer_; //todo use multiple renderers
+      Color gridlinecolor_ = Color(0, 0, 0, 1);
 
       std::list<size_t> aidx_;
       void attach(size_t idx);

@@ -1,5 +1,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "traits3d/glbase/transformation.h"
+#include "traits3d/glbase/gridrenderer.h"
 #include "traits3d/helper.h"
 #include "traits3d/coordinates.h"
 
@@ -104,7 +105,9 @@ bool Traits3D::Coordinates::initializeGL()
     if (!a.initializeGL())
       return false;
   }
-  return true;
+
+  grid_renderer_ = std::make_shared<GL::GridRenderer>();
+  return (grid_renderer_) ? true : false;
 }
 
 void Traits3D::Coordinates::setTicLength(double major, double minor)
@@ -131,15 +134,13 @@ void Traits3D::Coordinates::draw(GL::Transformation const& matrices)
     axes[it].draw(matrices);
   }
 
-  //if( style_ == NOCOORDINATES)
-  //  return;
+  if( style_ == NOCOORDINATES)
+    return;
 
-// if (majorgridlines_ || minorgridlines_)
-//   recalculateAxesTics();
-// if (majorgridlines_)
-//   drawMajorGridLines();
-  //if (minorgridlines_)
-  //  drawMinorGridLines();
+  if (majorgridlines_)
+    drawMajorGridLines(matrices);
+  if (minorgridlines_)
+    drawMinorGridLines(matrices);
 }
 
 
@@ -515,106 +516,91 @@ void Traits3D::Coordinates::setGridLines(bool majors, bool minors, int sides)
   minorgridlines_ = minors;
 }
 
-void Traits3D::Coordinates::drawMajorGridLines()
+void Traits3D::Coordinates::drawMajorGridLines(GL::Transformation const& matrices)
 {
   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  //glColor4d(gridlinecolor_.r,gridlinecolor_.g,gridlinecolor_.b,gridlinecolor_.a);
   //setLineWidth(axes[X1].majLineWidth());
+  
+  grid_renderer_->setColor(gridlinecolor_);
 
-// glBegin( GL_LINES );
-// if (sides_ & Traits3D::FLOOR)
-// {
-  //  drawMajorGridLines(axes[X1],axes[X4]);
-  //  drawMajorGridLines(axes[Y1],axes[Y2]);
-// }
-// if (sides_ & Traits3D::CEIL)
-// {
-  //  drawMajorGridLines(axes[X2],axes[X3]);
-  //  drawMajorGridLines(axes[Y3],axes[Y4]);
-// }
-// if (sides_ & Traits3D::LEFT)
-// {
-  //  drawMajorGridLines(axes[Y1],axes[Y4]);
-  //  drawMajorGridLines(axes[Z1],axes[Z2]);
-// }
-// if (sides_ & Traits3D::RIGHT)
-// {
-  //  drawMajorGridLines(axes[Y2],axes[Y3]);
-  //  drawMajorGridLines(axes[Z3],axes[Z4]);
-// }
-// if (sides_ & Traits3D::FRONT)
-// {
-  //  drawMajorGridLines(axes[X1],axes[X2]);
-  //  drawMajorGridLines(axes[Z2],axes[Z3]);
-// }
-// if (sides_ & Traits3D::BACK)
-// {
-  //  drawMajorGridLines(axes[X3],axes[X4]);
-  //  drawMajorGridLines(axes[Z4],axes[Z1]);
-// }
-// glEnd();
+  if (sides_ & Traits3D::FLOOR)
+  {
+    drawMajorGridLines(X1, X4, Y1, Y2, matrices);
+  }
+  if (sides_ & Traits3D::CEIL)
+  {
+    drawMajorGridLines(X2, X3, Y3, Y4, matrices);
+  }
+  if (sides_ & Traits3D::LEFT)
+  {
+    drawMajorGridLines(Y1, Y4, Z1, Z2, matrices);
+  }
+  if (sides_ & Traits3D::RIGHT)
+  {
+    drawMajorGridLines(Y2, Y3, Z3, Z4, matrices);
+  }
+  if (sides_ & Traits3D::FRONT)
+  {
+    drawMajorGridLines(X1, X2, Z2, Z3, matrices);
+  }
+  if (sides_ & Traits3D::BACK)
+  {
+    drawMajorGridLines(X3, X4, Z4, Z1, matrices);
+  }
 }
 
-void Traits3D::Coordinates::drawMinorGridLines()
+void Traits3D::Coordinates::drawMinorGridLines(GL::Transformation const& matrices)
 {
   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  //glColor4d(gridlinecolor_.r,gridlinecolor_.g,gridlinecolor_.b,gridlinecolor_.a);
   //setLineWidth(axes[X1].minLineWidth());
+  grid_renderer_->setColor(gridlinecolor_);
 
-// glBegin( GL_LINES );
-// if (sides_ & Traits3D::FLOOR)
-// {
-  //  drawMinorGridLines(axes[X1],axes[X4]);
-  //  drawMinorGridLines(axes[Y1],axes[Y2]);
-// }
-// if (sides_ & Traits3D::CEIL)
-// {
-  //  drawMinorGridLines(axes[X2],axes[X3]);
-  //  drawMinorGridLines(axes[Y3],axes[Y4]);
-// }
-// if (sides_ & Traits3D::LEFT)
-// {
-  //  drawMinorGridLines(axes[Y1],axes[Y4]);
-  //  drawMinorGridLines(axes[Z1],axes[Z2]);
-// }
-// if (sides_ & Traits3D::RIGHT)
-// {
-  //  drawMinorGridLines(axes[Y2],axes[Y3]);
-  //  drawMinorGridLines(axes[Z3],axes[Z4]);
-// }
-// if (sides_ & Traits3D::FRONT)
-// {
-  //  drawMinorGridLines(axes[X1],axes[X2]);
-  //  drawMinorGridLines(axes[Z2],axes[Z3]);
-// }
-// if (sides_ & Traits3D::BACK)
-// {
-  //  drawMinorGridLines(axes[X3],axes[X4]);
-  //  drawMinorGridLines(axes[Z4],axes[Z1]);
-// }
-// glEnd();
-}
-
-void Traits3D::Coordinates::drawMajorGridLines(Axis& a0, Axis& a1)
-{
-  Triple d = a1.begin() - a0.begin();
-
-  for (size_t i=0; i!=a0.majorPositions().size(); ++i)
+  if (sides_ & Traits3D::FLOOR)
   {
-    //glVertex3d( a0.majorPositions()[i].x, a0.majorPositions()[i].y, a0.majorPositions()[i].z );
-    //glVertex3d( a0.majorPositions()[i].x + d.x, a0.majorPositions()[i].y + d.y, a0.majorPositions()[i].z +d.z);
+    drawMinorGridLines(X1, X4, Y1, Y2, matrices);
+  }
+  if (sides_ & Traits3D::CEIL)
+  {
+    drawMinorGridLines(X2, X3, Y3, Y4, matrices);
+  }
+  if (sides_ & Traits3D::LEFT)
+  {
+    drawMinorGridLines(Y1, Y4, Z1, Z2, matrices);
+  }
+  if (sides_ & Traits3D::RIGHT)
+  {
+    drawMinorGridLines(Y2, Y3, Z3, Z4, matrices);
+  }
+  if (sides_ & Traits3D::FRONT)
+  {
+    drawMinorGridLines(X1, X2, Z2, Z3, matrices);
+  }
+  if (sides_ & Traits3D::BACK)
+  {
+    drawMinorGridLines(X3, X4, Z4, Z1, matrices);
   }
 }
 
-void Traits3D::Coordinates::drawMinorGridLines(Axis& a0, Axis& a1)
+void Traits3D::Coordinates::drawMajorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b1, GL::Transformation const& matrices)
 {
-  Triple d = a1.begin() - a0.begin();
+  std::vector<TripleF> ub = GL::convert(axes[a0].majorPositions()); //todo convert (check double values)
+  std::vector<TripleF> ue = GL::convert(axes[a1].majorPositions());
+  std::vector<TripleF> vb = GL::convert(axes[b0].majorPositions());
+  std::vector<TripleF> ve = GL::convert(axes[b1].majorPositions());
 
-  for (size_t i = 0; i != a0.minorPositions().size(); ++i)
-  {
-    //glVertex3d(a0.minorPositions()[i].x, a0.minorPositions()[i].y, a0.minorPositions()[i].z);
-    //glVertex3d(a0.minorPositions()[i].x + d.x, a0.minorPositions()[i].y + d.y, a0.minorPositions()[i].z + d.z);
-  }
+  grid_renderer_->createData(ub, ue, vb, ve);
+  grid_renderer_->draw(matrices);
+}
+
+void Traits3D::Coordinates::drawMinorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b1, GL::Transformation const& matrices)
+{
+  std::vector<TripleF> ub = GL::convert(axes[a0].minorPositions());
+  std::vector<TripleF> ue = GL::convert(axes[a1].minorPositions());
+  std::vector<TripleF> vb = GL::convert(axes[b0].minorPositions());
+  std::vector<TripleF> ve = GL::convert(axes[b1].minorPositions());
+
+  grid_renderer_->createData(ub, ue, vb, ve);
+  grid_renderer_->draw(matrices);
 }
 
 void Traits3D::Coordinates::attach(size_t idx)

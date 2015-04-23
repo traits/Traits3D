@@ -209,7 +209,7 @@ MeshMainWindow::MeshMainWindow( QWidget* parent )
       
   setStandardView();
 
-// widget_->plot3d->coordinates()->setGridLinesColor(Traits3D::Color(0.35, 0.35, 0.35, 1));
+  widget_->plot3d->coordinates()->setGridLineColor(Traits3D::Color(0.5, 0.5, 0.5, 1));
   widget_->enableMouse(true);
   widget_->setKeySpeed(15,20,20);
 
