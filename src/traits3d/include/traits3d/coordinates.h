@@ -7,7 +7,7 @@ namespace Traits3D
 {
   namespace GL
   {
-    class GridRenderer;
+    class LineRenderer;
   }
 
   //! A coordinate system with different styles (BOX, FRAME)
@@ -79,7 +79,7 @@ namespace Traits3D
       bool autodecoration_;
       bool majorgridlines_, minorgridlines_;
       int  sides_;
-      std::shared_ptr<GL::GridRenderer> grid_renderer_; //todo use multiple renderers
+      std::shared_ptr<GL::LineRenderer> grid_renderer_; //todo use multiple renderers
       Color gridlinecolor_ = Color(0, 0, 0, 1);
 
       std::list<size_t> aidx_;

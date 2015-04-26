@@ -1,6 +1,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "traits3d/glbase/transformation.h"
-#include "traits3d/glbase/gridrenderer.h"
+#include "traits3d/glbase/linerenderer.h"
 #include "traits3d/helper.h"
 #include "traits3d/coordinates.h"
 
@@ -106,7 +106,7 @@ bool Traits3D::Coordinates::initializeGL()
       return false;
   }
 
-  grid_renderer_ = std::make_shared<GL::GridRenderer>();
+  grid_renderer_ = std::make_shared<GL::LineRenderer>();
   return (grid_renderer_) ? true : false;
 }
 
@@ -588,7 +588,7 @@ void Traits3D::Coordinates::drawMajorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b
   std::vector<TripleF> vb = GL::convert(axes[b0].majorPositions());
   std::vector<TripleF> ve = GL::convert(axes[b1].majorPositions());
 
-  grid_renderer_->createData(ub, ue, vb, ve);
+  grid_renderer_->createGrid(ub, ue, vb, ve);
   grid_renderer_->draw(matrices);
 }
 
@@ -599,7 +599,7 @@ void Traits3D::Coordinates::drawMinorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b
   std::vector<TripleF> vb = GL::convert(axes[b0].minorPositions());
   std::vector<TripleF> ve = GL::convert(axes[b1].minorPositions());
 
-  grid_renderer_->createData(ub, ue, vb, ve);
+  grid_renderer_->createGrid(ub, ue, vb, ve);
   grid_renderer_->draw(matrices);
 }
 

@@ -12,9 +12,9 @@ namespace Traits3D
     class MeshRenderer : public GL::Object
     {
     public:
-      static const char* Traits3D::GL::MeshRenderer::VertexCoreCode;
-      static const char* Traits3D::GL::MeshRenderer::VertexSeamCode;
-      static const char* Traits3D::GL::MeshRenderer::FragmentCode;
+      static const char* VertexCoreCode;
+      static const char* VertexSeamCode;
+      static const char* FragmentCode;
 
       MeshRenderer();
       

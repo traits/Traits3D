@@ -4,6 +4,7 @@
 #include <limits>
 #include <vector>
 #include <algorithm>
+#include <numeric>
 #include "traits3d/types.h"
 
 
@@ -34,6 +35,38 @@ namespace Traits3D
   {
     return equal(a.minVertex, b.minVertex)
       && equal(a.maxVertex, b.maxVertex);
+  }
+
+  /**
+   Pair-wise compare sizes of the aarguments sub-vectors 
+  
+   \param tvec                 1st vector tvec.
+   \param svec                 2nd vector
+   \param check_empty_elements Check for empty sub-vectors
+  
+   \return true, if all sub-vectors have the same size and for check_empty_elements==true no empty sub-vector exists, false else 
+   */
+  template<typename T, typename S>
+  bool equalSizes(std::vector<std::vector<T>> const& tvec, std::vector<std::vector<S>> const& svec, bool check_empty_elements)
+  {
+    return std::equal(tvec.begin(), tvec.end(), svec.begin(),
+        [=](std::vector<T> const& t, std::vector<S> const& s) 
+        { 
+          return (check_empty_elements) ? !t.empty() && t.size() == s.size() : t.size() == s.size(); 
+        }
+      );
+  }
+
+  // Calculate total sum of sub-vector sizes 
+  template<typename T>
+  size_t addSizes(std::vector<std::vector<T>> const& tvec)
+  {
+    return std::accumulate<std::vector<std::vector<T>>::const_iterator, size_t>(tvec.begin(), tvec.end(), 0,
+      [](size_t part_sum, std::vector<T> const& t) -> size_t
+        {
+          return part_sum + t.size() ;
+        }
+      );
   }
 
   inline int round(double d)
