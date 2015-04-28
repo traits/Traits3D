@@ -64,43 +64,6 @@ namespace Traits3D
       return viewport;
     }
 
-    /**    
-     Checks, if the argument fits in a GLfloat by returning the scaling factor
-     associated with values position in (+/-)[0 ... max(GLfloat) ... max(double)]
-     \return m>=0, with (+/-)m*max(GLfloat) == value (>1 for values, exceeding the range of GLfloat)  
-     */
-    inline GLfloat excess(double value)
-    {
-      return (value > 0)
-        ? static_cast<GLfloat>(value / std::numeric_limits<GLfloat>::max())
-        : -static_cast<GLfloat>(value / std::numeric_limits<GLfloat>::max());
-    }
-
-    //! \return maximal excess for all three components
-    inline GLfloat excess(glm::dvec3 value)
-    {
-      return std::max({ excess(value.x), excess(value.y), excess(value.z) });
-    }
-    
-    //! \return maximal excess for val
-    GLfloat excess(std::vector<glm::dvec3> const& val); 
-
-    /**
-     Scale vector by maximal excess, if exc > 1; 
-     simply convert to vector<glm::vec3> else
-    
-     \param [in,out] exc The maximal excess
-     \param val          The vector to scale
-    
-     \return Scaled/converted vector
-     */
-    std::vector<glm::vec3> scale(double& exc, std::vector<glm::dvec3> const& val);
-    
-    //! Enforce scaling of val with 2nd argument 
-    std::vector<glm::vec3> scale(std::vector<glm::dvec3> const& val, double excess);
-    //! Converts value into vec3 vector - only casts are applied
-    std::vector<glm::vec3> convert(std::vector<glm::dvec3> const& val);
-
     //! simplified glut routine (glUnProject): windows coordinates_p --> object coordinates_p 
     inline glm::vec3 ViewPort2World(glm::vec3 const& obj, glm::mat4 const& mv, glm::mat4 const& proj, glm::ivec4 const& viewport)
     {

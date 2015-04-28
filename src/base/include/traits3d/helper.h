@@ -109,7 +109,46 @@ namespace Traits3D
         hull.maxVertex.z = p.z;
     }
     return hull;
-}
+  }
+
+  /**
+  Checks, if the argument fits in a GLfloat by returning the scaling factor
+  associated with values position in (+/-)[0 ... max(GLfloat) ... max(double)]
+  \return m>=0, with (+/-)m*max(GLfloat) == value (>1 for values, exceeding the range of GLfloat)
+  */
+  inline float excess(double value)
+  {
+    return (value > 0)
+      ? static_cast<float>(value / std::numeric_limits<float>::max())
+      : -static_cast<float>(value / std::numeric_limits<float>::max());
+  }
+
+  //! \return maximal excess for all three components
+  inline float excess(Traits3D::Triple value)
+  {
+    return std::max({ excess(value.x), excess(value.y), excess(value.z) });
+  }
+
+  //! \return maximal excess for val
+  float excess(std::vector<glm::dvec3> const& val);
+
+  /**
+  Scale vector by maximal excess, if exc > 1;
+  simply convert to vector<glm::vec3> else
+
+  \param [in,out] exc The maximal excess
+  \param val          The vector to scale
+
+  \return Scaled/converted vector
+  */
+  std::vector<Traits3D::TripleF> scale(double& exc, Traits3D::TripleVector const& val);
+
+  //! Enforce scaling of val with 2nd argument 
+  std::vector<Traits3D::TripleF> scale(Traits3D::TripleVector const& val, double excess);
+  //! Converts value into vec3 vector - only casts are applied
+  std::vector<Traits3D::TripleF> convert(Traits3D::TripleVector const& val);
+
+
 #ifndef TRAITS3D_NOT_FOR_DOXYGEN
 
   inline Triple normalizedCross(Triple const& u, Triple const& v)

@@ -583,10 +583,10 @@ void Traits3D::Coordinates::drawMinorGridLines(GL::Transformation const& matrice
 
 void Traits3D::Coordinates::drawMajorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b1, GL::Transformation const& matrices)
 {
-  std::vector<TripleF> ub = GL::convert(axes[a0].majorPositions()); //todo convert (check double values)
-  std::vector<TripleF> ue = GL::convert(axes[a1].majorPositions());
-  std::vector<TripleF> vb = GL::convert(axes[b0].majorPositions());
-  std::vector<TripleF> ve = GL::convert(axes[b1].majorPositions());
+  std::vector<TripleF> ub = convert(axes[a0].majorPositions()); //todo convert (check double values)
+  std::vector<TripleF> ue = convert(axes[a1].majorPositions());
+  std::vector<TripleF> vb = convert(axes[b0].majorPositions());
+  std::vector<TripleF> ve = convert(axes[b1].majorPositions());
 
   grid_renderer_->createGrid(ub, ue, vb, ve);
   grid_renderer_->draw(matrices);
@@ -594,10 +594,10 @@ void Traits3D::Coordinates::drawMajorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b
 
 void Traits3D::Coordinates::drawMinorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b1, GL::Transformation const& matrices)
 {
-  std::vector<TripleF> ub = GL::convert(axes[a0].minorPositions());
-  std::vector<TripleF> ue = GL::convert(axes[a1].minorPositions());
-  std::vector<TripleF> vb = GL::convert(axes[b0].minorPositions());
-  std::vector<TripleF> ve = GL::convert(axes[b1].minorPositions());
+  std::vector<TripleF> ub = convert(axes[a0].minorPositions());
+  std::vector<TripleF> ue = convert(axes[a1].minorPositions());
+  std::vector<TripleF> vb = convert(axes[b0].minorPositions());
+  std::vector<TripleF> ve = convert(axes[b1].minorPositions());
 
   grid_renderer_->createGrid(ub, ue, vb, ve);
   grid_renderer_->draw(matrices);

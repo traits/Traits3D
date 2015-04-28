@@ -1,5 +1,6 @@
 #pragma once
 
+#include "traits3d/matrix.h"
 #include "plot3d.h"
 
 namespace Traits3D
@@ -9,7 +10,8 @@ namespace Traits3D
     public:
       bool initializeGL() override;
       bool addPositionData(std::vector<TripleF> const& data,
-                           size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
+        size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
+      bool addPositionData(Traits3D::Matrix<TripleF> const& data, GLenum drawtype = GL_STATIC_DRAW);
 
       bool updatePositionData(std::vector<TripleF> const& data);
       bool setDataColor(ColorVector const& val);

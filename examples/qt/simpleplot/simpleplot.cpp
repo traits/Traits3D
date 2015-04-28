@@ -59,9 +59,7 @@ public:
   
   bool loadData()
   {
-    std::vector<Traits3D::TripleF> data = Traits3D::GL::convert(broeckchen.data());
-
-    if (!addPositionData(data, broeckchen.xSize(), broeckchen.ySize(), GL_STATIC_DRAW))
+    if (!addPositionData(broeckchen.dataF(), GL_STATIC_DRAW))
       return false;
 
     return setDataColor(Traits3D::ColorTable::stdColor(100)) && setMeshColor(Traits3D::Color(0.0, 0.5, 0.5, 0));

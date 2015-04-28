@@ -45,8 +45,7 @@ bool Traits3D::GL::DataObject::initShader()
 bool Traits3D::GL::DataObject::setPositionData(std::vector<TripleF> const& data,
     size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
-  data_ = data;
-  if (!addPositionDataCommon(xsize, ysize, data_, drawtype))
+  if (!data_.setData(data, xsize, ysize) || !addPositionDataCommon(xsize, ysize, data_.linearBuffer(), drawtype))
     return false;
 
   hull_ = Traits3D::calculateBox(data);
@@ -57,8 +56,7 @@ bool Traits3D::GL::DataObject::setPositionData(TripleVector const& data,
     size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
   double excess;
-  data_ = Traits3D::GL::scale(excess, data);
-  if (!addPositionDataCommon(xsize, ysize, data_, drawtype))
+  if (!data_.setData(scale(excess, data), xsize, ysize) || !addPositionDataCommon(xsize, ysize, data_.linearBuffer(), drawtype))
     return false;
 
   hull_ = Traits3D::calculateBox(data);
@@ -66,16 +64,28 @@ bool Traits3D::GL::DataObject::setPositionData(TripleVector const& data,
 
 }
 
+bool Traits3D::GL::DataObject::setPositionData(Matrix<TripleF> const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
+{
+  data_ = data;
+  if (!addPositionDataCommon(data_.xSize(), data_.ySize(), data_.linearBuffer(), drawtype))
+    return false;
+
+  hull_ = Traits3D::calculateBox(data.linearBuffer());
+  return true;
+}
+
 bool Traits3D::GL::DataObject::updatePositionData(std::vector<TripleF> const& data)
 {
   hull_ = Traits3D::calculateBox(data);
-  data_ = data;
+
+  if (!data_.setData(data, data_.xSize(), data_.ySize()))
+    return false;
 
   ColorVector colors = Traits3D::ColorTable::createColors(data, colors_);
   if (!vbos_[VBOindex::DataColor]->setData(colors))
     return false;
 
-  return vbos_[VBOindex::Position]->setData(data_);
+  return vbos_[VBOindex::Position]->setData(data_.linearBuffer());
 }
 
 bool Traits3D::GL::DataObject::updatePositionData(TripleVector const& data)
@@ -83,19 +93,20 @@ bool Traits3D::GL::DataObject::updatePositionData(TripleVector const& data)
   hull_ = Traits3D::calculateBox(data);
 
   double excess;
-  data_ = Traits3D::GL::scale(excess, data);
+  if (!data_.setData(scale(excess, data), data_.xSize(), data_.ySize()))
+    return false;
 
   ColorVector colors = Traits3D::ColorTable::createColors(data, colors_);
   if (!vbos_[VBOindex::DataColor]->setData(colors))
     return false;
 
-  return vbos_[VBOindex::Position]->setData(data_);
+  return vbos_[VBOindex::Position]->setData(data_.linearBuffer());
 }
 
 //todo check size against position vector[s]
 bool Traits3D::GL::DataObject::setColor(ColorVector const& data)
 {
-  ColorVector colors = Traits3D::ColorTable::createColors(data_, data);
+  ColorVector colors = Traits3D::ColorTable::createColors(data_.linearBuffer(), data);
   if (!vbos_[VBOindex::DataColor]->setData(colors))
     return false;
 

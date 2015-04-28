@@ -111,13 +111,13 @@ bool Traits3D::GL::AxisObject::setValues(
 
   if (excess_ > 1)
   {
-    majors_ = GL::scale(majors, excess_);
-    minors_ = GL::scale(minors, excess_);
+    majors_ = scale(majors, excess_);
+    minors_ = scale(minors, excess_);
   }
   else
   {
-    majors_ = GL::convert(majors);
-    minors_ = GL::convert(minors);
+    majors_ = convert(majors);
+    minors_ = convert(minors);
   }
   modified_ = true;
   return true;

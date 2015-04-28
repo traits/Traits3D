@@ -268,7 +268,7 @@ void MeshMainWindow::createFunction(QString const& name)
     function = std::make_shared<Rosenbrock>();
     
     function->setDomainResolution(50, 51);
-    function->setDomain(-1.73, 1.55, -1.5, 1.95);
+    function->setDomain(-1.73, 1.55, -1.5, 2.15);
     function->setRange(-100, 1000);
     
     widget_->plot3d->coordinates()->axes[Z1].setScale(LOG10SCALE);
@@ -308,8 +308,7 @@ void MeshMainWindow::createFunction(QString const& name)
 
   if (function.get() != nullptr)
   {
-    std::vector<TripleF> data = Traits3D::GL::convert(function->data());
-    widget_->plot3d->addPositionData(data, function->xSize(), function->ySize(), GL_STATIC_DRAW);
+    widget_->plot3d->addPositionData(function->dataF(), GL_STATIC_DRAW);
     resetColors();
   }
 
@@ -369,7 +368,7 @@ void MeshMainWindow::createPSurface(QString const& name)
 
   if (surface.get() != nullptr)
   {
-    std::vector<TripleF> data = Traits3D::GL::convert(surface->data());
+    std::vector<TripleF> data = Traits3D::convert(surface->data());
     widget_->plot3d->addPositionData(data, surface->uSize(), surface->vSize(), GL_STATIC_DRAW);
     resetColors();
   }

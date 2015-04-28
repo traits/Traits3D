@@ -1,5 +1,6 @@
 #pragma once
 
+#include "traits3d/matrix.h"
 #include "traits3d/gridmapping.h"
 
 namespace Traits3D
@@ -23,10 +24,14 @@ namespace Traits3D
     size_t ySize() const { return vmesh_p; }
 
     //! Returns data, created by updateData()
-    const TripleVector& data();
+    Matrix<Triple> const& data();
+
+    //! Returns float data (calls data() before)
+    Matrix<TripleF>  dataF();
+
 
   protected:
-    TripleVector data_p;
+    Matrix<Triple> data_p;
 
     //! Creates data representation (consecutive row vectors for this standard implementation).
     bool updateData() override;

@@ -49,7 +49,7 @@ bool Traits3D::Function::setRange(double min_z, double max_z)
 }
 
 
-const Traits3D::TripleVector& Traits3D::Function::data()
+Traits3D::Matrix<Traits3D::Triple> const& Traits3D::Function::data()
 {
   if (dirty_data_p)
     if (updateData())
@@ -58,12 +58,19 @@ const Traits3D::TripleVector& Traits3D::Function::data()
   return data_p;
 }
 
+
+Traits3D::Matrix<Traits3D::TripleF> Traits3D::Function::dataF()
+{
+  Matrix<Triple> const& d = data();
+  return d.convert<Traits3D::TripleF>();
+}
+
 bool Traits3D::Function::updateData()
 {
   if ((umesh_p < 2) || (vmesh_p < 2) )
     return false;
   
-  data_p.resize(umesh_p * vmesh_p);
+  data_p.resize(umesh_p, vmesh_p);
   
   /* get the data */
 
@@ -78,11 +85,9 @@ bool Traits3D::Function::updateData()
 
   for (size_t iy = 0; iy != vmesh_p; ++iy) 
   {
-    size_t row_idx = iy*umesh_p;
     for (size_t ix = 0; ix != umesh_p; ++ix) 
     {
-      size_t idx = row_idx + ix;
-      Triple& d = data_p[idx];
+      Triple& d = data_p(ix,iy);
 
       d.x = hmin.x + ix*dx;
       d.y = hmin.y + iy*dy;

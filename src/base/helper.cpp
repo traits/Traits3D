@@ -103,3 +103,43 @@ size_t Traits3D::tesselationSize(Traits3D::CellVector const& t)
 }
 
 #endif // TRAITS3D_NOT_FOR_DOXYGEN
+
+float Traits3D::excess(Traits3D::TripleVector const& val)
+{
+  float ret = 0;
+  for (auto v : val)
+  {
+    ret = std::max(ret, excess(v));
+  }
+  return ret;
+}
+
+
+std::vector<Traits3D::TripleF> Traits3D::scale(double& exc, Traits3D::TripleVector const& val)
+{
+  exc = excess(val);
+  if (exc > 1)
+    return scale(val, exc);
+  else
+    return convert(val);
+}
+
+std::vector<Traits3D::TripleF> Traits3D::scale(Traits3D::TripleVector const& val, double excess)
+{
+  std::vector<Traits3D::TripleF> ret(val.size());
+  for (size_t i = 0; i != val.size(); ++i)
+  {
+    ret[i] = (val[i] / excess);
+  }
+  return ret;
+}
+
+std::vector<Traits3D::TripleF> Traits3D::convert(Traits3D::TripleVector const& val)
+{
+  std::vector<Traits3D::TripleF> ret(val.size());
+  for (size_t i = 0; i != val.size(); ++i)
+  {
+    ret[i] = static_cast<Traits3D::TripleF>(val[i]);
+  }
+  return ret;
+}

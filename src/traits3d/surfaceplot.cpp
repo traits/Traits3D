@@ -14,6 +14,15 @@ bool Traits3D::SurfacePlot::addPositionData(std::vector<TripleF> const& data,
   return true;
 }
 
+bool Traits3D::SurfacePlot::addPositionData(Traits3D::Matrix<TripleF> const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
+{
+  if (!data_object_p->setPositionData(data, drawtype))
+    return false;
+
+  coordinates_p->init(data_object_p->hull());
+  return true;
+}
+
 //todo check size against position vector[s]
 bool Traits3D::SurfacePlot::setDataColor(ColorVector const& val)
 {
