@@ -43,6 +43,15 @@ bool Traits3D::SurfacePlot::updatePositionData(std::vector<TripleF> const& data)
   return true;
 }
 
+bool Traits3D::SurfacePlot::updatePositionData(Traits3D::MatrixF const& data)
+{
+  if (!data_object_p->updatePositionData(data.linearBuffer()))
+    return false;
+
+  coordinates_p->init(data_object_p->hull());
+  return true;
+}
+
 bool Traits3D::SurfacePlot::initializeGL()
 {
   if (!Plot3D::initializeGL())

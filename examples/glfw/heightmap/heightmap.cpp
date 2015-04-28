@@ -13,7 +13,7 @@
 
 HeightMap::HeightMap()
 {
-  map_vertices.resize(MAP_NUM_TOTAL_VERTICES);  
+  map_vertices.resize(MAP_NUM_VERTICES_X, MAP_NUM_VERTICES_Y);
   for (unsigned i = 0; i != coordinates_p->axes.size(); ++i)
   {
     coordinates_p->axes[i].setMajors(5);
@@ -27,7 +27,7 @@ HeightMap::HeightMap()
 
 bool HeightMap::loadData()
 {
-  if (!addPositionData(map_vertices, MAP_NUM_VERTICES_X, MAP_NUM_VERTICES_Y, GL_DYNAMIC_DRAW))
+  if (!addPositionData(map_vertices, GL_DYNAMIC_DRAW))
     return false;
 
   Traits3D::ColorVector colors = Traits3D::ColorTable::stdColor(100);
@@ -48,22 +48,15 @@ void HeightMap::updateData()
 void HeightMap::init_map()
 {
   GLfloat step = MAP_SIZE / (MAP_NUM_VERTICES_X - 1);
-  GLfloat x = 0.0f;
-  GLfloat y = 0.0f;
   /* Create a flat grid */
-  auto k = 0;
-  for (auto yy = 0; yy < MAP_NUM_VERTICES_Y; ++yy)
+  for (auto y = 0; y < MAP_NUM_VERTICES_Y; ++y)
   {
-    for (auto xx = 0; xx < MAP_NUM_VERTICES_X; ++xx)
+    for (auto x = 0; x < MAP_NUM_VERTICES_X; ++x)
     {
-      map_vertices[k].x = x;
-      map_vertices[k].y = y;
-      map_vertices[k].z = 0.0f;
-      x += step;
-      ++k;
+      map_vertices(x,y).x = step*x;
+      map_vertices(x,y).y = step*y;
+      map_vertices(x,y).z = 0.0f;
     }
-    y += step;
-    x = 0.0f;
   }
 }
 
@@ -99,16 +92,19 @@ void HeightMap::update_map(size_t num_iter)
     //circle_size = 1;
 
     disp = disp / 2.0f;
-    for (auto i = 0; i < MAP_NUM_TOTAL_VERTICES; ++i)
+    for (auto y = 0; y < MAP_NUM_VERTICES_Y; ++y)
     {
-      GLfloat dx = center_x - map_vertices[i].x;
-      GLfloat dy = center_y - map_vertices[i].y;
-      GLfloat pd = (2.0f * sqrtf((dx * dx) + (dy * dy))) / circle_size;
-      //if (fabs(pd) <= 1.0f)
+      for (auto x = 0; x < MAP_NUM_VERTICES_X; ++x)
       {
-        /* tx,ty is within the circle */
-        GLfloat new_height = disp + (float)(cos(pd*3.14f)*disp);
-        map_vertices[i].z = 3*new_height;
+        GLfloat dx = center_x - map_vertices(x,y).x;
+        GLfloat dy = center_y - map_vertices(x,y).y;
+        GLfloat pd = (2.0f * sqrtf((dx * dx) + (dy * dy))) / circle_size;
+        //if (fabs(pd) <= 1.0f)
+        {
+          /* tx,ty is within the circle */
+          GLfloat new_height = disp + (float)(cos(pd*3.14f)*disp);
+          map_vertices(x, y).z = 3 * new_height;
+        }
       }
     }
     --num_iter;
