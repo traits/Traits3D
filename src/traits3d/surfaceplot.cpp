@@ -14,7 +14,7 @@ bool Traits3D::SurfacePlot::addPositionData(std::vector<TripleF> const& data,
   return true;
 }
 
-bool Traits3D::SurfacePlot::addPositionData(Traits3D::Matrix<TripleF> const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
+bool Traits3D::SurfacePlot::addPositionData(Traits3D::MatrixF const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
   if (!data_object_p->setPositionData(data, drawtype))
     return false;

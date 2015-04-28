@@ -11,7 +11,7 @@ namespace Traits3D
       bool initializeGL() override;
       bool addPositionData(std::vector<TripleF> const& data,
         size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
-      bool addPositionData(Traits3D::Matrix<TripleF> const& data, GLenum drawtype = GL_STATIC_DRAW);
+      bool addPositionData(Traits3D::MatrixF const& data, GLenum drawtype = GL_STATIC_DRAW);
 
       bool updatePositionData(std::vector<TripleF> const& data);
       bool setDataColor(ColorVector const& val);

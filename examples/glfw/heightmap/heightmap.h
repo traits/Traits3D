@@ -10,7 +10,7 @@ public:
   void updateData() override;
 
 private:
-  std::vector<GLuint> map_line_indices;
+  //std::vector<GLuint> map_line_indices;
   std::vector<Traits3D::TripleF> map_vertices;
 
   void init_map();

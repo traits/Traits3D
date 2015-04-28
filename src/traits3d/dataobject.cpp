@@ -64,7 +64,7 @@ bool Traits3D::GL::DataObject::setPositionData(TripleVector const& data,
 
 }
 
-bool Traits3D::GL::DataObject::setPositionData(Matrix<TripleF> const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
+bool Traits3D::GL::DataObject::setPositionData(MatrixF const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
 {
   data_ = data;
   if (!addPositionDataCommon(data_.xSize(), data_.ySize(), data_.linearBuffer(), drawtype))

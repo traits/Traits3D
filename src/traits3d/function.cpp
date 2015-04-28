@@ -49,7 +49,7 @@ bool Traits3D::Function::setRange(double min_z, double max_z)
 }
 
 
-Traits3D::Matrix<Traits3D::Triple> const& Traits3D::Function::data()
+Traits3D::MatrixD const& Traits3D::Function::data()
 {
   if (dirty_data_p)
     if (updateData())
@@ -59,10 +59,10 @@ Traits3D::Matrix<Traits3D::Triple> const& Traits3D::Function::data()
 }
 
 
-Traits3D::Matrix<Traits3D::TripleF> Traits3D::Function::dataF()
+Traits3D::MatrixF Traits3D::Function::dataF()
 {
-  Matrix<Triple> const& d = data();
-  return d.convert<Traits3D::TripleF>();
+  MatrixD const& d = data();
+  return d.convert<TripleF>();
 }
 
 bool Traits3D::Function::updateData()

@@ -109,4 +109,7 @@ namespace Traits3D
 
     std::vector<T> data_;
   };
+
+  using MatrixF = Matrix < TripleF > ;
+  using MatrixD = Matrix < Triple > ;
 } //ns

@@ -17,7 +17,7 @@ namespace Traits3D
 
         void draw(Transformation const& matrices) override;
 
-        bool setPositionData(Matrix<TripleF> const& data, GLenum drawtype = GL_STATIC_DRAW);
+        bool setPositionData(MatrixF const& data, GLenum drawtype = GL_STATIC_DRAW);
         bool setPositionData(TripleVector const& data,
           size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
         bool updatePositionData(TripleVector const& data);
@@ -38,7 +38,7 @@ namespace Traits3D
         bool initShader();
         Traits3D::Box hull_;
         ColorVector colors_;
-        Matrix<TripleF> data_;
+        MatrixF data_;
 
         enum class VBOindex
         {
