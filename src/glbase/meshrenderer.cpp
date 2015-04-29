@@ -84,7 +84,7 @@ void Traits3D::GL::MeshRenderer::createData2(std::vector<TripleF> const& mesh_da
   // mesh data
   std::vector<TripleF> mdata(len_data-xsize);
   std::copy(mesh_data.begin()+xsize, mesh_data.end(), mdata.begin());
-  if (!core_vbo_->setData(mdata, GL_STATIC_DRAW))
+  if (!core_vbo_->setData(mdata))
     return;
 
   // offsets
@@ -93,7 +93,7 @@ void Traits3D::GL::MeshRenderer::createData2(std::vector<TripleF> const& mesh_da
   {
     odata[k] -= mesh_data[k];
   }
-  if (!offset_vbo_->setData(odata, GL_STATIC_DRAW))
+  if (!offset_vbo_->setData(odata))
     return;
 
   //// indexes
@@ -164,7 +164,7 @@ void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const& mesh_dat
     }    
   }
 
-  if (!core_vbo_->setData(mdata, GL_STATIC_DRAW))
+  if (!core_vbo_->setData(mdata))
     return;
 
   Color core_color(0, 0.8f, 0, 1);
@@ -176,7 +176,7 @@ void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const& mesh_dat
   // seam
   std::fill(begin(seam_colors) + 3 * len_data - 2 * xsize, end(seam_colors), seam_color);
 
-  if (!seam_color_vbo_->setData(seam_colors, GL_STATIC_DRAW))
+  if (!seam_color_vbo_->setData(seam_colors))
     return;
 
 

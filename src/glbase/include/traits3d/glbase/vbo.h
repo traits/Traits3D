@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include "traits3d/types.h"
 #include "traits3d/glbase/glhelper.h"
 #include "traits3d/glbase/vao.h"
 
@@ -49,8 +50,10 @@ namespace Traits3D
       void setLayout(Layout const& val) { layout_ = Layout(val); }
       GLuint id() const { return id_; } //!< VBO index
       
-      bool setData(std::vector<glm::vec3> const& data, GLenum drawtype = GL_STATIC_DRAW);
-      bool setData(std::vector<glm::vec4> const& data, GLenum drawtype = GL_STATIC_DRAW);
+      void setDrawType(GLenum val) { if (val != draw_type_.value) draw_type_.value = val; }
+      bool drawTypeModified() const { return draw_type_.modified; }
+      bool setData(std::vector<glm::vec3> const& data);
+      bool setData(std::vector<glm::vec4> const& data);
 
       bool bindAttribute(GLuint attr_location);
       //! Draw complete buffer as GL_TRIANGLE_STRIP etc.
@@ -66,9 +69,10 @@ namespace Traits3D
       GLuint program_;
       std::string attr_name_;
       VAO* vao_; // non-owning pointer
+      StateEntity<GLenum> draw_type_ = GL_STATIC_DRAW; // GL_STATIC_DRAW or GL_DYNAMIC_DRAW
 
       template <typename PRIMITIVE>
-      bool setData(std::vector<PRIMITIVE> const& data, GLenum drawtype = GL_STATIC_DRAW);
+      bool setData(std::vector<PRIMITIVE> const& data);
     };
 
 
@@ -77,12 +81,11 @@ namespace Traits3D
     
      \param data        The data.
      \param setdrawtype if true, consider the following argument
-     \param drawtype    GL_STATIC_DRAW etc.
 
      \return true if it succeeds, false if it fails.
      */
     template <typename PRIMITIVE>
-    bool Traits3D::GL::VBO::setData(std::vector<PRIMITIVE> const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
+    bool Traits3D::GL::VBO::setData(std::vector<PRIMITIVE> const& data)
     {
       if (data.empty())
         return false;
@@ -94,14 +97,9 @@ namespace Traits3D
       //todo hack caused inside mesh example
       while (GL_NO_ERROR != glGetError());
 
-      GLint oldtype;
-      glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_USAGE, &oldtype);
-      if (GL_NO_ERROR != glGetError())
-        return false;
-
       size_t bsize = sizeof(PRIMITIVE) * data.size();
-      if (!bsize_ || bsize_ != bsize || static_cast<GLenum>(oldtype) != drawtype)
-        glBufferData(GL_ARRAY_BUFFER, bsize, bsize ? &data[0] : nullptr, drawtype);
+      if (!bsize_ || bsize_ != bsize || draw_type_.modified)
+        glBufferData(GL_ARRAY_BUFFER, bsize, bsize ? &data[0] : nullptr, draw_type_.value);
       else
         glBufferSubData(GL_ARRAY_BUFFER, 0, bsize, bsize ? &data[0] : nullptr);
 

@@ -59,10 +59,11 @@ public:
   
   bool loadData()
   {
-    if (!addPositionData(broeckchen.dataF(), GL_STATIC_DRAW))
+    if (!addPositionData(broeckchen.dataF()))
       return false;
 
-    return setDataColor(Traits3D::ColorTable::stdColor(100)) && setMeshColor(Traits3D::Color(0.0, 0.5, 0.5, 0));
+    setDataColor(Traits3D::ColorTable::stdColor(100)); 
+    return setMeshColor(Traits3D::Color(0.0, 0.5, 0.5, 0));
   }
 
   //void updateData() override

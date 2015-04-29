@@ -12,59 +12,55 @@ namespace Traits3D
   {
     class DataObject : public GL::Object
     {
-      public:
-        DataObject();
+    public:
+      DataObject();
 
-        void draw(Transformation const& matrices) override;
+      void draw(Transformation const& matrices) override;
+      void setDrawType(GLenum val);
 
-        bool setPositionData(MatrixF const& data, GLenum drawtype = GL_STATIC_DRAW);
-        bool setPositionData(TripleVector const& data,
-          size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
-        bool updatePositionData(TripleVector const& data);
+      bool setPositionData(MatrixF const& data);
+      bool setPositionData(TripleVector const& data,
+        size_t xsize, size_t ysize);
+      bool updatePositionData(TripleVector const& data);
 
-        bool setPositionData(std::vector<TripleF> const& data,
-                             size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
-        bool updatePositionData(std::vector<TripleF> const& data);
-        
-        bool setColor(ColorVector const& data);
-        bool setMeshColor(Color const& data);
+      bool setPositionData(std::vector<TripleF> const& data,
+        size_t xsize, size_t ysize);
+      bool updatePositionData(std::vector<TripleF> const& data);
 
-        const Traits3D::Box& hull() const
-        {
-          return hull_;
-        }
 
-      private:
-        bool initShader();
-        Traits3D::Box hull_;
-        ColorVector colors_;
-        MatrixF data_;
+      void setColor(ColorVector const& data);
+      bool setMeshColor(Color const& data);
 
-        enum class VBOindex
-        {
-          Position,
-          DataColor
-        };
+      const Traits3D::Box& hull() const { return data_.value.hull(); }
 
-        enum class IBOindex
-        {
-          Mesh,
-          Polygons
-        };
+    private:
+      bool initShader();
+      StateEntity<ColorVector> colors_;
+      StateEntity<MatrixF> data_;
 
-        enum class ShaderIndex
-        {
-          Lines,
-          TriangleStrip
-        };
+      enum class VBOindex
+      {
+        Position,
+        DataColor
+      };
 
-        std::map<ShaderIndex, Shader> shader_;
-        std::map<VBOindex, std::unique_ptr<VBO>> vbos_;
-        std::map<IBOindex, std::unique_ptr<IBO>> ibos_;
+      enum class IBOindex
+      {
+        Mesh,
+        Polygons
+      };
 
-        GL::MeshRenderer mesh_renderer_;
+      enum class ShaderIndex
+      {
+        Lines,
+        TriangleStrip
+      };
 
-        bool addPositionDataCommon(size_t xsize, size_t ysize, std::vector<TripleF> const& data, GLenum drawtype);
+      std::map<ShaderIndex, Shader> shader_;
+      std::map<VBOindex, std::unique_ptr<VBO>> vbos_;
+      std::map<IBOindex, std::unique_ptr<IBO>> ibos_;
+
+      //GL::MeshRenderer mesh_renderer_;
     };
   } // ns
 } // ns

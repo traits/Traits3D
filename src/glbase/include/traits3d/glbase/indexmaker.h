@@ -22,6 +22,7 @@ namespace GL
     using IndexType = GLuint;
     using LinearizedContainer = std::vector < IndexType > ;
     using Container = std::vector < LinearizedContainer >;
+
     void setRestartBehavior(RestartType rtype, IndexType placeholder = 0);  
     RestartType restartType() const { return restart_type_; }
     IndexType restartPLaceholder() const { return restart_placeholder_; }

@@ -27,12 +27,15 @@ HeightMap::HeightMap()
 
 bool HeightMap::loadData()
 {
-  if (!addPositionData(map_vertices, GL_DYNAMIC_DRAW))
+  if (!addPositionData(map_vertices))
     return false;
 
-  Traits3D::ColorVector colors = Traits3D::ColorTable::stdColor(100);
+  setDataDrawType(GL_DYNAMIC_DRAW);
 
-  return setDataColor(colors) && setMeshColor(Traits3D::Color(0, 0, 0, 1));
+  Traits3D::ColorVector colors = Traits3D::ColorTable::stdColor(100);
+  setDataColor(colors);
+
+  return setMeshColor(Traits3D::Color(0, 0, 0, 1));
 }
 
 void HeightMap::updateData()

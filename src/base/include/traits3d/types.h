@@ -188,6 +188,34 @@ using Color = glm::vec4;
 
 //! A Color field
 using ColorVector = std::vector<Color> ;
+
+template <typename T>
+class StateEntity
+{
+public:
+  StateEntity()
+  {}
+
+  StateEntity(StateEntity const&) = delete;
+  void operator=(StateEntity const&) = delete;
+
+  StateEntity(T const& other)
+  {
+    value = other;
+    modified = true;
+  }
+  
+  StateEntity& operator=(T const& other)
+  {
+    value = other;
+    modified = true;
+    return *this;
+  }
+
+  T value;
+  bool modified = true;
+};
+
 } // ns
 
 

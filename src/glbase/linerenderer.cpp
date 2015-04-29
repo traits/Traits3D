@@ -97,7 +97,7 @@ bool Traits3D::GL::LineRenderer::createGrid(
     position_vbo_data_[start + 2 * v + 1] = stop_v[v];
   }
 
-  if (position_vbo_->setData(position_vbo_data_, GL_STATIC_DRAW))
+  if (position_vbo_->setData(position_vbo_data_))
   {
     type_ = Type::Grid;
     return true;
@@ -138,9 +138,9 @@ bool Traits3D::GL::LineRenderer::createStripes(std::vector<std::vector<TripleF>>
     pos += stripes[i].size();
   }
 
-  if (position_vbo_->setData(position_vbo_data_, GL_STATIC_DRAW))
+  if (position_vbo_->setData(position_vbo_data_))
   {
-    if (single_color_ || (!single_color_ && color_vbo_->setData(color_vbo_data_, GL_STATIC_DRAW)))
+    if (single_color_ || (!single_color_ && color_vbo_->setData(color_vbo_data_)))
     {
       type_ = Type::LineStripe;
       return true;

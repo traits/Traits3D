@@ -20,8 +20,8 @@ namespace Traits3D
 
       if (0 == xsize)
         ysize_ = 0;
-      if (0 == ysize)
-        xsize = 0;
+      else if (0 == ysize)
+        xsize_ = 0;
     }
     
     virtual ~Matrix() = default;
@@ -56,6 +56,7 @@ namespace Traits3D
 
     size_t xSize() const { return xsize_; }
     size_t ySize() const { return ysize_; }
+    Box const& hull() const { return hull_; }
 
     std::vector<T> const& linearBuffer() const { return data_; }
 
@@ -67,6 +68,8 @@ namespace Traits3D
       data_ = val;
       xsize_ = xsize;
       ysize_ = ysize;
+      hull_ = Traits3D::calculateBox(data_);
+
       return true;
     }
     
@@ -88,10 +91,13 @@ namespace Traits3D
         {
           data_.clear();
           xsize_ = ysize_ = 0;
+          hull_ = Box();
           return false;
         }
         curr = std::copy(sv.begin(), sv.end(), curr);
       }
+
+      hull_ = Traits3D::calculateBox(data_);
       return true;
     }
 
@@ -108,6 +114,7 @@ namespace Traits3D
     size_t ysize_ = 0;
 
     std::vector<T> data_;
+    Traits3D::Box hull_;
   };
 
   using MatrixF = Matrix < TripleF > ;

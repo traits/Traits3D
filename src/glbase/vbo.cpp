@@ -14,6 +14,7 @@ Traits3D::GL::VBO::VBO(VAO* vao, char layout_components)
     throw std::domain_error("Traits3D: VBO construction error");
 
   setLayout(Layout(layout_components));
+  draw_type_ = GL_STATIC_DRAW;
 }
 
 bool Traits3D::GL::VBO::bindAttribute(GLuint attr_location)
@@ -61,18 +62,18 @@ bool Traits3D::GL::VBO::draw(GLenum primitive_type)
   return draw(primitive_type, 0, bsize_ / primitive_size_);
 }
 
-bool Traits3D::GL::VBO::setData(std::vector<glm::vec3> const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
+bool Traits3D::GL::VBO::setData(std::vector<glm::vec3> const& data)
 {
   if (!layout_.match(Layout(3, GL_FLOAT, 0, 0)))
     return false;
 
-  return setData<glm::vec3>(data, drawtype);
+  return setData<glm::vec3>(data);
 }
 
-bool Traits3D::GL::VBO::setData(std::vector<glm::vec4> const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
+bool Traits3D::GL::VBO::setData(std::vector<glm::vec4> const& data)
 {
   if (!layout_.match(Layout(4, GL_FLOAT, 0, 0)))
     return false;
 
-  return setData<glm::vec4>(data, drawtype);
+  return setData<glm::vec4>(data);
 }

@@ -308,7 +308,7 @@ void MeshMainWindow::createFunction(QString const& name)
 
   if (function.get() != nullptr)
   {
-    widget_->plot3d->addPositionData(function->dataF(), GL_STATIC_DRAW);
+    widget_->plot3d->addPositionData(function->dataF());
     resetColors();
   }
 
@@ -369,7 +369,7 @@ void MeshMainWindow::createPSurface(QString const& name)
   if (surface.get() != nullptr)
   {
     std::vector<TripleF> data = Traits3D::convert(surface->data());
-    widget_->plot3d->addPositionData(data, surface->uSize(), surface->vSize(), GL_STATIC_DRAW);
+    widget_->plot3d->addPositionData(data, surface->uSize(), surface->vSize());
     resetColors();
   }
 

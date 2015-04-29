@@ -10,12 +10,13 @@ namespace Traits3D
     public:
       bool initializeGL() override;
       bool addPositionData(std::vector<TripleF> const& data,
-        size_t xsize, size_t ysize, GLenum drawtype = GL_STATIC_DRAW);
-      bool addPositionData(Traits3D::MatrixF const& data, GLenum drawtype = GL_STATIC_DRAW);
+        size_t xsize, size_t ysize);
+      bool addPositionData(Traits3D::MatrixF const& data);
       bool updatePositionData(std::vector<TripleF> const& data);
       bool updatePositionData(Traits3D::MatrixF const& data);
+      void setDataDrawType(GLenum val);
 
-      bool setDataColor(ColorVector const& val);
+      void setDataColor(ColorVector const& val);
       ColorVector createColors(std::vector<TripleF> const& data, ColorVector const& color_field);
       bool setMeshColor(Color const& val);
   };

@@ -43,75 +43,46 @@ bool Traits3D::GL::DataObject::initShader()
 * the specified program object
 */
 bool Traits3D::GL::DataObject::setPositionData(std::vector<TripleF> const& data,
-    size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/)
+    size_t xsize, size_t ysize)
 {
-  if (!data_.setData(data, xsize, ysize) || !addPositionDataCommon(xsize, ysize, data_.linearBuffer(), drawtype))
+  data_.modified = true;
+  if (!data_.value.setData(data, xsize, ysize))
     return false;
 
-  hull_ = Traits3D::calculateBox(data);
+  //mesh_renderer_.createData(data, xsize, ysize);
+
   return true;
 }
 
 bool Traits3D::GL::DataObject::setPositionData(TripleVector const& data,
-    size_t xsize, size_t ysize, GLenum drawtype /*= GL_STATIC_DRAW*/)
+    size_t xsize, size_t ysize)
 {
-  double excess;
-  if (!data_.setData(scale(excess, data), xsize, ysize) || !addPositionDataCommon(xsize, ysize, data_.linearBuffer(), drawtype))
-    return false;
-
-  hull_ = Traits3D::calculateBox(data);
-  return true;
-
+  std::vector<TripleF> fdata = convert(data);
+  return setPositionData(fdata, xsize, ysize);
 }
 
-bool Traits3D::GL::DataObject::setPositionData(MatrixF const& data, GLenum drawtype /*= GL_STATIC_DRAW*/)
+bool Traits3D::GL::DataObject::setPositionData(MatrixF const& data)
 {
-  data_ = data;
-  if (!addPositionDataCommon(data_.xSize(), data_.ySize(), data_.linearBuffer(), drawtype))
-    return false;
-
-  hull_ = Traits3D::calculateBox(data.linearBuffer());
-  return true;
+  return setPositionData(data.linearBuffer(), data.xSize(), data.ySize());
 }
 
 bool Traits3D::GL::DataObject::updatePositionData(std::vector<TripleF> const& data)
 {
-  hull_ = Traits3D::calculateBox(data);
-
-  if (!data_.setData(data, data_.xSize(), data_.ySize()))
+  if (!data_.value.setData(data, data_.value.xSize(), data_.value.ySize()))
     return false;
 
-  ColorVector colors = Traits3D::ColorTable::createColors(data, colors_);
-  if (!vbos_[VBOindex::DataColor]->setData(colors))
-    return false;
-
-  return vbos_[VBOindex::Position]->setData(data_.linearBuffer());
+  return vbos_[VBOindex::Position]->setData(data_.value.linearBuffer());
 }
 
 bool Traits3D::GL::DataObject::updatePositionData(TripleVector const& data)
 {
-  hull_ = Traits3D::calculateBox(data);
-
-  double excess;
-  if (!data_.setData(scale(excess, data), data_.xSize(), data_.ySize()))
-    return false;
-
-  ColorVector colors = Traits3D::ColorTable::createColors(data, colors_);
-  if (!vbos_[VBOindex::DataColor]->setData(colors))
-    return false;
-
-  return vbos_[VBOindex::Position]->setData(data_.linearBuffer());
+  std::vector<TripleF> fdata = convert(data);
+  return updatePositionData(fdata);
 }
 
-//todo check size against position vector[s]
-bool Traits3D::GL::DataObject::setColor(ColorVector const& data)
+void Traits3D::GL::DataObject::setColor(ColorVector const& data)
 {
-  ColorVector colors = Traits3D::ColorTable::createColors(data_.linearBuffer(), data);
-  if (!vbos_[VBOindex::DataColor]->setData(colors))
-    return false;
-
   colors_ = data;
-  return true;
 }
 
 bool Traits3D::GL::DataObject::setMeshColor(Color const& data)
@@ -119,11 +90,29 @@ bool Traits3D::GL::DataObject::setMeshColor(Color const& data)
   return shader_[ShaderIndex::Lines].setUniformVec4(data, GL::ShaderCode::Vertex::v_in_color);
 }
 
-
 void Traits3D::GL::DataObject::draw(Transformation const& matrices)
 {
   shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColor], GL::ShaderCode::Vertex::v_in_color);
   shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::Position], GL::ShaderCode::Vertex::v_coordinates);
+
+  if (data_.modified)
+  {
+    if ( !ibos_[IBOindex::Mesh]->create(data_.value.xSize(), data_.value.ySize(), GL_LINE_STRIP)
+      || !ibos_[IBOindex::Polygons]->create(data_.value.xSize(), data_.value.ySize(), GL_TRIANGLE_STRIP)
+      || !vbos_[VBOindex::Position]->setData(data_.value.linearBuffer()))
+      return;
+
+    data_.modified = false;
+  }
+
+  if (colors_.modified)
+  {
+    ColorVector colors = Traits3D::ColorTable::createColors(data_.value.linearBuffer(), colors_.value);
+    if (colors.size() != data_.value.linearBuffer().size() || !vbos_[VBOindex::DataColor]->setData(colors))
+      return;
+
+    colors_.modified = false;
+  }
 
   // polygons
   glEnable(GL_POLYGON_OFFSET_FILL);
@@ -150,24 +139,11 @@ void Traits3D::GL::DataObject::draw(Transformation const& matrices)
   ibos_[IBOindex::Mesh]->draw(GL_STATIC_DRAW);
 }
 
-bool Traits3D::GL::DataObject::addPositionDataCommon(size_t xsize, size_t ysize, std::vector<TripleF> const &data, GLenum drawtype)
+void Traits3D::GL::DataObject::setDrawType(GLenum val)
 {
-  if (xsize*ysize != data.size())
-    return false;
+  vbos_[VBOindex::Position]->setDrawType(val);
+  vbos_[VBOindex::DataColor]->setDrawType(val);
 
-  if (!ibos_[IBOindex::Mesh]->create(xsize, ysize, GL_LINE_STRIP))
-    return false;
-
-  if (!ibos_[IBOindex::Polygons]->create(xsize, ysize, GL_TRIANGLE_STRIP))
-    return false;
-
-  if (!vbos_[VBOindex::Position]->setData(data, drawtype))
-    return false;
-
-
-  mesh_renderer_.createData(data, xsize, ysize);
-
-  return true;
+  if (vbos_[VBOindex::Position]->drawTypeModified() || vbos_[VBOindex::DataColor]->drawTypeModified())
+    data_.modified = true;
 }
-
-
