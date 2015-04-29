@@ -14,7 +14,7 @@ Traits3D::GL::IBO::IBO(VAO* vao)
     throw std::domain_error("Traits3D: IBO construction error");
 }
 
-bool Traits3D::GL::IBO::bindData(GLenum draw_type)
+bool Traits3D::GL::IBO::bindData()
 {
   if (indexmaker_.container().empty() || indexmaker_.container()[0].empty())
     return false;
@@ -23,15 +23,10 @@ bool Traits3D::GL::IBO::bindData(GLenum draw_type)
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_);
  
-  GLint oldtype;
-  glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_USAGE, &oldtype);
-  if (GL_NO_ERROR != glGetError())
-    return false;
-
   size_t size = indexmaker_.linearSize();
 
-  if (!size_ || size_ != size || static_cast<GLenum>(oldtype) != draw_type)
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(IndexMaker::IndexType) * size, nullptr, draw_type);
+  if (!size_ || size_ != size || draw_type_.modified)
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(IndexMaker::IndexType) * size, nullptr, draw_type_.value);
 
   GLintptr offset = 0;
   for (auto const& a : indexmaker_.container())
@@ -44,6 +39,7 @@ bool Traits3D::GL::IBO::bindData(GLenum draw_type)
   if (GL_NO_ERROR != glGetError())
     return false;
   
+  draw_type_.modified = false;
   size_ = size;
   return true;
 }
@@ -55,9 +51,9 @@ bool Traits3D::GL::IBO::create(size_t xsize, size_t ysize, GLenum primitive_type
   return indexmaker_.create(static_cast<GLuint>(xsize), static_cast<GLuint>(ysize), primitive_type);
 }
 
-bool Traits3D::GL::IBO::draw(GLenum draw_type)
+bool Traits3D::GL::IBO::draw()
 {
-  if (!bindData(draw_type))
+  if (!bindData())
     return false;
   
   VAO::Binder vb(vao_);

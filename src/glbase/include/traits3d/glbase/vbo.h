@@ -106,6 +106,7 @@ namespace Traits3D
       if (GL_NO_ERROR != glGetError())
         return false;
 
+      draw_type_.modified = false;
       bsize_ = bsize;
       primitive_size_ = sizeof(PRIMITIVE);
       return true;

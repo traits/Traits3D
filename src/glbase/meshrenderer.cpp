@@ -257,7 +257,7 @@ void Traits3D::GL::MeshRenderer::draw(Transformation const& matrices)
   //core_shader_.setProjectionMatrix(proj_matrix);
   
   core_shader_.setMatrices(matrices);
-  core_ibo_->draw(GL_STATIC_DRAW);
+  core_ibo_->draw();
 
   GL::State blend(GL_BLEND, GL_TRUE);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -266,5 +266,5 @@ void Traits3D::GL::MeshRenderer::draw(Transformation const& matrices)
   seam_shader_.bindAttribute(*core_vbo_, GL::ShaderCode::Vertex::v_coordinates);
   seam_shader_.bindAttribute(*seam_color_vbo_, GL::ShaderCode::Vertex::v_in_color);
   seam_shader_.setMatrices(matrices);
-  seam_ibo_->draw(GL_STATIC_DRAW);
+  seam_ibo_->draw();
 }

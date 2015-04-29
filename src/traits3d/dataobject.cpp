@@ -119,10 +119,10 @@ void Traits3D::GL::DataObject::draw(Transformation const& matrices)
   glPolygonOffset(1, -1);
   shader_[ShaderIndex::TriangleStrip].use();
   shader_[ShaderIndex::TriangleStrip].setMatrices(matrices);
-  ibos_[IBOindex::Polygons]->draw(GL_STATIC_DRAW);
+  ibos_[IBOindex::Polygons]->draw();
 
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  //ibos_[IBOindex::Polygons]->draw(GL_STATIC_DRAW);
+  //ibos_[IBOindex::Polygons]->draw();
   //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glDisable(GL_POLYGON_OFFSET_FILL);
 
@@ -136,7 +136,7 @@ void Traits3D::GL::DataObject::draw(Transformation const& matrices)
   //ttt[2][2] += 5E-5f;
   //shader_[ShaderIndex::Lines].setProjectionMatrix(ttt);
   shader_[ShaderIndex::Lines].setMatrices(matrices);
-  ibos_[IBOindex::Mesh]->draw(GL_STATIC_DRAW);
+  ibos_[IBOindex::Mesh]->draw();
 }
 
 void Traits3D::GL::DataObject::setDrawType(GLenum val)
@@ -144,6 +144,10 @@ void Traits3D::GL::DataObject::setDrawType(GLenum val)
   vbos_[VBOindex::Position]->setDrawType(val);
   vbos_[VBOindex::DataColor]->setDrawType(val);
 
-  if (vbos_[VBOindex::Position]->drawTypeModified() || vbos_[VBOindex::DataColor]->drawTypeModified())
+  if (vbos_[VBOindex::Position]->drawTypeModified() 
+    || vbos_[VBOindex::DataColor]->drawTypeModified()
+    || ibos_[IBOindex::Polygons]->drawTypeModified()
+    || ibos_[IBOindex::Mesh]->drawTypeModified()
+    )
     data_.modified = true;
 }
