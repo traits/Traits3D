@@ -127,7 +127,7 @@ void ExampleArcBall::Draw()
   glTranslatef(-1.5f, 0.0f, -6.0f);									// Move Left 1.5 Units And Into The Screen 6.0
 
   glPushMatrix();													// NEW: Prepare Dynamic Transform
-  glMultMatrixf(Transform.M);										// NEW: Apply Dynamic Transform
+  glMultMatrixf(&Transform[0][0]);										// NEW: Apply Dynamic Transform
   glColor3f(0.75f, 0.75f, 1.0f);
   Torus(0.30f, 1.00f);
   glPopMatrix();													// NEW: Unapply Dynamic Transform
@@ -136,7 +136,7 @@ void ExampleArcBall::Draw()
   glTranslatef(1.5f, 0.0f, -6.0f);									// Move Right 1.5 Units And Into The Screen 7.0
 
   glPushMatrix();													// NEW: Prepare Dynamic Transform
-  glMultMatrixf(Transform.M);										// NEW: Apply Dynamic Transform
+  glMultMatrixf(&Transform[0][0]);										// NEW: Apply Dynamic Transform
   glColor3f(1.0f, 0.75f, 0.75f);
   gluSphere(quadratic, 1.3f, 20, 20);
   glPopMatrix();													// NEW: Unapply Dynamic Transform
