@@ -16,9 +16,9 @@
 /**   09/25/2003 - (TJG) - Version for NeHe Basecode users  **/
 /**                                                         **/
 /*************************************************************/
-
 #pragma once
 
+#include <glm/glm.hpp>
 #include <windows.h>											// Header File For Windows
 #include <gl\glu.h>												// Header File For The GLu32 Library
 
@@ -32,35 +32,10 @@
 #endif
 
 //Math types derived from the KempoApi tMath library
-    typedef union Tuple2f_t
-    {
-        struct
-        {
-            GLfloat X, Y;
-        } s;
 
-        GLfloat T[2];
-    } Tuple2fT;      //A generic 2-element tuple that is represented by single-precision floating point x,y coordinates. 
-
-    typedef union Tuple3f_t
-    {
-        struct
-        {
-            GLfloat X, Y, Z;
-        } s;
-
-        GLfloat T[3];
-    } Tuple3fT;      //A generic 3-element tuple that is represented by single precision-floating point x,y,z coordinates. 
-
-    typedef union Tuple4f_t
-    {
-        struct
-        {
-            GLfloat X, Y, Z, W;
-        } s;
-
-        GLfloat T[4];
-    } Tuple4fT;      //A 4-element tuple represented by single-precision floating point x,y,z,w coordinates. 
+using Tuple2fT = glm::vec2;
+using Tuple3fT = glm::vec3;
+using Tuple4fT = glm::vec4;
 
     typedef union Matrix3f_t
     {
@@ -132,8 +107,8 @@
     {
         assert(NewObj && t1);
 
-        NewObj->s.X += t1->s.X;
-        NewObj->s.Y += t1->s.Y;
+        NewObj->x += t1->x;
+        NewObj->y += t1->y;
     }
 
     /**
@@ -145,8 +120,8 @@
     {
         assert(NewObj && t1);
 
-        NewObj->s.X -= t1->s.X;
-        NewObj->s.Y -= t1->s.Y;
+        NewObj->x -= t1->x;
+        NewObj->y -= t1->y;
     }
 
     /**
@@ -164,9 +139,9 @@
         // store on stack once for aliasing-safty
         // i.e. safe when a.cross(a, b)
 
-        Result.s.X = (v1->s.Y * v2->s.Z) - (v1->s.Z * v2->s.Y);
-        Result.s.Y = (v1->s.Z * v2->s.X) - (v1->s.X * v2->s.Z);
-        Result.s.Z = (v1->s.X * v2->s.Y) - (v1->s.Y * v2->s.X);
+        Result.x = (v1->y * v2->z) - (v1->z * v2->y);
+        Result.y = (v1->z * v2->x) - (v1->x * v2->z);
+        Result.z = (v1->x * v2->y) - (v1->y * v2->x);
 
         //copy result back
         *NewObj = Result;
@@ -181,9 +156,9 @@
     {
         assert(NewObj && v1);
 
-        return  (NewObj->s.X * v1->s.X) +
-                (NewObj->s.Y * v1->s.Y) +
-                (NewObj->s.Z * v1->s.Z);
+        return  (NewObj->x * v1->x) +
+                (NewObj->y * v1->y) +
+                (NewObj->z * v1->z);
     }
 
     /**
@@ -195,9 +170,9 @@
     {
         assert(NewObj);
 
-        return  (NewObj->s.X * NewObj->s.X) +
-                (NewObj->s.Y * NewObj->s.Y) +
-                (NewObj->s.Z * NewObj->s.Z);
+        return  (NewObj->x * NewObj->x) +
+                (NewObj->y * NewObj->y) +
+                (NewObj->z * NewObj->z);
     }
 
     /**
@@ -251,13 +226,13 @@
 
         assert(NewObj && q1);
 
-        n = (q1->s.X * q1->s.X) + (q1->s.Y * q1->s.Y) + (q1->s.Z * q1->s.Z) + (q1->s.W * q1->s.W);
+        n = (q1->x * q1->x) + (q1->y * q1->y) + (q1->z * q1->z) + (q1->w * q1->w);
         s = (n > 0.0f) ? (2.0f / n) : 0.0f;
 
-        xs = q1->s.X * s;  ys = q1->s.Y * s;  zs = q1->s.Z * s;
-        wx = q1->s.W * xs; wy = q1->s.W * ys; wz = q1->s.W * zs;
-        xx = q1->s.X * xs; xy = q1->s.X * ys; xz = q1->s.X * zs;
-        yy = q1->s.Y * ys; yz = q1->s.Y * zs; zz = q1->s.Z * zs;
+        xs = q1->x * s;  ys = q1->y * s;  zs = q1->z * s;
+        wx = q1->w * xs; wy = q1->w * ys; wz = q1->w * zs;
+        xx = q1->x * xs; xy = q1->x * ys; xz = q1->x * zs;
+        yy = q1->y * ys; yz = q1->y * zs; zz = q1->z * zs;
 
         NewObj->s.XX = 1.0f - (yy + zz); NewObj->s.YX =         xy - wz;  NewObj->s.ZX =         xz + wy;
         NewObj->s.XY =         xy + wz;  NewObj->s.YY = 1.0f - (xx + zz); NewObj->s.ZY =         yz - wx;

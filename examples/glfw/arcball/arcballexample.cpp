@@ -60,8 +60,8 @@ void ExampleArcBall::Deinitialize() // Any User DeInitialization Goes Here
 
 void ExampleArcBall::Update() // Perform Motion Updates Here
 {
-  MousePt.s.X = window_->xPos();
-  MousePt.s.Y = window_->yPos();
+  MousePt.x = window_->xPos();
+  MousePt.y = window_->yPos();
 
   if (window_->rightMouseButtonPressed())													// If Right Mouse Clicked, Reset All Rotations
   {
