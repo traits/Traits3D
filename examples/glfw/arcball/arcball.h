@@ -92,125 +92,11 @@ using Matrix4fT = glm::mat4;
 #define Vector2fT   Tuple2fT   //A 2-element vector that is represented by single-precision floating point x,y coordinates. 
 #define Vector3fT   Tuple3fT   //A 3-element vector that is represented by single-precision floating point x,y,z coordinates. 
 
-//Custom math, or speed overrides
-#define FuncSqrt    sqrtf
-
 //utility macros
 //assuming IEEE-754(GLfloat), which i believe has max precision of 7 bits
 # define Epsilon 1.0e-5
 
 //Math functions
-
-    /**
-     * Sets the value of this tuple to the vector sum of itself and tuple t1.
-     * @param t1  the other tuple
-     */
-    inline
-    static void Point2fAdd(Point2fT* NewObj, const Tuple2fT* t1)
-    {
-        assert(NewObj && t1);
-
-        NewObj->x += t1->x;
-        NewObj->y += t1->y;
-    }
-
-    /**
-      * Sets the value of this tuple to the vector difference of itself and tuple t1 (this = this - t1).
-      * @param t1 the other tuple
-      */
-    inline
-    static void Point2fSub(Point2fT* NewObj, const Tuple2fT* t1)
-    {
-        assert(NewObj && t1);
-
-        NewObj->x -= t1->x;
-        NewObj->y -= t1->y;
-    }
-
-    /**
-      * Sets this vector to be the vector cross product of vectors v1 and v2.
-      * @param v1 the first vector
-      * @param v2 the second vector
-      */
-    inline
-    static void Vector3fCross(Vector3fT* NewObj, const Vector3fT* v1, const Vector3fT* v2)
-    {
-        Vector3fT Result; //safe not to initialize
-
-        assert(NewObj && v1 && v2);
-
-        // store on stack once for aliasing-safty
-        // i.e. safe when a.cross(a, b)
-
-        Result.x = (v1->y * v2->z) - (v1->z * v2->y);
-        Result.y = (v1->z * v2->x) - (v1->x * v2->z);
-        Result.z = (v1->x * v2->y) - (v1->y * v2->x);
-
-        //copy result back
-        *NewObj = Result;
-    }
-
-    /**
-      * Computes the dot product of the this vector and vector v1.
-      * @param  v1 the other vector
-      */
-    inline
-    static GLfloat Vector3fDot(const Vector3fT* NewObj, const Vector3fT* v1)
-    {
-        assert(NewObj && v1);
-
-        return  (NewObj->x * v1->x) +
-                (NewObj->y * v1->y) +
-                (NewObj->z * v1->z);
-    }
-
-    /**
-      * Returns the squared length of this vector.
-      * @return the squared length of this vector
-      */
-    inline
-    static GLfloat Vector3fLengthSquared(const Vector3fT* NewObj)
-    {
-        assert(NewObj);
-
-        return  (NewObj->x * NewObj->x) +
-                (NewObj->y * NewObj->y) +
-                (NewObj->z * NewObj->z);
-    }
-
-    /**
-      * Returns the length of this vector.
-      * @return the length of this vector
-      */
-    inline
-    static GLfloat Vector3fLength(const Vector3fT* NewObj)
-    {
-        assert(NewObj);
-
-        return FuncSqrt(Vector3fLengthSquared(NewObj));
-    }
-
-    inline
-    static void Matrix3fSetZero(Matrix3fT& NewObj)
-    {
-        NewObj[0][0] = NewObj[1][0] = NewObj[2][0] = 
-        NewObj[0][1] = NewObj[1][1] = NewObj[2][1] = 
-        NewObj[0][2] = NewObj[1][2] = NewObj[2][2] = 0.0f;
-    }
-
-    /**
-     * Sets this Matrix3 to identity.
-     */
-    inline
-    static void Matrix3fSetIdentity(Matrix3fT& NewObj)
-    {
-        Matrix3fSetZero(NewObj);
-
-        //then set diagonal as 1
-        NewObj[0][0] = 
-        NewObj[1][1] = 
-        NewObj[2][2] = 1.0f;
-    }
 
     /**
       * Sets the value of this matrix to the matrix conversion of the
@@ -242,32 +128,6 @@ using Matrix4fT = glm::mat4;
         NewObj[0][2] =         xz - wy;  NewObj[1][2] =         yz + wx;  NewObj[2][2] = 1.0f - (xx + yy);
     }
 
-    /**
-     * Sets the value of this matrix to the result of multiplying itself
-     * with matrix m1. 
-     * @param m1 the other matrix 
-     */
-    inline
-    static void Matrix3fMulMatrix3f(Matrix3fT& NewObj, const Matrix3fT& m1)
-    {
-        Matrix3fT Result; //safe not to initialize
-
-        // alias-safe way.
-        Result[0][0] = (NewObj[0][0] * m1[0][0]) + (NewObj[1][0] * m1[0][1]) + (NewObj[2][0] * m1[0][2]);
-        Result[1][0] = (NewObj[0][0] * m1[1][0]) + (NewObj[1][0] * m1[1][1]) + (NewObj[2][0] * m1[1][2]);
-        Result[2][0] = (NewObj[0][0] * m1[2][0]) + (NewObj[1][0] * m1[2][1]) + (NewObj[2][0] * m1[2][2]);
-
-        Result[0][1] = (NewObj[0][1] * m1[0][0]) + (NewObj[1][1] * m1[0][1]) + (NewObj[2][1] * m1[0][2]);
-        Result[1][1] = (NewObj[0][1] * m1[1][0]) + (NewObj[1][1] * m1[1][1]) + (NewObj[2][1] * m1[1][2]);
-        Result[2][1] = (NewObj[0][1] * m1[2][0]) + (NewObj[1][1] * m1[2][1]) + (NewObj[2][1] * m1[2][2]);
-
-        Result[0][2] = (NewObj[0][2] * m1[0][0]) + (NewObj[1][2] * m1[0][1]) + (NewObj[2][2] * m1[0][2]);
-        Result[1][2] = (NewObj[0][2] * m1[1][0]) + (NewObj[1][2] * m1[1][1]) + (NewObj[2][2] * m1[1][2]);
-        Result[2][2] = (NewObj[0][2] * m1[2][0]) + (NewObj[1][2] * m1[2][1]) + (NewObj[2][2] * m1[2][2]);
-
-        //copy result back to this
-        NewObj = Result;
-    }
 
     inline
     static void Matrix4fSetRotationScaleFromMatrix4f(Matrix4fT& NewObj, const Matrix4fT& m1)
@@ -290,13 +150,13 @@ using Matrix4fT = glm::mat4;
         //Matrix3fT rot3; //todo 
         //Matrix4fT rot4;
         
-        GLfloat s, n;
+        GLfloat s/*, n*/;
 
         // this is a simple svd.
         // Not complete but fast and reasonable.
         // See comment in Matrix3d.
 
-        s = FuncSqrt(
+        s = std::sqrt(
                 ( (NewObj[0][0] * NewObj[0][0]) + (NewObj[0][1] * NewObj[0][1]) + (NewObj[0][2] * NewObj[0][2]) + 
                   (NewObj[1][0] * NewObj[1][0]) + (NewObj[1][1] * NewObj[1][1]) + (NewObj[1][2] * NewObj[1][2]) +
                   (NewObj[2][0] * NewObj[2][0]) + (NewObj[2][1] * NewObj[2][1]) + (NewObj[2][2] * NewObj[2][2]) ) / 3.0f );
@@ -310,21 +170,21 @@ using Matrix4fT = glm::mat4;
 
         //    // zero-div may occur.
 
-        //    n = 1.0f / FuncSqrt( (NewObj[0][0] * NewObj[0][0]) +
+        //    n = 1.0f / std::sqrt( (NewObj[0][0] * NewObj[0][0]) +
         //                              (NewObj[0][1] * NewObj[0][1]) +
         //                              (NewObj[0][2] * NewObj[0][2]) );
         //    rot3[0][0] *= n;
         //    rot3[0][1] *= n;
         //    rot3[0][2] *= n;
 
-        //    n = 1.0f / FuncSqrt( (NewObj[1][0] * NewObj[1][0]) +
+        //    n = 1.0f / std::sqrt( (NewObj[1][0] * NewObj[1][0]) +
         //                              (NewObj[1][1] * NewObj[1][1]) +
         //                              (NewObj[1][2] * NewObj[1][2]) );
         //    rot3[1][0] *= n;
         //    rot3[1][1] *= n;
         //    rot3[1][2] *= n;
 
-        //    n = 1.0f / FuncSqrt( (NewObj[2][0] * NewObj[2][0]) +
+        //    n = 1.0f / std::sqrt( (NewObj[2][0] * NewObj[2][0]) +
         //                              (NewObj[2][1] * NewObj[2][1]) +
         //                              (NewObj[2][2] * NewObj[2][2]) );
         //    rot3[2][0] *= n;
@@ -341,21 +201,21 @@ using Matrix4fT = glm::mat4;
 
         //    // zero-div may occur.
 
-        //    n = 1.0f / FuncSqrt( (NewObj[0][0] * NewObj[0][0]) +
+        //    n = 1.0f / std::sqrt( (NewObj[0][0] * NewObj[0][0]) +
         //                              (NewObj[0][1] * NewObj[0][1]) +
         //                              (NewObj[0][2] * NewObj[0][2]) );
         //    rot4[0][0] *= n;
         //    rot4[0][1] *= n;
         //    rot4[0][2] *= n;
 
-        //    n = 1.0f / FuncSqrt( (NewObj[1][0] * NewObj[1][0]) +
+        //    n = 1.0f / std::sqrt( (NewObj[1][0] * NewObj[1][0]) +
         //                              (NewObj[1][1] * NewObj[1][1]) +
         //                              (NewObj[1][2] * NewObj[1][2]) );
         //    rot4[1][0] *= n;
         //    rot4[1][1] *= n;
         //    rot4[1][2] *= n;
 
-        //    n = 1.0f / FuncSqrt( (NewObj[2][0] * NewObj[2][0]) +
+        //    n = 1.0f / std::sqrt( (NewObj[2][0] * NewObj[2][0]) +
         //                              (NewObj[2][1] * NewObj[2][1]) +
         //                              (NewObj[2][2] * NewObj[2][2]) );
         //    rot4[2][0] *= n;

@@ -2,18 +2,9 @@
 
 ExampleArcBall::ExampleArcBall()
 {
-  Transform = { 1.0f, 0.0f, 0.0f, 0.0f,				// NEW: Final Transform
-    0.0f, 1.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 1.0f };
-
-  LastRot = { 1.0f, 0.0f, 0.0f,					// NEW: Last Rotation
-    0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 1.0f };
-
-  ThisRot = { 1.0f, 0.0f, 0.0f,					// NEW: This Rotation
-    0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 1.0f };
+  Transform = glm::mat4(1);
+  LastRot = glm::mat3(1);
+  ThisRot = glm::mat3(1);
 
   window_ = std::make_shared<Example::Window>("GLFW OpenGL3 Arcball Demo", 1, 2);
   arcBall.setBounds(1280.0f, 960.0f);
@@ -65,8 +56,8 @@ void ExampleArcBall::Update() // Perform Motion Updates Here
 
   if (window_->rightMouseButtonPressed())													// If Right Mouse Clicked, Reset All Rotations
   {
-    Matrix3fSetIdentity(LastRot);								// Reset Rotation
-    Matrix3fSetIdentity(ThisRot);								// Reset Rotation
+    LastRot = glm::mat3(1);								// Reset Rotation
+    ThisRot = glm::mat3(1);								// Reset Rotation
     Matrix4fSetRotationFromMatrix3f(Transform, ThisRot);		// Reset Rotation
   }
 
@@ -87,7 +78,8 @@ void ExampleArcBall::Update() // Perform Motion Updates Here
 
       arcBall.drag(&MousePt, &ThisQuat);						// Update End Vector And Get Rotation As Quaternion
       Matrix3fSetRotationFromQuat4f(ThisRot, &ThisQuat);		// Convert Quaternion Into Matrix3fT
-      Matrix3fMulMatrix3f(ThisRot, LastRot);				// Accumulate Last Rotation Into This One
+
+      ThisRot *= LastRot;  // Accumulate Last Rotation Into This One
       Matrix4fSetRotationFromMatrix3f(Transform, ThisRot);	// Set Our Final Transform's Rotation From This One
     }
     else														// No Longer Dragging
