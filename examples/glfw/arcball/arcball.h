@@ -188,25 +188,25 @@ using Tuple4fT = glm::vec4;
     }
 
     inline
-    static void Matrix3fSetZero(Matrix3fT* NewObj)
+    static void Matrix3fSetZero(Matrix3fT& NewObj)
     {
-        NewObj->s.M00 = NewObj->s.M01 = NewObj->s.M02 = 
-        NewObj->s.M10 = NewObj->s.M11 = NewObj->s.M12 = 
-        NewObj->s.M20 = NewObj->s.M21 = NewObj->s.M22 = 0.0f;
+        NewObj.s.M00 = NewObj.s.M01 = NewObj.s.M02 = 
+        NewObj.s.M10 = NewObj.s.M11 = NewObj.s.M12 = 
+        NewObj.s.M20 = NewObj.s.M21 = NewObj.s.M22 = 0.0f;
     }
 
     /**
      * Sets this Matrix3 to identity.
      */
     inline
-    static void Matrix3fSetIdentity(Matrix3fT* NewObj)
+    static void Matrix3fSetIdentity(Matrix3fT& NewObj)
     {
         Matrix3fSetZero(NewObj);
 
         //then set diagonal as 1
-        NewObj->s.M00 = 
-        NewObj->s.M11 = 
-        NewObj->s.M22 = 1.0f;
+        NewObj.s.M00 = 
+        NewObj.s.M11 = 
+        NewObj.s.M22 = 1.0f;
     }
 
     /**
@@ -216,7 +216,7 @@ using Tuple4fT = glm::vec4;
       */
     //$hack this can be optimized some(if s == 0)
     inline
-    static void Matrix3fSetRotationFromQuat4f(Matrix3fT* NewObj, const Quat4fT* q1)
+    static void Matrix3fSetRotationFromQuat4f(Matrix3fT& NewObj, const Quat4fT* q1)
     {
         GLfloat n, s;
         GLfloat xs, ys, zs;
@@ -224,7 +224,7 @@ using Tuple4fT = glm::vec4;
         GLfloat xx, xy, xz;
         GLfloat yy, yz, zz;
 
-        assert(NewObj && q1);
+        assert(q1);
 
         n = (q1->x * q1->x) + (q1->y * q1->y) + (q1->z * q1->z) + (q1->w * q1->w);
         s = (n > 0.0f) ? (2.0f / n) : 0.0f;
@@ -234,9 +234,9 @@ using Tuple4fT = glm::vec4;
         xx = q1->x * xs; xy = q1->x * ys; xz = q1->x * zs;
         yy = q1->y * ys; yz = q1->y * zs; zz = q1->z * zs;
 
-        NewObj->s.M00 = 1.0f - (yy + zz); NewObj->s.M01 =         xy - wz;  NewObj->s.M02 =         xz + wy;
-        NewObj->s.M10 =         xy + wz;  NewObj->s.M11 = 1.0f - (xx + zz); NewObj->s.M12 =         yz - wx;
-        NewObj->s.M20 =         xz - wy;  NewObj->s.M21 =         yz + wx;  NewObj->s.M22 = 1.0f - (xx + yy);
+        NewObj.s.M00 = 1.0f - (yy + zz); NewObj.s.M01 =         xy - wz;  NewObj.s.M02 =         xz + wy;
+        NewObj.s.M10 =         xy + wz;  NewObj.s.M11 = 1.0f - (xx + zz); NewObj.s.M12 =         yz - wx;
+        NewObj.s.M20 =         xz - wy;  NewObj.s.M21 =         yz + wx;  NewObj.s.M22 = 1.0f - (xx + yy);
     }
 
     /**
@@ -245,37 +245,33 @@ using Tuple4fT = glm::vec4;
      * @param m1 the other matrix 
      */
     inline
-    static void Matrix3fMulMatrix3f(Matrix3fT* NewObj, const Matrix3fT* m1)
+    static void Matrix3fMulMatrix3f(Matrix3fT& NewObj, const Matrix3fT& m1)
     {
         Matrix3fT Result; //safe not to initialize
 
-        assert(NewObj && m1);
-
         // alias-safe way.
-        Result.s.M00 = (NewObj->s.M00 * m1->s.M00) + (NewObj->s.M01 * m1->s.M10) + (NewObj->s.M02 * m1->s.M20);
-        Result.s.M01 = (NewObj->s.M00 * m1->s.M01) + (NewObj->s.M01 * m1->s.M11) + (NewObj->s.M02 * m1->s.M21);
-        Result.s.M02 = (NewObj->s.M00 * m1->s.M02) + (NewObj->s.M01 * m1->s.M12) + (NewObj->s.M02 * m1->s.M22);
+        Result.s.M00 = (NewObj.s.M00 * m1.s.M00) + (NewObj.s.M01 * m1.s.M10) + (NewObj.s.M02 * m1.s.M20);
+        Result.s.M01 = (NewObj.s.M00 * m1.s.M01) + (NewObj.s.M01 * m1.s.M11) + (NewObj.s.M02 * m1.s.M21);
+        Result.s.M02 = (NewObj.s.M00 * m1.s.M02) + (NewObj.s.M01 * m1.s.M12) + (NewObj.s.M02 * m1.s.M22);
 
-        Result.s.M10 = (NewObj->s.M10 * m1->s.M00) + (NewObj->s.M11 * m1->s.M10) + (NewObj->s.M12 * m1->s.M20);
-        Result.s.M11 = (NewObj->s.M10 * m1->s.M01) + (NewObj->s.M11 * m1->s.M11) + (NewObj->s.M12 * m1->s.M21);
-        Result.s.M12 = (NewObj->s.M10 * m1->s.M02) + (NewObj->s.M11 * m1->s.M12) + (NewObj->s.M12 * m1->s.M22);
+        Result.s.M10 = (NewObj.s.M10 * m1.s.M00) + (NewObj.s.M11 * m1.s.M10) + (NewObj.s.M12 * m1.s.M20);
+        Result.s.M11 = (NewObj.s.M10 * m1.s.M01) + (NewObj.s.M11 * m1.s.M11) + (NewObj.s.M12 * m1.s.M21);
+        Result.s.M12 = (NewObj.s.M10 * m1.s.M02) + (NewObj.s.M11 * m1.s.M12) + (NewObj.s.M12 * m1.s.M22);
 
-        Result.s.M20 = (NewObj->s.M20 * m1->s.M00) + (NewObj->s.M21 * m1->s.M10) + (NewObj->s.M22 * m1->s.M20);
-        Result.s.M21 = (NewObj->s.M20 * m1->s.M01) + (NewObj->s.M21 * m1->s.M11) + (NewObj->s.M22 * m1->s.M21);
-        Result.s.M22 = (NewObj->s.M20 * m1->s.M02) + (NewObj->s.M21 * m1->s.M12) + (NewObj->s.M22 * m1->s.M22);
+        Result.s.M20 = (NewObj.s.M20 * m1.s.M00) + (NewObj.s.M21 * m1.s.M10) + (NewObj.s.M22 * m1.s.M20);
+        Result.s.M21 = (NewObj.s.M20 * m1.s.M01) + (NewObj.s.M21 * m1.s.M11) + (NewObj.s.M22 * m1.s.M21);
+        Result.s.M22 = (NewObj.s.M20 * m1.s.M02) + (NewObj.s.M21 * m1.s.M12) + (NewObj.s.M22 * m1.s.M22);
 
         //copy result back to this
-        *NewObj = Result;
+        NewObj = Result;
     }
 
     inline
-    static void Matrix4fSetRotationScaleFromMatrix4f(Matrix4fT* NewObj, const Matrix4fT* m1)
+    static void Matrix4fSetRotationScaleFromMatrix4f(Matrix4fT& NewObj, const Matrix4fT& m1)
     {
-        assert(NewObj && m1);
-
-        NewObj->s.M00 = m1->s.M00; NewObj->s.M01 = m1->s.M01; NewObj->s.M02 = m1->s.M02;
-        NewObj->s.M10 = m1->s.M10; NewObj->s.M11 = m1->s.M11; NewObj->s.M12 = m1->s.M12;
-        NewObj->s.M20 = m1->s.M20; NewObj->s.M21 = m1->s.M21; NewObj->s.M22 = m1->s.M22;
+        NewObj.s.M00 = m1.s.M00; NewObj.s.M01 = m1.s.M01; NewObj.s.M02 = m1.s.M02;
+        NewObj.s.M10 = m1.s.M10; NewObj.s.M11 = m1.s.M11; NewObj.s.M12 = m1.s.M12;
+        NewObj.s.M20 = m1.s.M20; NewObj.s.M21 = m1.s.M21; NewObj.s.M22 = m1.s.M22;
     }
 
     /**
@@ -286,104 +282,101 @@ using Tuple4fT = glm::vec4;
       * @return scale factor
       */
     inline
-    static GLfloat Matrix4fSVD(const Matrix4fT* NewObj, Matrix3fT* rot3, Matrix4fT* rot4)
+    static GLfloat Matrix4fSVD(const Matrix4fT& NewObj)
     {
+        //Matrix3fT rot3; //todo 
+        //Matrix4fT rot4;
+        
         GLfloat s, n;
-
-        assert(NewObj);
 
         // this is a simple svd.
         // Not complete but fast and reasonable.
         // See comment in Matrix3d.
 
         s = FuncSqrt(
-                ( (NewObj->s.M00 * NewObj->s.M00) + (NewObj->s.M10 * NewObj->s.M10) + (NewObj->s.M20 * NewObj->s.M20) + 
-                  (NewObj->s.M01 * NewObj->s.M01) + (NewObj->s.M11 * NewObj->s.M11) + (NewObj->s.M21 * NewObj->s.M21) +
-                  (NewObj->s.M02 * NewObj->s.M02) + (NewObj->s.M12 * NewObj->s.M12) + (NewObj->s.M22 * NewObj->s.M22) ) / 3.0f );
+                ( (NewObj.s.M00 * NewObj.s.M00) + (NewObj.s.M10 * NewObj.s.M10) + (NewObj.s.M20 * NewObj.s.M20) + 
+                  (NewObj.s.M01 * NewObj.s.M01) + (NewObj.s.M11 * NewObj.s.M11) + (NewObj.s.M21 * NewObj.s.M21) +
+                  (NewObj.s.M02 * NewObj.s.M02) + (NewObj.s.M12 * NewObj.s.M12) + (NewObj.s.M22 * NewObj.s.M22) ) / 3.0f );
 
-        if (rot3)   //if pointer not null
-        {
-            //this->getRotationScale(rot3);
-            rot3->s.M00 = NewObj->s.M00; rot3->s.M10 = NewObj->s.M10; rot3->s.M20 = NewObj->s.M20;
-            rot3->s.M01 = NewObj->s.M01; rot3->s.M11 = NewObj->s.M11; rot3->s.M21 = NewObj->s.M21;
-            rot3->s.M02 = NewObj->s.M02; rot3->s.M12 = NewObj->s.M12; rot3->s.M22 = NewObj->s.M22;
+        //if (rot3)   //if pointer not null
+        //{
+        //    //this->getRotationScale(rot3);
+        //    rot3.s.M00 = NewObj.s.M00; rot3.s.M10 = NewObj.s.M10; rot3.s.M20 = NewObj.s.M20;
+        //    rot3.s.M01 = NewObj.s.M01; rot3.s.M11 = NewObj.s.M11; rot3.s.M21 = NewObj.s.M21;
+        //    rot3.s.M02 = NewObj.s.M02; rot3.s.M12 = NewObj.s.M12; rot3.s.M22 = NewObj.s.M22;
 
-            // zero-div may occur.
+        //    // zero-div may occur.
 
-            n = 1.0f / FuncSqrt( (NewObj->s.M00 * NewObj->s.M00) +
-                                      (NewObj->s.M10 * NewObj->s.M10) +
-                                      (NewObj->s.M20 * NewObj->s.M20) );
-            rot3->s.M00 *= n;
-            rot3->s.M10 *= n;
-            rot3->s.M20 *= n;
+        //    n = 1.0f / FuncSqrt( (NewObj.s.M00 * NewObj.s.M00) +
+        //                              (NewObj.s.M10 * NewObj.s.M10) +
+        //                              (NewObj.s.M20 * NewObj.s.M20) );
+        //    rot3.s.M00 *= n;
+        //    rot3.s.M10 *= n;
+        //    rot3.s.M20 *= n;
 
-            n = 1.0f / FuncSqrt( (NewObj->s.M01 * NewObj->s.M01) +
-                                      (NewObj->s.M11 * NewObj->s.M11) +
-                                      (NewObj->s.M21 * NewObj->s.M21) );
-            rot3->s.M01 *= n;
-            rot3->s.M11 *= n;
-            rot3->s.M21 *= n;
+        //    n = 1.0f / FuncSqrt( (NewObj.s.M01 * NewObj.s.M01) +
+        //                              (NewObj.s.M11 * NewObj.s.M11) +
+        //                              (NewObj.s.M21 * NewObj.s.M21) );
+        //    rot3.s.M01 *= n;
+        //    rot3.s.M11 *= n;
+        //    rot3.s.M21 *= n;
 
-            n = 1.0f / FuncSqrt( (NewObj->s.M02 * NewObj->s.M02) +
-                                      (NewObj->s.M12 * NewObj->s.M12) +
-                                      (NewObj->s.M22 * NewObj->s.M22) );
-            rot3->s.M02 *= n;
-            rot3->s.M12 *= n;
-            rot3->s.M22 *= n;
-        }
+        //    n = 1.0f / FuncSqrt( (NewObj.s.M02 * NewObj.s.M02) +
+        //                              (NewObj.s.M12 * NewObj.s.M12) +
+        //                              (NewObj.s.M22 * NewObj.s.M22) );
+        //    rot3.s.M02 *= n;
+        //    rot3.s.M12 *= n;
+        //    rot3.s.M22 *= n;
+        //}
 
-        if (rot4)   //if pointer not null
-        {
-            if (rot4 != NewObj)
-            {
-                Matrix4fSetRotationScaleFromMatrix4f(rot4, NewObj);  // private method
-            }
+        //if (rot4)   //if pointer not null
+        //{
+        //    if (rot4 != NewObj)
+        //    {
+        //        Matrix4fSetRotationScaleFromMatrix4f(rot4, NewObj);  // private method
+        //    }
 
-            // zero-div may occur.
+        //    // zero-div may occur.
 
-            n = 1.0f / FuncSqrt( (NewObj->s.M00 * NewObj->s.M00) +
-                                      (NewObj->s.M10 * NewObj->s.M10) +
-                                      (NewObj->s.M20 * NewObj->s.M20) );
-            rot4->s.M00 *= n;
-            rot4->s.M10 *= n;
-            rot4->s.M20 *= n;
+        //    n = 1.0f / FuncSqrt( (NewObj.s.M00 * NewObj.s.M00) +
+        //                              (NewObj.s.M10 * NewObj.s.M10) +
+        //                              (NewObj.s.M20 * NewObj.s.M20) );
+        //    rot4.s.M00 *= n;
+        //    rot4.s.M10 *= n;
+        //    rot4.s.M20 *= n;
 
-            n = 1.0f / FuncSqrt( (NewObj->s.M01 * NewObj->s.M01) +
-                                      (NewObj->s.M11 * NewObj->s.M11) +
-                                      (NewObj->s.M21 * NewObj->s.M21) );
-            rot4->s.M01 *= n;
-            rot4->s.M11 *= n;
-            rot4->s.M21 *= n;
+        //    n = 1.0f / FuncSqrt( (NewObj.s.M01 * NewObj.s.M01) +
+        //                              (NewObj.s.M11 * NewObj.s.M11) +
+        //                              (NewObj.s.M21 * NewObj.s.M21) );
+        //    rot4.s.M01 *= n;
+        //    rot4.s.M11 *= n;
+        //    rot4.s.M21 *= n;
 
-            n = 1.0f / FuncSqrt( (NewObj->s.M02 * NewObj->s.M02) +
-                                      (NewObj->s.M12 * NewObj->s.M12) +
-                                      (NewObj->s.M22 * NewObj->s.M22) );
-            rot4->s.M02 *= n;
-            rot4->s.M12 *= n;
-            rot4->s.M22 *= n;
-        }
+        //    n = 1.0f / FuncSqrt( (NewObj.s.M02 * NewObj.s.M02) +
+        //                              (NewObj.s.M12 * NewObj.s.M12) +
+        //                              (NewObj.s.M22 * NewObj.s.M22) );
+        //    rot4.s.M02 *= n;
+        //    rot4.s.M12 *= n;
+        //    rot4.s.M22 *= n;
+        //}
 
         return s;
     }
 
     inline
-    static void Matrix4fSetRotationScaleFromMatrix3f(Matrix4fT* NewObj, const Matrix3fT* m1)
+    static void Matrix4fSetRotationScaleFromMatrix3f(Matrix4fT& NewObj, const Matrix3fT& m1)
     {
-        assert(NewObj && m1);
-
-        NewObj->s.M00 = m1->s.M00; NewObj->s.M01 = m1->s.M01; NewObj->s.M02 = m1->s.M02;
-        NewObj->s.M10 = m1->s.M10; NewObj->s.M11 = m1->s.M11; NewObj->s.M12 = m1->s.M12;
-        NewObj->s.M20 = m1->s.M20; NewObj->s.M21 = m1->s.M21; NewObj->s.M22 = m1->s.M22;
+        NewObj.s.M00 = m1.s.M00; NewObj.s.M01 = m1.s.M01; NewObj.s.M02 = m1.s.M02;
+        NewObj.s.M10 = m1.s.M10; NewObj.s.M11 = m1.s.M11; NewObj.s.M12 = m1.s.M12;
+        NewObj.s.M20 = m1.s.M20; NewObj.s.M21 = m1.s.M21; NewObj.s.M22 = m1.s.M22;
     }
 
     inline
-    static void Matrix4fMulRotationScale(Matrix4fT* NewObj, GLfloat scale)
+    static void Matrix4fMulRotationScale(Matrix4fT& NewObj, GLfloat scale)
     {
-        assert(NewObj);
-
-        NewObj->s.M00 *= scale; NewObj->s.M01 *= scale; NewObj->s.M02 *= scale;
-        NewObj->s.M10 *= scale; NewObj->s.M11 *= scale; NewObj->s.M12 *= scale;
-        NewObj->s.M20 *= scale; NewObj->s.M21 *= scale; NewObj->s.M22 *= scale;
+        NewObj.s.M00 *= scale; NewObj.s.M01 *= scale; NewObj.s.M02 *= scale;
+        NewObj.s.M10 *= scale; NewObj.s.M11 *= scale; NewObj.s.M12 *= scale;
+        NewObj.s.M20 *= scale; NewObj.s.M21 *= scale; NewObj.s.M22 *= scale;
     }
 
     /**
@@ -397,13 +390,11 @@ using Tuple4fT = glm::vec4;
       * @param m1 T precision 3x3 matrix
       */
     inline
-    static void Matrix4fSetRotationFromMatrix3f(Matrix4fT* NewObj, const Matrix3fT* m1)
+    static void Matrix4fSetRotationFromMatrix3f(Matrix4fT& NewObj, const Matrix3fT& m1)
     {
         GLfloat scale;
 
-        assert(NewObj && m1);
-
-        scale = Matrix4fSVD(NewObj, NULL, NULL);
+        scale = Matrix4fSVD(NewObj/*, NULL, NULL*/);
 
         Matrix4fSetRotationScaleFromMatrix3f(NewObj, m1);
         Matrix4fMulRotationScale(NewObj, scale);

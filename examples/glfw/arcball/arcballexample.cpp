@@ -65,9 +65,9 @@ void ExampleArcBall::Update() // Perform Motion Updates Here
 
   if (window_->rightMouseButtonPressed())													// If Right Mouse Clicked, Reset All Rotations
   {
-    Matrix3fSetIdentity(&LastRot);								// Reset Rotation
-    Matrix3fSetIdentity(&ThisRot);								// Reset Rotation
-    Matrix4fSetRotationFromMatrix3f(&Transform, &ThisRot);		// Reset Rotation
+    Matrix3fSetIdentity(LastRot);								// Reset Rotation
+    Matrix3fSetIdentity(ThisRot);								// Reset Rotation
+    Matrix4fSetRotationFromMatrix3f(Transform, ThisRot);		// Reset Rotation
   }
 
   if (!isDragging)												// Not Dragging
@@ -86,9 +86,9 @@ void ExampleArcBall::Update() // Perform Motion Updates Here
       Quat4fT     ThisQuat;
 
       arcBall.drag(&MousePt, &ThisQuat);						// Update End Vector And Get Rotation As Quaternion
-      Matrix3fSetRotationFromQuat4f(&ThisRot, &ThisQuat);		// Convert Quaternion Into Matrix3fT
-      Matrix3fMulMatrix3f(&ThisRot, &LastRot);				// Accumulate Last Rotation Into This One
-      Matrix4fSetRotationFromMatrix3f(&Transform, &ThisRot);	// Set Our Final Transform's Rotation From This One
+      Matrix3fSetRotationFromQuat4f(ThisRot, &ThisQuat);		// Convert Quaternion Into Matrix3fT
+      Matrix3fMulMatrix3f(ThisRot, LastRot);				// Accumulate Last Rotation Into This One
+      Matrix4fSetRotationFromMatrix3f(Transform, ThisRot);	// Set Our Final Transform's Rotation From This One
     }
     else														// No Longer Dragging
       isDragging = false;
