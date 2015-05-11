@@ -42,15 +42,15 @@ using Tuple4fT = glm::vec4;
             struct
             {
                 //column major
-                union { GLfloat M00; GLfloat XX; GLfloat SX; };  //XAxis.X and Scale X
-                union { GLfloat M10; GLfloat XY;             };  //XAxis.Y
-                union { GLfloat M20; GLfloat XZ;             };  //XAxis.Z
-                union { GLfloat M01; GLfloat YX;             };  //YAxis.X
-                union { GLfloat M11; GLfloat YY; GLfloat SY; };  //YAxis.Y and Scale Y
-                union { GLfloat M21; GLfloat YZ;             };  //YAxis.Z
-                union { GLfloat M02; GLfloat ZX;             };  //ZAxis.X
-                union { GLfloat M12; GLfloat ZY;             };  //ZAxis.Y
-                union { GLfloat M22; GLfloat ZZ; GLfloat SZ; };  //ZAxis.Z and Scale Z
+                GLfloat M00;  //XAxis.X and Scale X
+                GLfloat M10;  //XAxis.Y
+                GLfloat M20;  //XAxis.Z
+                GLfloat M01;  //YAxis.X
+                GLfloat M11;  //YAxis.Y and Scale Y
+                GLfloat M21;  //YAxis.Z
+                GLfloat M02;  //ZAxis.X
+                GLfloat M12;  //ZAxis.Y
+                GLfloat M22;  //ZAxis.Z and Scale Z
             } s;
             GLfloat M[9];
     } Matrix3fT;     //A single precision floating point 3 by 3 matrix. 
@@ -60,22 +60,22 @@ using Tuple4fT = glm::vec4;
             struct
             {
                 //column major
-                union { GLfloat M00; GLfloat XX; GLfloat SX; };  //XAxis.X and Scale X
-                union { GLfloat M10; GLfloat XY;             };  //XAxis.Y
-                union { GLfloat M20; GLfloat XZ;             };  //XAxis.Z
-                union { GLfloat M30; GLfloat XW;             };  //XAxis.W
-                union { GLfloat M01; GLfloat YX;             };  //YAxis.X
-                union { GLfloat M11; GLfloat YY; GLfloat SY; };  //YAxis.Y and Scale Y
-                union { GLfloat M21; GLfloat YZ;             };  //YAxis.Z
-                union { GLfloat M31; GLfloat YW;             };  //YAxis.W
-                union { GLfloat M02; GLfloat ZX;             };  //ZAxis.X
-                union { GLfloat M12; GLfloat ZY;             };  //ZAxis.Y
-                union { GLfloat M22; GLfloat ZZ; GLfloat SZ; };  //ZAxis.Z and Scale Z
-                union { GLfloat M32; GLfloat ZW;             };  //ZAxis.W
-                union { GLfloat M03; GLfloat TX;             };  //Trans.X
-                union { GLfloat M13; GLfloat TY;             };  //Trans.Y
-                union { GLfloat M23; GLfloat TZ;             };  //Trans.Z
-                union { GLfloat M33; GLfloat TW; GLfloat SW; };  //Trans.W and Scale W
+                GLfloat M00;  //XAxis.X and Scale X
+                GLfloat M10;  //XAxis.Y
+                GLfloat M20;  //XAxis.Z
+                GLfloat M30;  //XAxis.W
+                GLfloat M01;  //YAxis.X
+                GLfloat M11;  //YAxis.Y and Scale Y
+                GLfloat M21;  //YAxis.Z
+                GLfloat M31;  //YAxis.W
+                GLfloat M02;  //ZAxis.X
+                GLfloat M12;  //ZAxis.Y
+                GLfloat M22;  //ZAxis.Z and Scale Z
+                GLfloat M32;  //ZAxis.W
+                GLfloat M03;  //Trans.X
+                GLfloat M13;  //Trans.Y
+                GLfloat M23;  //Trans.Z
+                GLfloat M33;  //Trans.W and Scale W
             } s;
             GLfloat M[16];
     } Matrix4fT;     //A single precision floating point 4 by 4 matrix. 
@@ -234,9 +234,9 @@ using Tuple4fT = glm::vec4;
         xx = q1->x * xs; xy = q1->x * ys; xz = q1->x * zs;
         yy = q1->y * ys; yz = q1->y * zs; zz = q1->z * zs;
 
-        NewObj->s.XX = 1.0f - (yy + zz); NewObj->s.YX =         xy - wz;  NewObj->s.ZX =         xz + wy;
-        NewObj->s.XY =         xy + wz;  NewObj->s.YY = 1.0f - (xx + zz); NewObj->s.ZY =         yz - wx;
-        NewObj->s.XZ =         xz - wy;  NewObj->s.YZ =         yz + wx;  NewObj->s.ZZ = 1.0f - (xx + yy);
+        NewObj->s.M00 = 1.0f - (yy + zz); NewObj->s.M01 =         xy - wz;  NewObj->s.M02 =         xz + wy;
+        NewObj->s.M10 =         xy + wz;  NewObj->s.M11 = 1.0f - (xx + zz); NewObj->s.M12 =         yz - wx;
+        NewObj->s.M20 =         xz - wy;  NewObj->s.M21 =         yz + wx;  NewObj->s.M22 = 1.0f - (xx + yy);
     }
 
     /**
@@ -273,9 +273,9 @@ using Tuple4fT = glm::vec4;
     {
         assert(NewObj && m1);
 
-        NewObj->s.XX = m1->s.XX; NewObj->s.YX = m1->s.YX; NewObj->s.ZX = m1->s.ZX;
-        NewObj->s.XY = m1->s.XY; NewObj->s.YY = m1->s.YY; NewObj->s.ZY = m1->s.ZY;
-        NewObj->s.XZ = m1->s.XZ; NewObj->s.YZ = m1->s.YZ; NewObj->s.ZZ = m1->s.ZZ;
+        NewObj->s.M00 = m1->s.M00; NewObj->s.M01 = m1->s.M01; NewObj->s.M02 = m1->s.M02;
+        NewObj->s.M10 = m1->s.M10; NewObj->s.M11 = m1->s.M11; NewObj->s.M12 = m1->s.M12;
+        NewObj->s.M20 = m1->s.M20; NewObj->s.M21 = m1->s.M21; NewObj->s.M22 = m1->s.M22;
     }
 
     /**
@@ -297,39 +297,39 @@ using Tuple4fT = glm::vec4;
         // See comment in Matrix3d.
 
         s = FuncSqrt(
-                ( (NewObj->s.XX * NewObj->s.XX) + (NewObj->s.XY * NewObj->s.XY) + (NewObj->s.XZ * NewObj->s.XZ) + 
-                  (NewObj->s.YX * NewObj->s.YX) + (NewObj->s.YY * NewObj->s.YY) + (NewObj->s.YZ * NewObj->s.YZ) +
-                  (NewObj->s.ZX * NewObj->s.ZX) + (NewObj->s.ZY * NewObj->s.ZY) + (NewObj->s.ZZ * NewObj->s.ZZ) ) / 3.0f );
+                ( (NewObj->s.M00 * NewObj->s.M00) + (NewObj->s.M10 * NewObj->s.M10) + (NewObj->s.M20 * NewObj->s.M20) + 
+                  (NewObj->s.M01 * NewObj->s.M01) + (NewObj->s.M11 * NewObj->s.M11) + (NewObj->s.M21 * NewObj->s.M21) +
+                  (NewObj->s.M02 * NewObj->s.M02) + (NewObj->s.M12 * NewObj->s.M12) + (NewObj->s.M22 * NewObj->s.M22) ) / 3.0f );
 
         if (rot3)   //if pointer not null
         {
             //this->getRotationScale(rot3);
-            rot3->s.XX = NewObj->s.XX; rot3->s.XY = NewObj->s.XY; rot3->s.XZ = NewObj->s.XZ;
-            rot3->s.YX = NewObj->s.YX; rot3->s.YY = NewObj->s.YY; rot3->s.YZ = NewObj->s.YZ;
-            rot3->s.ZX = NewObj->s.ZX; rot3->s.ZY = NewObj->s.ZY; rot3->s.ZZ = NewObj->s.ZZ;
+            rot3->s.M00 = NewObj->s.M00; rot3->s.M10 = NewObj->s.M10; rot3->s.M20 = NewObj->s.M20;
+            rot3->s.M01 = NewObj->s.M01; rot3->s.M11 = NewObj->s.M11; rot3->s.M21 = NewObj->s.M21;
+            rot3->s.M02 = NewObj->s.M02; rot3->s.M12 = NewObj->s.M12; rot3->s.M22 = NewObj->s.M22;
 
             // zero-div may occur.
 
-            n = 1.0f / FuncSqrt( (NewObj->s.XX * NewObj->s.XX) +
-                                      (NewObj->s.XY * NewObj->s.XY) +
-                                      (NewObj->s.XZ * NewObj->s.XZ) );
-            rot3->s.XX *= n;
-            rot3->s.XY *= n;
-            rot3->s.XZ *= n;
+            n = 1.0f / FuncSqrt( (NewObj->s.M00 * NewObj->s.M00) +
+                                      (NewObj->s.M10 * NewObj->s.M10) +
+                                      (NewObj->s.M20 * NewObj->s.M20) );
+            rot3->s.M00 *= n;
+            rot3->s.M10 *= n;
+            rot3->s.M20 *= n;
 
-            n = 1.0f / FuncSqrt( (NewObj->s.YX * NewObj->s.YX) +
-                                      (NewObj->s.YY * NewObj->s.YY) +
-                                      (NewObj->s.YZ * NewObj->s.YZ) );
-            rot3->s.YX *= n;
-            rot3->s.YY *= n;
-            rot3->s.YZ *= n;
+            n = 1.0f / FuncSqrt( (NewObj->s.M01 * NewObj->s.M01) +
+                                      (NewObj->s.M11 * NewObj->s.M11) +
+                                      (NewObj->s.M21 * NewObj->s.M21) );
+            rot3->s.M01 *= n;
+            rot3->s.M11 *= n;
+            rot3->s.M21 *= n;
 
-            n = 1.0f / FuncSqrt( (NewObj->s.ZX * NewObj->s.ZX) +
-                                      (NewObj->s.ZY * NewObj->s.ZY) +
-                                      (NewObj->s.ZZ * NewObj->s.ZZ) );
-            rot3->s.ZX *= n;
-            rot3->s.ZY *= n;
-            rot3->s.ZZ *= n;
+            n = 1.0f / FuncSqrt( (NewObj->s.M02 * NewObj->s.M02) +
+                                      (NewObj->s.M12 * NewObj->s.M12) +
+                                      (NewObj->s.M22 * NewObj->s.M22) );
+            rot3->s.M02 *= n;
+            rot3->s.M12 *= n;
+            rot3->s.M22 *= n;
         }
 
         if (rot4)   //if pointer not null
@@ -341,26 +341,26 @@ using Tuple4fT = glm::vec4;
 
             // zero-div may occur.
 
-            n = 1.0f / FuncSqrt( (NewObj->s.XX * NewObj->s.XX) +
-                                      (NewObj->s.XY * NewObj->s.XY) +
-                                      (NewObj->s.XZ * NewObj->s.XZ) );
-            rot4->s.XX *= n;
-            rot4->s.XY *= n;
-            rot4->s.XZ *= n;
+            n = 1.0f / FuncSqrt( (NewObj->s.M00 * NewObj->s.M00) +
+                                      (NewObj->s.M10 * NewObj->s.M10) +
+                                      (NewObj->s.M20 * NewObj->s.M20) );
+            rot4->s.M00 *= n;
+            rot4->s.M10 *= n;
+            rot4->s.M20 *= n;
 
-            n = 1.0f / FuncSqrt( (NewObj->s.YX * NewObj->s.YX) +
-                                      (NewObj->s.YY * NewObj->s.YY) +
-                                      (NewObj->s.YZ * NewObj->s.YZ) );
-            rot4->s.YX *= n;
-            rot4->s.YY *= n;
-            rot4->s.YZ *= n;
+            n = 1.0f / FuncSqrt( (NewObj->s.M01 * NewObj->s.M01) +
+                                      (NewObj->s.M11 * NewObj->s.M11) +
+                                      (NewObj->s.M21 * NewObj->s.M21) );
+            rot4->s.M01 *= n;
+            rot4->s.M11 *= n;
+            rot4->s.M21 *= n;
 
-            n = 1.0f / FuncSqrt( (NewObj->s.ZX * NewObj->s.ZX) +
-                                      (NewObj->s.ZY * NewObj->s.ZY) +
-                                      (NewObj->s.ZZ * NewObj->s.ZZ) );
-            rot4->s.ZX *= n;
-            rot4->s.ZY *= n;
-            rot4->s.ZZ *= n;
+            n = 1.0f / FuncSqrt( (NewObj->s.M02 * NewObj->s.M02) +
+                                      (NewObj->s.M12 * NewObj->s.M12) +
+                                      (NewObj->s.M22 * NewObj->s.M22) );
+            rot4->s.M02 *= n;
+            rot4->s.M12 *= n;
+            rot4->s.M22 *= n;
         }
 
         return s;
@@ -371,9 +371,9 @@ using Tuple4fT = glm::vec4;
     {
         assert(NewObj && m1);
 
-        NewObj->s.XX = m1->s.XX; NewObj->s.YX = m1->s.YX; NewObj->s.ZX = m1->s.ZX;
-        NewObj->s.XY = m1->s.XY; NewObj->s.YY = m1->s.YY; NewObj->s.ZY = m1->s.ZY;
-        NewObj->s.XZ = m1->s.XZ; NewObj->s.YZ = m1->s.YZ; NewObj->s.ZZ = m1->s.ZZ;
+        NewObj->s.M00 = m1->s.M00; NewObj->s.M01 = m1->s.M01; NewObj->s.M02 = m1->s.M02;
+        NewObj->s.M10 = m1->s.M10; NewObj->s.M11 = m1->s.M11; NewObj->s.M12 = m1->s.M12;
+        NewObj->s.M20 = m1->s.M20; NewObj->s.M21 = m1->s.M21; NewObj->s.M22 = m1->s.M22;
     }
 
     inline
@@ -381,9 +381,9 @@ using Tuple4fT = glm::vec4;
     {
         assert(NewObj);
 
-        NewObj->s.XX *= scale; NewObj->s.YX *= scale; NewObj->s.ZX *= scale;
-        NewObj->s.XY *= scale; NewObj->s.YY *= scale; NewObj->s.ZY *= scale;
-        NewObj->s.XZ *= scale; NewObj->s.YZ *= scale; NewObj->s.ZZ *= scale;
+        NewObj->s.M00 *= scale; NewObj->s.M01 *= scale; NewObj->s.M02 *= scale;
+        NewObj->s.M10 *= scale; NewObj->s.M11 *= scale; NewObj->s.M12 *= scale;
+        NewObj->s.M20 *= scale; NewObj->s.M21 *= scale; NewObj->s.M22 *= scale;
     }
 
     /**

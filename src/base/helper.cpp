@@ -1,3 +1,5 @@
+#include <glm/gtc/quaternion.hpp> 
+#include <glm/gtx/quaternion.hpp>
 #include "traits3d/helper.h"
 
 
@@ -142,4 +144,115 @@ std::vector<Traits3D::TripleF> Traits3D::convert(Traits3D::TripleVector const& v
     ret[i] = static_cast<Traits3D::TripleF>(val[i]);
   }
   return ret;
+}
+
+Traits3D::TripleF Traits3D::calculateUpVector(const TripleF& position, const TripleF& target)
+{
+  TripleF up;
+  const float eps = 0.03f;
+
+  // compute the forward vector
+  TripleF forward = glm::normalize(position - target);
+  forward = glm::normalize(forward);
+
+  // compute temporal up vector based on the forward vector
+  // watch out when look up/down at 90 degree
+  // for example, forward vector is on the Z axis
+  if (std::abs(forward.x) < eps && std::abs(forward.y) < eps)
+  {
+    // forward vector is pointing +Z axis
+    if (forward.z > 0)
+      up = TripleF(0, -1, 0);
+    // forward vector is pointing -Z axis
+    else
+      up = TripleF(0, 1, 0);
+  }
+  // in general, up vector is straight up
+  else
+  {
+    up = TripleF(0, 0, 1);
+  }
+
+  // compute the left vector
+  TripleF left = glm::normalize(glm::cross(up, forward));
+
+  // re-calculate the orthonormal up vector
+  up = glm::normalize(glm::cross(forward, left));
+
+  return up;
+}
+
+
+namespace{
+  // Returns a quaternion such that q*start = dest
+  glm::quat RotationBetweenVectors(glm::vec3 start, glm::vec3 dest){
+    start = glm::normalize(start);
+    dest = glm::normalize(dest);
+
+    float cosTheta = glm::dot(start, dest);
+    glm::vec3 rotationAxis;
+
+    if (cosTheta < -1 + 0.001f){
+      // special case when vectors in opposite directions :
+      // there is no "ideal" rotation axis
+      // So guess one; any will do as long as it's perpendicular to start
+      // This implementation favors a rotation around the Up axis,
+      // since it's often what you want to do.
+      rotationAxis = glm::cross(glm::vec3(0.0f, 0.1f, 0.0f), start);
+      if (length2(rotationAxis) < 0.01) // bad luck, they were parallel, try again!
+        rotationAxis = glm::cross(glm::vec3(1.0f, 0.0f, 0.0f), start);
+
+      rotationAxis = glm::normalize(rotationAxis);
+      return glm::angleAxis(3.1415926f, rotationAxis);
+    }
+
+    // Implementation from Stan Melax's Game Programming Gems 1 article
+    rotationAxis = glm::cross(start, dest);
+    rotationAxis = glm::normalize(rotationAxis);
+
+    float s = sqrt((1 + cosTheta) * 2);
+    float invs =  1 / s;
+    //float invs = sqrt(1 - cosTheta);// 1 / s;
+
+    //invs = std::acos(cosTheta) / 2;
+    //invs = std::sin(invs);
+
+    return glm::quat(
+      s * 0.5f,
+      rotationAxis.x * invs,
+      rotationAxis.y * invs,
+      rotationAxis.z * invs
+      );
+  }
+
+  // Returns a quaternion that will make your object looking towards 'direction'.
+  // Similar to RotationBetweenVectors, but also controls the vertical orientation.
+  // This assumes that at rest, the object faces +Z.
+  // Beware, the first parameter is a direction, not the target point !
+  glm::quat LookAt(glm::vec3 direction, glm::vec3 desiredUp)
+  {
+    // Recompute desiredUp so that it's perpendicular to the direction
+    // You can skip that part if you really want to force desiredUp
+    glm::vec3 right = glm::cross(direction, desiredUp);
+    desiredUp = glm::cross(right, direction);
+
+    // Find the rotation between the front of the object (that we assume towards +Z,
+    // but this depends on your model) and the desired direction
+    glm::quat rot1 = RotationBetweenVectors(glm::vec3(0.0f, 0.0f, 1.0f), direction);
+    // Because of the 1rst rotation, the up is probably completely screwed up. 
+    // Find the rotation between the "up" of the rotated object, and the desired up
+    glm::vec3 newUp = rot1 * glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::quat rot2 = RotationBetweenVectors(newUp, desiredUp);
+
+    // Apply them
+    return rot2 * rot1; // remember, in reverse order.
+  }
+
+} // private
+
+glm::mat4 Traits3D::rotMatrix(const TripleF& direction)
+{  
+  glm::quat q = LookAt(direction, glm::vec3(0,1,0));
+
+  return glm::toMat4(q);
 }

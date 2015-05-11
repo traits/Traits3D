@@ -53,7 +53,7 @@ void Traits3D::Plot3D::draw()
 
   smax *= radius;
 
-  double xrot_r = deg2rad(xRotation());
+  double xrot_r = deg2rad(xRotation()+90);
   double yrot_r = deg2rad(yRotation());
   double zrot_r = deg2rad(zRotation());
   float neg_cos_xrot = -static_cast<float>(std::cos(xrot_r));
@@ -64,10 +64,61 @@ void Traits3D::Plot3D::draw()
     neg_cos_xrot * std::cos(zrot_r), 
     std::sin(xrot_r));
 
-  eye = glm::normalize(eye) * smax * 7.0f;
+  eye = glm::normalize(eye);
+
+  up = glm::cross(glm::vec3(0, 0, 1), eye);
+  if (up.length() < 0.03)
+    up = glm::cross(glm::vec3(0, 1, 0), eye);
+
+  //glm::vec3 X = up;
+  
+  up = glm::cross(eye, up);
+
+  if (xRotation() > 90 && xRotation() <= 270)
+    up = -up;
+
+  eye = eye * smax * 7.0f;
   eye +=  glm::vec3(center);
 
-  modelview_matrix_p = m_zoom * m_scale * glm::lookAt(eye, glm::vec3(center), up); // lookAt first
+  //up = calculateUpVector(eye, glm::vec3(center));
+
+  glm::mat4 m_lookat = glm::lookAt(eye, glm::vec3(center), up);
+  
+  //glm::mat4 m_lookat = glm::lookAt(eye, glm::vec3(center), up);
+
+
+  //glm::vec3 Y = up;
+  //glm::vec3 Z = eye - glm::vec3(center);
+
+  //X = glm::normalize(X);
+  //Y = glm::normalize(Y);
+  //Z = glm::normalize(Z);
+
+  //m_lookat[0][0] = X.x;
+  //m_lookat[1][0] = X.y;
+  //m_lookat[2][0] = X.z;
+  //m_lookat[3][0] = -glm::dot(X, eye);
+  //m_lookat[0][1] = Y.x;
+  //m_lookat[1][1] = Y.y;
+  //m_lookat[2][1] = Y.z;
+  //m_lookat[3][1] = -glm::dot(Y, eye);
+  //m_lookat[0][2] = Z.x;
+  //m_lookat[1][2] = Z.y;
+  //m_lookat[2][2] = Z.z;
+  //m_lookat[3][2] = -glm::dot(Z, eye);
+  //m_lookat[0][3] = 0;
+  //m_lookat[1][3] = 0;
+  //m_lookat[2][3] = 0;
+  //m_lookat[3][3] = 1.0f;
+
+
+  glm::mat4 m_translate = -glm::translate(glm::mat4(1.0f), glm::vec3(center) - eye);
+  m_lookat = glm::mat4(1);
+
+  //m_lookat = rotMatrix(glm::vec3(center)-eye);
+
+
+  modelview_matrix_p = m_translate * m_zoom * m_scale * m_lookat; // lookAt first
 
   float l(-radius), r(radius), b(-radius), t(radius), n(3 * smax * zoom()), f(8 * smax * zoom());
 

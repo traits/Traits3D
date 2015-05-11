@@ -94,6 +94,27 @@ namespace Traits3D
   
       bool ortho_;
   
+      TripleF rot_axis_ = TripleF(1.0f, 0.0f, 0.0f); // x-axis
+      float rot_angle_ = 0.0f;
+
+      //! Returns rotation axis
+      TripleF const& rotationAxis() const { return rot_axis_; }
+
+      //! Returns rotation angle (in [0,2PI])
+      float rotationAngle() const { return rot_angle_; }
+
+      /**
+      Sets rotation parameters.
+      
+      \param axis           Rotation axis.
+      \param angle          Rotation angle in radians. The function maps the value into [0,2PI]
+      \param normalize_axis If true, the axis vector will be normalized.
+      
+      \return true if it succeeds, false for zero-length axis.
+      */
+      bool setRotation(TripleF const& axis, float angle, bool normalize_axis = true);
+
+
       // lighting
       struct Light
       {  

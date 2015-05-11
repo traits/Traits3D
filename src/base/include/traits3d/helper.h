@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
+#include <glm/gtc/matrix_transform.hpp>
 #include "traits3d/types.h"
 
 
@@ -147,6 +148,13 @@ namespace Traits3D
   std::vector<Traits3D::TripleF> scale(Traits3D::TripleVector const& val, double excess);
   //! Converts value into vec3 vector - only casts are applied
   std::vector<Traits3D::TripleF> convert(Traits3D::TripleVector const& val);
+
+  ///////////////////////////////////////////////////////////////////////////////
+  // compute transform axis from object position and target point
+  ///////////////////////////////////////////////////////////////////////////////
+  TripleF calculateUpVector(const TripleF& position, const TripleF& target);
+
+  glm::mat4 rotMatrix(const TripleF& direction);
 
 
 #ifndef TRAITS3D_NOT_FOR_DOXYGEN
