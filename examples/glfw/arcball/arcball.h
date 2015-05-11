@@ -434,41 +434,37 @@
 
 // 8<--Snip here if you have your own math types/funcs-->8 
 
-    typedef class ArcBall_t
+    class ArcBall
     {
-        protected:
-            inline
-            void _mapToSphere(const Point2fT* NewPt, Vector3fT* NewVec) const;
+      public:
+          //Create/Destroy
+        ArcBall(GLfloat NewWidth, GLfloat NewHeight);
+        ~ArcBall() { /* nothing to do */ };
 
-        public:
-            //Create/Destroy
-                    ArcBall_t(GLfloat NewWidth, GLfloat NewHeight);
-                   ~ArcBall_t() { /* nothing to do */ };
+          //Set new bounds
+          void setBounds(GLfloat NewWidth, GLfloat NewHeight)
+          {
+            assert((NewWidth > 1.0f) && (NewHeight > 1.0f));
 
-            //Set new bounds
-            inline
-            void    setBounds(GLfloat NewWidth, GLfloat NewHeight)
-            {
-                assert((NewWidth > 1.0f) && (NewHeight > 1.0f));
+            //Set adjustment factor for width/height
+            this->AdjustWidth  = 1.0f / ((NewWidth  - 1.0f) * 0.5f);
+            this->AdjustHeight = 1.0f / ((NewHeight - 1.0f) * 0.5f);
+          }
 
-                //Set adjustment factor for width/height
-                this->AdjustWidth  = 1.0f / ((NewWidth  - 1.0f) * 0.5f);
-                this->AdjustHeight = 1.0f / ((NewHeight - 1.0f) * 0.5f);
-            }
+          //Mouse down
+          void    click(const Point2fT* NewPt);
 
-            //Mouse down
-            void    click(const Point2fT* NewPt);
+          //Mouse drag, calculate rotation
+          void    drag(const Point2fT* NewPt, Quat4fT* NewRot);
 
-            //Mouse drag, calculate rotation
-            void    drag(const Point2fT* NewPt, Quat4fT* NewRot);
+      protected:
+        void mapToSphere(const Point2fT* NewPt, Vector3fT* NewVec) const;
 
-        protected:
-            Vector3fT   StVec;          //Saved click vector
-            Vector3fT   EnVec;          //Saved drag vector
-            GLfloat     AdjustWidth;    //Mouse bounds width
-            GLfloat     AdjustHeight;   //Mouse bounds height
-
-    } ArcBallT;
+        Vector3fT   StVec;          //Saved click vector
+        Vector3fT   EnVec;          //Saved drag vector
+        GLfloat     AdjustWidth;    //Mouse bounds width
+        GLfloat     AdjustHeight;   //Mouse bounds height
+      };
 
 #endif
 

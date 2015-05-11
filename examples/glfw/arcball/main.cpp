@@ -12,7 +12,7 @@
 #include <gl\glu.h>													// Header File For The GLu32 Library
 
 #include "math.h"												    // NEW: Needed For Sqrtf
-#include "arcBall.h"												// NEW: ArcBall Header
+#include "arcball.h"												// NEW: ArcBall Header
 #include "Window/Window.h"
 
 #pragma comment( lib, "opengl32.lib" )								// Search For OpenGL32.lib While Linking
@@ -21,31 +21,31 @@
 												// We Can Avoid Errors
 
 
-inline void printGlError()
-{
-  GLenum err = glGetError();
-
-  switch (err)
-  {
-  case GL_INVALID_ENUM:
-    std::cerr << "GL_INVALID_ENUM" << "\n";
-    break;
-  case GL_INVALID_VALUE:
-    std::cerr << "GL_INVALID_VALUE" << "\n";
-    break;
-  case GL_INVALID_OPERATION:
-    std::cerr << "GL_INVALID_OPERATION" << "\n";
-    break;
-  //case GL_INVALID_FRAMEBUFFER_OPERATION:
-  //  std::cerr << "GL_INVALID_FRAMEBUFFER_OPERATION" << "\n";
-  //  break;
-  case GL_OUT_OF_MEMORY:
-    std::cerr << "GL_OUT_OF_MEMORY" << "\n";
-    break;
-  default:
-    std::cerr << "No GL error" << "\n";
-  }
-}
+//inline void printGlError()
+//{
+//  GLenum err = glGetError();
+//
+//  switch (err)
+//  {
+//  case GL_INVALID_ENUM:
+//    std::cerr << "GL_INVALID_ENUM" << "\n";
+//    break;
+//  case GL_INVALID_VALUE:
+//    std::cerr << "GL_INVALID_VALUE" << "\n";
+//    break;
+//  case GL_INVALID_OPERATION:
+//    std::cerr << "GL_INVALID_OPERATION" << "\n";
+//    break;
+//  //case GL_INVALID_FRAMEBUFFER_OPERATION:
+//  //  std::cerr << "GL_INVALID_FRAMEBUFFER_OPERATION" << "\n";
+//  //  break;
+//  case GL_OUT_OF_MEMORY:
+//    std::cerr << "GL_OUT_OF_MEMORY" << "\n";
+//    break;
+//  default:
+//    std::cerr << "No GL error" << "\n";
+//  }
+//}
 
 
 
@@ -67,7 +67,7 @@ Matrix3fT   ThisRot     = {  1.0f,  0.0f,  0.0f,					// NEW: This Rotation
                              0.0f,  1.0f,  0.0f,
                              0.0f,  0.0f,  1.0f };
 
-ArcBallT    ArcBall(1280.0f, 960.0f);				                // NEW: ArcBall Instance
+ArcBall    ArcBall(1280.0f, 960.0f);				                // NEW: ArcBall Instance
 Point2fT    MousePt;												// NEW: Current Mouse Point
 bool        isClicked  = false;										// NEW: Clicking The Mouse?
 bool        isRClicked = false;										// NEW: Clicking The Right Mouse Button?
@@ -76,20 +76,13 @@ bool        isDragging = false;					                    // NEW: Dragging The Mou
 
 BOOL Initialize ()						// Any GL Init Code & User Initialiazation Goes Here
 {
-  printGlError();
   glViewport(0, 0, (GLsizei)(1280), (GLsizei)(960));				// Reset The Current Viewport
-  printGlError();
   glMatrixMode(GL_PROJECTION);										// Select The Projection Matrix
-  printGlError();
   glLoadIdentity();													// Reset The Projection Matrix
-  printGlError();
   gluPerspective(45.0f, (GLfloat)(1280) / (GLfloat)(960),			// Calculate The Aspect Ratio Of The Window
     1.0f, 100.0f);
-  printGlError();
   glMatrixMode(GL_MODELVIEW);										// Select The Modelview Matrix
-  printGlError();
   glLoadIdentity();													// Reset The Modelview Matrix
-  printGlError();
 
   ArcBall.setBounds((GLfloat)1280, (GLfloat)960);                 //*NEW* Update mouse bounds for arcball
 
@@ -113,8 +106,6 @@ BOOL Initialize ()						// Any GL Init Code & User Initialiazation Goes Here
 	glEnable(GL_LIGHTING);											// Enable Lighting
 
 	glEnable(GL_COLOR_MATERIAL);									// Enable Color Material
-
-  printGlError();
 
 	return TRUE;													// Return TRUE (Initialization Successful)
 }
@@ -232,8 +223,11 @@ int main()
     double dt = glfwGetTime();
     //if ((dt - last_update_time) > 0.1)
     {
+      MousePt.s.X = w.xPos();
+      MousePt.s.Y = w.yPos();
+      isClicked = w.isMousePressing();
+      Update(0);
       Draw();
-      //Update(0);
       //hm.draw();
       w.update();
       /* generate the next iteration of the heightmap */

@@ -1,11 +1,32 @@
 #include <iostream>
 #include "Window.h"
 
+
+Example::CallBack* Example::CallBack::instance_p = nullptr;
+
 /**********************************************************************
 * GLFW callback functions
 *********************************************************************/
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void Example::CallBack::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+  if (instance_p)
+    instance_p->keyCallback(window, key, scancode, action, mods);
+}
+
+void Example::CallBack::mouse_move_callback(GLFWwindow* window, double xpos, double ypos)
+{
+  if (instance_p)
+    instance_p->mouseMoveCallback(window, xpos, ypos);
+}
+
+void Example::CallBack::mouse_callback(GLFWwindow* window, int button, int action, int modifiers)
+{
+  if (instance_p)
+    instance_p->mouseCallback(window, button, action, modifiers);
+}
+
+void Example::Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
   switch (key)
   {
@@ -16,7 +37,17 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
   }
 }
 
-static void mouse_callback(GLFWwindow* window, int button, int action, int modifiers)
+void Example::Window::mouseMoveCallback(GLFWwindow* window, double xpos, double ypos)
+{
+  if (!left_mouse_button_pressed_)
+    return;
+
+  xpos_ = xpos;
+  ypos_ = ypos;
+  std::cerr << "move: x: " << xpos_ << "  y: " << ypos_ << std::endl;
+}
+
+void Example::Window::mouseCallback(GLFWwindow* window, int button, int action, int modifiers)
 {
   if (action == GLFW_PRESS)
   {
@@ -26,15 +57,24 @@ static void mouse_callback(GLFWwindow* window, int button, int action, int modif
     }
     else if (button == GLFW_MOUSE_BUTTON_LEFT)
     {
-      double x, y;
-      glfwGetCursorPos(window, &x, &y);
-      std::cerr << "x: " << x << "  y: " << y << std::endl;
+      left_mouse_button_pressed_ = true;
+      glfwGetCursorPos(window, &xpos_, &ypos_);
+      std::cerr << "x: " << xpos_ << "  y: " << ypos_ << std::endl;
     }
   }
-  //else // GLFW_RELEASE
-  //{
-  //
-  //}
+  else // GLFW_RELEASE
+  {
+    if (button == GLFW_MOUSE_BUTTON_RIGHT)
+    {
+      // ... some code
+    }
+    else if (button == GLFW_MOUSE_BUTTON_LEFT)
+    {
+      left_mouse_button_pressed_ = false;
+      glfwGetCursorPos(window, &xpos_, &ypos_);
+      std::cerr << "x: " << xpos_ << "  y: " << ypos_ << std::endl;
+    }
+  }
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -70,8 +110,9 @@ bool Example::Window::init(std::string val, int majorversion, int minorversion)
   }
 
   /* Register events callback */
-  glfwSetKeyCallback(window_, key_callback);
-  glfwSetMouseButtonCallback(window_, mouse_callback);
+  glfwSetKeyCallback(window_, CallBack::key_callback);
+  glfwSetMouseButtonCallback(window_, CallBack::mouse_callback);
+  glfwSetCursorPosCallback(window_, CallBack::mouse_move_callback);
   glfwSetFramebufferSizeCallback(window_, framebuffer_size_callback);
   glfwMakeContextCurrent(window_);
 
@@ -86,6 +127,7 @@ bool Example::Window::init(std::string val, int majorversion, int minorversion)
 
 Example::Window::Window(std::string val /*= "Traits3D Demo"*/, int majorversion/* = 4*/, int minorversion/* = 0*/)
 {
+  instance_p = this;
   init(val, majorversion, minorversion);
 }
 

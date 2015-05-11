@@ -31,7 +31,7 @@
 //Radius is         1.0f
 //Radius squared is 1.0f
 
-void ArcBall_t::_mapToSphere(const Point2fT* NewPt, Vector3fT* NewVec) const
+void ArcBall::mapToSphere(const Point2fT* NewPt, Vector3fT* NewVec) const
 {
     Point2fT TempPt;
     GLfloat length;
@@ -69,7 +69,7 @@ void ArcBall_t::_mapToSphere(const Point2fT* NewPt, Vector3fT* NewVec) const
 }
 
 //Create/Destroy
-ArcBall_t::ArcBall_t(GLfloat NewWidth, GLfloat NewHeight)
+ArcBall::ArcBall(GLfloat NewWidth, GLfloat NewHeight)
 {
     //Clear initial values
     this->StVec.s.X     =
@@ -85,17 +85,17 @@ ArcBall_t::ArcBall_t(GLfloat NewWidth, GLfloat NewHeight)
 }
 
 //Mouse down
-void    ArcBall_t::click(const Point2fT* NewPt)
+void    ArcBall::click(const Point2fT* NewPt)
 {
     //Map the point to the sphere
-    this->_mapToSphere(NewPt, &this->StVec);
+    this->mapToSphere(NewPt, &this->StVec);
 }
 
 //Mouse drag, calculate rotation
-void    ArcBall_t::drag(const Point2fT* NewPt, Quat4fT* NewRot)
+void    ArcBall::drag(const Point2fT* NewPt, Quat4fT* NewRot)
 {
     //Map the point to the sphere
-    this->_mapToSphere(NewPt, &this->EnVec);
+    this->mapToSphere(NewPt, &this->EnVec);
 
     //Return the quaternion equivalent to the rotation
     if (NewRot)
