@@ -17,8 +17,10 @@
 /**                                                         **/
 /*************************************************************/
 
-#ifndef _ArcBall_h
-#define _ArcBall_h
+#pragma once
+
+#include <windows.h>											// Header File For Windows
+#include <gl\glu.h>												// Header File For The GLu32 Library
 
 // 8<--Snip here if you have your own math types/funcs-->8 
 
@@ -438,7 +440,7 @@
     {
       public:
           //Create/Destroy
-        ArcBall(GLfloat NewWidth, GLfloat NewHeight);
+        explicit ArcBall(GLfloat NewWidth = 1.1f, GLfloat NewHeight = 1.1f);
         ~ArcBall() { /* nothing to do */ };
 
           //Set new bounds
@@ -466,5 +468,4 @@
         GLfloat     AdjustHeight;   //Mouse bounds height
       };
 
-#endif
 

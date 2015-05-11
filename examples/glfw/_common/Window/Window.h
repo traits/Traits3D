@@ -33,7 +33,8 @@ public:
   double xPos() const { return xpos_; }
   double yPos() const { return ypos_; }
 
-  bool isMousePressing() const { return left_mouse_button_pressed_; }
+  bool leftMouseButtonPressed() const { return left_mouse_button_pressed_; }
+  bool rightMouseButtonPressed() const { return right_mouse_button_pressed_; }
 
 protected:
   void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) override;
@@ -45,6 +46,7 @@ private:
   bool init(std::string val, int majorversion, int minorversion);
   
   bool left_mouse_button_pressed_ = false;
+  bool right_mouse_button_pressed_ = false;
   double xpos_ = 0.0;
   double ypos_ = 0.0;
 };

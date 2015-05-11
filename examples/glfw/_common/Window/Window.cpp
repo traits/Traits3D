@@ -53,6 +53,7 @@ void Example::Window::mouseCallback(GLFWwindow* window, int button, int action, 
   {
     if (button == GLFW_MOUSE_BUTTON_RIGHT)
     {
+      right_mouse_button_pressed_ = true;
       // ... some code
     }
     else if (button == GLFW_MOUSE_BUTTON_LEFT)
@@ -66,6 +67,7 @@ void Example::Window::mouseCallback(GLFWwindow* window, int button, int action, 
   {
     if (button == GLFW_MOUSE_BUTTON_RIGHT)
     {
+      right_mouse_button_pressed_ = false;
       // ... some code
     }
     else if (button == GLFW_MOUSE_BUTTON_LEFT)
