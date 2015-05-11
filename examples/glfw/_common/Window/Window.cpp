@@ -43,7 +43,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 
-bool Example::Window::init(std::string val)
+bool Example::Window::init(std::string val, int majorversion, int minorversion)
 {
   if (!glfwInit())
   {
@@ -52,12 +52,16 @@ bool Example::Window::init(std::string val)
   }
 
   glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_FALSE);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, majorversion);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minorversion);
 
-  window_ = glfwCreateWindow(1024, 768, val.c_str(), NULL, NULL);
+  if (majorversion >= 3)
+  {
+	  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_FALSE);
+  }
+
+  window_ = glfwCreateWindow(2*640, 2*480, val.c_str(), NULL, NULL);
   if (!window_)
   {
     //fprintf(stderr, "ERROR: Unable to create the OpenGL context and associated window\n");
@@ -80,9 +84,9 @@ bool Example::Window::init(std::string val)
   return true;
 }
 
-Example::Window::Window(std::string val /*= "Traits3D Demo"*/)
+Example::Window::Window(std::string val /*= "Traits3D Demo"*/, int majorversion/* = 4*/, int minorversion/* = 0*/)
 {
-  init(val);
+  init(val, majorversion, minorversion);
 }
 
 Example::Window::~Window()
