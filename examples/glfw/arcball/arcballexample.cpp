@@ -1,3 +1,4 @@
+#include <glm\gtc\matrix_transform.hpp>
 #include "arcballexample.h"
 
 ExampleArcBall::ExampleArcBall()
@@ -15,8 +16,9 @@ bool ExampleArcBall::Initialize() // Any GL Init Code & User Initialiazation Goe
   glViewport(0, 0, (GLsizei)(1280), (GLsizei)(960));				// Reset The Current Viewport
   glMatrixMode(GL_PROJECTION);										// Select The Projection Matrix
   glLoadIdentity();													// Reset The Projection Matrix
-  gluPerspective(45.0f, (GLfloat)(1280) / (GLfloat)(960),			// Calculate The Aspect Ratio Of The Window
-    1.0f, 100.0f);
+  
+  glm::mat4 proj_mat = glm::perspectiveFov(45.0f, 1280.0f, 960.0f,	1.0f, 100.0f);
+  glMultMatrixf(&proj_mat[0][0]);
   glMatrixMode(GL_MODELVIEW);										// Select The Modelview Matrix
   glLoadIdentity();													// Reset The Modelview Matrix
 
@@ -32,21 +34,12 @@ bool ExampleArcBall::Initialize() // Any GL Init Code & User Initialiazation Goe
   glShadeModel(GL_FLAT);											// Select Flat Shading (Nice Definition Of Objects)
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);				// Set Perspective Calculations To Most Accurate
 
-  quadratic = gluNewQuadric();										// Create A Pointer To The Quadric Object
-  gluQuadricNormals(quadratic, GLU_SMOOTH);						// Create Smooth Normals
-  gluQuadricTexture(quadratic, GL_TRUE);							// Create Texture Coords
-
   glEnable(GL_LIGHT0);											// Enable Default Light
   glEnable(GL_LIGHTING);											// Enable Lighting
 
   glEnable(GL_COLOR_MATERIAL);									// Enable Color Material
 
   return true;													// Return TRUE (Initialization Successful)
-}
-
-void ExampleArcBall::Deinitialize() // Any User DeInitialization Goes Here
-{
-  gluDeleteQuadric(quadratic);
 }
 
 void ExampleArcBall::Update() // Perform Motion Updates Here
@@ -84,6 +77,43 @@ void ExampleArcBall::Update() // Perform Motion Updates Here
     }
     else														// No Longer Dragging
       isDragging = false;
+  }
+}
+
+void ExampleArcBall::Sphere(int NumMajor, int NumMinor, float radius)
+{
+  float MajorStep, MinorStep;
+  float a, b, c, r0, r1;
+  float x, y, z0, z1;
+
+  MajorStep = PI2 / 2 / NumMajor;
+  MinorStep = PI2 / NumMinor;
+
+  for (int i = 0; i <= NumMajor; ++i)
+  {
+    a = i * MajorStep;
+    b = a + MajorStep;
+    r0 = radius * std::sin(a);
+    r1 = radius * std::sin(b);
+    z0 = radius * std::cos(a);
+    z1 = radius * std::cos(b);
+
+    glBegin(GL_TRIANGLE_STRIP);
+    for (int j = 0; j <= NumMinor; ++j)
+    {
+      c = j * MinorStep;
+      x = std::cos(c);
+      y = std::sin(c);
+
+      glNormal3f((x * r0) / radius, (y * r0) / radius, z0 / radius);
+      glTexCoord2f(float(j) / NumMinor, float(i) / NumMajor);
+      glVertex3f(x * r0, y * r0, z0);
+
+      glNormal3f((x * r1) / radius, (y * r1) / radius, z1 / radius);
+      glTexCoord2f(float(j) / NumMinor, float(i + 1) / NumMajor);
+      glVertex3f(x * r1, y * r1, z1);
+    }
+    glEnd();
   }
 }
 
@@ -130,7 +160,7 @@ void ExampleArcBall::Draw()
   glPushMatrix();													// NEW: Prepare Dynamic Transform
   glMultMatrixf(&Transform[0][0]);										// NEW: Apply Dynamic Transform
   glColor3f(1.0f, 0.75f, 0.75f);
-  gluSphere(quadratic, 1.3f, 20, 20);
+  Sphere(20, 20, 1.3f);
   glPopMatrix();													// NEW: Unapply Dynamic Transform
 
   //glFlush ();														// Flush The GL Rendering Pipeline

@@ -17,8 +17,6 @@ public:
 
   bool Initialize();						// Any GL Init Code & User Initialiazation Goes Here
 
-  void Deinitialize();											// Any User DeInitialization Goes Here
-
   void Update();									// Perform Motion Updates Here
   void Draw();
 
@@ -32,7 +30,6 @@ public:
     Matrix3fT   LastRot;					// NEW: Last Rotation
     Matrix3fT   ThisRot;					// NEW: This Rotation
     // User Defined Variables
-    GLUquadricObj *quadratic;											// Used For Our Quadric
-
+    void Sphere(int NumMajor, int NumMinor, float Radius);
     void Torus(float MinorRadius, float MajorRadius);					// Draw A Torus With Normals
 };

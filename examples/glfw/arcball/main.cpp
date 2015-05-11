@@ -1,17 +1,8 @@
-/**************************************
-*                                     *
-*   Jeff Molofee's Basecode Example   *
-*          nehe.gamedev.net           *
-*                2001                 *
-*                                     *
-**************************************/
-
 #include <iostream>
 
 #include "arcballexample.h"											
 
 #pragma comment( lib, "opengl32.lib" )								// Search For OpenGL32.lib While Linking
-#pragma comment( lib, "glu32.lib" )									// Search For GLu32.lib While Linking
 
 int main()
 {

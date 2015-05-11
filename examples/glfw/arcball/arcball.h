@@ -20,7 +20,7 @@
 
 #include <glm/glm.hpp>
 #include <windows.h>											// Header File For Windows
-#include <gl\glu.h>												// Header File For The GLu32 Library
+#include <GL\gl.h>												// Header File For The GLu32 Library
 
 // 8<--Snip here if you have your own math types/funcs-->8 
 
