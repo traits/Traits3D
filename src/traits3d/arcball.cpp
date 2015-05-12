@@ -1,4 +1,4 @@
-#include "arcball.h"  
+#include "traits3d/arcball.h"  
 
 //ArcbBall sphere constants:
 //Diameter is       2.0f
@@ -6,13 +6,13 @@
 //Radius squared is 1.0f
 
 //Create/Destroy
-ArcBall::ArcBall(GLfloat NewWidth /*= 1.1f*/, GLfloat NewHeight /*= 1.1f*/)
+Traits3D::ArcBall::ArcBall(GLfloat NewWidth /*= 1.1f*/, GLfloat NewHeight /*= 1.1f*/)
 {
   //Set initial bounds
   this->setBounds(NewWidth, NewHeight);
 }
 
-void ArcBall::mapToSphere(glm::vec3& NewVec, const glm::vec2& NewPt) const
+void Traits3D::ArcBall::mapToSphere(glm::vec3& NewVec, const glm::vec2& NewPt) const
 {
   glm::vec2 TempPt;
   GLfloat length;
@@ -49,14 +49,14 @@ void ArcBall::mapToSphere(glm::vec3& NewVec, const glm::vec2& NewPt) const
   }
 }
 
-void ArcBall::Matrix4fSetRotationScaleFromMatrix4f(glm::mat4& NewObj, const glm::mat4& m1)
+void Traits3D::ArcBall::Matrix4fSetRotationScaleFromMatrix4f(glm::mat4& NewObj, const glm::mat4& m1)
 {
   NewObj[0][0] = m1[0][0]; NewObj[1][0] = m1[1][0]; NewObj[2][0] = m1[2][0];
   NewObj[0][1] = m1[0][1]; NewObj[1][1] = m1[1][1]; NewObj[2][1] = m1[2][1];
   NewObj[0][2] = m1[0][2]; NewObj[1][2] = m1[1][2]; NewObj[2][2] = m1[2][2];
 }
 
-GLfloat ArcBall::Matrix4fSVD(const glm::mat4& NewObj)
+GLfloat Traits3D::ArcBall::Matrix4fSVD(const glm::mat4& NewObj)
 {
   //Matrix3fT rot3; //todo 
   //Matrix4fT rot4;
@@ -137,21 +137,21 @@ GLfloat ArcBall::Matrix4fSVD(const glm::mat4& NewObj)
   return s;
 }
 
-void ArcBall::Matrix4fSetRotationScaleFromMatrix3f(glm::mat4& NewObj, const glm::mat3& m1)
+void Traits3D::ArcBall::Matrix4fSetRotationScaleFromMatrix3f(glm::mat4& NewObj, const glm::mat3& m1)
 {
   NewObj[0][0] = m1[0][0]; NewObj[1][0] = m1[1][0]; NewObj[2][0] = m1[2][0];
   NewObj[0][1] = m1[0][1]; NewObj[1][1] = m1[1][1]; NewObj[2][1] = m1[2][1];
   NewObj[0][2] = m1[0][2]; NewObj[1][2] = m1[1][2]; NewObj[2][2] = m1[2][2];
 }
 
-void ArcBall::Matrix4fMulRotationScale(glm::mat4& NewObj, GLfloat scale)
+void Traits3D::ArcBall::Matrix4fMulRotationScale(glm::mat4& NewObj, GLfloat scale)
 {
   NewObj[0][0] *= scale; NewObj[1][0] *= scale; NewObj[2][0] *= scale;
   NewObj[0][1] *= scale; NewObj[1][1] *= scale; NewObj[2][1] *= scale;
   NewObj[0][2] *= scale; NewObj[1][2] *= scale; NewObj[2][2] *= scale;
 }
 
-void ArcBall::setBounds(GLfloat NewWidth, GLfloat NewHeight)
+void Traits3D::ArcBall::setBounds(GLfloat NewWidth, GLfloat NewHeight)
 {
   assert((NewWidth > 1.0f) && (NewHeight > 1.0f));
 
@@ -161,14 +161,14 @@ void ArcBall::setBounds(GLfloat NewWidth, GLfloat NewHeight)
 }
 
 //Mouse down
-void ArcBall::click(const glm::vec2& NewPt)
+void Traits3D::ArcBall::click(const glm::vec2& NewPt)
 {
     //Map the point to the sphere
     this->mapToSphere(StVec, NewPt);
 }
 
 //Mouse drag, calculate rotation
-glm::quat ArcBall::drag(const glm::vec2& NewPt)
+glm::quat Traits3D::ArcBall::drag(const glm::vec2& NewPt)
 {
   glm::quat NewRot;
   //Map the point to the sphere
@@ -200,7 +200,7 @@ glm::quat ArcBall::drag(const glm::vec2& NewPt)
   return NewRot;
 }
 
-glm::mat3 ArcBall::rotationMatrix(const glm::quat& q1)
+glm::mat3 Traits3D::ArcBall::rotationMatrix(const glm::quat& q1)
 {
   glm::mat3 NewObj;
 
@@ -225,7 +225,7 @@ glm::mat3 ArcBall::rotationMatrix(const glm::quat& q1)
   return NewObj;
 }
 
-void ArcBall::setRotationalComponent(glm::mat4& NewObj, const glm::mat3& m1)
+void Traits3D::ArcBall::setRotationalComponent(glm::mat4& NewObj, const glm::mat3& m1)
 {
   GLfloat scale;
 

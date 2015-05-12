@@ -2,7 +2,7 @@
 
 #include <memory>
 #include "Window/Window.h"
-#include "arcball.h"
+#include "traits3d/arcball.h"
 
 class ExampleArcBall
 {
@@ -24,7 +24,7 @@ public:
   private:
     std::shared_ptr<Example::Window> window_;
     glm::vec2    MousePt;												// NEW: Current Mouse Point
-    ArcBall    arcBall; 		                // NEW: ArcBall Instance
+    Traits3D::ArcBall    arcBall; 		                // NEW: ArcBall Instance
     bool        isDragging = false;					                    // NEW: Dragging The Mouse?
     glm::mat4   Transform;				// NEW: Final Transform
     glm::mat3   LastRot;					// NEW: Last Rotation

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "traits3d/global.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp> 
 #include <glm/gtx/quaternion.hpp> 
@@ -59,10 +60,13 @@
 //    } Matrix4fT;     //A single precision floating point 4 by 4 matrix. 
 
 
-class ArcBall
+namespace Traits3D
 {
+
+  class TRAITS3D_EXPORT ArcBall
+  {
   public:
-      //Create/Destroy
+    //Create/Destroy
     explicit ArcBall(GLfloat NewWidth = 1.1f, GLfloat NewHeight = 1.1f);
     ~ArcBall() { /* nothing to do */ };
 
@@ -126,6 +130,6 @@ class ArcBall
 
 
     // 8<--Snip here if you have your own math types/funcs-->8 
-};
+  };
 
-
+} //ns
