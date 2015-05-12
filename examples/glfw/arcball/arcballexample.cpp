@@ -104,11 +104,9 @@ void ExampleArcBall::Sphere(int NumMajor, int NumMinor, float radius)
       y = std::sin(c);
 
       glNormal3f((x * r0) / radius, (y * r0) / radius, z0 / radius);
-      glTexCoord2f(float(j) / NumMinor, float(i) / NumMajor);
       glVertex3f(x * r0, y * r0, z0);
 
       glNormal3f((x * r1) / radius, (y * r1) / radius, z1 / radius);
-      glTexCoord2f(float(j) / NumMinor, float(i + 1) / NumMajor);
       glVertex3f(x * r1, y * r1, z1);
     }
     glEnd();
@@ -144,19 +142,19 @@ void ExampleArcBall::draw()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);				// Clear Screen And Depth Buffer
   glLoadIdentity();												// Reset The Current Modelview Matrix
-  glTranslatef(-1.5f, 0.0f, -6.0f);									// Move Left 1.5 Units And Into The Screen 6.0
+  glTranslatef(-1.5f, 0.0f, -6.0f);			  // Move Left 1.5 Units And Into The Screen 6.0
 
   glPushMatrix();													// NEW: Prepare Dynamic Transform
-  glMultMatrixf(&Transform[0][0]);										// NEW: Apply Dynamic Transform
+  glMultMatrixf(&Transform[0][0]);				// NEW: Apply Dynamic Transform
   glColor3f(0.75f, 0.75f, 1.0f);
   Torus(0.30f, 1.00f);
   glPopMatrix();													// NEW: Unapply Dynamic Transform
 
   glLoadIdentity();												// Reset The Current Modelview Matrix
-  glTranslatef(1.5f, 0.0f, -6.0f);									// Move Right 1.5 Units And Into The Screen 7.0
+  glTranslatef(1.5f, 0.0f, -6.0f);				// Move Right 1.5 Units And Into The Screen 7.0
 
   glPushMatrix();													// NEW: Prepare Dynamic Transform
-  glMultMatrixf(&Transform[0][0]);										// NEW: Apply Dynamic Transform
+  glMultMatrixf(&Transform[0][0]);			  // NEW: Apply Dynamic Transform
   glColor3f(1.0f, 0.75f, 0.75f);
   Sphere(20, 20, 1.3f);
   glPopMatrix();													// NEW: Unapply Dynamic Transform
