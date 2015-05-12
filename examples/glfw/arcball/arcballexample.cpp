@@ -51,7 +51,7 @@ void ExampleArcBall::update() // Perform Motion Updates Here
   {
     LastRot = glm::mat3(1);								// Reset Rotation
     ThisRot = glm::mat3(1);								// Reset Rotation
-    arcBall.Matrix4fSetRotationFromMatrix3f(Transform, ThisRot);		// Reset Rotation
+    arcBall.setRotationalComponent(Transform, ThisRot);		// Reset Rotation
   }
 
   if (!isDragging)												// Not Dragging
@@ -68,10 +68,10 @@ void ExampleArcBall::update() // Perform Motion Updates Here
     if (window_->leftMouseButtonPressed())												// Still Clicked, So Still Dragging
     {
       glm::quat quat = arcBall.drag(MousePt);						// Update End Vector And Get Rotation As Quaternion
-      ThisRot = arcBall.Matrix3fSetRotationFromQuat4f(quat);		// Convert Quaternion Into Matrix3fT
+      ThisRot = arcBall.rotationMatrix(quat);		// Convert Quaternion Into Matrix3fT
 
       ThisRot *= LastRot;  // Accumulate Last Rotation Into This One
-      arcBall.Matrix4fSetRotationFromMatrix3f(Transform, ThisRot);	// Set Our Final Transform's Rotation From This One
+      arcBall.setRotationalComponent(Transform, ThisRot);	// Set Our Final Transform's Rotation From This One
     }
     else														// No Longer Dragging
       isDragging = false;

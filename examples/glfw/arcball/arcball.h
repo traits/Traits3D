@@ -20,6 +20,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp> 
+#include <glm/gtx/quaternion.hpp> 
 #include <windows.h>											// Header File For Windows
 #include <GL\gl.h>												// Header File For The GLu32 Library
 
@@ -100,12 +101,12 @@ class ArcBall
       glm::quat drag(const glm::vec2& NewPt);
 
       /**
-      * Sets the value of this matrix to the matrix conversion of the
+      * Returns matrix conversion of the
       * quaternion argument.
       * @param q1 the quaternion to be converted
       */
       //$hack this can be optimized some(if s == 0)
-      inline static glm::mat3 Matrix3fSetRotationFromQuat4f(const glm::quat& q1)
+      inline static glm::mat3 rotationMatrix(const glm::quat& q1)
       {
         glm::mat3 NewObj;
 
@@ -140,7 +141,7 @@ class ArcBall
       * components.
       * @param m1 T precision 3x3 matrix
       */
-      inline static void Matrix4fSetRotationFromMatrix3f(glm::mat4& NewObj, const glm::mat3& m1)
+      inline static void setRotationalComponent(glm::mat4& NewObj, const glm::mat3& m1)
       {
         GLfloat scale;
 
