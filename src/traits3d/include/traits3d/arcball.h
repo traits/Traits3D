@@ -4,8 +4,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp> 
 #include <glm/gtx/quaternion.hpp> 
-#include <windows.h>											// Header File For Windows
-#include <GL\gl.h>												// Header File For The GLu32 Library
+#include <windows.h>                      // Header File For Windows
+#include <GL\gl.h>                        // Header File For The GLu32 Library
 
 // 8<--Snip here if you have your own math types/funcs-->8 
 
@@ -62,22 +62,21 @@
 
 namespace Traits3D
 {
-
   class TRAITS3D_EXPORT ArcBall
   {
   public:
     //Create/Destroy
-    explicit ArcBall(GLfloat NewWidth = 1.1f, GLfloat NewHeight = 1.1f);
-    ~ArcBall() { /* nothing to do */ };
+    explicit ArcBall(GLfloat width = 1.1f, GLfloat height = 1.1f);
+    ~ArcBall() = default;
 
     //Set new bounds
-    void setBounds(GLfloat NewWidth, GLfloat NewHeight);
+    void setBounds(GLfloat width, GLfloat height);
 
     //Mouse down
-    void click(const glm::vec2& NewPt);
+    void start(glm::vec2 const& pos2d);
 
     //Mouse drag, calculate rotation
-    glm::quat drag(const glm::vec2& NewPt);
+    glm::quat quaternion(glm::vec2 const& pos2d);
 
     /**
     * Returns matrix conversion of the
@@ -99,19 +98,16 @@ namespace Traits3D
     */
     static void setRotationalComponent(glm::mat4& NewObj, const glm::mat3& m1);
 
-  protected:
-    void mapToSphere(glm::vec3& NewVec, const glm::vec2& NewPt) const;
-
-
-    glm::vec3   StVec = glm::vec3(0);          //Saved click vector
-    glm::vec3   EnVec = glm::vec3(0);          //Saved drag vector
-    GLfloat     AdjustWidth;    //Mouse bounds width
-    GLfloat     AdjustHeight;   //Mouse bounds height
-
   private:
-    const float Epsilon = 1.0e-5f;
+    const float Epsilon_ = 1.0e-5f;
 
-    //Math functions
+    glm::vec3   start_position_ = glm::vec3(0);          //Saved click vector
+    GLfloat     adjust_width_;    //Mouse bounds width
+    GLfloat     adjust_height_;   //Mouse bounds height
+
+    glm::vec3 mapToSphere(glm::vec2 const& pos2d) const;
+
+      //Math functions
 
     static void Matrix4fSetRotationScaleFromMatrix4f(glm::mat4& NewObj, const glm::mat4& m1);
 

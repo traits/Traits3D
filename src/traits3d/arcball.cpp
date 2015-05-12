@@ -6,46 +6,35 @@
 //Radius squared is 1.0f
 
 //Create/Destroy
-Traits3D::ArcBall::ArcBall(GLfloat NewWidth /*= 1.1f*/, GLfloat NewHeight /*= 1.1f*/)
+Traits3D::ArcBall::ArcBall(GLfloat width /*= 1.1f*/, GLfloat height /*= 1.1f*/)
 {
   //Set initial bounds
-  this->setBounds(NewWidth, NewHeight);
+  setBounds(width, height);
 }
 
-void Traits3D::ArcBall::mapToSphere(glm::vec3& NewVec, const glm::vec2& NewPt) const
+glm::vec3 Traits3D::ArcBall::mapToSphere(glm::vec2 const& pos2d) const
 {
-  glm::vec2 TempPt;
-  GLfloat length;
+  glm::vec2 tmp = pos2d;
 
-  //Copy parameter into temp point
-  TempPt = NewPt;
+  // adjusting point coordinates and scaling down into [-1,1]
+  tmp.x = (tmp.x * adjust_width_) - 1.0f;
+  tmp.y = 1.0f - (tmp.y * adjust_height_);
 
-  //Adjust point coords and scale down to range of [-1 ... 1]
-  TempPt.x = (TempPt.x * this->AdjustWidth) - 1.0f;
-  TempPt.y = 1.0f - (TempPt.y * this->AdjustHeight);
+  GLfloat length = (tmp.x * tmp.x) + (tmp.y * tmp.y);
 
-  //Compute the square of the length of the vector to the point from the center
-  length = (TempPt.x * TempPt.x) + (TempPt.y * TempPt.y);
-
-  //If the point is mapped outside of the sphere... (length > radius squared)
+  // if the point is mapped outside of the sphere... (length > radius squared)
   if (length > 1.0f)
   {
-    GLfloat norm;
-
     //Compute a normalizing factor (radius / sqrt(length))
-    norm = 1.0f / std::sqrt(length);
+    GLfloat norm = 1.0f / std::sqrt(length);
 
     //Return the "normalized" vector, a point on the sphere
-    NewVec.x = TempPt.x * norm;
-    NewVec.y = TempPt.y * norm;
-    NewVec.z = 0.0f;
+    return glm::vec3(tmp.x * norm, tmp.y * norm, 0.0f);
   }
-  else    //Else it's on the inside
+  else    // it's on the inside
   {
     //Return a vector to a point mapped inside the sphere sqrt(radius squared - length)
-    NewVec.x = TempPt.x;
-    NewVec.y = TempPt.y;
-    NewVec.z = std::sqrt(1.0f - length);
+    return glm::vec3(tmp.x, tmp.y, std::sqrt(1.0f - length));
   }
 }
 
@@ -74,7 +63,7 @@ GLfloat Traits3D::ArcBall::Matrix4fSVD(const glm::mat4& NewObj)
 
   //if (rot3)   //if pointer not null
   //{
-  //    //this->getRotationScale(rot3);
+  //    //getRotationScale(rot3);
   //    rot3[0][0] = NewObj[0][0]; rot3[0][1] = NewObj[0][1]; rot3[0][2] = NewObj[0][2];
   //    rot3[1][0] = NewObj[1][0]; rot3[1][1] = NewObj[1][1]; rot3[1][2] = NewObj[1][2];
   //    rot3[2][0] = NewObj[2][0]; rot3[2][1] = NewObj[2][1]; rot3[2][2] = NewObj[2][2];
@@ -151,58 +140,49 @@ void Traits3D::ArcBall::Matrix4fMulRotationScale(glm::mat4& NewObj, GLfloat scal
   NewObj[0][2] *= scale; NewObj[1][2] *= scale; NewObj[2][2] *= scale;
 }
 
-void Traits3D::ArcBall::setBounds(GLfloat NewWidth, GLfloat NewHeight)
+void Traits3D::ArcBall::setBounds(GLfloat width, GLfloat height)
 {
-  assert((NewWidth > 1.0f) && (NewHeight > 1.0f));
+  assert((width > 1.0f) && (height > 1.0f));
 
   //Set adjustment factor for width/height
-  this->AdjustWidth = 1.0f / ((NewWidth - 1.0f) * 0.5f);
-  this->AdjustHeight = 1.0f / ((NewHeight - 1.0f) * 0.5f);
+  adjust_width_ = 1.0f / ((width - 1.0f) * 0.5f);
+  adjust_height_ = 1.0f / ((height - 1.0f) * 0.5f);
 }
 
 //Mouse down
-void Traits3D::ArcBall::click(const glm::vec2& NewPt)
+void Traits3D::ArcBall::start(glm::vec2 const& pos2d)
 {
-    //Map the point to the sphere
-    this->mapToSphere(StVec, NewPt);
+    start_position_ = mapToSphere(pos2d);
 }
 
-//Mouse drag, calculate rotation
-glm::quat Traits3D::ArcBall::drag(const glm::vec2& NewPt)
+//Mouse dragged to pos2d, calculate rotation quaternion
+glm::quat Traits3D::ArcBall::quaternion(glm::vec2 const& pos2d)
 {
-  glm::quat NewRot;
   //Map the point to the sphere
-  this->mapToSphere(EnVec, NewPt);
+  glm::vec3 current_pos =  mapToSphere(pos2d);
 
   //Return the quaternion equivalent to the rotation
   //Compute the vector perpendicular to the begin and end vectors
-  glm::vec3  Perp = glm::cross(StVec, EnVec);
+  glm::vec3 cp = glm::cross(start_position_, current_pos);
 
   //Compute the length of the perpendicular vector
-  if (Perp.length() > Epsilon)    //if its non-zero
+  if (cp.length() > Epsilon_)    //if its non-zero
   {
     //We're ok, so return the perpendicular vector as the transform after all
-    NewRot.x = Perp.x;
-    NewRot.y = Perp.y;
-    NewRot.z = Perp.z;
     //In the quaternion values, w is cosine (theta / 2), where theta is rotation angle
-    NewRot.w= glm::dot(StVec, EnVec);
+
+    return glm::quat(glm::dot(start_position_, current_pos), cp);
   }
   else                                    //if its zero
   {
     //The begin and end vectors coincide, so return an identity transform
-    NewRot.x = 
-    NewRot.y = 
-    NewRot.z = 
-    NewRot.w = 0.0f;
+    return glm::quat(0, 0, 0, 0);
   }
-
-  return NewRot;
 }
 
 glm::mat3 Traits3D::ArcBall::rotationMatrix(const glm::quat& q1)
 {
-  glm::mat3 NewObj;
+  glm::mat3 ret;
 
   GLfloat n, s;
   GLfloat xs, ys, zs;
@@ -218,11 +198,11 @@ glm::mat3 Traits3D::ArcBall::rotationMatrix(const glm::quat& q1)
   xx = q1.x * xs; xy = q1.x * ys; xz = q1.x * zs;
   yy = q1.y * ys; yz = q1.y * zs; zz = q1.z * zs;
 
-  NewObj[0][0] = 1.0f - (yy + zz); NewObj[1][0] = xy - wz;  NewObj[2][0] = xz + wy;
-  NewObj[0][1] = xy + wz;  NewObj[1][1] = 1.0f - (xx + zz); NewObj[2][1] = yz - wx;
-  NewObj[0][2] = xz - wy;  NewObj[1][2] = yz + wx;  NewObj[2][2] = 1.0f - (xx + yy);
+  ret[0][0] = 1.0f - (yy + zz); ret[1][0] = xy - wz;  ret[2][0] = xz + wy;
+  ret[0][1] = xy + wz;  ret[1][1] = 1.0f - (xx + zz); ret[2][1] = yz - wx;
+  ret[0][2] = xz - wy;  ret[1][2] = yz + wx;  ret[2][2] = 1.0f - (xx + yy);
 
-  return NewObj;
+  return ret;
 }
 
 void Traits3D::ArcBall::setRotationalComponent(glm::mat4& NewObj, const glm::mat3& m1)

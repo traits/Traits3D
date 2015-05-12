@@ -11,69 +11,70 @@ ExampleArcBall::ExampleArcBall()
   arcBall.setBounds(1280.0f, 960.0f);
 }
 
-bool ExampleArcBall::initialize() // Any GL Init Code & User Initialiazation Goes Here
+bool ExampleArcBall::initialize() // Any GL Init Code 
 {
-  glViewport(0, 0, (GLsizei)(1280), (GLsizei)(960));				// Reset The Current Viewport
-  glMatrixMode(GL_PROJECTION);										// Select The Projection Matrix
-  glLoadIdentity();													// Reset The Projection Matrix
+  glViewport(0, 0, (GLsizei)(1280), (GLsizei)(960)); 
+  glMatrixMode(GL_PROJECTION);                       
+  glLoadIdentity();                         
   
-  glm::mat4 proj_mat = glm::perspectiveFov(45.0f, 1280.0f, 960.0f,	1.0f, 100.0f);
+  glm::mat4 proj_mat = glm::perspectiveFov(45.0f, 1280.0f, 960.0f,  1.0f, 100.0f);
   glMultMatrixf(&proj_mat[0][0]);
-  glMatrixMode(GL_MODELVIEW);										// Select The Modelview Matrix
-  glLoadIdentity();													// Reset The Modelview Matrix
+  glMatrixMode(GL_MODELVIEW);               
+  glLoadIdentity();                         
 
-  arcBall.setBounds((GLfloat)1280, (GLfloat)960);                 //*NEW* Update mouse bounds for arcball
+  arcBall.setBounds((GLfloat)1280, (GLfloat)960);  // Update mouse bounds for arcball
 
 
   // Start Of User Initialization
 
-  glClearColor(0.0f, 0.0f, 0.0f, 0.5f);							// Black Background
-  glClearDepth(1.0f);											// Depth Buffer Setup
-  glDepthFunc(GL_LEQUAL);										// The Type Of Depth Testing (Less Or Equal)
-  glEnable(GL_DEPTH_TEST);										// Enable Depth Testing
-  glShadeModel(GL_FLAT);											// Select Flat Shading (Nice Definition Of Objects)
-  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);				// Set Perspective Calculations To Most Accurate
+  glClearColor(0.0f, 0.0f, 0.0f, 0.5f); 
+  glClearDepth(1.0f);
+  glDepthFunc(GL_LEQUAL); 
+  glEnable(GL_DEPTH_TEST);
+  glShadeModel(GL_FLAT);  
+  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);// Set Perspective Calculations To Most Accurate
 
-  glEnable(GL_LIGHT0);											// Enable Default Light
-  glEnable(GL_LIGHTING);											// Enable Lighting
+  glEnable(GL_LIGHT0);  
+  glEnable(GL_LIGHTING);  
 
-  glEnable(GL_COLOR_MATERIAL);									// Enable Color Material
+  glEnable(GL_COLOR_MATERIAL);
 
-  return true;													// Return TRUE (Initialization Successful)
+  return true;
 }
 
 void ExampleArcBall::update() // Perform Motion Updates Here
 {
-  MousePt.x = static_cast<float>(window_->xPos());
-  MousePt.y = static_cast<float>(window_->yPos());
+  glm::vec2 pos;
+  pos.x = static_cast<float>(window_->xPos());
+  pos.y = static_cast<float>(window_->yPos());
 
-  if (window_->rightMouseButtonPressed())													// If Right Mouse Clicked, Reset All Rotations
+  if (window_->rightMouseButtonPressed()) // If Right Mouse Clicked, Reset All Rotations
   {
-    LastRot = glm::mat3(1);								// Reset Rotation
-    ThisRot = glm::mat3(1);								// Reset Rotation
-    arcBall.setRotationalComponent(Transform, ThisRot);		// Reset Rotation
+    LastRot = glm::mat3(1);               // Reset Rotation
+    ThisRot = glm::mat3(1);               // Reset Rotation
+    Traits3D::ArcBall::setRotationalComponent(Transform, ThisRot);    // Reset Rotation
   }
 
-  if (!isDragging)												// Not Dragging
+  if (!isDragging)                
   {
-    if (window_->leftMouseButtonPressed())												// First Click
+    if (window_->leftMouseButtonPressed())  // First Click
     {
-      isDragging = true;										// Prepare For Dragging
-      LastRot = ThisRot;										// Set Last Static Rotation To Last Dynamic One
-      arcBall.click(MousePt);								// Update Start Vector And Prepare For Dragging
+      isDragging = true;                    // Prepare For Dragging
+      LastRot = ThisRot;                    // Set Last Static Rotation To Last Dynamic One
+      arcBall.start(pos);                   // Update Start Vector And Prepare For Dragging
     }
   }
   else
   {
-    if (window_->leftMouseButtonPressed())												// Still Clicked, So Still Dragging
+    if (window_->leftMouseButtonPressed())                // Still Clicked, So Still Dragging
     {
-      glm::quat quat = arcBall.drag(MousePt);						// Update End Vector And Get Rotation As Quaternion
-      ThisRot = arcBall.rotationMatrix(quat);		// Convert Quaternion Into Matrix3fT
+      glm::quat quat = arcBall.quaternion(pos);           // Update End Vector And Get Rotation As Quaternion
+      ThisRot = Traits3D::ArcBall::rotationMatrix(quat);  // Convert Quaternion Into Matrix3fT
 
-      ThisRot *= LastRot;  // Accumulate Last Rotation Into This One
-      arcBall.setRotationalComponent(Transform, ThisRot);	// Set Our Final Transform's Rotation From This One
+      ThisRot *= LastRot;                                 // Accumulate Last Rotation Into This One
+      Traits3D::ArcBall::setRotationalComponent(Transform, ThisRot);  // Set Our Final Transform's Rotation From This One
     }
-    else														// No Longer Dragging
+    else                            // No Longer Dragging
       isDragging = false;
   }
 }
@@ -116,10 +117,10 @@ void ExampleArcBall::Sphere(int NumMajor, int NumMinor, float radius)
 void ExampleArcBall::Torus(float MinorRadius, float MajorRadius) // Draw A Torus With Normals
 {
   int i, j;
-  glBegin(GL_TRIANGLE_STRIP);									// Start A Triangle Strip
-  for (i = 0; i < 20; i++)										// Stacks
+  glBegin(GL_TRIANGLE_STRIP);                 // Start A Triangle Strip
+  for (i = 0; i < 20; i++)                    // Stacks
   {
-    for (j = -1; j < 20; j++)									// Slices
+    for (j = -1; j < 20; j++)                 // Slices
     {
       float wrapFrac = (j % 20) / (float)20;
       float phi = PI2*wrapFrac;
@@ -135,29 +136,29 @@ void ExampleArcBall::Torus(float MinorRadius, float MajorRadius) // Draw A Torus
       glVertex3f(float(sin(PI2*(i + 1 % 20 + wrapFrac) / (float)20))*r, MinorRadius*sinphi, float(cos(PI2*(i + 1 % 20 + wrapFrac) / (float)20))*r);
     }
   }
-  glEnd();														// Done Torus
+  glEnd();
 }
 
 void ExampleArcBall::draw()
 {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);				// Clear Screen And Depth Buffer
-  glLoadIdentity();												// Reset The Current Modelview Matrix
-  glTranslatef(-1.5f, 0.0f, -6.0f);			  // Move Left 1.5 Units And Into The Screen 6.0
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);       // Clear Screen And Depth Buffer
+  glLoadIdentity();                       // Reset The Current Modelview Matrix
+  glTranslatef(-1.5f, 0.0f, -6.0f);       // Move Left 1.5 Units And Into The Screen 6.0
 
-  glPushMatrix();													// NEW: Prepare Dynamic Transform
-  glMultMatrixf(&Transform[0][0]);				// NEW: Apply Dynamic Transform
+  glPushMatrix();                         // NEW: Prepare Dynamic Transform
+  glMultMatrixf(&Transform[0][0]);        // NEW: Apply Dynamic Transform
   glColor3f(0.75f, 0.75f, 1.0f);
   Torus(0.30f, 1.00f);
-  glPopMatrix();													// NEW: Unapply Dynamic Transform
+  glPopMatrix();                          // NEW: Unapply Dynamic Transform
 
-  glLoadIdentity();												// Reset The Current Modelview Matrix
-  glTranslatef(1.5f, 0.0f, -6.0f);				// Move Right 1.5 Units And Into The Screen 7.0
+  glLoadIdentity();                       // Reset The Current Modelview Matrix
+  glTranslatef(1.5f, 0.0f, -6.0f);        // Move Right 1.5 Units And Into The Screen 7.0
 
-  glPushMatrix();													// NEW: Prepare Dynamic Transform
-  glMultMatrixf(&Transform[0][0]);			  // NEW: Apply Dynamic Transform
+  glPushMatrix();                         // NEW: Prepare Dynamic Transform
+  glMultMatrixf(&Transform[0][0]);        // NEW: Apply Dynamic Transform
   glColor3f(1.0f, 0.75f, 0.75f);
   Sphere(20, 20, 1.3f);
-  glPopMatrix();													// NEW: Unapply Dynamic Transform
+  glPopMatrix();                          // NEW: Unapply Dynamic Transform
 
-  //glFlush ();														// Flush The GL Rendering Pipeline
+  //glFlush ();                           // Flush The GL Rendering Pipeline
 }
