@@ -7,7 +7,7 @@
 int main()
 {
   ExampleArcBall ea;
-  ea.Initialize();
+  ea.initialize();
 
   //if (!hm.loadData())
   //  return -1;
@@ -25,8 +25,8 @@ int main()
     double dt = glfwGetTime();
     //if ((dt - last_update_time) > 0.1)
     {
-      ea.Update();
-      ea.Draw();
+      ea.update();
+      ea.draw();
       ea.window()->update();
       last_update_time = dt;
     }

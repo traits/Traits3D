@@ -15,20 +15,20 @@ public:
 
   const float PI2 = 2.0*3.1415926535f;								// PI Squared
 
-  bool Initialize();						// Any GL Init Code & User Initialiazation Goes Here
+  bool initialize();						// Any GL Init Code & User Initialiazation Goes Here
 
-  void Update();									// Perform Motion Updates Here
-  void Draw();
+  void update();									// Perform Motion Updates Here
+  void draw();
 
 
   private:
     std::shared_ptr<Example::Window> window_;
-    Point2fT    MousePt;												// NEW: Current Mouse Point
+    glm::vec2    MousePt;												// NEW: Current Mouse Point
     ArcBall    arcBall; 		                // NEW: ArcBall Instance
     bool        isDragging = false;					                    // NEW: Dragging The Mouse?
-    Matrix4fT   Transform;				// NEW: Final Transform
-    Matrix3fT   LastRot;					// NEW: Last Rotation
-    Matrix3fT   ThisRot;					// NEW: This Rotation
+    glm::mat4   Transform;				// NEW: Final Transform
+    glm::mat3   LastRot;					// NEW: Last Rotation
+    glm::mat3   ThisRot;					// NEW: This Rotation
     // User Defined Variables
     void Sphere(int NumMajor, int NumMinor, float Radius);
     void Torus(float MinorRadius, float MajorRadius);					// Draw A Torus With Normals

@@ -11,7 +11,7 @@ ExampleArcBall::ExampleArcBall()
   arcBall.setBounds(1280.0f, 960.0f);
 }
 
-bool ExampleArcBall::Initialize() // Any GL Init Code & User Initialiazation Goes Here
+bool ExampleArcBall::initialize() // Any GL Init Code & User Initialiazation Goes Here
 {
   glViewport(0, 0, (GLsizei)(1280), (GLsizei)(960));				// Reset The Current Viewport
   glMatrixMode(GL_PROJECTION);										// Select The Projection Matrix
@@ -42,7 +42,7 @@ bool ExampleArcBall::Initialize() // Any GL Init Code & User Initialiazation Goe
   return true;													// Return TRUE (Initialization Successful)
 }
 
-void ExampleArcBall::Update() // Perform Motion Updates Here
+void ExampleArcBall::update() // Perform Motion Updates Here
 {
   MousePt.x = static_cast<float>(window_->xPos());
   MousePt.y = static_cast<float>(window_->yPos());
@@ -51,7 +51,7 @@ void ExampleArcBall::Update() // Perform Motion Updates Here
   {
     LastRot = glm::mat3(1);								// Reset Rotation
     ThisRot = glm::mat3(1);								// Reset Rotation
-    Matrix4fSetRotationFromMatrix3f(Transform, ThisRot);		// Reset Rotation
+    arcBall.Matrix4fSetRotationFromMatrix3f(Transform, ThisRot);		// Reset Rotation
   }
 
   if (!isDragging)												// Not Dragging
@@ -60,20 +60,18 @@ void ExampleArcBall::Update() // Perform Motion Updates Here
     {
       isDragging = true;										// Prepare For Dragging
       LastRot = ThisRot;										// Set Last Static Rotation To Last Dynamic One
-      arcBall.click(&MousePt);								// Update Start Vector And Prepare For Dragging
+      arcBall.click(MousePt);								// Update Start Vector And Prepare For Dragging
     }
   }
   else
   {
     if (window_->leftMouseButtonPressed())												// Still Clicked, So Still Dragging
     {
-      Quat4fT     ThisQuat;
-
-      arcBall.drag(&MousePt, &ThisQuat);						// Update End Vector And Get Rotation As Quaternion
-      Matrix3fSetRotationFromQuat4f(ThisRot, &ThisQuat);		// Convert Quaternion Into Matrix3fT
+      glm::quat quat = arcBall.drag(MousePt);						// Update End Vector And Get Rotation As Quaternion
+      ThisRot = arcBall.Matrix3fSetRotationFromQuat4f(quat);		// Convert Quaternion Into Matrix3fT
 
       ThisRot *= LastRot;  // Accumulate Last Rotation Into This One
-      Matrix4fSetRotationFromMatrix3f(Transform, ThisRot);	// Set Our Final Transform's Rotation From This One
+      arcBall.Matrix4fSetRotationFromMatrix3f(Transform, ThisRot);	// Set Our Final Transform's Rotation From This One
     }
     else														// No Longer Dragging
       isDragging = false;
@@ -142,7 +140,7 @@ void ExampleArcBall::Torus(float MinorRadius, float MajorRadius) // Draw A Torus
   glEnd();														// Done Torus
 }
 
-void ExampleArcBall::Draw()
+void ExampleArcBall::draw()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);				// Clear Screen And Depth Buffer
   glLoadIdentity();												// Reset The Current Modelview Matrix
