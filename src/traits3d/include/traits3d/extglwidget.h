@@ -23,9 +23,9 @@ namespace Traits3D
 
       // transformations
   
-      float xRotation() const { return xRot_;}  //!< Returns rotation around X axis [-360..360] (some angles are equivalent)
-      float yRotation() const { return yRot_;}  //!< Returns rotation around Y axis [-360..360] (some angles are equivalent)
-      float zRotation() const { return zRot_;}  //!< Returns rotation around Z axis [-360..360] (some angles are equivalent)
+      float xRotation() const { return xRot_;}  //!< Returns rotation around X axis [0..2PI]
+      float yRotation() const { return yRot_;}  //!< Returns rotation around Y axis [0..2PI]
+      float zRotation() const { return zRot_;}  //!< Returns rotation around Z axis [0..2PI]
 
       float xShift() const { return xShift_;} //!< Returns shift along X axis (object coordinates)
       float yShift() const { return yShift_;} //!< Returns shift along Y axis (object coordinates)
@@ -93,27 +93,6 @@ namespace Traits3D
                , xScale_, yScale_, zScale_, xVPShift_, yVPShift_;
   
       bool ortho_;
-  
-      TripleF rot_axis_ = TripleF(1.0f, 0.0f, 0.0f); // x-axis
-      float rot_angle_ = 0.0f;
-
-      //! Returns rotation axis
-      TripleF const& rotationAxis() const { return rot_axis_; }
-
-      //! Returns rotation angle (in [0,2PI])
-      float rotationAngle() const { return rot_angle_; }
-
-      /**
-      Sets rotation parameters.
-      
-      \param axis           Rotation axis.
-      \param angle          Rotation angle in radians. The function maps the value into [0,2PI]
-      \param normalize_axis If true, the axis vector will be normalized.
-      
-      \return true if it succeeds, false for zero-length axis.
-      */
-      bool setRotation(TripleF const& axis, float angle, bool normalize_axis = true);
-
 
       // lighting
       struct Light

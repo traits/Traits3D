@@ -35,7 +35,7 @@ public:
 
   Rosenbrock()
   {
-    setRotation(30, 0, 15);
+    setRotation(Traits3D::deg2rad(30), 0, Traits3D::deg2rad(15));
     setScale(1, 1, 1);
     setShift(0.15f, 0, 0);
     setZoom(0.9f);    

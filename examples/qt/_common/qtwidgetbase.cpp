@@ -106,19 +106,21 @@ void QtWidgetBase::setRotationMouse(MouseState bstate, double accel, QPoint diff
   double w = std::max<int>(1,width());
   double h = std::max<int>(1,height());
     
-  double relx = accel*360 * diff.x() / w; 
-  double relyz = accel*360 * diff.y() / h; 
+  double relx = accel * diff.x() / w; 
+  double relyz = accel * diff.y() / h; 
   
   double new_xrot = plot_p->xRotation();
   double new_yrot = plot_p->yRotation();
   double new_zrot = plot_p->zRotation();
   
+  float PI2 = Traits3D::PI * 2;
+
   if ( bstate == xrot_mstate_ )
-    new_xrot = round(plot_p->xRotation() + relyz) % 360; 
+    new_xrot = std::fmod(new_xrot + relyz, PI2);
   if ( bstate == yrot_mstate_ )
-    new_yrot = round(plot_p->yRotation() + relx) % 360; 
+    new_yrot = std::fmod(new_yrot + relx, PI2);
   if ( bstate == zrot_mstate_ )
-    new_zrot = round(plot_p->zRotation() + relx) % 360; 
+    new_zrot = std::fmod(new_zrot + relx, PI2);
     
   setRotation(new_xrot, new_yrot, new_zrot); 
 }
@@ -261,27 +263,29 @@ void QtWidgetBase::setRotationKeyboard(KeyboardState kseq, double speed)
   double w = max(1,width());
   double h = max(1,height());
     
-  double relx = speed*360 / w; 
-  double relyz = speed*360 / h; 
+  double relx = speed / w; 
+  double relyz = speed / h; 
   
+  float PI2 = Traits3D::PI * 2;
+
   double new_xrot = plot_p->xRotation();
   double new_yrot = plot_p->yRotation();
   double new_zrot = plot_p->zRotation();
   
   if ( kseq == xrot_kstate_[0] )
-    new_xrot = round(plot_p->xRotation() + relyz) % 360; 
+    new_xrot = std::fmod(new_xrot + relyz, PI2);
   if ( kseq == xrot_kstate_[1] )
-    new_xrot = round(plot_p->xRotation() - relyz) % 360; 
+    new_xrot = std::fmod(new_xrot - relyz, PI2);
   if ( kseq == yrot_kstate_[0] )
-    new_yrot = round(plot_p->yRotation() + relx) % 360; 
+    new_yrot = std::fmod(new_yrot + relx, PI2);
   if ( kseq == yrot_kstate_[1] )
-    new_yrot = round(plot_p->yRotation() - relx) % 360; 
+    new_yrot = std::fmod(new_yrot - relx, PI2);
   if ( kseq == zrot_kstate_[0] )
-    new_zrot = round(plot_p->zRotation() + relx) % 360; 
+    new_zrot = std::fmod(new_zrot + relx, PI2);
   if ( kseq == zrot_kstate_[1] )
-    new_zrot = round(plot_p->zRotation() - relx) % 360; 
+    new_zrot = std::fmod(new_zrot - relx, PI2);
     
-  setRotation(new_xrot, new_yrot, new_zrot); 
+  setRotation(new_xrot, new_yrot, new_zrot);
 }
 
 void QtWidgetBase::setScaleKeyboard(KeyboardState kseq, double speed)
@@ -428,9 +432,9 @@ void QtWidgetBase::keySpeed(double& rot, double& scale, double& shift) const
 /**
   Set the rotation angle of the object. If you look along the respective axis towards ascending values,
   the rotation is performed in mathematical \e negative sense 
-  \param xVal angle in \e degree to rotate around the X axis
-  \param yVal angle in \e degree to rotate around the Y axis
-  \param zVal angle in \e degree to rotate around the Z axis
+  \param xVal angle in \e radians to rotate around the X axis
+  \param yVal angle in \e radians to rotate around the Y axis
+  \param zVal angle in \e radians to rotate around the Z axis
 */
 void QtWidgetBase::setRotation( double xVal, double yVal, double zVal )
 {

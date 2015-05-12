@@ -1,3 +1,7 @@
+2015/05/12
+
+- lighting rotation to radians
+
 2015/01/06
 
 - remove shader objects from axes / handle them as single instance inside coordinates

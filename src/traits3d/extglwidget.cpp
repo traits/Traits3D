@@ -336,22 +336,6 @@ void Traits3D::ExtGLWidget::setLightShift( float xVal, float yVal, float zVal, u
   lights_[light].shift.z = zVal;
 }
 
-
-bool Traits3D::ExtGLWidget::setRotation(TripleF const& axis, float angle, bool normalize_axis/* = true*/)
-{
-  if (isZero(axis.length()))
-    return false;
-  
-  rot_axis_ = (normalize_axis) ? glm::normalize(axis) : axis;
-
-  // normalize to [0,2PI]
-  angle = std::fmod(angle, static_cast<float>(2 * Traits3D::PI));
-  if (angle < 0)
-    angle = static_cast<float>(2 * Traits3D::PI) + angle;
-
-  return true;
-}
-
 void Traits3D::ExtGLWidget::applyLight(unsigned light)
 {
   //if (lights_[light].unlit)

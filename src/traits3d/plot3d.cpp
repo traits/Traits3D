@@ -53,9 +53,9 @@ void Traits3D::Plot3D::draw()
 
   smax *= radius;
 
-  double xrot_r = deg2rad(xRotation()+90);
-  double yrot_r = deg2rad(yRotation());
-  double zrot_r = deg2rad(zRotation());
+  double xrot_r = xRotation();
+  double yrot_r = yRotation();
+  double zrot_r = zRotation();
   float neg_cos_xrot = -static_cast<float>(std::cos(xrot_r));
 
   glm::vec3 up(std::sin(yrot_r), 0, std::cos(yrot_r));
@@ -74,7 +74,7 @@ void Traits3D::Plot3D::draw()
   
   up = glm::cross(eye, up);
 
-  if (xRotation() > 90 && xRotation() <= 270)
+  if (xRotation() > Traits3D::PI / 2 && xRotation() <= 3 * Traits3D::PI / 2)
     up = -up;
 
   eye = eye * smax * 7.0f;
@@ -84,8 +84,6 @@ void Traits3D::Plot3D::draw()
 
   glm::mat4 m_lookat = glm::lookAt(eye, glm::vec3(center), up);
   
-  //glm::mat4 m_lookat = glm::lookAt(eye, glm::vec3(center), up);
-
 
   //glm::vec3 Y = up;
   //glm::vec3 Z = eye - glm::vec3(center);
@@ -112,13 +110,13 @@ void Traits3D::Plot3D::draw()
   //m_lookat[3][3] = 1.0f;
 
 
-  glm::mat4 m_translate = -glm::translate(glm::mat4(1.0f), glm::vec3(center) - eye);
-  m_lookat = glm::mat4(1);
+  //glm::mat4 m_translate = -glm::translate(glm::mat4(1.0f), glm::vec3(center) - eye);
+  //m_lookat = glm::mat4(1);
 
   //m_lookat = rotMatrix(glm::vec3(center)-eye);
 
 
-  modelview_matrix_p = m_translate * m_zoom * m_scale * m_lookat; // lookAt first
+  modelview_matrix_p = /*m_translate * */m_zoom * m_scale * m_lookat; // lookAt first
 
   float l(-radius), r(radius), b(-radius), t(radius), n(3 * smax * zoom()), f(8 * smax * zoom());
 

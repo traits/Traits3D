@@ -694,7 +694,7 @@ void MeshMainWindow::resetFonts()
 
 void MeshMainWindow::setStandardView()
 {
-  widget_->plot3d->setRotation(30,0,15);
+  widget_->plot3d->setRotation(deg2rad(30), 0, deg2rad(15));
   widget_->plot3d->setViewportShift(0.05f,0);
   widget_->plot3d->setScale(1,1,1);
   widget_->plot3d->setZoom(0.95f);
@@ -720,10 +720,13 @@ void MeshMainWindow::rotate()
   if (!widget_)
     return;
 
+  float step = 0.5f / Traits3D::PI;
+  float PI2 = Traits3D::PI * 2;
+
   widget_->plot3d->setRotation(
-    int(widget_->plot3d->xRotation() + 1) % 360,
-    int(widget_->plot3d->yRotation() + 1) % 360,
-    int(widget_->plot3d->zRotation() + 1) % 360
+    std::fmod(widget_->plot3d->xRotation() + step, PI2),
+    std::fmod(widget_->plot3d->yRotation() + step, PI2),
+    std::fmod(widget_->plot3d->zRotation() + step, PI2)
     );
   widget_->update();
 }
