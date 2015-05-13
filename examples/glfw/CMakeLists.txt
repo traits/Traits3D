@@ -20,6 +20,9 @@ TRAITS3D_SUBDIRLIST(SUBDIRS ${CMAKE_CURRENT_SOURCE_DIR})
 # no executables to create here
 list(REMOVE_ITEM SUBDIRS _common)
 
+#todo - upgrade to OpenGL version >=3.0 
+list(REMOVE_ITEM SUBDIRS arcball)
+
 list (APPEND MY_LINK_LIBRARIES traits3d ${OPENGL_LIBRARIES} window)
 
 # create single project for every example 

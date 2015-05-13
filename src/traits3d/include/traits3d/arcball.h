@@ -1,20 +1,15 @@
 #pragma once
 
+#include "traits3d/glbase/glhelper.h"
 #include "traits3d/global.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp> 
 #include <glm/gtx/quaternion.hpp> 
-#include <windows.h>                      // Header File For Windows
-#include <GL\gl.h>                        // Header File For The GLu32 Library
+//#include <windows.h>                      // Header File For Windows
+//#include <GL\gl.h>                        // Header File For The GLu32 Library
 
 // 8<--Snip here if you have your own math types/funcs-->8 
 
-//Only support assertions in debug builds
-#ifdef _DEBUG
-# include "assert.h"
-#else
-# define assert(x) { }
-#endif
 
 //typedef union Matrix3f_t
 //    {
