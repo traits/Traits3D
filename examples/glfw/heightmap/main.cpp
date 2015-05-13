@@ -18,7 +18,7 @@ int main()
   if (!hm.loadData())
     return -1;
 
-  hm.setRotation(30, 0, 45);
+  hm.setRotation(Traits3D::deg2rad(30), 0, Traits3D::deg2rad(45));
   hm.setBackgroundColor(Traits3D::Color(1,1,1,1));
 
   /* main loop */
