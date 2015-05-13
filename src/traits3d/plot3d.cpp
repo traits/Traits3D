@@ -28,7 +28,7 @@ void Traits3D::Plot3D::draw()
   Triple end = data_object_p->hull().maxVertex;
   Triple center = beg + (end - beg) * 0.5;
 
-  float radius = static_cast<float>(glm::distance(center,beg)); //todo
+  float radius = static_cast<float>(glm::distance(center,beg));
 
   if (isZero(radius))
     return;
@@ -43,82 +43,34 @@ void Traits3D::Plot3D::draw()
   // scaling/zooming influence
 
   std::array<float, 3> scales;
-  scales[0] = xScale();
-  scales[1] = yScale();
-  scales[2] = zScale();
+  scales[0] = xScale() * zoom();
+  scales[1] = yScale() * zoom();
+  scales[2] = zScale() * zoom();
 
-  float smax = (*std::max_element(scales.cbegin(), scales.cend()));
-  //if (smax < 1)
-  //  smax = 1;
+  float smax = radius * (*std::max_element(scales.cbegin(), scales.cend()));
 
-  smax *= radius;
 
-  double xrot_r = xRotation();
-  double yrot_r = yRotation();
-  double zrot_r = zRotation();
-  float neg_cos_xrot = -static_cast<float>(std::cos(xrot_r));
-
-  glm::vec3 up(std::sin(yrot_r), 0, std::cos(yrot_r));
-  glm::vec3 eye(
-    neg_cos_xrot * std::sin(zrot_r), 
-    neg_cos_xrot * std::cos(zrot_r), 
-    std::sin(xrot_r));
-
-  eye = glm::normalize(eye);
-
-  up = glm::cross(glm::vec3(0, 0, 1), eye);
-  if (up.length() < 0.03)
-    up = glm::cross(glm::vec3(0, 1, 0), eye);
-
-  //glm::vec3 X = up;
+  // rotation 
   
-  up = glm::cross(eye, up);
-
-  if (xRotation() > Traits3D::PI / 2 && xRotation() <= 3 * Traits3D::PI / 2)
-    up = -up;
-
-  eye = eye * smax * 7.0f;
-  eye +=  glm::vec3(center);
-
-  //up = calculateUpVector(eye, glm::vec3(center));
-
-  glm::mat4 m_lookat = glm::lookAt(eye, glm::vec3(center), up);
+  float xrot_r = static_cast<float>(xRotation() - PI / 2);
+  float yrot_r = static_cast<float>(yRotation());
+  float zrot_r = static_cast<float>(zRotation());
   
+  glm::mat4 m_rotate = glm::rotate(glm::mat4(1.0f), xrot_r, glm::vec3(1, 0, 0));
+  m_rotate = glm::rotate(m_rotate, yrot_r, glm::vec3(0, 1, 0));
+  m_rotate = glm::rotate(m_rotate, zrot_r, glm::vec3(0, 0, 1));
 
-  //glm::vec3 Y = up;
-  //glm::vec3 Z = eye - glm::vec3(center);
+  // 'lookat'
+  glm::vec3 eye = glm::vec3(0, 0, smax * 7.0f) + glm::vec3(center);
+  glm::mat4 m_translate = glm::translate(glm::mat4(1.0f), glm::vec3(center) - eye);
+  
+  // initial model centering
+  glm::mat4 m_translate2center = glm::translate(glm::mat4(1.0f), -glm::vec3(center));
+  
+  // completed MV matrix
+  modelview_matrix_p = m_translate * m_zoom * m_scale * m_rotate * m_translate2center; 
 
-  //X = glm::normalize(X);
-  //Y = glm::normalize(Y);
-  //Z = glm::normalize(Z);
-
-  //m_lookat[0][0] = X.x;
-  //m_lookat[1][0] = X.y;
-  //m_lookat[2][0] = X.z;
-  //m_lookat[3][0] = -glm::dot(X, eye);
-  //m_lookat[0][1] = Y.x;
-  //m_lookat[1][1] = Y.y;
-  //m_lookat[2][1] = Y.z;
-  //m_lookat[3][1] = -glm::dot(Y, eye);
-  //m_lookat[0][2] = Z.x;
-  //m_lookat[1][2] = Z.y;
-  //m_lookat[2][2] = Z.z;
-  //m_lookat[3][2] = -glm::dot(Z, eye);
-  //m_lookat[0][3] = 0;
-  //m_lookat[1][3] = 0;
-  //m_lookat[2][3] = 0;
-  //m_lookat[3][3] = 1.0f;
-
-
-  //glm::mat4 m_translate = -glm::translate(glm::mat4(1.0f), glm::vec3(center) - eye);
-  //m_lookat = glm::mat4(1);
-
-  //m_lookat = rotMatrix(glm::vec3(center)-eye);
-
-
-  modelview_matrix_p = /*m_translate * */m_zoom * m_scale * m_lookat; // lookAt first
-
-  float l(-radius), r(radius), b(-radius), t(radius), n(3 * smax * zoom()), f(8 * smax * zoom());
+  float l(-radius), r(radius), b(-radius), t(radius), n(3 * smax ), f(8 * smax);
 
   l -= xViewportShift() * 2 * radius;
   r -= xViewportShift() * 2 * radius;
@@ -132,7 +84,7 @@ void Traits3D::Plot3D::draw()
   data_object_p->draw(matrices_p);
   
   //Axis aux_a(center, Triple(eye)-center);
-  //aux_a.setLimits(0, c_dist);
+  //aux_a.setLimits(0, 0);
   //aux_a.initializeGL();
   ////aux_a.showNumbers(true);
   //aux_a.setAutoScale(false);
