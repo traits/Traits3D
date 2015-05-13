@@ -4,7 +4,6 @@
 #endif
 
 #include <algorithm>
-#include "traits3d/glbase/glhelper.h"
 #include "traits3d/helper.h"
 #include "qtwidgetbase.h"
 
