@@ -1,19 +1,15 @@
 #include <iostream>
-
 #include "arcballexample.h"											
-
-#pragma comment( lib, "opengl32.lib" )								// Search For OpenGL32.lib While Linking
 
 int main()
 {
   ExampleArcBall ea;
-  ea.initialize();
 
-  //if (!hm.loadData())
-  //  return -1;
+  if (!ea.initializeGL())
+    return false;
 
-  //hm.setRotation(30, 0, 45);
-  //hm.setBackgroundColor(Traits3D::Color(1, 1, 1, 1));
+  if (!ea.loadData())
+    return -1;
 
   /* main loop */
   double last_update_time = glfwGetTime();
@@ -21,9 +17,9 @@ int main()
   while (!ea.window()->onClose())
   {
 
-    /* Check the frame rate and update the heightmap if needed */
+    /* Check the frame rate and update transformations if needed */
     double dt = glfwGetTime();
-    //if ((dt - last_update_time) > 0.1)
+    if ((dt - last_update_time) > 0.01)
     {
       ea.update();
       ea.draw();

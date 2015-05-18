@@ -13,6 +13,11 @@ void Traits3D::GL::Transformation::setModelView(glm::mat4 const& mv)
   mv_ = mv;
 }
 
+void Traits3D::GL::Transformation::setProjection(glm::mat4 const& proj)
+{
+  proj_ = proj;
+}
+
 void Traits3D::GL::Transformation::setProjection(
   bool ortho, float l, float r, float b, float t, float n, float f)
 {
@@ -28,3 +33,4 @@ void Traits3D::GL::Transformation::setProjection(
     ? glm::ortho(l, r, b, t, n, f)
     : glm::frustum(l, r, b, t, n, f);
 }
+

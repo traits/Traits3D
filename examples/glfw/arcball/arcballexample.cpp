@@ -1,3 +1,4 @@
+#include "traits3d/glbase/transformation.h"
 #include <glm\gtc\matrix_transform.hpp>
 #include "arcballexample.h"
 
@@ -7,37 +8,45 @@ ExampleArcBall::ExampleArcBall()
   LastRot = glm::mat3(1);
   ThisRot = glm::mat3(1);
 
-  window_ = std::make_shared<Example::Window>("GLFW OpenGL3 Arcball Demo", 1, 2);
+  window_ = std::make_shared<Example::Window>("GLFW OpenGL3 Arcball Demo");
   arcBall.setBounds(1280.0f, 960.0f);
 }
 
-bool ExampleArcBall::initialize() // Any GL Init Code 
+bool ExampleArcBall::initializeGL() // Any GL Init Code 
 {
-  glViewport(0, 0, (GLsizei)(1280), (GLsizei)(960)); 
-  glMatrixMode(GL_PROJECTION);                       
-  glLoadIdentity();                         
-  
-  glm::mat4 proj_mat = glm::perspectiveFov(45.0f, 1280.0f, 960.0f,  1.0f, 100.0f);
-  glMultMatrixf(&proj_mat[0][0]);
-  glMatrixMode(GL_MODELVIEW);               
-  glLoadIdentity();                         
-
   arcBall.setBounds((GLfloat)1280, (GLfloat)960);  // Update mouse bounds for arcball
 
 
   // Start Of User Initialization
 
-  glClearColor(0.0f, 0.0f, 0.0f, 0.5f); 
+  glClearColor(0.8f, 0.8f, 0.8f, 0.5f); 
   glClearDepth(1.0f);
   glDepthFunc(GL_LEQUAL); 
   glEnable(GL_DEPTH_TEST);
-  glShadeModel(GL_FLAT);  
-  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);// Set Perspective Calculations To Most Accurate
+  //glShadeModel(GL_FLAT);  
+  //glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);// Set Perspective Calculations To Most Accurate
 
-  glEnable(GL_LIGHT0);  
-  glEnable(GL_LIGHTING);  
+  //glEnable(GL_LIGHT0);  
+  //glEnable(GL_LIGHTING);  
 
-  glEnable(GL_COLOR_MATERIAL);
+  //glEnable(GL_COLOR_MATERIAL);
+
+
+  shader_ = std::make_unique<Traits3D::GL::Shader>();
+
+  if (!shader_->create(Traits3D::GL::ShaderCode::Vertex::Line, Traits3D::GL::ShaderCode::Fragment::Simple))
+    return false;
+
+  vao_ = std::make_unique<Traits3D::GL::VAO>();
+  vbo_torus_ = std::make_unique<Traits3D::GL::VBO>(vao_.get(), 3);
+  vbo_sphere_ = std::make_unique<Traits3D::GL::VBO>(vao_.get(), 3);
+  return true;
+}
+
+bool ExampleArcBall::loadData() 
+{
+  Torus(0.30f, 1.00f);
+  Sphere(20, 20, 1.3f);
 
   return true;
 }
@@ -88,6 +97,8 @@ void ExampleArcBall::Sphere(int NumMajor, int NumMinor, float radius)
   MajorStep = PI2 / 2 / NumMajor;
   MinorStep = PI2 / NumMinor;
 
+  std::vector<Traits3D::TripleF> pos(2*(NumMinor+1)*(NumMajor+1));
+  int curr = 0;
   for (int i = 0; i <= NumMajor; ++i)
   {
     a = i * MajorStep;
@@ -97,68 +108,85 @@ void ExampleArcBall::Sphere(int NumMajor, int NumMinor, float radius)
     z0 = radius * std::cos(a);
     z1 = radius * std::cos(b);
 
-    glBegin(GL_TRIANGLE_STRIP);
+    //glBegin(GL_TRIANGLE_STRIP);
     for (int j = 0; j <= NumMinor; ++j)
     {
       c = j * MinorStep;
       x = std::cos(c);
       y = std::sin(c);
 
-      glNormal3f((x * r0) / radius, (y * r0) / radius, z0 / radius);
-      glVertex3f(x * r0, y * r0, z0);
+      //glNormal3f((x * r0) / radius, (y * r0) / radius, z0 / radius);
+      //glVertex3f(x * r0, y * r0, z0);
 
-      glNormal3f((x * r1) / radius, (y * r1) / radius, z1 / radius);
-      glVertex3f(x * r1, y * r1, z1);
+      pos[curr++] = Traits3D::TripleF(x * r0, y * r0, z0);
+
+      //glNormal3f((x * r1) / radius, (y * r1) / radius, z1 / radius);
+      //glVertex3f(x * r1, y * r1, z1);
+      pos[curr++] = Traits3D::TripleF(x * r1, y * r1, z1);
     }
-    glEnd();
+    //glEnd();
   }
+
+  vbo_sphere_->setData(pos);
 }
 
 void ExampleArcBall::Torus(float MinorRadius, float MajorRadius) // Draw A Torus With Normals
 {
-  int i, j;
-  glBegin(GL_TRIANGLE_STRIP);                 // Start A Triangle Strip
-  for (i = 0; i < 20; i++)                    // Stacks
+//  glBegin(GL_TRIANGLE_STRIP);                 // Start A Triangle Strip
+
+  const int size = 30;
+
+  std::vector<Traits3D::TripleF> pos(2 * size*(size+1));
+  int curr = 0;
+  for (int i = 0; i < size; ++i)                    // Stacks
   {
-    for (j = -1; j < 20; j++)                 // Slices
+    for (int j = -1; j < size; ++j)                 // Slices
     {
-      float wrapFrac = (j % 20) / (float)20;
+      float wrapFrac = (j % size) / (float)size;
       float phi = PI2*wrapFrac;
       float sinphi = float(sin(phi));
       float cosphi = float(cos(phi));
 
       float r = MajorRadius + MinorRadius*cosphi;
 
-      glNormal3f(float(sin(PI2*(i % 20 + wrapFrac) / (float)20))*cosphi, sinphi, float(cos(PI2*(i % 20 + wrapFrac) / (float)20))*cosphi);
-      glVertex3f(float(sin(PI2*(i % 20 + wrapFrac) / (float)20))*r, MinorRadius*sinphi, float(cos(PI2*(i % 20 + wrapFrac) / (float)20))*r);
-
-      glNormal3f(float(sin(PI2*(i + 1 % 20 + wrapFrac) / (float)20))*cosphi, sinphi, float(cos(PI2*(i + 1 % 20 + wrapFrac) / (float)20))*cosphi);
-      glVertex3f(float(sin(PI2*(i + 1 % 20 + wrapFrac) / (float)20))*r, MinorRadius*sinphi, float(cos(PI2*(i + 1 % 20 + wrapFrac) / (float)20))*r);
+      //glNormal3f(float(sin(PI2*(i % size + wrapFrac) / (float)size))*cosphi, sinphi, float(cos(PI2*(i % size + wrapFrac) / (float)size))*cosphi);
+      //glVertex3f(float(sin(PI2*(i % size + wrapFrac) / (float)size))*r, MinorRadius*sinphi, float(cos(PI2*(i % size + wrapFrac) / (float)size))*r);
+      pos[curr++] = Traits3D::TripleF(float(sin(PI2*(i % size + wrapFrac) / (float)size))*r, MinorRadius*sinphi, float(cos(PI2*(i % size + wrapFrac) / (float)size))*r);
+      //glNormal3f(float(sin(PI2*(i + 1 % size + wrapFrac) / (float)size))*cosphi, sinphi, float(cos(PI2*(i + 1 % size + wrapFrac) / (float)size))*cosphi);
+      //glVertex3f(float(sin(PI2*(i + 1 % size + wrapFrac) / (float)size))*r, MinorRadius*sinphi, float(cos(PI2*(i + 1 % size + wrapFrac) / (float)size))*r);
+      pos[curr++] = Traits3D::TripleF(float(sin(PI2*(i + 1 % size + wrapFrac) / (float)size))*r, MinorRadius*sinphi, float(cos(PI2*(i + 1 % size + wrapFrac) / (float)size))*r);
     }
   }
-  glEnd();
+  //glEnd();
+
+  vbo_torus_->setData(pos);
 }
 
 void ExampleArcBall::draw()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);       // Clear Screen And Depth Buffer
-  glLoadIdentity();                       // Reset The Current Modelview Matrix
-  glTranslatef(-1.5f, 0.0f, -6.0f);       // Move Left 1.5 Units And Into The Screen 6.0
 
-  glPushMatrix();                         // NEW: Prepare Dynamic Transform
-  glMultMatrixf(&Transform[0][0]);        // NEW: Apply Dynamic Transform
-  glColor3f(0.75f, 0.75f, 1.0f);
-  Torus(0.30f, 1.00f);
-  glPopMatrix();                          // NEW: Unapply Dynamic Transform
 
-  glLoadIdentity();                       // Reset The Current Modelview Matrix
-  glTranslatef(1.5f, 0.0f, -6.0f);        // Move Right 1.5 Units And Into The Screen 7.0
+  //glViewport(0, 0, (GLsizei)(1280), (GLsizei)(960));
 
-  glPushMatrix();                         // NEW: Prepare Dynamic Transform
-  glMultMatrixf(&Transform[0][0]);        // NEW: Apply Dynamic Transform
-  glColor3f(1.0f, 0.75f, 0.75f);
-  Sphere(20, 20, 1.3f);
-  glPopMatrix();                          // NEW: Unapply Dynamic Transform
+  glm::mat4 proj = glm::perspectiveFov(45.0f, 1280.0f, 960.0f, 1.0f, 100.0f);
+  shader_->setUniformMatrix(proj, Traits3D::GL::ShaderCode::Vertex::proj_matrix);
 
-  //glFlush ();                           // Flush The GL Rendering Pipeline
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+  glm::mat4 mv = glm::mat4(1);
+  mv = glm::translate(mv, glm::vec3(-1.5f, 0.0f, -6.0f));
+  mv = mv * Transform;
+  shader_->setUniformMatrix(mv, Traits3D::GL::ShaderCode::Vertex::mv_matrix);
+  shader_->bindAttribute(*vbo_torus_, Traits3D::GL::ShaderCode::Vertex::v_coordinates);
+  shader_->setUniformVec4(glm::vec4(0.35f, 0.35f, 1.0f, 1.0f), Traits3D::GL::ShaderCode::Vertex::v_in_color);
+  vbo_torus_->draw(GL_TRIANGLE_STRIP);
+
+  mv = glm::mat4(1);
+  mv = glm::translate(mv, glm::vec3(1.5f, 0.0f, -6.0f));
+  mv = mv * Transform;
+  shader_->setUniformMatrix(mv, Traits3D::GL::ShaderCode::Vertex::mv_matrix);
+  shader_->bindAttribute(*vbo_sphere_, Traits3D::GL::ShaderCode::Vertex::v_coordinates);
+  shader_->setUniformVec4(glm::vec4(1.0f, 0.35f, 0.35f, 1.0f), Traits3D::GL::ShaderCode::Vertex::v_in_color);
+  vbo_sphere_->draw(GL_TRIANGLE_STRIP);
 }

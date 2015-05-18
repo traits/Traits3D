@@ -25,12 +25,10 @@ INCLUDEPATH += \
 
 SOURCES -= 3rdparty/glloadgen/GL_3_3/gl_core_3_3.c \
            3rdparty/glloadgen/GL_4_2/gl_core_4_2.c \
-           3rdparty/glm/detail/dummy.cpp \
-           traits3d/arcball.cpp
+           3rdparty/glm/detail/dummy.cpp
            
 HEADERS -= 3rdparty/glloadgen/GL_3_3/gl_core_3_3.h \
-           3rdparty/glloadgen/GL_4_2/gl_core_4_2.h \
-           traits3d/include/traits3d/arcball.h
+           3rdparty/glloadgen/GL_4_2/gl_core_4_2.h
     
 CONFIG += mobility debug
 MOBILITY = 

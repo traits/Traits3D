@@ -1,17 +1,5 @@
 file(GLOB  TRAITS3D_CORE_SOURCES *.cpp)
 file(GLOB  TRAITS3D_CORE_HEADERS include/traits3d/*.h)
 
-#todo arcball temporarily removed (update GL version)
-foreach(s ${TRAITS3D_CORE_SOURCES})
- if (${s} MATCHES "arcball.cpp")
-  list(REMOVE_ITEM TRAITS3D_CORE_SOURCES ${s})
- endif() 
-endforeach() 
-foreach(s ${TRAITS3D_CORE_HEADERS})
- if (${s} MATCHES "arcball.h")
-  list(REMOVE_ITEM TRAITS3D_CORE_HEADERS ${s})
- endif() 
-endforeach() 
-
 set (TRAITS3D_CORE_SOURCES ${TRAITS3D_CORE_SOURCES} PARENT_SCOPE)
 set (TRAITS3D_CORE_HEADERS ${TRAITS3D_CORE_HEADERS} PARENT_SCOPE)
