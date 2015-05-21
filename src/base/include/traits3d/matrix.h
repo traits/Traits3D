@@ -87,7 +87,7 @@ namespace Traits3D
       auto curr = data_.begin();
       for (auto const& sv : val)
       {
-        if (sv.size() != xsize)
+        if (sv.size() != xsize_)
         {
           data_.clear();
           xsize_ = ysize_ = 0;

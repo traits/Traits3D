@@ -34,7 +34,7 @@ namespace Traits3D
       IndexMaker indexmaker_;
       GLenum primitive_type_ = GL_TRIANGLE_STRIP;
       VAO* vao_;
-      StateEntity<GLenum> draw_type_ = GL_STATIC_DRAW; // GL_STATIC_DRAW or GL_DYNAMIC_DRAW
+      StateEntity<GLenum> draw_type_; // GL_STATIC_DRAW or GL_DYNAMIC_DRAW
 
       bool bindData();
     };

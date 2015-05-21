@@ -8,6 +8,8 @@ Traits3D::GL::IBO::IBO(VAO* vao)
 {
   if (!vao_)
     throw std::domain_error("Traits3D: IBO construction error");
+
+  draw_type_ = GL_STATIC_DRAW;
   glGetError(); //todo temp reset for gl error flag
   glGenBuffers(1, &id_);
   if (GL_NO_ERROR != glGetError())

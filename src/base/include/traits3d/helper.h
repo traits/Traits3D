@@ -62,7 +62,7 @@ namespace Traits3D
   template<typename T>
   size_t addSizes(std::vector<std::vector<T>> const& tvec)
   {
-    return std::accumulate<std::vector<std::vector<T>>::const_iterator, size_t>(tvec.begin(), tvec.end(), 0,
+    return std::accumulate<typename std::vector<std::vector<T>>::const_iterator, size_t>(tvec.begin(), tvec.end(), 0,
       [](size_t part_sum, std::vector<T> const& t) -> size_t
         {
           return part_sum + t.size() ;

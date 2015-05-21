@@ -108,7 +108,6 @@ void ExampleArcBall::Sphere(int NumMajor, int NumMinor, float radius)
     z0 = radius * std::cos(a);
     z1 = radius * std::cos(b);
 
-    //glBegin(GL_TRIANGLE_STRIP);
     for (int j = 0; j <= NumMinor; ++j)
     {
       c = j * MinorStep;
@@ -124,7 +123,6 @@ void ExampleArcBall::Sphere(int NumMajor, int NumMinor, float radius)
       //glVertex3f(x * r1, y * r1, z1);
       pos[curr++] = Traits3D::TripleF(x * r1, y * r1, z1);
     }
-    //glEnd();
   }
 
   vbo_sphere_->setData(pos);
@@ -132,8 +130,6 @@ void ExampleArcBall::Sphere(int NumMajor, int NumMinor, float radius)
 
 void ExampleArcBall::Torus(float MinorRadius, float MajorRadius) // Draw A Torus With Normals
 {
-//  glBegin(GL_TRIANGLE_STRIP);                 // Start A Triangle Strip
-
   const int size = 30;
 
   std::vector<Traits3D::TripleF> pos(2 * size*(size+1));
@@ -157,7 +153,6 @@ void ExampleArcBall::Torus(float MinorRadius, float MajorRadius) // Draw A Torus
       pos[curr++] = Traits3D::TripleF(float(sin(PI2*(i + 1 % size + wrapFrac) / (float)size))*r, MinorRadius*sinphi, float(cos(PI2*(i + 1 % size + wrapFrac) / (float)size))*r);
     }
   }
-  //glEnd();
 
   vbo_torus_->setData(pos);
 }
@@ -166,8 +161,6 @@ void ExampleArcBall::draw()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);       // Clear Screen And Depth Buffer
 
-
-  //glViewport(0, 0, (GLsizei)(1280), (GLsizei)(960));
 
   glm::mat4 proj = glm::perspectiveFov(45.0f, 1280.0f, 960.0f, 1.0f, 100.0f);
   shader_->setUniformMatrix(proj, Traits3D::GL::ShaderCode::Vertex::proj_matrix);

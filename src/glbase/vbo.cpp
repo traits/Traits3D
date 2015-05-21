@@ -8,6 +8,7 @@ Traits3D::GL::VBO::VBO(VAO* vao, char layout_components)
   if (!vao_)
     throw std::domain_error("Traits3D: VBO construction error");
 
+  draw_type_ = GL_STATIC_DRAW;
   glGetError(); //todo temp reset for gl error flag
   glGenBuffers(1, &id_);
   if (GL_NO_ERROR != glGetError())

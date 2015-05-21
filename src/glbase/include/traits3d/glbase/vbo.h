@@ -69,7 +69,7 @@ namespace Traits3D
       GLuint program_;
       std::string attr_name_;
       VAO* vao_; // non-owning pointer
-      StateEntity<GLenum> draw_type_ = GL_STATIC_DRAW; // GL_STATIC_DRAW or GL_DYNAMIC_DRAW
+      StateEntity<GLenum> draw_type_; // GL_STATIC_DRAW or GL_DYNAMIC_DRAW
 
       template <typename PRIMITIVE>
       bool setData(std::vector<PRIMITIVE> const& data);
