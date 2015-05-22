@@ -252,3 +252,15 @@ bool Traits3D::GL::Shader::bindAttribute(VBO& vbo, std::string const& name)
 
   return vbo.bindAttribute(attrloc);
 }
+
+bool Traits3D::GL::Shader::unbindAttribute(VBO& vbo, std::string const& name)
+{
+  if (name.empty())
+    return false;
+
+  GLuint attrloc = glGetAttribLocation(program_id_, name.c_str());
+  if (GL_NO_ERROR != glGetError())
+    return false;
+
+  return vbo.unbindAttribute(attrloc);
+}

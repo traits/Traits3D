@@ -56,6 +56,7 @@ namespace Traits3D
       bool setData(std::vector<glm::vec4> const& data);
 
       bool bindAttribute(GLuint attr_location);
+      bool unbindAttribute(GLuint attr_location);
       //! Draw complete buffer as GL_TRIANGLE_STRIP etc.
       bool draw(GLenum primitive_type);
       //! Draw partial buffer

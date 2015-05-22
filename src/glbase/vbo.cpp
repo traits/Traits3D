@@ -38,6 +38,18 @@ bool Traits3D::GL::VBO::bindAttribute(GLuint attr_location)
   return true;
 }
 
+bool Traits3D::GL::VBO::unbindAttribute(GLuint attr_location)
+{
+  VAO::Binder vb(vao_);
+
+  glDisableVertexAttribArray(attr_location);
+  if (GL_NO_ERROR != glGetError())
+    return false;
+
+  return true;
+
+}
+
 /**
  \param primitive_type Type of the primitive (GL_TRIANGLE_STRIP etc.).
  \param first          Index to the first element to draw. An element means an entities, 

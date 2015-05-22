@@ -37,6 +37,7 @@ namespace Traits3D
       bool use();
 
       bool bindAttribute(VBO& vbo, std::string const& name);
+      bool unbindAttribute(VBO& vbo, std::string const& name);
       bool setUniformVec2(glm::vec2 const& vec, std::string const& name);
       bool setUniformVec3(glm::vec3 const& vec, std::string const& name);
       bool setUniformVec4(glm::vec4 const& vec, std::string const& name);
