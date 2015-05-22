@@ -27,21 +27,25 @@ namespace Traits3D
         size_t xsize, size_t ysize);
       bool updatePositionData(std::vector<TripleF> const& data);
 
+      bool maintainNormals(bool val);
 
       void setColor(ColorVector const& data);
       bool setMeshColor(Color const& data);
 
-      const Traits3D::Box& hull() const { return data_.value.hull(); }
+      const Traits3D::Box& hull() const { return vertices_.value.hull(); }
 
     private:
-      bool initShader();
+      bool maintain_normals_ = false;
+
       StateEntity<ColorVector> colors_;
-      StateEntity<MatrixF> data_;
+      StateEntity<MatrixF> vertices_;
+      Matrix<TripleF> normals_;
 
       enum class VBOindex
       {
-        Position,
-        DataColor
+        Positions,
+        Normals,
+        DataColors
       };
 
       enum class IBOindex
@@ -59,6 +63,9 @@ namespace Traits3D
       std::map<ShaderIndex, Shader> shader_;
       std::map<VBOindex, std::unique_ptr<VBO>> vbos_;
       std::map<IBOindex, std::unique_ptr<IBO>> ibos_;
+
+      bool initShader();
+      bool calculateNormals(Matrix<TripleF>& result, MatrixF const& positions);
 
       //GL::MeshRenderer mesh_renderer_;
     };

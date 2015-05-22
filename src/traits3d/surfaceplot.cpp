@@ -65,6 +65,7 @@ bool Traits3D::SurfacePlot::initializeGL()
     return false;
   }
   data_object_p = std::make_unique<GL::DataObject>();
+  data_object_p->maintainNormals(true);
   gl_is_initialized_p = true;
   return true;
 }
