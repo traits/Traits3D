@@ -14,7 +14,7 @@ namespace Traits3D
     {
       if (0 != xsize && 0 != ysize)
       {
-        data_.resize(xsize*ysize);
+        data_p.resize(xsize*ysize);
         return;
       }
 
@@ -28,14 +28,14 @@ namespace Traits3D
 
     T& operator()(size_t x, size_t y) 
     { 
-      assert(y*xsize_ + x <= data_.size());
-      return data_[y*xsize_+x]; 
+      assert(y*xsize_ + x <= data_p.size());
+      return data_p[y*xsize_+x]; 
     }
 
     T const& operator()(size_t x, size_t y) const
     {
-      assert(y*xsize_ + x <= data_.size());
-      return data_[y*xsize_ + x];
+      assert(y*xsize_ + x <= data_p.size());
+      return data_p[y*xsize_ + x];
     }
 
     //! Invalidates all iterators
@@ -43,12 +43,12 @@ namespace Traits3D
     {
       if (0 == xsize*ysize)
       {
-        data_.clear();
+        data_p.clear();
         xsize_ = ysize_ = 0;
       }
       else
       {
-        data_.resize(xsize*ysize);
+        data_p.resize(xsize*ysize);
         xsize_ = xsize;
         ysize_ = ysize;
       }
@@ -56,25 +56,23 @@ namespace Traits3D
 
     size_t xSize() const { return xsize_; }
     size_t ySize() const { return ysize_; }
-    Box const& hull() const { return hull_; }
 
-    std::vector<T> const& linearBuffer() const { return data_; }
+    std::vector<T> const& linearBuffer() const { return data_p; }
 
-    bool setData(std::vector<T> const& val, size_t xsize, size_t ysize)
+    virtual bool setData(std::vector<T> const& val, size_t xsize, size_t ysize)
     {
       if (0 == xsize*ysize || val.size() != xsize*ysize)
         return false;
 
-      data_ = val;
+      data_p = val;
       xsize_ = xsize;
       ysize_ = ysize;
-      hull_ = Traits3D::calculateBox(data_);
-
+ 
       return true;
     }
     
     // row vectors
-    bool setData(std::vector<std::vector<T>> const& val)
+    virtual bool setData(std::vector<std::vector<T>> const& val)
     {
       if (val.empty() || val[0].empty())
         return false;
@@ -82,41 +80,70 @@ namespace Traits3D
       ysize_ = val.size();
       xsize_ = val[0].size();
 
-      data_.resize(xsize_*ysize_);
+      data_p.resize(xsize_*ysize_);
 
-      auto curr = data_.begin();
+      auto curr = data_p.begin();
       for (auto const& sv : val)
       {
         if (sv.size() != xsize_)
         {
-          data_.clear();
+          data_p.clear();
           xsize_ = ysize_ = 0;
-          hull_ = Box();
           return false;
         }
         curr = std::copy(sv.begin(), sv.end(), curr);
       }
-
-      hull_ = Traits3D::calculateBox(data_);
       return true;
     }
 
-    template <typename S>
-    Matrix<S> convert() const
-    {
-      Matrix<S> ret;
-      ret.setData(Traits3D::convert(data_), xsize_, ysize_);
-      return ret;
-    }
+  protected:
+    std::vector<T> data_p;
 
   private:
     size_t xsize_ = 0;
     size_t ysize_ = 0;
+  };
 
-    std::vector<T> data_;
+  // Matrix with data types allowing a hull
+  template <typename T>
+  class MatrixH : public Matrix <T>
+  {
+  public:
+    Box const& hull() const { return hull_; }
+
+    bool setData(std::vector<T> const& val, size_t xsize, size_t ysize) override
+    {
+      if (!Matrix<T>::setData(val, xsize, ysize))
+        return false;
+
+      hull_ = Traits3D::calculateBox(data_p);
+      return true;
+    }
+
+    bool setData(std::vector<std::vector<T>> const& val) override
+    {
+      if (!Matrix<T>::setData(val))
+      {
+        hull_ = Box();
+        return false;
+      }
+
+      hull_ = Traits3D::calculateBox(data_p);
+      return true;
+    }
+
+    template <typename S>
+    MatrixH<S> convert() const
+    {
+      MatrixH<S> ret;
+      ret.setData(Traits3D::convert(data_p), xSize(), ySize());
+      return ret;
+    }
+
+  private:
     Traits3D::Box hull_;
   };
 
-  using MatrixF = Matrix < TripleF > ;
-  using MatrixD = Matrix < Triple > ;
+  using MatrixF = MatrixH < TripleF > ;
+  using MatrixD = MatrixH < Triple > ;
 } //ns
