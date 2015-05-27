@@ -11,7 +11,7 @@ Traits3D::GL::AxisObject::AxisObject()
   shader_.create(GL::ShaderCode::Vertex::Line, GL::ShaderCode::Fragment::Simple);
 
   vbo_ = std::make_unique<VBO>(&vao_p, 3);
-  shader_.bindAttribute(*vbo_, GL::ShaderCode::Vertex::v_coordinates);
+  shader_.bindAttribute(*vbo_, GL::ShaderCode::Var::v_coordinates);
   
   te_ = std::make_shared<StandardTextEngine>();
   te_->initializeGL();
@@ -21,8 +21,8 @@ Traits3D::GL::AxisObject::AxisObject()
 //{
 //  vbo_->create(axes_, GL_STATIC_DRAW); //todo (could be dynamic)
 //
-//  shader_.bindAttribute(*vbo_, GL::ShaderCode::Vertex::v_coordinates);
-//  shader_.setUniformVec4(Color(0.0f, 0.5f, 0.0f, 1.0f), GL::ShaderCode::Vertex::v_in_color);
+//  shader_.bindAttribute(*vbo_, GL::ShaderCode::Var::v_coordinates);
+//  shader_.setUniformVec4(Color(0.0f, 0.5f, 0.0f, 1.0f), GL::ShaderCode::Var::v_in_color);
 //
 //  return true;
 //}
@@ -34,7 +34,7 @@ void Traits3D::GL::AxisObject::draw(GL::Transformation const& matrices)
   
   //todo
   updateData();
-  shader_.setUniformVec4(axis_color_, GL::ShaderCode::Vertex::v_in_color);
+  shader_.setUniformVec4(axis_color_, GL::ShaderCode::Var::v_in_color);
   shader_.use();
   shader_.setMatrices(matrices);
   vbo_->draw(GL_LINES);

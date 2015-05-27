@@ -12,10 +12,10 @@ Traits3D::GL::DataObject::DataObject()
   vbos_[VBOindex::Normals] = std::make_unique<VBO>(&vao_p, 3);
   vbos_[VBOindex::DataColors] = std::make_unique<VBO>(&vao_p, 4);
 
-  shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColors], GL::ShaderCode::Vertex::v_in_color);
+  shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColors], GL::ShaderCode::Var::v_in_color);
   for (auto& s : shader_)
   {
-    if (!s.second.bindAttribute(*vbos_[VBOindex::Positions], GL::ShaderCode::Vertex::v_coordinates))
+    if (!s.second.bindAttribute(*vbos_[VBOindex::Positions], GL::ShaderCode::Var::v_coordinates))
       return;
   }
 
@@ -100,15 +100,15 @@ void Traits3D::GL::DataObject::setColor(ColorVector const& data)
 
 bool Traits3D::GL::DataObject::setMeshColor(Color const& data)
 {
-  return shader_[ShaderIndex::Lines].setUniformVec4(data, GL::ShaderCode::Vertex::v_in_color);
+  return shader_[ShaderIndex::Lines].setUniformVec4(data, GL::ShaderCode::Var::v_in_color);
 }
 
 void Traits3D::GL::DataObject::draw(Transformation const& matrices)
 {
-  shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColors], GL::ShaderCode::Vertex::v_in_color);
-  shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::Positions], GL::ShaderCode::Vertex::v_coordinates);
+  shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColors], GL::ShaderCode::Var::v_in_color);
+  shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::Positions], GL::ShaderCode::Var::v_coordinates);
   if (maintain_normals_)
-    shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::Normals], GL::ShaderCode::Vertex::v_normals);
+    shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::Normals], GL::ShaderCode::Var::v_normals);
 
   if (vertices_.modified)
   {
@@ -179,12 +179,12 @@ bool Traits3D::GL::DataObject::maintainNormals(bool val)
   {
     if (val)
     {
-      if (!s.second.bindAttribute(*vbos_[VBOindex::Normals], GL::ShaderCode::Vertex::v_normals))
+      if (!s.second.bindAttribute(*vbos_[VBOindex::Normals], GL::ShaderCode::Var::v_normals))
         return false;
     }
     else
     {
-      if (!s.second.unbindAttribute(*vbos_[VBOindex::Normals], GL::ShaderCode::Vertex::v_normals))
+      if (!s.second.unbindAttribute(*vbos_[VBOindex::Normals], GL::ShaderCode::Var::v_normals))
         return false;
     }
   }

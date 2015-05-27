@@ -175,8 +175,8 @@ void Traits3D::GL::LineRenderer::draw(Transformation const& matrices)
     if (!single_color_shader_.use())
       return;
 
-    single_color_shader_.bindAttribute(*position_vbo_, GL::ShaderCode::Vertex::v_coordinates);
-    single_color_shader_.setUniformVec4(color_, GL::ShaderCode::Vertex::v_in_color);
+    single_color_shader_.bindAttribute(*position_vbo_, GL::ShaderCode::Var::v_coordinates);
+    single_color_shader_.setUniformVec4(color_, GL::ShaderCode::Var::v_in_color);
     single_color_shader_.setMatrices(matrices);
     position_vbo_->draw(GL_LINES);
   }
@@ -185,8 +185,8 @@ void Traits3D::GL::LineRenderer::draw(Transformation const& matrices)
     if (!color_field_shader_.use())
       return;
 
-    color_field_shader_.bindAttribute(*position_vbo_, GL::ShaderCode::Vertex::v_coordinates);
-    color_field_shader_.bindAttribute(*color_vbo_, GL::ShaderCode::Vertex::v_in_color);
+    color_field_shader_.bindAttribute(*position_vbo_, GL::ShaderCode::Var::v_coordinates);
+    color_field_shader_.bindAttribute(*color_vbo_, GL::ShaderCode::Var::v_in_color);
     color_field_shader_.setMatrices(matrices);
     position_vbo_->draw(GL_LINE_STRIP);
   }

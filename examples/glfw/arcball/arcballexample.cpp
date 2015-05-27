@@ -163,23 +163,23 @@ void ExampleArcBall::draw()
 
 
   glm::mat4 proj = glm::perspectiveFov(45.0f, 1280.0f, 960.0f, 1.0f, 100.0f);
-  shader_->setUniformMatrix(proj, Traits3D::GL::ShaderCode::Vertex::proj_matrix);
+  shader_->setUniformMatrix(proj, Traits3D::GL::ShaderCode::Var::proj_matrix);
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   glm::mat4 mv = glm::mat4(1);
   mv = glm::translate(mv, glm::vec3(-1.5f, 0.0f, -6.0f));
   mv = mv * Transform;
-  shader_->setUniformMatrix(mv, Traits3D::GL::ShaderCode::Vertex::mv_matrix);
-  shader_->bindAttribute(*vbo_torus_, Traits3D::GL::ShaderCode::Vertex::v_coordinates);
-  shader_->setUniformVec4(glm::vec4(0.35f, 0.35f, 1.0f, 1.0f), Traits3D::GL::ShaderCode::Vertex::v_in_color);
+  shader_->setUniformMatrix(mv, Traits3D::GL::ShaderCode::Var::mv_matrix);
+  shader_->bindAttribute(*vbo_torus_, Traits3D::GL::ShaderCode::Var::v_coordinates);
+  shader_->setUniformVec4(glm::vec4(0.35f, 0.35f, 1.0f, 1.0f), Traits3D::GL::ShaderCode::Var::v_in_color);
   vbo_torus_->draw(GL_TRIANGLE_STRIP);
 
   mv = glm::mat4(1);
   mv = glm::translate(mv, glm::vec3(1.5f, 0.0f, -6.0f));
   mv = mv * Transform;
-  shader_->setUniformMatrix(mv, Traits3D::GL::ShaderCode::Vertex::mv_matrix);
-  shader_->bindAttribute(*vbo_sphere_, Traits3D::GL::ShaderCode::Vertex::v_coordinates);
-  shader_->setUniformVec4(glm::vec4(1.0f, 0.35f, 0.35f, 1.0f), Traits3D::GL::ShaderCode::Vertex::v_in_color);
+  shader_->setUniformMatrix(mv, Traits3D::GL::ShaderCode::Var::mv_matrix);
+  shader_->bindAttribute(*vbo_sphere_, Traits3D::GL::ShaderCode::Var::v_coordinates);
+  shader_->setUniformVec4(glm::vec4(1.0f, 0.35f, 0.35f, 1.0f), Traits3D::GL::ShaderCode::Var::v_in_color);
   vbo_sphere_->draw(GL_TRIANGLE_STRIP);
 }

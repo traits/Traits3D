@@ -252,8 +252,8 @@ void Traits3D::GL::MeshRenderer::draw(Transformation const& matrices)
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   Color color(0, 0.8f, 0, 1);
   core_shader_.use();
-  core_shader_.bindAttribute(*core_vbo_, GL::ShaderCode::Vertex::v_coordinates);
-  core_shader_.setUniformVec4(color, GL::ShaderCode::Vertex::v_in_color);
+  core_shader_.bindAttribute(*core_vbo_, GL::ShaderCode::Var::v_coordinates);
+  core_shader_.setUniformVec4(color, GL::ShaderCode::Var::v_in_color);
   //core_shader_.setProjectionMatrix(proj_matrix);
   
   core_shader_.setMatrices(matrices);
@@ -263,8 +263,8 @@ void Traits3D::GL::MeshRenderer::draw(Transformation const& matrices)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   seam_shader_.use();
-  seam_shader_.bindAttribute(*core_vbo_, GL::ShaderCode::Vertex::v_coordinates);
-  seam_shader_.bindAttribute(*seam_color_vbo_, GL::ShaderCode::Vertex::v_in_color);
+  seam_shader_.bindAttribute(*core_vbo_, GL::ShaderCode::Var::v_coordinates);
+  seam_shader_.bindAttribute(*seam_color_vbo_, GL::ShaderCode::Var::v_in_color);
   seam_shader_.setMatrices(matrices);
   seam_ibo_->draw();
 }

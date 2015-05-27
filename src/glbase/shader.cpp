@@ -225,9 +225,9 @@ bool Traits3D::GL::Shader::setUniformVec4(glm::vec4 const& vec, std::string cons
 bool Traits3D::GL::Shader::setMatrices(Traits3D::GL::Transformation const& matrices)
 {
   return 
-    setUniformMatrix(matrices.proj(), ShaderCode::Vertex::proj_matrix)
+    setUniformMatrix(matrices.proj(), ShaderCode::Var::proj_matrix)
     &&
-    setUniformMatrix(matrices.mv(), ShaderCode::Vertex::mv_matrix);
+    setUniformMatrix(matrices.mv(), ShaderCode::Var::mv_matrix);
 }
 
 bool Traits3D::GL::Shader::use()
