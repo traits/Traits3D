@@ -14,7 +14,7 @@ namespace Traits3D
     class Object
     {
       public:
-        Object();
+        Object() = default;
         virtual ~Object() = default;
         virtual void draw(Transformation const& matrices) = 0;
 

@@ -36,7 +36,7 @@ bool Traits3D::GL::Shader::compile(GLuint shader_id, std::vector<std::string> co
   for (auto i = 0; i != shader_code.size(); ++i)
     pptr[i] = shader_code[i].c_str();
 
-  glShaderSource(shader_id, pptr.size(), &pptr[0], NULL);
+  glShaderSource(shader_id, static_cast<GLsizei>(pptr.size()), &pptr[0], NULL);
   //char const* text = shader_code.c_str();
   //glShaderSource(shader_id, 1, &text, NULL);
   glCompileShader(shader_id);
