@@ -4,3 +4,4 @@
 *.pri
 *.user
 *.suo
+/shader/*.pyc

@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2d164738-b26c-47ca-ad08-260e0802109b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>converter.py</StartupFile>
+    <StartupFile>main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -27,6 +27,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="converter.py" />
+    <Compile Include="main.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <Import Condition="Exists($(PtvsTargetsFile))" Project="$(PtvsTargetsFile)" />
   <Import Condition="!Exists($(PtvsTargetsFile))" Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
