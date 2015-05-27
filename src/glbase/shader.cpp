@@ -25,13 +25,20 @@ bool Traits3D::GL::Shader::load(std::string& result, std::string const& path)
   return false;
 }
 
-bool Traits3D::GL::Shader::compile(GLuint shader_id, std::string const& shader_code)
+bool Traits3D::GL::Shader::compile(GLuint shader_id, std::vector<std::string> const& shader_code)
 {
+  assert(!shader_code.empty());
+
   GLint result = GL_FALSE;
 
   // Compile shader
-  char const* text = shader_code.c_str();
-  glShaderSource(shader_id, 1, &text , NULL);
+  std::vector<const char*> pptr(shader_code.size());
+  for (auto i = 0; i != shader_code.size(); ++i)
+    pptr[i] = shader_code[i].c_str();
+
+  glShaderSource(shader_id, pptr.size(), &pptr[0], NULL);
+  //char const* text = shader_code.c_str();
+  //glShaderSource(shader_id, 1, &text, NULL);
   glCompileShader(shader_id);
 
   // Check shader
@@ -43,11 +50,16 @@ bool Traits3D::GL::Shader::compile(GLuint shader_id, std::string const& shader_c
     if (infolog_size > 0){
       std::vector<char> shader_error(infolog_size + 1);
       glGetShaderInfoLog(shader_id, infolog_size, NULL, &shader_error[0]);
-      last_error_info_ = std::string(shader_error.begin(),shader_error.end());
+      last_error_info_ = std::string(shader_error.begin(), shader_error.end());
       std::cerr << __FUNCTION__ << ": " << last_error_info_ << std::endl;
     }
   }
   return (GL_TRUE == result) ? true : false;
+}
+
+bool Traits3D::GL::Shader::compile(GLuint shader_id, std::string const& shader_code)
+{
+  return compile(shader_id, std::vector<std::string>(1, shader_code));
 }
 
 bool Traits3D::GL::Shader::link(GLuint vertex_shader_id, GLuint fragment_shader_id)
@@ -79,7 +91,7 @@ bool Traits3D::GL::Shader::link(GLuint vertex_shader_id, GLuint fragment_shader_
   return (result == GL_TRUE) ? true : false;
 }
 
-bool Traits3D::GL::Shader::create(std::string const& vertex_code, std::string const& fragment_code)
+bool Traits3D::GL::Shader::create(std::vector<std::string> const& vertex_code, std::vector<std::string> const& fragment_code)
 {
   initialized_ = false;
 
@@ -101,6 +113,11 @@ bool Traits3D::GL::Shader::create(std::string const& vertex_code, std::string co
 
   initialized_ = true;
   return true;
+}
+
+bool Traits3D::GL::Shader::create(std::string const& vertex_code, std::string const& fragment_code)
+{
+  return create(std::vector<std::string>(1, vertex_code), std::vector<std::string>(1, fragment_code));
 }
 
 //bool Traits3D::GL::Shader::create()

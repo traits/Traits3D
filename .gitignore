@@ -3,3 +3,4 @@
 /examples/glfw/heightmap/surface_deformer_vs.glsl
 *.pri
 *.user
+*.suo

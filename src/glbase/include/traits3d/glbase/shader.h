@@ -21,9 +21,12 @@ namespace Traits3D
       ////! Create complete shader program with standard shaders
       //bool create();
 
+      //! Create complete shader program from multiple shader source codes
+      bool create(std::vector<std::string> const& vertex_code, std::vector<std::string> const& fragment_code);
+      
       //! Create complete shader program from string
       bool create(std::string const& vertex_code, std::string const& fragment_code);
-      
+
       //! Create complete shader program from file sources
       bool createFromFile(std::string const& vertex_file_path, std::string const& fragment_file_path);
       
@@ -49,6 +52,7 @@ namespace Traits3D
       bool initialized_;
       bool load(std::string& result, std::string const& path);
       bool compile(GLuint shader_id, std::string const& shader_code);
+      bool compile(GLuint shader_id, std::vector<std::string> const& shader_code);
       bool link(GLuint vertex_shader_id, GLuint fragment_shader_id);
       bool inUse() const;
       GLuint program_id_;
