@@ -10,13 +10,14 @@ class Converter(object):
     self.__function_input_dir = 'input' + os.sep + 'functions'
     self.__hout = '..' + os.sep + 'src' + os.sep + 'glbase' + os.sep + 'include'  + os.sep + 'traits3d' + os.sep + 'glbase'
     self.__cppout = '..' + os.sep + 'src' + os.sep + 'glbase'
+    self.__shout = 'generated_glsl'
     self.__insert = ''
 
-  def openFiles(self):
-    self.__hfile = open(os.path.join(self.__hout, "shader_std.h"),'w')
-    self.__cppfile = open(os.path.join(self.__cppout, "shader_std.cpp"),'w')
+  def __openFiles(self):
+    self.__hfile = open(os.path.join(self.__hout, 'shader_std.h'),'w')
+    self.__cppfile = open(os.path.join(self.__cppout, 'shader_std.cpp'),'w')
   
-  def closeFiles(self):
+  def __closeFiles(self):
     self.__hfile.close()
     self.__cppfile .close()
 
@@ -92,7 +93,7 @@ class Converter(object):
         ret[basename] = [fname, type, text]   
     return ret
 
-  def writeOutput(self, comment, artifact_class, artifact_input_dir):
+  def writeOutput(self, comment, artifact_class, artifact_input_dir, output_shader, glsl_variant):
     a_info = Converter.processFiles(artifact_input_dir, artifact_class)
     self.__hfile.write(self.__insert + comment + '\n')
     self.__hfile.write(self.__insert + 'class ' + artifact_class + '\n' + self.__insert + '{\n')
@@ -113,9 +114,33 @@ class Converter(object):
       self.__cppfile.write('};\n\n')
     self._unintend()
     self.__hfile.write(self.__insert + '};\n\n')
+
+    if output_shader:
+      for k, v in sorted(a_info.iteritems()):
+        suffix = '.glsl'
+        if artifact_class == Converter.__vertex_class:
+          suffix = '.vert'
+        elif artifact_class == Converter.__fragment_class:
+          suffix = '.frag'
+        elif artifact_class == Converter.__function_class:
+          suffix = '.func'
+        try:
+          os.mkdir(self.__shout)
+        except OSError:
+          pass 
+        self.__shfile = open(os.path.join(self.__shout, k + suffix),'w')
+        if glsl_variant=='desktop':
+          self.__shfile.write('#version 330\n\n')
+        else:
+          self.__shfile.write('#version 300 es\n\n')
+        for line in v[2]:
+          self.__shfile.write(line + '\n')
+        self.__shfile.close()
+
     return
 
-  def run(self):
+  def run(self, output_shader=False, glsl_variant='desktop'):
+    self.__openFiles()
     self.__hfile.write(Converter.__h_preamble)
 
     for n in Converter.__namespace:
@@ -134,12 +159,14 @@ class Converter(object):
     for v in sorted(Converter.__shader_variables.itervalues()):
       self.__cppfile.write('const std::string ' + '::'.join(Converter.__namespace) + '::' + Converter.__variables_struct + '::' + v + ' = "' + v + '";\n')
 
-    self.writeOutput(r'// Vertex shader', Converter.__vertex_class, self.__vertex_input_dir)
-    self.writeOutput(r'// Fragment shader', Converter.__fragment_class, self.__fragment_input_dir)
-    #self.writeOutput(r'// Functions', Converter.__function_class, self.__function_input_dir)
+    self.writeOutput(r'// Vertex shader', Converter.__vertex_class, self.__vertex_input_dir, output_shader, glsl_variant)
+    self.writeOutput(r'// Fragment shader', Converter.__fragment_class, self.__fragment_input_dir, output_shader, glsl_variant)
+    #self.writeOutput(r'// Functions', Converter.__function_class, self.__function_input_dir, output_shader, glsl_variant)
 
     self.__insert = self.__insert.replace(' ', '', 2)
     for n in reversed(Converter.__namespace):
       self.__hfile.write(self.__insert + '} // ' + n + '\n')
       self._unintend()
+
+    self.__closeFiles()
     return

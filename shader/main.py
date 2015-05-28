@@ -1,6 +1,4 @@
 from converter import Converter
 
 conv = Converter()
-conv.openFiles()
-conv.run()
-conv.closeFiles()
+conv.run(output_shader=True, glsl_variant='desktop') # for output_shader==True set glsl_variant to 'desktop' (default) or 'es'

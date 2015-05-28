@@ -5,3 +5,4 @@
 *.user
 *.suo
 /shader/*.pyc
+/shader/generated_glsl
