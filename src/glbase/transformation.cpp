@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/gtc/matrix_transform.hpp>
+//#include <glm/gtc/matrix_inverse.hpp>
 #include "traits3d/glbase/transformation.h"
 
 Traits3D::GL::Transformation::Transformation()
@@ -8,9 +9,14 @@ Traits3D::GL::Transformation::Transformation()
   // dummy
 }
 
-void Traits3D::GL::Transformation::setModelView(glm::mat4 const& mv)
+/**
+ \param mv The model-view matrix to set
+ \param n  The normal transformation matrix to set (mat3(mv)^-1^T)
+ */
+void Traits3D::GL::Transformation::setModelView(glm::mat4 const& mv, glm::mat3 const& n)
 {
   mv_ = mv;
+  normal_mat_ = n;
 }
 
 void Traits3D::GL::Transformation::setProjection(glm::mat4 const& proj)

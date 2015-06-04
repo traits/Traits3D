@@ -29,16 +29,19 @@ class Converter(object):
 
 
   # The key is used as a variable (e.g. $proj_matrix) in input shader templates
-  # and will be transformed to value in ouput files (C++ or shader). 
-  # The key should remain consistent with the input shader content
+  # and will be transformed to value in output files (C++ or shader). 
+  # The key must match shader template variable names exactly, changing value names
+  # is allowed and will create respective C++ sources
 
   __shader_variables = { 
     'proj_matrix'   : 'proj_matrix',
     'mv_matrix'     : 'mv_matrix',
+    'normal_matrix' : 'normal_matrix',
     'v_in_color'    : 'v_in_color', 
     'v_coordinates' : 'v_coordinates',
     'v_normals'     : 'v_normals',  
     'v_out_color'   : 'v_out_color',  
+    'light_position': 'light_position', # might be a direction for some cases 
     }
 
   #def decorate(variables):

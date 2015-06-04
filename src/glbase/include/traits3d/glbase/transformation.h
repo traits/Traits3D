@@ -16,7 +16,10 @@ namespace Traits3D
 
       glm::mat4 const& mv() const { return mv_; }
       glm::mat4 const& proj() const { return proj_; }
-      void setModelView(glm::mat4 const& mv);
+      glm::mat3 const& normalMatrix() const { return normal_mat_; }
+
+      //! Set model-view and normal-matrix
+      void setModelView(glm::mat4 const& mv, glm::mat3 const& n);
       void setProjection(glm::mat4 const& proj);
 
       //todo
@@ -32,6 +35,7 @@ namespace Traits3D
     private:
       glm::mat4 mv_;      
       glm::mat4 proj_;
+      glm::mat3 normal_mat_;
 
       bool ortho_ = true;
       float p_l_ = 0.0f;

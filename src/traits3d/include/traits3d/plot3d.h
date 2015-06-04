@@ -1,6 +1,5 @@
 #pragma once
 
-#include <array>
 #include "traits3d/glbase/transformation.h"
 #include "traits3d/colortable.h"
 #include "traits3d/coordinates.h"
