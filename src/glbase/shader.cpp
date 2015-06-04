@@ -157,69 +157,71 @@ bool Traits3D::GL::Shader::createFromFile(std::string const& vertex_file_path, s
   return create(vertex_code, fragment_code);
 }
 
-bool Traits3D::GL::Shader::setUniformMatrix(glm::mat4 const& mat, std::string const& name)
+GLint Traits3D::GL::Shader::getUniform(std::string const& name)
 {
   if (name.empty() || !use())
-    return false;
+    return -1;
 
   GLint loc = glGetUniformLocation(program_id_, name.c_str());
-  if (-1 == loc || GL_NO_ERROR != glGetError())
+  if (GL_NO_ERROR != glGetError())
+    return -1;
+  
+  return loc;
+}
+
+bool Traits3D::GL::Shader::setUniformMatrix(glm::mat3 const& mat, std::string const& name)
+{
+  GLint loc = getUniform(name);
+  if (-1 == loc)
+    return false;
+
+  glUniformMatrix3fv(loc, 1, GL_FALSE, &mat[0][0]);
+  
+  return (GL_NO_ERROR == glGetError()) ? true : false;
+}
+
+bool Traits3D::GL::Shader::setUniformMatrix(glm::mat4 const& mat, std::string const& name)
+{
+  GLint loc = getUniform(name);
+  if (-1 == loc)
     return false;
 
   glUniformMatrix4fv(loc, 1, GL_FALSE, &mat[0][0]);
-  if (GL_NO_ERROR != glGetError())
-    return false;
 
-  return true;
+  return (GL_NO_ERROR == glGetError()) ? true : false;
 }
-
 
 bool Traits3D::GL::Shader::setUniformVec2(glm::vec2 const& vec, std::string const& name)
 {
-  if (name.empty() || !use())
-    return false;
-
-  GLint loc = glGetUniformLocation(program_id_, name.c_str());
-  if (-1 == loc || GL_NO_ERROR != glGetError())
+  GLint loc = getUniform(name);
+  if (-1 == loc)
     return false;
 
   glUniform2fv(loc, 1, &vec[0]);
-  if (GL_NO_ERROR != glGetError())
-    return false;
 
-  return true;
+  return (GL_NO_ERROR == glGetError()) ? true : false;
 }
 
 bool Traits3D::GL::Shader::setUniformVec3(glm::vec3 const& vec, std::string const& name)
 {
-  if (name.empty() || !use())
-    return false;
-
-  GLint loc = glGetUniformLocation(program_id_, name.c_str());
-  if (-1 == loc || GL_NO_ERROR != glGetError())
+  GLint loc = getUniform(name);
+  if (-1 == loc)
     return false;
 
   glUniform3fv(loc, 1, &vec[0]);
-  if (GL_NO_ERROR != glGetError())
-    return false;
 
-  return true;
+  return (GL_NO_ERROR == glGetError()) ? true : false;
 }
 
 bool Traits3D::GL::Shader::setUniformVec4(glm::vec4 const& vec, std::string const& name)
 {
-  if (name.empty() || !use())
-    return false;
-
-  GLint loc = glGetUniformLocation(program_id_, name.c_str());
-  if (-1 == loc || GL_NO_ERROR != glGetError())
+  GLint loc = getUniform(name);
+  if (-1 == loc)
     return false;
 
   glUniform4fv(loc, 1, &vec[0]);
-  if (GL_NO_ERROR != glGetError())
-    return false;
 
-  return true;
+  return (GL_NO_ERROR == glGetError()) ? true : false;
 }
 
 bool Traits3D::GL::Shader::setMatrices(Traits3D::GL::Transformation const& matrices)

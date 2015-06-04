@@ -108,6 +108,8 @@ namespace Traits3D
   template <typename T>
   class MatrixH : public Matrix <T>
   {
+  // cf http://stackoverflow.com/questions/5286922/g-template-parameter-error
+  // about using the this pointer in classes derived from template base classes
   public:
     Box const& hull() const { return hull_; }
 
@@ -116,7 +118,7 @@ namespace Traits3D
       if (!Matrix<T>::setData(val, xsize, ysize))
         return false;
 
-      hull_ = Traits3D::calculateBox(data_p);
+      hull_ = Traits3D::calculateBox(this->data_p);
       return true;
     }
 
@@ -128,7 +130,7 @@ namespace Traits3D
         return false;
       }
 
-      hull_ = Traits3D::calculateBox(data_p);
+      hull_ = Traits3D::calculateBox(this->data_p);
       return true;
     }
 
@@ -136,7 +138,7 @@ namespace Traits3D
     MatrixH<S> convert() const
     {
       MatrixH<S> ret;
-      ret.setData(Traits3D::convert(data_p), xSize(), ySize());
+      ret.setData(Traits3D::convert(this->data_p), this->xSize(), this->ySize());
       return ret;
     }
 

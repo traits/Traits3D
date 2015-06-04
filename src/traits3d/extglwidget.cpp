@@ -52,10 +52,6 @@ Traits3D::ExtGLWidget::ExtGLWidget()
   xScale_ = yScale_ = zScale_ = 1.0f;
   zoom_ = 1;
   ortho_ = true;
-
-  lighting_enabled_ = false;
-  disableLighting();
-  lights_ = std::vector<Light>(8);
 }
 
 /**
@@ -191,11 +187,11 @@ bool Traits3D::ExtGLWidget::initializeGL()
 
   // Set up the lights
 
-  disableLighting();
+  //disableLighting();
 
   GLfloat whiteAmb[4] = {1.0, 1.0, 1.0, 1.0};
 
-  setLightShift(0, 0, 3000);
+//  setLightShift(0, 0, 3000);
 // glEnable(GL_COLOR_MATERIAL);
 
   //glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
@@ -213,46 +209,35 @@ bool Traits3D::ExtGLWidget::initializeGL()
 
 void Traits3D::ExtGLWidget::enableLighting(bool val)
 {
-  //if (lighting_enabled_ == val)
-  //  return;
-  //
-  //lighting_enabled_ = val;
-  ////makeCurrent();
-  //if (val)
-  //  glEnable(GL_LIGHTING);
-  //else
-  //  glDisable(GL_LIGHTING);
+  for (auto l : lights_)
+    l->enable(val);
 }
 
-void Traits3D::ExtGLWidget::disableLighting(bool val)
+void Traits3D::ExtGLWidget::appendLight(std::shared_ptr<Light> val)
 {
-  enableLighting(!val);
+  lights_.push_back(val);
 }
 
-bool Traits3D::ExtGLWidget::lightingEnabled() const
-{
-  return lighting_enabled_;
-}
 
 /**
   \param light light number [0..7]
   \see setLight
 */
-void Traits3D::ExtGLWidget::illuminate(unsigned light)
+void Traits3D::ExtGLWidget::illuminate(size_t light)
 {
-  if (light>7)
+  if (light>=lights_.size())
     return;
-  lights_[light].unlit = false;
+  lights_[light]->enable(true);
 }
 /**
   \param light light number [0..7]
   \see setLight
 */
-void Traits3D::ExtGLWidget::blowout(unsigned light)
+void Traits3D::ExtGLWidget::blowout(size_t light)
 {
-  if (light>7)
+  if (light >= lights_.size())
     return;
-  lights_[light].unlit = false;
+  lights_[light]->enable(false);
 }
 
 /**
@@ -302,39 +287,6 @@ void Traits3D::ExtGLWidget::setLightComponent(GLenum property, float intensity, 
   //setLightComponent(property,intensity,intensity,intensity,1.0, lightEnum(light));
 }
 
-/**
-  Set the rotation angle of the light source. If you look along the respective axis towards ascending values,
-  the rotation is performed in mathematical \e negative sense
-  \param xVal angle in \e degree to rotate around the X axis
-  \param yVal angle in \e degree to rotate around the Y axis
-  \param zVal angle in \e degree to rotate around the Z axis
-  \param light light number
-*/
-void Traits3D::ExtGLWidget::setLightRotation( float xVal, float yVal, float zVal, unsigned light )
-{
-  if (light>7)
-    return;
-  lights_[light].rot.x = xVal;
-  lights_[light].rot.y = yVal;
-  lights_[light].rot.z = zVal;
-}
-
-/**
-  Set the shift in light source (world) coordinates.
-  \param xVal shift along (world) X axis
-  \param yVal shift along (world) Y axis
-  \param zVal shift along (world) Z axis
-  \param light light number
-  \see setViewportShift()
-*/
-void Traits3D::ExtGLWidget::setLightShift( float xVal, float yVal, float zVal, unsigned light )
-{
-  if (light>7)
-    return;
-  lights_[light].shift.x = xVal;
-  lights_[light].shift.y = yVal;
-  lights_[light].shift.z = zVal;
-}
 
 void Traits3D::ExtGLWidget::applyLight(unsigned light)
 {

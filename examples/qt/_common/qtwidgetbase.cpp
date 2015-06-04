@@ -539,19 +539,19 @@ void Traits3D::QtWidgetBase::enableLighting( bool val /*= true*/ )
 void Traits3D::QtWidgetBase::disableLighting( bool val /*= true*/ )
 {
   makeCurrent();
-  plot_p->disableLighting(val);
+  //plot_p->disableLighting(val);
   update();
 }
 
 void Traits3D::QtWidgetBase::setLightRotation( double xVal, double yVal, double zVal, unsigned int idx /*= 0 */ )
 {
-  plot_p->setLightRotation(xVal, yVal, zVal, idx);
+  //plot_p->setLightRotation(xVal, yVal, zVal, idx);
   update();
 }
 
 void Traits3D::QtWidgetBase::setLightShift( double xVal, double yVal, double zVal, unsigned int idx /*= 0 */ )
 {
-  plot_p->setLightShift(xVal, yVal, zVal, idx);
+  //plot_p->setLightShift(xVal, yVal, zVal, idx);
   update();
 }
 
