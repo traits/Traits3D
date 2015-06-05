@@ -184,9 +184,9 @@ void QtWidgetBase::wheelEvent( QWheelEvent *e )
   step = exp(step)-1;
 
   if ( e->modifiers() & Qt::ShiftModifier )
-    plot_p->setScale(plot_p->xScale(),plot_p->yScale(), std::max<double>(0.0,plot_p->zScale() + step));
+    setScale(plot_p->xScale(),plot_p->yScale(), std::max<double>(0.0,plot_p->zScale() + step));
   else
-    plot_p->setZoom(max<double>(0.0,plot_p->zoom() + step ));
+    setZoom(max<double>(0.0,plot_p->zoom() + step ));
   
   update();
 }
@@ -505,7 +505,7 @@ void QtWidgetBase::setZoom( double val )
   if (!plot_p->setZoom(val))
     return;
 
-   update();
+  update();
   emit zoomChanged(val);
 }
 

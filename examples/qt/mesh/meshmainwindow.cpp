@@ -150,7 +150,7 @@ MeshMainWindow::MeshMainWindow( QWidget* parent )
   connect( datacolor, SIGNAL( triggered() ), this, SLOT( pickDataColor() ) );
   connect( lighting, SIGNAL( clicked() ), this, SLOT( pickLighting() ) );
   connect( resetcolor, SIGNAL( triggered() ), this, SLOT( resetColors() ) );
-   connect( numberfont, SIGNAL( triggered() ), this, SLOT( pickNumberFont() ) );
+  connect( numberfont, SIGNAL( triggered() ), this, SLOT( pickNumberFont() ) );
   connect( labelfont, SIGNAL( triggered() ), this, SLOT( pickLabelFont() ) );
   connect( titlefont, SIGNAL( triggered() ), this, SLOT( pickTitleFont() ) );
   connect( resetfont, SIGNAL( triggered() ), this, SLOT( resetFonts() ) );
@@ -694,10 +694,10 @@ void MeshMainWindow::resetFonts()
 
 void MeshMainWindow::setStandardView()
 {
-  widget_->plot3d->setRotation(deg2rad(30), 0, deg2rad(15));
-  widget_->plot3d->setViewportShift(0.05f,0);
-  widget_->plot3d->setScale(1,1,1);
-  widget_->plot3d->setZoom(0.95f);
+  widget_->setRotation(deg2rad(30), 0, deg2rad(15));
+  widget_->setViewportShift(0.05f,0);
+  widget_->setScale(1,1,1);
+  widget_->setZoom(0.95f);
 }
 
 /*!
@@ -770,9 +770,10 @@ MeshMainWindow::setPolygonOffset(int val)
 void
 MeshMainWindow::showRotate(double x, double y, double z)    
 {
-  rotate_label_->setText(" Angles ("  + QString::number(x,'g',3) + " ," 
-                                  + QString::number(y,'g',3) + " ,"
-                                  + QString::number(z,'g',3) + ")");
+  rotate_label_->setText(" Angles ("  
+    + QString::number(Traits3D::rad2deg(x), 'g', 3) + " ," 
+    + QString::number(Traits3D::rad2deg(y), 'g', 3) + " ,"
+    + QString::number(Traits3D::rad2deg(z), 'g', 3) + ")");
 }
 void
 MeshMainWindow::showShift(double x, double y)    

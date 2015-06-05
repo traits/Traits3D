@@ -40,6 +40,10 @@ void Traits3D::Plot3D::draw()
   // glm::T(M,...) -> M*T --- NOT T*M !!!
 
 
+  // initial model centering
+  // 
+  glm::mat4 m_translate2origin = glm::translate(glm::mat4(1.0f), -glm::vec3(center));
+
   // scaling/zooming
 
   std::array<float, 3> scales;
@@ -47,15 +51,13 @@ void Traits3D::Plot3D::draw()
   scales[1] = yScale() * zoom();
   scales[2] = zScale() * zoom();
 
-  float smax = *std::max_element(scales.cbegin(), scales.cend());
-  if (isZero(smax))
+  float radius_max = *std::max_element(scales.cbegin(), scales.cend());
+  if (isZero(radius_max))
     return;
 
-  smax *= radius;
+  radius_max *= radius;
 
-  glm::mat4 mv_matrix;
-  glm::mat4 m_scale = glm::scale(glm::mat4(1.0f), glm::vec3(xScale(), yScale(), zScale()));
-  glm::mat4 m_zoom = glm::scale(glm::mat4(1.0f), glm::vec3(zoom()));
+  glm::mat4 m_scale = glm::scale(glm::mat4(1.0f), glm::vec3(scales[0], scales[1], scales[2]));
 
   // rotation 
   
@@ -69,34 +71,30 @@ void Traits3D::Plot3D::draw()
   glm::mat4 m_rotate = m_xrot * m_yrot * m_zrot;
 
   // 'lookat'
-  glm::mat4 m_translate = glm::translate(glm::mat4(1.0f), -glm::vec3(0, 0, smax * 7.0f));
-  
-  // initial model centering
-  glm::mat4 m_translate2origin = glm::translate(glm::mat4(1.0f), -glm::vec3(center));
-  
+  glm::mat4 m_translate = glm::translate(glm::mat4(1.0f), -glm::vec3(0, 0, radius_max * 7.0f));
+    
   // completed MV matrix
-  mv_matrix = m_translate * m_zoom * m_scale * m_rotate * m_translate2origin; 
+  glm::mat4  mv_matrix = m_translate * m_rotate * m_scale * m_translate2origin;
   
   //bool uniform_scaling = equal(scales[0], scales[1]) && equal(scales[1], scales[2]);
 
   // calculate transposed inverse of upper 3x3 mv-matrix (for normal transformations)
-  // this should be equal to glm::inverseTranspose(glm::mat3(modelview_matrix_p)))
+  // this should be equal to glm::inverseTranspose(glm::mat3(mv_matrix)))
   
-  glm::mat3 i_zoom = glm::mat3(1/zoom());
-  glm::mat3 i_scale = glm::mat3(glm::scale(glm::mat4(1.0f), glm::vec3(1/xScale(), 1/yScale(), 1/zScale())));
+  glm::mat3 i_scale = glm::mat3(glm::scale(glm::mat4(1.0f), glm::vec3(1 / scales[0], 1 / scales[1], 1 / scales[2])));
   glm::mat4 i_xrot = glm::rotate(glm::mat4(1.0f), -xrot_r, glm::vec3(1, 0, 0));
   glm::mat4 i_yrot = glm::rotate(glm::mat4(1.0f), -yrot_r, glm::vec3(0, 1, 0));
   glm::mat4 i_zrot = glm::rotate(glm::mat4(1.0f), -zrot_r, glm::vec3(0, 0, 1));
   glm::mat3 i_rotate = glm::mat3(i_zrot * i_yrot * i_xrot);
 
-  glm::mat3 normal_matrix = i_rotate * i_scale * i_zoom;
+  glm::mat3 normal_matrix = i_scale * i_rotate;
   normal_matrix = glm::transpose(normal_matrix);
  
   matrices_p.setModelView(mv_matrix, normal_matrix);
 
   // projective transformation
   
-  float l(-radius), r(radius), b(-radius), t(radius), n(3 * smax), f(8 * smax);
+  float l(-radius), r(radius), b(-radius), t(radius), n(3 * radius_max), f(8 * radius_max);
 
   l -= xViewportShift() * 2 * radius;
   r -= xViewportShift() * 2 * radius;
