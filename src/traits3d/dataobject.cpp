@@ -32,7 +32,10 @@ bool Traits3D::GL::DataObject::initShader()
 
   shader_[ShaderIndex::Lines] = s;
 
-  if (!s.create(GL::ShaderCode::Vertex::TriangleStrip, GL::ShaderCode::Fragment::Simple))
+  //if (!s.create(GL::ShaderCode::Vertex::TriangleStrip, GL::ShaderCode::Fragment::Simple))
+  //  return false;
+  
+  if (!s.create(GL::ShaderCode::Vertex::BlinnPhong, GL::ShaderCode::Fragment::BlinnPhong))
     return false;
 
   shader_[ShaderIndex::TriangleStrip] = s;
@@ -50,7 +53,7 @@ bool Traits3D::GL::DataObject::setPositionData(std::vector<TripleF> const& data,
   if (!vertices_.value.setData(data, xsize, ysize))
     return false;
 
-  if (maintain_normals_)
+  //if (maintain_normals_)
   {
     if (!calculateNormals(normals_, vertices_.value))
       return false;
@@ -78,7 +81,7 @@ bool Traits3D::GL::DataObject::updatePositionData(std::vector<TripleF> const& da
   if (!vertices_.value.setData(data, vertices_.value.xSize(), vertices_.value.ySize()))
     return false;
 
-  if (maintain_normals_)
+  //if (maintain_normals_)
   {
     if (!calculateNormals(normals_, vertices_.value) || !vbos_[VBOindex::Normals]->setData(normals_.linearBuffer()))
       return false;
@@ -107,8 +110,8 @@ void Traits3D::GL::DataObject::draw(Transformation const& matrices)
 {
   shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::DataColors], GL::ShaderCode::Var::v_in_color);
   shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::Positions], GL::ShaderCode::Var::v_coordinates);
-  if (maintain_normals_)
-    shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::Normals], GL::ShaderCode::Var::v_normals);
+  //if (maintain_normals_)
+  shader_[ShaderIndex::TriangleStrip].bindAttribute(*vbos_[VBOindex::Normals], GL::ShaderCode::Var::v_normals);
 
   if (vertices_.modified)
   {
@@ -117,7 +120,7 @@ void Traits3D::GL::DataObject::draw(Transformation const& matrices)
       || !vbos_[VBOindex::Positions]->setData(vertices_.value.linearBuffer()))
       return;
 
-    if (maintain_normals_ && !vbos_[VBOindex::Normals]->setData(normals_.linearBuffer()))
+    if (/*maintain_normals_ &&*/ !vbos_[VBOindex::Normals]->setData(normals_.linearBuffer()))
       return;
 
     vertices_.modified = false;

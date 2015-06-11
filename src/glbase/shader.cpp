@@ -229,7 +229,9 @@ bool Traits3D::GL::Shader::setMatrices(Traits3D::GL::Transformation const& matri
   return 
     setUniformMatrix(matrices.proj(), ShaderCode::Var::proj_matrix)
     &&
-    setUniformMatrix(matrices.mv(), ShaderCode::Var::mv_matrix);
+    setUniformMatrix(matrices.mv(), ShaderCode::Var::mv_matrix)
+    &&
+    setUniformMatrix(matrices.normalMatrix(), ShaderCode::Var::normal_matrix);
 }
 
 bool Traits3D::GL::Shader::use()

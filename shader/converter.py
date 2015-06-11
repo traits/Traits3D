@@ -41,6 +41,7 @@ class Converter(object):
     'v_coordinates' : 'v_coordinates',
     'v_normals'     : 'v_normals',  
     'v_out_color'   : 'v_out_color',  
+    'f_out_color'   : 'f_out_color',  
     'light_position': 'light_position', # might be a direction for some cases 
     }
 
