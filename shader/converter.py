@@ -5,9 +5,7 @@ class Converter(object):
   """Converts template shader files into C++ sources"""
 
   def __init__(self):
-    self.__vertex_input_dir = 'input' + os.sep + 'vshader'
-    self.__fragment_input_dir = 'input' + os.sep + 'fshader'
-    self.__function_input_dir = 'input' + os.sep + 'functions'
+    self.__input_dir = 'input'
     self.__hout = '..' + os.sep + 'src' + os.sep + 'glbase' + os.sep + 'include'  + os.sep + 'traits3d' + os.sep + 'glbase'
     self.__cppout = '..' + os.sep + 'src' + os.sep + 'glbase'
     self.__shout = 'generated_glsl'
@@ -43,7 +41,17 @@ class Converter(object):
     'v_out_color'   : 'v_out_color',  
     'f_out_color'   : 'f_out_color',  
     'light_position': 'light_position', # might be a direction for some cases 
+    'light_position2': 'light_position2', 
     }
+
+  # filename suffix indicates shader type 
+  __shader_type = { 
+    'Vertex'     : {'tsuffix' :'.vsht', 'osuffix' :'.vsh'},
+    'Fragment'   : {'tsuffix' :'.fsht', 'osuffix' :'.fsh'},
+    'Subroutine' : {'tsuffix' :'.rsht', 'osuffix' :'.rsh'},
+  }
+  __variables_struct = 'Var'
+
 
   #def decorate(variables):
   #  surround = lambda word : '$' + word 
@@ -60,11 +68,6 @@ class Converter(object):
 #endif
 '''
 
-  __variables_struct = 'Var'
-  __vertex_class = 'Vertex'
-  __fragment_class = 'Fragment'
-  __function_class = 'Function'
-
   __h_rel_path = 'traits3d/glbase'
   __h_preamble = \
     '#pragma once\n\n' \
@@ -79,13 +82,17 @@ class Converter(object):
   def _unintend(self) :
     self.__insert = self.__insert.replace(' ', '', 2)
 
-  @staticmethod
-  def processFiles(dir, type):
+  #@staticmethod
+  def processFiles(self, dir):
     ret = {}
+    for k in self.__shader_type:
+      ret[k] = []
+
     for root, dirs, files in os.walk(dir):
       for fname in sorted(files):
         ifile = os.path.join(root, fname)     
         basename = os.path.splitext(os.path.basename(ifile))[0]
+        suffix = os.path.splitext(os.path.basename(ifile))[1] # suffix including '.'
     
         with open(ifile, mode='rb') as file:     
           text = [] 
@@ -94,53 +101,51 @@ class Converter(object):
             line = line.rstrip('\r\n')
             line = Template(line).substitute(Converter.__shader_variables)
             text.append(line)
-        ret[basename] = [fname, type, text]   
+        
+        # look up suffix key
+        lsuffix = [k for k,v in self.__shader_type.iteritems() if v['tsuffix'] == suffix]
+        if lsuffix:
+          ret[lsuffix[0]].append([fname, basename, text])   
     return ret
 
-  def writeOutput(self, comment, artifact_class, artifact_input_dir, output_shader, glsl_variant):
-    a_info = Converter.processFiles(artifact_input_dir, artifact_class)
-    self.__hfile.write(self.__insert + comment + '\n')
-    self.__hfile.write(self.__insert + 'class ' + artifact_class + '\n' + self.__insert + '{\n')
-    self.__hfile.write(self.__insert + 'public:\n')
-    self._intend()
-    self.__cppfile.write('\n\n' + comment + '\n')
+  def writeOutput(self, artifact_input_dir, output_shader, glsl_variant):
+    a_info = self.processFiles(artifact_input_dir)
     for k, v in sorted(a_info.iteritems()):
-      self.__hfile.write(self.__insert + 'static const char* ' + k + ';\n')
-      self.__cppfile.write('\n\n// ' + v[0] + '\n') 
-      self.__cppfile.write('const char* ' + '::'.join(Converter.__namespace) + '::' + artifact_class + '::' + k + ' = \n{')
-      self.__cppfile.write(Converter.__cpp_version_selector)
-      for line in v[2]:
-        if line and not line.isspace():
-          #if line.startswith('//'):
-          #  self.__cppfile.write(line + '\n')
-          #else:
-          self.__cppfile.write('  "' + line + '\\n"' + '\n')
-      self.__cppfile.write('};\n\n')
-    self._unintend()
-    self.__hfile.write(self.__insert + '};\n\n')
+      self.__hfile.write(self.__insert + '// ' + k + ' shader \n')
+      self.__hfile.write(self.__insert + 'class ' + k + '\n' + self.__insert + '{\n')
+      self.__hfile.write(self.__insert + 'public:\n')
+      self._intend()
+      self.__cppfile.write('\n\n' + '// ' + k + ' shader\n')
+      for lv in v:
+        self.__hfile.write(self.__insert + 'static const char* ' + lv[1] + ';\n')
+        self.__cppfile.write('\n\n// ' + lv[0] + '\n') 
+        self.__cppfile.write('const char* ' + '::'.join(Converter.__namespace) + '::' + k + '::' + lv[1] + ' = \n{')
+        self.__cppfile.write(Converter.__cpp_version_selector)
+        for line in lv[2]:
+          if line and not line.isspace():
+            #if line.startswith('//'):
+            #  self.__cppfile.write(line + '\n')
+            #else:
+            self.__cppfile.write('  "' + line + '\\n"' + '\n')
+              
+        if output_shader:        
+          suffix = self.__shader_type[k]['osuffix']
+          try:
+            os.mkdir(self.__shout)
+          except OSError:
+            pass 
+          self.__shfile = open(os.path.join(self.__shout, lv[1] + suffix),'w')
+          if glsl_variant=='desktop':
+            self.__shfile.write('#version 330\n\n')
+          else:
+            self.__shfile.write('#version 300 es\n\n')
+          for line in lv[2]:
+            self.__shfile.write(line + '\n')
+          self.__shfile.close()
 
-    if output_shader:
-      for k, v in sorted(a_info.iteritems()):
-        suffix = '.glsl'
-        if artifact_class == Converter.__vertex_class:
-          suffix = '.vert'
-        elif artifact_class == Converter.__fragment_class:
-          suffix = '.frag'
-        elif artifact_class == Converter.__function_class:
-          suffix = '.func'
-        try:
-          os.mkdir(self.__shout)
-        except OSError:
-          pass 
-        self.__shfile = open(os.path.join(self.__shout, k + suffix),'w')
-        if glsl_variant=='desktop':
-          self.__shfile.write('#version 330\n\n')
-        else:
-          self.__shfile.write('#version 300 es\n\n')
-        for line in v[2]:
-          self.__shfile.write(line + '\n')
-        self.__shfile.close()
-
+        self.__cppfile.write('};\n\n')
+      self._unintend()
+      self.__hfile.write(self.__insert + '};\n\n')
     return
 
   def run(self, output_shader=False, glsl_variant='desktop'):
@@ -163,9 +168,7 @@ class Converter(object):
     for v in sorted(Converter.__shader_variables.itervalues()):
       self.__cppfile.write('const std::string ' + '::'.join(Converter.__namespace) + '::' + Converter.__variables_struct + '::' + v + ' = "' + v + '";\n')
 
-    self.writeOutput(r'// Vertex shader', Converter.__vertex_class, self.__vertex_input_dir, output_shader, glsl_variant)
-    self.writeOutput(r'// Fragment shader', Converter.__fragment_class, self.__fragment_input_dir, output_shader, glsl_variant)
-    #self.writeOutput(r'// Functions', Converter.__function_class, self.__function_input_dir, output_shader, glsl_variant)
+    self.writeOutput(self.__input_dir, output_shader, glsl_variant)
 
     self.__insert = self.__insert.replace(' ', '', 2)
     for n in reversed(Converter.__namespace):
