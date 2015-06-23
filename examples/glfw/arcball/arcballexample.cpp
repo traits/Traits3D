@@ -1,5 +1,6 @@
 #include "traits3d/glbase/transformation.h"
 #include <glm\gtc\matrix_transform.hpp>
+#include "traits3d/glbase/shader_std.h"
 #include "arcballexample.h"
 
 ExampleArcBall::ExampleArcBall()

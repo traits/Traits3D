@@ -1,4 +1,5 @@
 #include <algorithm>
+#include "traits3d/glbase/shader_std.h"
 #include "traits3d/glbase/meshrenderer.h"
 
 const std::string Traits3D::GL::MeshRenderer::v_core_delta_ = "v_core_delta";

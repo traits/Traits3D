@@ -15,6 +15,7 @@ namespace Traits3D
       {
         static const std::string f_out_color;
         static const std::string light_position;
+        static const std::string light_position2;
         static const std::string mv_matrix;
         static const std::string normal_matrix;
         static const std::string proj_matrix;
@@ -24,25 +25,31 @@ namespace Traits3D
         static const std::string v_out_color;
       };
 
-      // Vertex shader
-      class Vertex
-      {
-      public:
-        static const char* BlinnPhong;
-        static const char* Line;
-        static const char* LineXYZ;
-        static const char* Phong;
-        static const char* TriangleStrip;
-        static const char* TriangleStripXYZ;
-      };
-
-      // Fragment shader
+      // Fragment shader 
       class Fragment
       {
       public:
+        static const char* Blinn;
         static const char* BlinnPhong;
-        static const char* Phong;
         static const char* Simple;
+      };
+
+      // Subroutine shader 
+      class Subroutine
+      {
+      public:
+      };
+
+      // Vertex shader 
+      class Vertex
+      {
+      public:
+        static const char* Blinn;
+        static const char* BlinnPhong;
+        static const char* Line;
+        static const char* LineXYZ;
+        static const char* TriangleStrip;
+        static const char* TriangleStripXYZ;
       };
 
     } // ShaderCode

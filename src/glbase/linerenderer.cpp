@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "traits3d/helper.h"
+#include "traits3d/glbase/shader_std.h"
 #include "traits3d/glbase/linerenderer.h"
 
 

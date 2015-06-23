@@ -1,6 +1,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "traits3d/glbase/transformation.h"
 #include "traits3d/helper.h"
+#include "traits3d/glbase/shader_std.h"
 #include "traits3d/textengine/textengine_std.h"
 #include "traits3d/axisobject.h"
 

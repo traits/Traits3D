@@ -3,6 +3,7 @@
 #include <string>
 #include "traits3d/glbase/vbo.h"
 #include "traits3d/glbase/transformation.h"
+#include "traits3d/glbase/shader_std.h"
 #include "traits3d/glbase/shader.h"
 
 Traits3D::GL::Shader::Shader()

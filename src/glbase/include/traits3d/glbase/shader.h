@@ -2,7 +2,6 @@
 
 #include <map>
 #include "traits3d/glbase/glhelper.h"
-#include "traits3d/glbase/shader_std.h"
 
 
 namespace Traits3D

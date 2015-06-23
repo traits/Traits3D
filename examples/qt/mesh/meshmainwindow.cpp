@@ -268,7 +268,7 @@ void MeshMainWindow::createFunction(QString const& name)
     function = std::make_shared<Rosenbrock>();
     
     function->setDomainResolution(50, 51);
-    function->setDomain(-1.73, 1.55, -1.5, 2.15);
+    function->setDomain(-2.73, 1.55, -1.5, 2.15);
     function->setRange(-100, 1000);
     
     widget_->plot3d->coordinates()->axes[Z1].setScale(LOG10SCALE);
