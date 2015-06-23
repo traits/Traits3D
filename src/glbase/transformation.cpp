@@ -17,7 +17,7 @@ void Traits3D::GL::Transformation::setModelView(glm::mat4 const& mv, glm::mat3 c
 {
   mv_ = mv;
   normal_mat_ = n;
-  light_to_camspace_ = t;
+  light_mat_ = t;
 }
 
 void Traits3D::GL::Transformation::setProjection(glm::mat4 const& proj)

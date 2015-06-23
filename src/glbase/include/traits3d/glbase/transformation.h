@@ -17,7 +17,7 @@ namespace Traits3D
       glm::mat4 const& mv() const { return mv_; }
       glm::mat4 const& proj() const { return proj_; }
       glm::mat3 const& normalMatrix() const { return normal_mat_; }
-      glm::mat4 const& light2cameraSpace() const { return light_to_camspace_; }
+      glm::mat4 const& lightMatrix() const { return light_mat_; }
 
       //! Set model-view and normal-matrix
       void setModelView(glm::mat4 const& mv, glm::mat3 const& n, glm::mat4 const& t);
@@ -37,7 +37,7 @@ namespace Traits3D
       glm::mat4 mv_;      
       glm::mat4 proj_;
       glm::mat3 normal_mat_;
-      glm::mat4 light_to_camspace_;
+      glm::mat4 light_mat_;
 
       bool ortho_ = true;
       float p_l_ = 0.0f;

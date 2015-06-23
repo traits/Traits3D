@@ -87,13 +87,15 @@ void Traits3D::Plot3D::draw()
   glm::mat4 i_zrot = glm::rotate(glm::mat4(1.0f), -zrot_r, glm::vec3(0, 0, 1));
   glm::mat3 i_rotate = glm::mat3(i_zrot * i_yrot * i_xrot);
 
-  glm::mat3 normal_matrix = i_scale * i_rotate;
-  normal_matrix = glm::transpose(normal_matrix);
- 
-  glm::mat4 light_matrix =
-    glm::inverse(m_translate2origin)
-    * glm::rotate(glm::mat4(1.0f), static_cast<float>(PI / 2), glm::vec3(1, 0, 0))
-    * glm::inverse(m_translate);
+  glm::mat3 normal_matrix = glm::transpose(i_scale * i_rotate);
+
+  // transforms light positions invariant to model rotations in world space
+  glm::mat4  light_matrix =
+    m_translate 
+    * glm::rotate(glm::mat4(1.0f), -static_cast<float>(PI / 2), glm::vec3(1, 0, 0)) 
+    * m_scale 
+    * m_translate2origin;
+
   matrices_p.setModelView(mv_matrix, normal_matrix, light_matrix);
 
   // projective transformation

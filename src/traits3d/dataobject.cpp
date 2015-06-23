@@ -141,13 +141,11 @@ void Traits3D::GL::DataObject::draw(Transformation const& matrices)
   Light bulb;
   bulb.enable(true);
 
-  TripleF bpos(hull().minVertex.x, hull().maxVertex.y, 
-    hull().minVertex.z + 0.5 * (hull().maxVertex.z - hull().minVertex.z));
+  TripleF bpos(hull().minVertex.x, hull().minVertex.y, 
+    hull().minVertex.z + 2 * (hull().maxVertex.z - hull().minVertex.z));
 
   bulb.setPosition(bpos);
-  //TripleF lightpos_eye_space = glm::vec3(matrices.light2cameraSpace() * glm::vec4(bulb.position(), 1.0));
-  TripleF lightpos_eye_space = bulb.position();
-
+  TripleF lightpos_eye_space = glm::vec3(matrices.lightMatrix() * glm::vec4(bulb.position(), 1.0));
   shader_[ShaderIndex::TriangleStrip].setUniformVec3(lightpos_eye_space, ShaderCode::Var::light_position);
 
 

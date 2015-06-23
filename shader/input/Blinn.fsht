@@ -1,6 +1,5 @@
 in vec4 $v_out_color;
 in vec3 N;
-in vec3 P;
 in vec3 V;
 in vec3 L;
 out vec4 $f_out_color;
@@ -23,13 +22,13 @@ void main()
 { 
     vec3 l = normalize(L);
     vec3 n = normalize(N);
-    vec3 v = normalize(V);
+    vec3 v = normalize(-V);
     vec3 h = normalize(l+v);
 
     float diffuse = dot(l,n);
-    //float s = strictSign(diffuse);
-    //diffuse = s * diffuse;
-    //n = s * n;
+    float s = strictSign(diffuse);
+    diffuse = s * diffuse;
+    n = s * n;
     
     
     float specular = pow(max(0.0,dot(n,h)),1/Roughness);
