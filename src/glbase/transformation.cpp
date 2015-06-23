@@ -13,10 +13,11 @@ Traits3D::GL::Transformation::Transformation()
  \param mv The model-view matrix to set
  \param n  The normal transformation matrix to set (mat3(mv)^-1^T)
  */
-void Traits3D::GL::Transformation::setModelView(glm::mat4 const& mv, glm::mat3 const& n)
+void Traits3D::GL::Transformation::setModelView(glm::mat4 const& mv, glm::mat3 const& n, glm::mat4 const& t)
 {
   mv_ = mv;
   normal_mat_ = n;
+  light_to_camspace_ = t;
 }
 
 void Traits3D::GL::Transformation::setProjection(glm::mat4 const& proj)

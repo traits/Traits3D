@@ -1,0 +1,28 @@
+uniform mat4 $proj_matrix;
+uniform mat4 $mv_matrix;
+uniform mat3 $normal_matrix;
+uniform vec3 $light_position;
+
+layout (location = 0) in vec3 $v_coordinates;
+in vec3 $v_normals;
+in vec4 $v_in_color;
+
+out vec4 $v_out_color;
+out vec3 N;
+out vec3 P;
+out vec3 V;
+out vec3 L;
+
+void main()
+{    
+    N = normalize($normal_matrix*$v_normals);
+    P = $v_coordinates;
+    V = -vec3($mv_matrix * vec4($v_coordinates, 1.0));
+    //V = -$v_coordinates;
+	  L = vec3($mv_matrix*(vec4($light_position-$v_coordinates, 1.0)));
+	  //L = $light_position - vec3($mv_matrix*(vec4(-$v_coordinates, 1)));
+	  //L = $light_position-$v_coordinates;
+    $v_out_color = $v_in_color;
+    gl_Position = $proj_matrix * $mv_matrix * vec4($v_coordinates, 1.0);
+}
+

@@ -90,7 +90,11 @@ void Traits3D::Plot3D::draw()
   glm::mat3 normal_matrix = i_scale * i_rotate;
   normal_matrix = glm::transpose(normal_matrix);
  
-  matrices_p.setModelView(mv_matrix, normal_matrix);
+  glm::mat4 light_matrix =
+    glm::inverse(m_translate2origin)
+    * glm::rotate(glm::mat4(1.0f), static_cast<float>(PI / 2), glm::vec3(1, 0, 0))
+    * glm::inverse(m_translate);
+  matrices_p.setModelView(mv_matrix, normal_matrix, light_matrix);
 
   // projective transformation
   

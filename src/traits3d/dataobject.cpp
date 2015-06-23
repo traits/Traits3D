@@ -2,7 +2,10 @@
 #include "traits3d/glbase/transformation.h"
 #include "traits3d/helper.h"
 #include "traits3d/colortable.h"
+#include "traits3d/light.h"
+#include "traits3d/glbase/shader_std.h"
 #include "traits3d/dataobject.h"
+
 
 Traits3D::GL::DataObject::DataObject()
   : GL::Object()
@@ -35,7 +38,7 @@ bool Traits3D::GL::DataObject::initShader()
   //if (!s.create(GL::ShaderCode::Vertex::TriangleStrip, GL::ShaderCode::Fragment::Simple))
   //  return false;
   
-  if (!s.create(GL::ShaderCode::Vertex::BlinnPhong, GL::ShaderCode::Fragment::BlinnPhong))
+  if (!s.create(GL::ShaderCode::Vertex::Blinn, GL::ShaderCode::Fragment::Blinn))
     return false;
 
   shader_[ShaderIndex::TriangleStrip] = s;
@@ -135,6 +138,19 @@ void Traits3D::GL::DataObject::draw(Transformation const& matrices)
     colors_.modified = false;
   }
 
+  Light bulb;
+  bulb.enable(true);
+
+  TripleF bpos(hull().minVertex.x, hull().maxVertex.y, 
+    hull().minVertex.z + 0.5 * (hull().maxVertex.z - hull().minVertex.z));
+
+  bulb.setPosition(bpos);
+  //TripleF lightpos_eye_space = glm::vec3(matrices.light2cameraSpace() * glm::vec4(bulb.position(), 1.0));
+  TripleF lightpos_eye_space = bulb.position();
+
+  shader_[ShaderIndex::TriangleStrip].setUniformVec3(lightpos_eye_space, ShaderCode::Var::light_position);
+
+
   // polygons
   glEnable(GL_POLYGON_OFFSET_FILL);
   glPolygonOffset(1, -1);
@@ -144,7 +160,7 @@ void Traits3D::GL::DataObject::draw(Transformation const& matrices)
 
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   //ibos_[IBOindex::Polygons]->draw();
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glDisable(GL_POLYGON_OFFSET_FILL);
 
   //mesh_renderer_.draw(matrices);
@@ -257,7 +273,7 @@ bool Traits3D::GL::DataObject::calculateNormals(Matrix<TripleF>& result, MatrixF
 
     // right boundary
     x = positions.xSize() - 1;
-    q[0] = nc(1, 0, -1, 0);
+    q[0] = nc(0, 1, -1, 0);
     q[1] = nc(-1, 0, 0, -1);
     result(x, y) = glm::normalize(std::accumulate(q.begin(), q.end(), TripleF(0, 0, 0)));
   }
@@ -265,8 +281,8 @@ bool Traits3D::GL::DataObject::calculateNormals(Matrix<TripleF>& result, MatrixF
   // corners
   x = 0;                     y = 0;                     result(x, y) = nc( 1,  0,  0,  1);
   x = positions.xSize() - 1; y = 0;                     result(x, y) = nc( 0,  1, -1,  0);
-  x = 0;                     y = positions.ySize() - 1; result(x, y) = nc( 0, -1,  1,  0);
-  x = positions.xSize() - 1; y = positions.ySize() - 1; result(x, y) = nc(-1,  0,  0, -1);
+  x = positions.xSize() - 1; y = positions.ySize() - 1; result(x, y) = nc(-1, 0, 0, -1);
+  x = 0;                     y = positions.ySize() - 1; result(x, y) = nc(0, -1, 1, 0);
 
   return true;
 }
