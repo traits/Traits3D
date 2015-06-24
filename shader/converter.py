@@ -19,6 +19,10 @@ class Converter(object):
     self.__hfile.close()
     self.__cppfile .close()
 
+  def __skipComments(self, file):
+    for line in file:
+      if not line.strip().startswith('//'):
+        yield line
 
   # static config section
 
@@ -96,7 +100,7 @@ class Converter(object):
     
         with open(ifile, mode='rb') as file:     
           text = [] 
-          for line in file:
+          for line in self.__skipComments(file):
             #eols = line.count('\n')
             line = line.rstrip('\r\n')
             line = Template(line).substitute(Converter.__shader_variables)

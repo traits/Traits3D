@@ -33,6 +33,12 @@ void main()
     
     float specular = pow(max(0.0,dot(n,h)),1/Roughness);
     
+    //// true Phong  shading  
+    //vec3 reflectDir = reflect(-l, n);
+    //float specAngle = max(dot(reflectDir, v), 0.0);
+    // note that the exponent is different here
+    //specular = pow(specAngle, 4.0);
+   
     $f_out_color = vec4(AmbientColour*AmbientIntensity + 
                         DiffuseColour*diffuse*DiffuseIntensity +
                         SpecularColour*specular*SpecularIntensity,1);

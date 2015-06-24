@@ -37,7 +37,6 @@ const char* Traits3D::GL::ShaderCode::Fragment::Blinn =
   "const float DiffuseIntensity = 1.0;\n"
   "const float SpecularIntensity = 1.0;\n"
   "const float Roughness = 1.0/16.0;\n"
-  "// -1 for x<0; 1 else\n"
   "float strictSign(float x)\n"
   "{\n"
   "	return step(0, x)*2 - 1;\n"
@@ -56,7 +55,6 @@ const char* Traits3D::GL::ShaderCode::Fragment::Blinn =
   "    f_out_color = vec4(AmbientColour*AmbientIntensity + \n"
   "                        DiffuseColour*diffuse*DiffuseIntensity +\n"
   "                        SpecularColour*specular*SpecularIntensity,1);\n"
-  "    //f_out_color = vec4(DiffuseColour,1.0);\n"
   "}\n"
 };
 
@@ -79,7 +77,6 @@ const char* Traits3D::GL::ShaderCode::Fragment::BlinnPhong =
   "vec3 diffuseColor = vec3(v_out_color);\n"
   "const vec3 ambientColor = vec3(0.2, 0.0, 0.0);\n"
   "const vec3 specColor = vec3(1.0, 1.0, 1.0);\n"
-  "// -1 for x<0; 1 else\n"
   "float strictSign(float x)\n"
   "{\n"
   "	return step(0, x)*2 - 1;\n"
@@ -94,14 +91,12 @@ const char* Traits3D::GL::ShaderCode::Fragment::BlinnPhong =
   "  normal = s * normal;\n"
   "  float specular = 0.0;\n"
   "  vec3 viewDir = normalize(-vert_out);\n"
-  "  // this is blinn phong\n"
   "  vec3 halfDir = normalize(lightDir + viewDir);\n"
   "  float specAngle = max(dot(halfDir, normal), 0.0);\n"
   "  specular = pow(specAngle, 16.0);\n"
   "  f_out_color = vec4(ambientColor +\n"
   "                    lambertian*diffuseColor +\n"
   "                    specular*specColor, 1.0);\n"
-  "  //f_out_color = vec4(diffuseColor, 1.0);\n"
   "}\n"
 };
 
