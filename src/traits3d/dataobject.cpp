@@ -158,7 +158,7 @@ void Traits3D::GL::DataObject::draw(Transformation const& matrices)
 
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   //ibos_[IBOindex::Polygons]->draw();
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glDisable(GL_POLYGON_OFFSET_FILL);
 
   //mesh_renderer_.draw(matrices);
