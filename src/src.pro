@@ -5,13 +5,14 @@ include(src.pri)
 QT       += core gui widgets
 
 #CONFIG += c++11
-QMAKE_CXXFLAGS += -std=c++1y -O0 -fno-strict-aliasing
+QMAKE_CXXFLAGS += -std=c++1y -O0 -fno-strict-aliasing 
+QMAKE_CXXFLAGS_WARN_ON += -Wno-comment
 
 TARGET = traits3d
 TEMPLATE = lib
 DEFINES += TRAITS3D_GL_IS_OPENGL_ES
 #todo!
-DEFINES += QT_OPENGL_ES_3 GL_ES_VERSION_3_0
+DEFINES += QT_OPENGL_ES_3 #GL_ES_VERSION_3_0
 LIBS += -lGLESv3
 
 
