@@ -36,20 +36,8 @@ endfunction()
 
 function(example_creator subdirlist linklibrarylist ideproperty)
   foreach(subdir ${subdirlist})
-    file(GLOB  ${subdir}_FILES ${subdir}/*.cpp ${subdir}/*.h ${subdir}/*.qml )
-    file(GLOB  ${subdir}_QRC_FILES ${subdir}/*.qrc)
-    file(GLOB  ${subdir}_UI_FILES ${subdir}/*.ui)
-    
-    if (NOT ("${${subdir}_QRC_FILES}" STREQUAL ""))
-      qt5_add_resources(${subdir}_QRC_CREATED_FILES ${${subdir}_QRC_FILES})
-      #message("Bummer: " ${${subdir}_QRC} " -> " ${QRC_FILES})
-    endif()
-    if (NOT ("${${subdir}_UI_FILES}" STREQUAL ""))
-      qt5_wrap_ui(${subdir}_UI_CREATED_FILES ${${subdir}_UI_FILES})
-    endif()
-    
-    add_executable(${subdir}  ${${subdir}_FILES} ${${subdir}_QRC_CREATED_FILES} ${${subdir}_UI_CREATED_FILES})
-    
+    file(GLOB  ${subdir}_FILES ${subdir}/*.cpp ${subdir}/*.h ${subdir}/*.qml ${subdir}/*.qrc ${subdir}/*.ui)
+    add_executable(${subdir}  ${${subdir}_FILES})
     set_property(TARGET ${subdir} PROPERTY FOLDER ${ideproperty})
     target_link_libraries(${subdir} ${linklibrarylist})
     set_target_properties(${subdir} PROPERTIES WIN32_EXECUTABLE false)

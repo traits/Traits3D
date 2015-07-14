@@ -7,6 +7,9 @@ set(QT5CMAKEROOT "v:/lib/qt/qt5/install/x64/lib/cmake" CACHE STRING "Qt cmake ro
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+set_property(GLOBAL PROPERTY AUTOGEN_TARGETS_FOLDER "examples/qt/automoc")
 # Find the QtWidgets library
 find_package(Qt5Widgets)
 find_package(Qt5OpenGL)
