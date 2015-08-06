@@ -36,7 +36,7 @@ void main()
     //// true Phong  shading  
     //vec3 reflectDir = reflect(-l, n);
     //float specAngle = max(dot(reflectDir, v), 0.0);
-    // note that the exponent is different here
+    //// note that the exponent is different here
     //specular = pow(specAngle, 4.0);
    
     $f_out_color = vec4(AmbientColour*AmbientIntensity + 
