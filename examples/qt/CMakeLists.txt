@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
 
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "v:/lib/qt/qt550/install/x64/lib/cmake")
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "v:/lib/qt/qt550/install/VS2013/x64/lib/cmake")
 #set(QT5CMAKEROOT "v:/lib/qt/qt5/install/android/x86/lib/cmake" CACHE STRING "Qt cmake root")
 
 # Find includes in corresponding build directories
