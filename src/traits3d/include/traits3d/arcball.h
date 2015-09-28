@@ -3,12 +3,12 @@
 #include "traits3d/glbase/glhelper.h"
 #include "traits3d/global.h"
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp> 
-#include <glm/gtx/quaternion.hpp> 
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 //#include <windows.h>                      // Header File For Windows
 //#include <GL\gl.h>                        // Header File For The GLu32 Library
 
-// 8<--Snip here if you have your own math types/funcs-->8 
+// 8<--Snip here if you have your own math types/funcs-->8
 
 
 //typedef union Matrix3f_t
@@ -27,7 +27,7 @@
 //                GLfloat M22;  //ZAxis.Z and Scale Z
 //            } s;
 //            GLfloat M[9];
-//    } Matrix3fT;     //A single precision floating point 3 by 3 matrix. 
+//    } Matrix3fT;     //A single precision floating point 3 by 3 matrix.
 //
 //    typedef union Matrix4f_t
 //    {
@@ -52,14 +52,14 @@
 //                GLfloat M33;  //Trans.W and Scale W
 //            } s;
 //            GLfloat M[16];
-//    } Matrix4fT;     //A single precision floating point 4 by 4 matrix. 
+//    } Matrix4fT;     //A single precision floating point 4 by 4 matrix.
 
 
 namespace Traits3D
 {
-  class TRAITS3D_EXPORT ArcBall
-  {
-  public:
+class TRAITS3D_EXPORT ArcBall
+{
+public:
     //Create/Destroy
     explicit ArcBall(GLfloat width = 1.1f, GLfloat height = 1.1f);
     ~ArcBall() = default;
@@ -68,10 +68,10 @@ namespace Traits3D
     void setBounds(GLfloat width, GLfloat height);
 
     //Mouse down
-    void start(glm::vec2 const& pos2d);
+    void start(glm::vec2 const &pos2d);
 
     //Mouse drag, calculate rotation
-    glm::quat quaternion(glm::vec2 const& pos2d);
+    glm::quat quaternion(glm::vec2 const &pos2d);
 
     /**
     * Returns matrix conversion of the
@@ -79,7 +79,7 @@ namespace Traits3D
     * @param q1 the quaternion to be converted
     */
     //$hack this can be optimized some(if s == 0)
-    static glm::mat3 rotationMatrix(const glm::quat& q1);
+    static glm::mat3 rotationMatrix(const glm::quat &q1);
 
     /**
     * Sets the rotational component (upper 3x3) of this matrix to the matrix
@@ -91,20 +91,20 @@ namespace Traits3D
     * components.
     * @param m1 T precision 3x3 matrix
     */
-    static void setRotationalComponent(glm::mat4& NewObj, const glm::mat3& m1);
+    static void setRotationalComponent(glm::mat4 &NewObj, const glm::mat3 &m1);
 
-  private:
+private:
     const float Epsilon_ = 1.0e-5f;
 
     glm::vec3   start_position_ = glm::vec3(0);          //Saved click vector
     GLfloat     adjust_width_;    //Mouse bounds width
     GLfloat     adjust_height_;   //Mouse bounds height
 
-    glm::vec3 mapToSphere(glm::vec2 const& pos2d) const;
+    glm::vec3 mapToSphere(glm::vec2 const &pos2d) const;
 
-      //Math functions
+    //Math functions
 
-    static void Matrix4fSetRotationScaleFromMatrix4f(glm::mat4& NewObj, const glm::mat4& m1);
+    static void matrix4fSetRotationScaleFromMatrix4f(glm::mat4 &NewObj, const glm::mat4 &m1);
 
     /**
     * Performs SVD on this matrix and gets scale and rotation.
@@ -113,14 +113,14 @@ namespace Traits3D
     * @param rot4 the rotation factor(Matrix4) only upper 3x3 elements are changed. if null, ignored
     * @return scale factor
     */
-    static GLfloat Matrix4fSVD(const glm::mat4& NewObj);
+    static GLfloat Matrix4fSVD(const glm::mat4 &NewObj);
 
-    static void Matrix4fSetRotationScaleFromMatrix3f(glm::mat4& NewObj, const glm::mat3& m1);
+    static void matrix4fSetRotationScaleFromMatrix3f(glm::mat4 &NewObj, const glm::mat3 &m1);
 
-    static void Matrix4fMulRotationScale(glm::mat4& NewObj, GLfloat scale);
+    static void matrix4fMulRotationScale(glm::mat4 &NewObj, GLfloat scale);
 
 
-    // 8<--Snip here if you have your own math types/funcs-->8 
-  };
+    // 8<--Snip here if you have your own math types/funcs-->8
+};
 
 } //ns
