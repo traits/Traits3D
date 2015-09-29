@@ -1,8 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
 
-set(GLFW_BUILD_DOCS OFF)
-set(GLFW_BUILD_EXAMPLES OFF)
-set(GLFW_BUILD_TESTS OFF)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "Build GLFW docs")
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "Build GLFW examples")
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "Build GLFW tests")
 add_subdirectory(glfw-${TRAITS3D_GLFW_VERSION})
 
 # set and hide some GLFW specific variables

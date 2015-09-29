@@ -1,10 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
 
-set (GLFW_BUILD_EXAMPLES OFF)
-set (GLFW_BUILD_TESTS OFF)
-set (GLFW_BUILD_DOCS OFF)
-
-set (TRAITS3D_GLFW_VERSION "3.1")
+set (TRAITS3D_GLFW_VERSION "3.1.1")
 include_directories(_common)
 include_directories(_common/glfw-${TRAITS3D_GLFW_VERSION}/include)
 add_subdirectory(_common)
