@@ -48,8 +48,6 @@ public:
     bool setUniformVec4(glm::vec4 const &vec, std::string const &name);
     bool setUniformMatrix(glm::mat3 const &mat, std::string const &name);
     bool setUniformMatrix(glm::mat4 const &mat, std::string const &name);
-    //! Set projection & model-view matrix
-    bool setMatrices(Transformation const &matrices);
 
 private:
     bool initialized_;

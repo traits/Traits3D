@@ -147,7 +147,7 @@ void Traits3D::GL::DataObject::draw(Transformation const &matrices)
     glEnable(GL_POLYGON_OFFSET_FILL);
     glPolygonOffset(1, -1);
     shader_[ShaderIndex::TriangleStrip].use();
-    shader_[ShaderIndex::TriangleStrip].setMatrices(matrices);
+    setStdMatrices(shader_[ShaderIndex::TriangleStrip], matrices);
     ibos_[IBOindex::Polygons]->draw();
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     //ibos_[IBOindex::Polygons]->draw();
@@ -161,7 +161,7 @@ void Traits3D::GL::DataObject::draw(Transformation const &matrices)
     //glm::mat4 ttt = proj_matrix;
     //ttt[2][2] += 5E-5f;
     //shader_[ShaderIndex::Lines].setProjectionMatrix(ttt);
-    shader_[ShaderIndex::Lines].setMatrices(matrices);
+    setStdMatrices(shader_[ShaderIndex::Lines], matrices);
     ibos_[IBOindex::Mesh]->draw();
 }
 

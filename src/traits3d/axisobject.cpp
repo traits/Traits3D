@@ -35,7 +35,7 @@ void Traits3D::GL::AxisObject::draw(GL::Transformation const &matrices)
     updateData();
     shader_.setUniformVec4(axis_color_, GL::ShaderCode::Var::v_in_color);
     shader_.use();
-    shader_.setMatrices(matrices);
+    setStdMatrices(shader_, matrices);
     vbo_->draw(GL_LINES);
 
     if (majors_.size() != major_values_.size()) // sanity
