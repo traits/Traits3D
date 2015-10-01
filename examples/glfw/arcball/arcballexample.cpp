@@ -152,14 +152,14 @@ void ExampleArcBall::draw()
     mv = glm::translate(mv, glm::vec3(-1.5f, 0.0f, -6.0f));
     mv = mv * Transform;
     shader_->setUniformMatrix(mv, Traits3D::GL::ShaderCode::Var::mv_matrix);
-    shader_->bindAttribute(*vbo_torus_, Traits3D::GL::ShaderCode::Var::v_coordinates);
+    vbo_torus_->bindAttribute(shader_->programId(), Traits3D::GL::ShaderCode::Var::v_coordinates);
     shader_->setUniformVec4(glm::vec4(0.35f, 0.35f, 1.0f, 1.0f), Traits3D::GL::ShaderCode::Var::v_in_color);
     vbo_torus_->draw(GL_TRIANGLE_STRIP);
     mv = glm::mat4(1);
     mv = glm::translate(mv, glm::vec3(1.5f, 0.0f, -6.0f));
     mv = mv * Transform;
     shader_->setUniformMatrix(mv, Traits3D::GL::ShaderCode::Var::mv_matrix);
-    shader_->bindAttribute(*vbo_sphere_, Traits3D::GL::ShaderCode::Var::v_coordinates);
+    vbo_sphere_->bindAttribute(shader_->programId(), Traits3D::GL::ShaderCode::Var::v_coordinates);
     shader_->setUniformVec4(glm::vec4(1.0f, 0.35f, 0.35f, 1.0f), Traits3D::GL::ShaderCode::Var::v_in_color);
     vbo_sphere_->draw(GL_TRIANGLE_STRIP);
 }
