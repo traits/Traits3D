@@ -123,7 +123,7 @@ class Converter(object):
       for lv in v:
         self.__hfile.write(self.__insert + 'static const char* ' + lv[1] + ';\n')
         self.__cppfile.write('\n\n// ' + lv[0] + '\n') 
-        self.__cppfile.write('const char* ' + '::'.join(Converter.__namespace) + '::' + k + '::' + lv[1] + ' = \n{')
+        self.__cppfile.write('const char* ' + k + '::' + lv[1] + ' = \n{')
         self.__cppfile.write(Converter.__cpp_version_selector)
         for line in lv[2]:
           if line and not line.isspace():
@@ -169,8 +169,11 @@ class Converter(object):
     self.__hfile.write(self.__insert + '};\n\n')
 
     self.__cppfile.write(Converter.__touch_warning + '#include "' + Converter.__h_rel_path + "/" + 'shader_std.h"\n\n')
+    for n in Converter.__namespace:
+      self.__cppfile.write('namespace ' + n + '\n' + '{\n')
+    self.__cppfile.write('\n')
     for v in sorted(Converter.__shader_variables.itervalues()):
-      self.__cppfile.write('const std::string ' + '::'.join(Converter.__namespace) + '::' + Converter.__variables_struct + '::' + v + ' = "' + v + '";\n')
+      self.__cppfile.write('const std::string ' + Converter.__variables_struct + '::' + v + ' = "' + v + '";\n')
 
     self.writeOutput(self.__input_dir, output_shader, glsl_variant)
 
@@ -178,6 +181,8 @@ class Converter(object):
     for n in reversed(Converter.__namespace):
       self.__hfile.write(self.__insert + '} // ' + n + '\n')
       self._unintend()
+    for n in reversed(Converter.__namespace):
+      self.__cppfile.write('} // ' + n + '\n')
 
     self.__closeFiles()
     return

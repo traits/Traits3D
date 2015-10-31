@@ -7,9 +7,9 @@
 
 namespace Traits3D
 {
-//! Projects GL namespace
 namespace GL
 {
+
 //! Vertex Buffer Objects
 class VBO
 {
@@ -101,17 +101,13 @@ private:
  \return true if it succeeds, false if it fails.
  */
 template <typename PRIMITIVE>
-bool Traits3D::GL::VBO::setData(std::vector<PRIMITIVE> const &data)
+bool VBO::setData(std::vector<PRIMITIVE> const &data)
 {
     if (data.empty())
         return false;
 
     VAO::Binder vb(vao_);
     glBindBuffer(GL_ARRAY_BUFFER, id_);
-
-    //todo hack caused inside mesh example
-    while (GL_NO_ERROR != glGetError());
-
     size_t bsize = sizeof(PRIMITIVE) * data.size();
 
     if (!bsize_ || bsize_ != bsize || draw_type_.modified)
@@ -119,7 +115,7 @@ bool Traits3D::GL::VBO::setData(std::vector<PRIMITIVE> const &data)
     else
         glBufferSubData(GL_ARRAY_BUFFER, 0, bsize, bsize ? &data[0] : nullptr);
 
-    if (GL_NO_ERROR != glGetError())
+    if (GL_NO_ERROR != logGlError())
         return false;
 
     draw_type_.modified = false;

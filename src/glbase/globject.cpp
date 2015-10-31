@@ -3,7 +3,11 @@
 #include "traits3d/glbase/transformation.h"
 #include "traits3d/glbase/globject.h"
 
-bool Traits3D::GL::Object::setStdMatrices(Shader &s, Transformation const &t)
+namespace Traits3D
+{
+namespace GL
+{
+bool Object::setStdMatrices(Shader &s, Transformation const &t)
 {
     return
         s.setUniformMatrix(t.proj(), ShaderCode::Var::proj_matrix)
@@ -12,3 +16,6 @@ bool Traits3D::GL::Object::setStdMatrices(Shader &s, Transformation const &t)
         &&
         s.setUniformMatrix(t.normalMatrix(), ShaderCode::Var::normal_matrix);
 }
+} // ns
+} // ns
+

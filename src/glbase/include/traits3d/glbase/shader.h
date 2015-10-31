@@ -3,11 +3,11 @@
 #include <map>
 #include "traits3d/glbase/glhelper.h"
 
-
 namespace Traits3D
 {
 namespace GL
 {
+
 class Transformation;
 
 //! Shader program, containing various GLSL shaders
@@ -20,13 +20,25 @@ public:
     //bool create();
 
     //! Create complete shader program from multiple shader source codes
-    bool create(std::vector<std::string> const &vertex_code, std::vector<std::string> const &fragment_code);
+    bool create(
+        std::vector<std::string> const &vertex_code,
+        std::vector<std::string> const &fragment_code,
+        std::vector<std::string> const &geometry_code = std::vector<std::string>()
+    );
 
     //! Create complete shader program from string
-    bool create(std::string const &vertex_code, std::string const &fragment_code);
+    bool create(
+        std::string const &vertex_code,
+        std::string const &fragment_code,
+        std::string const &geometry_code = ""
+    );
 
     //! Create complete shader program from file sources
-    bool createFromFile(std::string const &vertex_file_path, std::string const &fragment_file_path);
+    bool createFromFile(
+        std::string const &vertex_file_path,
+        std::string const &fragment_file_path,
+        std::string const &geometry_file_path = ""
+    );
 
     //! Shader contains a valid fragment- and vertex-shader
     bool initialized() const
@@ -46,6 +58,8 @@ public:
     bool setUniformVec2(glm::vec2 const &vec, std::string const &name);
     bool setUniformVec3(glm::vec3 const &vec, std::string const &name);
     bool setUniformVec4(glm::vec4 const &vec, std::string const &name);
+    bool setUniformArrayVec3(std::vector<glm::vec3> const &vec, std::string const &name);
+    bool setUniformArrayVec4(std::vector<glm::vec4> const &vec, std::string const &name);
     bool setUniformMatrix(glm::mat3 const &mat, std::string const &name);
     bool setUniformMatrix(glm::mat4 const &mat, std::string const &name);
 
@@ -54,7 +68,7 @@ private:
     bool load(std::string &result, std::string const &path);
     bool compile(GLuint shader_id, std::string const &shader_code);
     bool compile(GLuint shader_id, std::vector<std::string> const &shader_code);
-    bool link(GLuint vertex_shader_id, GLuint fragment_shader_id);
+    bool link(GLuint vertex_shader_id, GLuint fragment_shader_id, GLuint geometry_shader_id = 0);
     bool inUse() const;
     GLuint program_id_;
 

@@ -2,31 +2,36 @@
 #include "traits3d/glbase/vao.h"
 #include "traits3d/glbase/vbo.h"
 
-Traits3D::GL::VBO::VBO(VAO *vao, char layout_components)
+namespace Traits3D
+{
+namespace GL
+{
+
+VBO::VBO(VAO *vao, char layout_components)
     : vao_(vao)
 {
     if (!vao_)
-        throw std::domain_error("Traits3D: VBO construction error");
+        throw std::domain_error(__FUNCTION__ ": VBO construction error");
 
     draw_type_ = GL_STATIC_DRAW;
-    glGetError(); //todo temp reset for gl error flag
+    logGlError(); //todo temp reset for gl error flag
     glGenBuffers(1, &id_);
 
-    if (GL_NO_ERROR != glGetError())
-        throw std::domain_error("Traits3D: VBO construction error");
+    if (GL_NO_ERROR != logGlError())
+        throw std::domain_error(__FUNCTION__": VBO construction error");
 
     setLayout(Layout(layout_components));
     draw_type_ = GL_STATIC_DRAW;
 }
 
-bool Traits3D::GL::VBO::bindAttribute(GLuint program_id, std::string const &name)
+bool VBO::bindAttribute(GLuint program_id, std::string const &name)
 {
     if (name.empty())
         return false;
 
     GLuint attr_location = glGetAttribLocation(program_id, name.c_str());
 
-    if (GL_NO_ERROR != glGetError())
+    if (GL_NO_ERROR != logGlError())
         return false;
 
     VAO::Binder vb(vao_);
@@ -36,31 +41,31 @@ bool Traits3D::GL::VBO::bindAttribute(GLuint program_id, std::string const &name
     glVertexAttribPointer(attr_location, layout_.components, layout_.type,
                           GL_FALSE, layout_.stride, ptr);
 
-    if (GL_NO_ERROR != glGetError())
+    if (GL_NO_ERROR != logGlError())
         return false;
 
     glEnableVertexAttribArray(attr_location);
 
-    if (GL_NO_ERROR != glGetError())
+    if (GL_NO_ERROR != logGlError())
         return false;
 
     return true;
 }
 
-bool Traits3D::GL::VBO::unbindAttribute(GLuint program_id, std::string const &name)
+bool VBO::unbindAttribute(GLuint program_id, std::string const &name)
 {
     if (name.empty())
         return false;
 
     GLuint attr_location = glGetAttribLocation(program_id, name.c_str());
 
-    if (GL_NO_ERROR != glGetError())
+    if (GL_NO_ERROR != logGlError())
         return false;
 
     VAO::Binder vb(vao_);
     glDisableVertexAttribArray(attr_location);
 
-    if (GL_NO_ERROR != glGetError())
+    if (GL_NO_ERROR != logGlError())
         return false;
 
     return true;
@@ -68,28 +73,28 @@ bool Traits3D::GL::VBO::unbindAttribute(GLuint program_id, std::string const &na
 
 /**
  \param primitive_type Type of the primitive (GL_TRIANGLE_STRIP etc.).
- \param first          Index to the first element to draw. An element means an entities,
-                       set by the corresponding overloaded setData call (glm::vec4 etc.)
+ \param first          Index to the first element to draw. An element means an entity,
+ set by the corresponding overloaded setData call (glm::vec4 etc.)
  \param count          Number of elements to draw.
 
  \return true if it succeeds, false if it fails.
  */
-bool Traits3D::GL::VBO::draw(GLenum primitive_type, size_t first, size_t count)
+bool VBO::draw(GLenum primitive_type, size_t first, size_t count)
 {
     if ((first + count)*primitive_size_ > bsize_)
         return false;
 
     VAO::Binder vb(vao_);
     glDrawArrays(primitive_type, static_cast<GLint>(first), static_cast<GLsizei>(count));
-    return GL_NO_ERROR == glGetError();
+    return GL_NO_ERROR == logGlError();
 }
 
-bool Traits3D::GL::VBO::draw(GLenum primitive_type)
+bool VBO::draw(GLenum primitive_type)
 {
     return draw(primitive_type, 0, bsize_ / primitive_size_);
 }
 
-bool Traits3D::GL::VBO::setData(std::vector<glm::vec3> const &data)
+bool VBO::setData(std::vector<glm::vec3> const &data)
 {
     if (!layout_.match(Layout(3, GL_FLOAT, 0, 0)))
         return false;
@@ -97,10 +102,13 @@ bool Traits3D::GL::VBO::setData(std::vector<glm::vec3> const &data)
     return setData<glm::vec3>(data);
 }
 
-bool Traits3D::GL::VBO::setData(std::vector<glm::vec4> const &data)
+bool VBO::setData(std::vector<glm::vec4> const &data)
 {
     if (!layout_.match(Layout(4, GL_FLOAT, 0, 0)))
         return false;
 
     return setData<glm::vec4>(data);
 }
+
+} // ns
+} // ns

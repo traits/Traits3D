@@ -19,7 +19,7 @@ public:
     bool setStdMatrices(Shader &s, Transformation const &t);
 
 protected:
-    GL::VAO vao_p;
+    VAO vao_p;
 };
-} // ns
+}
 } // ns

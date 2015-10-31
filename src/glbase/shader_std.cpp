@@ -2,23 +2,30 @@
 
 #include "traits3d/glbase/shader_std.h"
 
-const std::string Traits3D::GL::ShaderCode::Var::f_out_color = "f_out_color";
-const std::string Traits3D::GL::ShaderCode::Var::light_position = "light_position";
-const std::string Traits3D::GL::ShaderCode::Var::light_position2 = "light_position2";
-const std::string Traits3D::GL::ShaderCode::Var::mv_matrix = "mv_matrix";
-const std::string Traits3D::GL::ShaderCode::Var::normal_matrix = "normal_matrix";
-const std::string Traits3D::GL::ShaderCode::Var::proj_matrix = "proj_matrix";
-const std::string Traits3D::GL::ShaderCode::Var::v_coordinates = "v_coordinates";
-const std::string Traits3D::GL::ShaderCode::Var::v_in_color = "v_in_color";
-const std::string Traits3D::GL::ShaderCode::Var::v_normals = "v_normals";
-const std::string Traits3D::GL::ShaderCode::Var::v_out_color = "v_out_color";
+namespace Traits3D
+{
+namespace GL
+{
+namespace ShaderCode
+{
+
+const std::string Var::f_out_color = "f_out_color";
+const std::string Var::light_position = "light_position";
+const std::string Var::light_position2 = "light_position2";
+const std::string Var::mv_matrix = "mv_matrix";
+const std::string Var::normal_matrix = "normal_matrix";
+const std::string Var::proj_matrix = "proj_matrix";
+const std::string Var::v_coordinates = "v_coordinates";
+const std::string Var::v_in_color = "v_in_color";
+const std::string Var::v_normals = "v_normals";
+const std::string Var::v_out_color = "v_out_color";
 
 
 // Fragment shader
 
 
 // Blinn.fsht
-const char* Traits3D::GL::ShaderCode::Fragment::Blinn = 
+const char* Fragment::Blinn = 
 {
 #ifdef GL_ES_VERSION_3_0
   "#version 300 es\n"
@@ -61,7 +68,7 @@ const char* Traits3D::GL::ShaderCode::Fragment::Blinn =
 
 
 // BlinnPhong.fsht
-const char* Traits3D::GL::ShaderCode::Fragment::BlinnPhong = 
+const char* Fragment::BlinnPhong = 
 {
 #ifdef GL_ES_VERSION_3_0
   "#version 300 es\n"
@@ -103,7 +110,7 @@ const char* Traits3D::GL::ShaderCode::Fragment::BlinnPhong =
 
 
 // Simple.fsht
-const char* Traits3D::GL::ShaderCode::Fragment::Simple = 
+const char* Fragment::Simple = 
 {
 #ifdef GL_ES_VERSION_3_0
   "#version 300 es\n"
@@ -127,7 +134,7 @@ const char* Traits3D::GL::ShaderCode::Fragment::Simple =
 
 
 // Blinn.vsht
-const char* Traits3D::GL::ShaderCode::Vertex::Blinn = 
+const char* Vertex::Blinn = 
 {
 #ifdef GL_ES_VERSION_3_0
   "#version 300 es\n"
@@ -158,7 +165,7 @@ const char* Traits3D::GL::ShaderCode::Vertex::Blinn =
 
 
 // BlinnPhong.vsht
-const char* Traits3D::GL::ShaderCode::Vertex::BlinnPhong = 
+const char* Vertex::BlinnPhong = 
 {
 #ifdef GL_ES_VERSION_3_0
   "#version 300 es\n"
@@ -190,7 +197,7 @@ const char* Traits3D::GL::ShaderCode::Vertex::BlinnPhong =
 
 
 // Line.vsht
-const char* Traits3D::GL::ShaderCode::Vertex::Line = 
+const char* Vertex::Line = 
 {
 #ifdef GL_ES_VERSION_3_0
   "#version 300 es\n"
@@ -213,7 +220,7 @@ const char* Traits3D::GL::ShaderCode::Vertex::Line =
 
 
 // LineXYZ.vsht
-const char* Traits3D::GL::ShaderCode::Vertex::LineXYZ = 
+const char* Vertex::LineXYZ = 
 {
 #ifdef GL_ES_VERSION_3_0
   "#version 300 es\n"
@@ -237,7 +244,7 @@ const char* Traits3D::GL::ShaderCode::Vertex::LineXYZ =
 
 
 // TriangleStrip.vsht
-const char* Traits3D::GL::ShaderCode::Vertex::TriangleStrip = 
+const char* Vertex::TriangleStrip = 
 {
 #ifdef GL_ES_VERSION_3_0
   "#version 300 es\n"
@@ -260,7 +267,7 @@ const char* Traits3D::GL::ShaderCode::Vertex::TriangleStrip =
 
 
 // TriangleStripXYZ.vsht
-const char* Traits3D::GL::ShaderCode::Vertex::TriangleStripXYZ = 
+const char* Vertex::TriangleStripXYZ = 
 {
 #ifdef GL_ES_VERSION_3_0
   "#version 300 es\n"
@@ -281,3 +288,6 @@ const char* Traits3D::GL::ShaderCode::Vertex::TriangleStripXYZ =
   "}\n"
 };
 
+} // ShaderCode
+} // GL
+} // Traits3D
