@@ -1,10 +1,13 @@
 #include "traits3d/helper.h"
 #include "traits3d/scale.h"
 
-Traits3D::Scale::Scale()
-  : start_p(0.), stop_p(0.),
-    majorintervals_p(0), minorintervals_p(0),
-    mstart_p(0.), mstop_p(0.)
+namespace traits3d
+{
+
+Scale::Scale()
+    : start_p(0.), stop_p(0.),
+      majorintervals_p(0), minorintervals_p(0),
+      mstart_p(0.), mstop_p(0.)
 {
 }
 
@@ -26,29 +29,31 @@ Traits3D::Scale::Scale()
 //}
 
 //! Sets start and stop value for the scale;
-void Traits3D::Scale::setLimits(double start, double stop)
+void Scale::setLimits(double start, double stop)
 {
-  if (start < stop)
-  {
-    start_p = start;
-    stop_p = stop;
-    return;
-  }
-  start_p = stop;
-  stop_p = start;
+    if (start < stop)
+    {
+        start_p = start;
+        stop_p = stop;
+        return;
+    }
+
+    start_p = stop;
+    stop_p = start;
 }
 
 //! Sets value of first major tic
-void Traits3D::Scale::setMajorLimits(double start, double stop)
+void Scale::setMajorLimits(double start, double stop)
 {
-  if (start < stop)
-  {
-    mstart_p = start;
-    mstop_p = stop;
-    return;
-  }
-  mstart_p = stop;
-  mstop_p = start;
+    if (start < stop)
+    {
+        mstart_p = start;
+        mstop_p = stop;
+        return;
+    }
+
+    mstart_p = stop;
+    mstop_p = start;
 }
 
 /*!
@@ -60,12 +65,12 @@ void Traits3D::Scale::setMajorLimits(double start, double stop)
   \return Number of major intervals after autoscaling\n
 
   The default implementation sets a=start, b=stop and returns ivals.
-*/
-size_t Traits3D::Scale::autoscale(double& a, double& b, double start, double stop, size_t ivals)
+  */
+size_t Scale::autoscale(double &a, double &b, double start, double stop, size_t ivals)
 {
-  a = start;
-  b = stop;
-  return ivals;
+    a = start;
+    b = stop;
+    return ivals;
 }
 
 /***************************
@@ -76,115 +81,120 @@ size_t Traits3D::Scale::autoscale(double& a, double& b, double start, double sto
 
 
 //! Applies LinearAutoScaler::execute()
-size_t Traits3D::LinearScale::autoscale(double& a, double& b, double start, double stop, size_t ivals)
+size_t LinearScale::autoscale(double &a, double &b, double start, double stop, size_t ivals)
 {
-  return autoscaler_p.execute(a, b, start, stop, ivals);
+    return autoscaler_p.execute(a, b, start, stop, ivals);
 }
 
 //! Creates the major and minor vector for the scale
-void Traits3D::LinearScale::calculate()
+void LinearScale::calculate()
 {
-  majors_p.clear();
-  minors_p.clear();
+    majors_p.clear();
+    minors_p.clear();
+    double interval = mstop_p - mstart_p;
+    double runningval;
+    // majors
+    // first tic
+    // if (mstart_p<start_p || mstop_p>stop_p)
+    //   return;
+    majors_p.push_back(mstart_p);
 
-  double interval = mstop_p-mstart_p;
-
-  double runningval;
-
-  // majors
-
-  // first tic
-  // if (mstart_p<start_p || mstop_p>stop_p)
-  //   return;
-
-  majors_p.push_back(mstart_p);
-
-  // remaining tics
-  for (size_t i = 1; i <= majorintervals_p; ++i)
-  {
-    double t = double(i) / majorintervals_p;
-    runningval = mstart_p + t * interval;
-    if (runningval>stop_p)
-      break;
-    if (equal(mstart_p, -t*interval)) // prevent rounding errors near 0
-      runningval = 0.0;
-    majors_p.push_back(runningval);
-  }
-  majorintervals_p = majors_p.size();
-  if (majorintervals_p)
-    --majorintervals_p;
-
-
-  // minors
-
-  if (!majorintervals_p || !minorintervals_p) // no valid interval
-  {
-    minorintervals_p = 0;
-    return;
-  }
-
-  // start_p      mstart_p
-  //  |_____________|_____ _ _ _
-
-  double step = (majors_p[1]-majors_p[0]) / minorintervals_p;
-  if (isZero(step))
-    return;
-
-  runningval = mstart_p-step;
-  while (runningval>start_p)
-  {
-    minors_p.push_back(runningval);
-    runningval -= step;
-  }
-
-  //       mstart_p            mstop_p
-  //  ________|_____ _ _ _ _ _ ___|__________
-
-  for (size_t i=0; i!=majorintervals_p; ++i)
-  {
-    runningval = majors_p[i] + step;
-    for (size_t j=0; j!=minorintervals_p; ++j)
+    // remaining tics
+    for (size_t i = 1; i <= majorintervals_p; ++i)
     {
-      minors_p.push_back(runningval);
-      runningval += step;
+        double t = double(i) / majorintervals_p;
+        runningval = mstart_p + t * interval;
+
+        if (runningval > stop_p)
+            break;
+
+        if (equal(mstart_p, -t * interval)) // prevent rounding errors near 0
+            runningval = 0.0;
+
+        majors_p.push_back(runningval);
     }
-  }
 
-  //    mstop_p       stop_p
-  // _ _ _|_____________|
+    majorintervals_p = majors_p.size();
 
-  runningval = mstop_p + step;
-  while (runningval<stop_p)
-  {
-    minors_p.push_back(runningval);
-    runningval += step;
-  }
+    if (majorintervals_p)
+        --majorintervals_p;
+
+    // minors
+
+    if (!majorintervals_p || !minorintervals_p) // no valid interval
+    {
+        minorintervals_p = 0;
+        return;
+    }
+
+    // start_p      mstart_p
+    //  |_____________|_____ _ _ _
+    double step = (majors_p[1] - majors_p[0]) / minorintervals_p;
+
+    if (isZero(step))
+        return;
+
+    runningval = mstart_p - step;
+
+    while (runningval > start_p)
+    {
+        minors_p.push_back(runningval);
+        runningval -= step;
+    }
+
+    //       mstart_p            mstop_p
+    //  ________|_____ _ _ _ _ _ ___|__________
+
+    for (size_t i = 0; i != majorintervals_p; ++i)
+    {
+        runningval = majors_p[i] + step;
+
+        for (size_t j = 0; j != minorintervals_p; ++j)
+        {
+            minors_p.push_back(runningval);
+            runningval += step;
+        }
+    }
+
+    //    mstop_p       stop_p
+    // _ _ _|_____________|
+    runningval = mstop_p + step;
+
+    while (runningval < stop_p)
+    {
+        minors_p.push_back(runningval);
+        runningval += step;
+    }
 }
 
-void Traits3D::LogScale::setupCounter(double& k, int& step)
+void LogScale::setupCounter(double &k, int &step)
 {
-  switch(minorintervals_p)
-  {
-  case 9:
-    k=9;
-    step=1;
-    break;
-  case 5:
-    k=8;
-    step=2;
-    break;
-  case 3:
-    k=5;
-    step=3;
-    break;
-  case 2:
-    k=5;
-    step=5;
-    break;
-  default:
-    k=9;
-    step=1;
-  }
+    switch (minorintervals_p)
+    {
+        case 9:
+            k = 9;
+            step = 1;
+            break;
+
+        case 5:
+            k = 8;
+            step = 2;
+            break;
+
+        case 3:
+            k = 5;
+            step = 3;
+            break;
+
+        case 2:
+            k = 5;
+            step = 5;
+            break;
+
+        default:
+            k = 9;
+            step = 1;
+    }
 }
 
 /*! Creates major and minor vectors for the scale.
@@ -193,85 +203,89 @@ or will contain only a single major tic. There is no automatism
 (also not planned for now) for an 'intelligent' guess, what to do.
 Better switch manually to linear to scales in such cases.
 */
-void Traits3D::LogScale::calculate()
+void LogScale::calculate()
 {
-  majors_p.clear();
-  minors_p.clear();
+    majors_p.clear();
+    minors_p.clear();
 
-  if (start_p < std::numeric_limits<double>::min_exponent10)
-    start_p = std::numeric_limits<double>::min_exponent10;
-  if (stop_p > std::numeric_limits<double>::max_exponent10)
-    stop_p = std::numeric_limits<double>::max_exponent10;
+    if (start_p < std::numeric_limits<double>::min_exponent10)
+        start_p = std::numeric_limits<double>::min_exponent10;
 
-  double interval = stop_p-start_p;
-  if (interval<=0)
-    return;
+    if (stop_p > std::numeric_limits<double>::max_exponent10)
+        stop_p = std::numeric_limits<double>::max_exponent10;
 
-  double runningval = floor(start_p);
-  while(runningval<=stop_p)
-  {
-    if (runningval>=start_p)
-      majors_p.push_back(runningval);
-    ++runningval;
-  }
-  majorintervals_p = majors_p.size();
-  if (majorintervals_p)
-    --majorintervals_p;
+    double interval = stop_p - start_p;
 
-  if (majors_p.size()<1) // not even a single major tic
-  {
-    return;
-  }
+    if (interval <= 0)
+        return;
 
+    double runningval = floor(start_p);
 
-  // minors
-
-  // start_p      mstart_p
-  //  |_____________|_____ _ _ _
-
-  double k;
-  int step;
-  setupCounter(k,step);
-  runningval = log10(k)+(majors_p[0]-1);
-  while (runningval>start_p && k>1)
-  {
-    minors_p.push_back(runningval);
-    k -=step;
-    runningval = log10(k)+(majors_p[0]-1);
-  }
-
-  //       mstart_p            mstop_p
-  //  ________|_____ _ _ _ _ _ ___|__________
-
-  for (size_t i=0; i!=majorintervals_p; ++i)
-  {
-    setupCounter(k,step);
-    runningval = log10(k)+(majors_p[i]);
-    while (k>1)
+    while (runningval <= stop_p)
     {
-      minors_p.push_back(runningval);
-      k-=step;
-      runningval = log10(k)+(majors_p[i]);
+        if (runningval >= start_p)
+            majors_p.push_back(runningval);
+
+        ++runningval;
     }
-  }
 
-  //    mstop_p       stop_p
-  // _ _ _|_____________|
+    majorintervals_p = majors_p.size();
 
-  setupCounter(k,step);
-  runningval = log10(k)+(majors_p.back());
-  do
-  {
-    k-=step;
-    runningval = log10(k)+(majors_p.back());
-  }
-  while(runningval>=stop_p);
-  while (k>1)
-  {
-    minors_p.push_back(runningval);
-    k-=step;
-    runningval = log10(k)+(majors_p.back());
-  }
+    if (majorintervals_p)
+        --majorintervals_p;
+
+    if (majors_p.size() < 1) // not even a single major tic
+        return;
+
+    // minors
+    // start_p      mstart_p
+    //  |_____________|_____ _ _ _
+    double k;
+    int step;
+    setupCounter(k, step);
+    runningval = log10(k) + (majors_p[0] - 1);
+
+    while (runningval > start_p && k > 1)
+    {
+        minors_p.push_back(runningval);
+        k -= step;
+        runningval = log10(k) + (majors_p[0] - 1);
+    }
+
+    //       mstart_p            mstop_p
+    //  ________|_____ _ _ _ _ _ ___|__________
+
+    for (size_t i = 0; i != majorintervals_p; ++i)
+    {
+        setupCounter(k, step);
+        runningval = log10(k) + (majors_p[i]);
+
+        while (k > 1)
+        {
+            minors_p.push_back(runningval);
+            k -= step;
+            runningval = log10(k) + (majors_p[i]);
+        }
+    }
+
+    //    mstop_p       stop_p
+    // _ _ _|_____________|
+    setupCounter(k, step);
+    runningval = log10(k) + (majors_p.back());
+
+    do
+    {
+        k -= step;
+        runningval = log10(k) + (majors_p.back());
+    }
+    while (runningval >= stop_p);
+
+    while (k > 1)
+    {
+        minors_p.push_back(runningval);
+        k -= step;
+        runningval = log10(k) + (majors_p.back());
+    }
 }
 
 /*!
@@ -279,24 +293,26 @@ Sets the minor intervals for the logarithmic scale. Only values of 9,5,3 or 2
 are accepted as arguments. They will produce mantissa sets of {2,3,4,5,6,7,8,9},
 {2,4,6,8}, {2,5} or {5} respectively.
 */
-void Traits3D::LogScale::setMinors(size_t val)
+void LogScale::setMinors(size_t val)
 {
-  if ((val == 2) || (val == 3) || (val == 5) || (val == 9))
-    minorintervals_p = val;
+    if ((val == 2) || (val == 3) || (val == 5) || (val == 9))
+        minorintervals_p = val;
 }
 
-Traits3D::LogScale::LogScale()
+LogScale::LogScale()
 {
-  minorintervals_p = 9;
+    minorintervals_p = 9;
 }
 
 ////! Returns a power of 10 associated to the major value at index idx.
-//Traits3D::Label::String Traits3D::LogScale::ticLabel(unsigned int idx) const
+//Label::String Traits3D::LogScale::ticLabel(unsigned int idx) const
 //{
 //  if (idx<majors_p.size())
 //  {
 //    double val = majors_p[idx];
-//    return Traits3D::Label::number(pow(double(10), val));
+//    return Label::number(pow(double(10), val));
 //  }
-//  return Traits3D::Label::String("");
+//  return Label::String("");
 //}
+
+} // ns

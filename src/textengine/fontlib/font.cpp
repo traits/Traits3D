@@ -1,21 +1,28 @@
 #include "traits3d/fonts/stdfonts.h"
 #include "traits3d/fonts/font.h"
 
-Traits3D::Font::Repository& Traits3D::Font::repository()
+namespace traits3d
 {
-  static Repository* repo = nullptr;
-  if (repo == nullptr)
-  {
-    repo = new Repository();
-    StandardFonts::append_to_repository();
-  }  
-  return *repo;
+
+Font::Repository &Font::repository()
+{
+    static Repository *repo = nullptr;
+
+    if (repo == nullptr)
+    {
+        repo = new Repository();
+        StandardFonts::append_to_repository();
+    }
+
+    return *repo;
 }
 
-void Traits3D::Font::appendFont(const Font* val)
+void Font::appendFont(const Font *val)
 {
-  if (!val)
-    return;
+    if (!val)
+        return;
 
-  repository().map_[val->name] = val;
+    repository().map_[val->name] = val;
 }
+
+} // ns

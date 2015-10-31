@@ -7,11 +7,11 @@
 #include "traits3d/glbase/shader.h"
 #include "traits3d/glbase/globject.h"
 
-namespace Traits3D
+namespace traits3d
 {
-namespace GL
+namespace gl
 {
-class LineRenderer : public GL::Object
+class LineRenderer : public Object
 {
 public:
     LineRenderer();

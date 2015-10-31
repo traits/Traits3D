@@ -3,9 +3,9 @@
 #include <map>
 #include "traits3d/glbase/glhelper.h"
 
-namespace Traits3D
+namespace traits3d
 {
-namespace GL
+namespace gl
 {
 
 class Transformation;

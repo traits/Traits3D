@@ -2,9 +2,9 @@
 //#include <glm/gtc/matrix_inverse.hpp>
 #include "traits3d/glbase/transformation.h"
 
-namespace Traits3D
+namespace traits3d
 {
-namespace GL
+namespace gl
 {
 
 Transformation::Transformation()

@@ -2,9 +2,9 @@
 
 #include "glm/glm.hpp"
 
-namespace Traits3D
+namespace traits3d
 {
-namespace GL
+namespace gl
 {
 
 //! Index Buffer Objects

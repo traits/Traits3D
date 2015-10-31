@@ -3,9 +3,9 @@
 #include <string>
 #include "traits3d/glbase/shader.h"
 
-namespace Traits3D
+namespace traits3d
 {
-namespace GL
+namespace gl
 {
 
 Shader::Shader()

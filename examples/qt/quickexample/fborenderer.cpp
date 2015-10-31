@@ -8,6 +8,8 @@
 
 #include "fborenderer.h"
 
+using namespace traits3d;
+
 class LogoInFboRenderer : public QQuickFramebufferObject::Renderer
 {
 public:
@@ -15,18 +17,20 @@ public:
     {
         hm.initializeGL();
         hm.loadData();
-        hm.setRotation(Traits3D::deg2rad(30), 0, Traits3D::deg2rad(45));
-        hm.setBackgroundColor(Traits3D::Color(0.0f, 197/255.0f, 205/255.0f, 1.0f)); // turquoise3
+        hm.setRotation(deg2rad(30), 0, deg2rad(45));
+        hm.setBackgroundColor(Color(0.0f, 197 / 255.0f, 205 / 255.0f, 1.0f)); // turquoise3
         hm.setTitle("Embedded FBO Plot");
     }
 
-    void render() {
+    void render()
+    {
         hm.draw();
         QThread::msleep(50);
         update();
     }
 
-    QOpenGLFramebufferObject *createFramebufferObject(const QSize &size) {
+    QOpenGLFramebufferObject *createFramebufferObject(const QSize &size)
+    {
         QOpenGLFramebufferObjectFormat format;
         format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
         format.setSamples(1);

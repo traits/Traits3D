@@ -3,18 +3,20 @@
 #include "traits3d/textengine/textengine_std.h"
 #include "traits3d/plot3d.h"
 
+namespace traits3d
+{
 
-Traits3D::Plot3D::Plot3D()
+Plot3D::Plot3D()
 {
     text_engine_p = std::make_shared<StandardTextEngine>();
     coordinates_p = std::make_shared<Coordinates>();
 }
 
-Traits3D::Plot3D::~Plot3D()
+Plot3D::~Plot3D()
 {
 }
 
-void Traits3D::Plot3D::draw()
+void Plot3D::draw()
 {
     if (!isInitialized())
         return;
@@ -97,7 +99,7 @@ void Traits3D::Plot3D::draw()
     //aux_a.setColor(Color(1,0,0,1));
     //aux_a.draw(matrices_p);
     //todo
-    glm::ivec4 vp = GL::viewPort();
+    glm::ivec4 vp = gl::viewPort();
     setTitle(title_);
     std::vector<TextEngine::Position> positions(1);
     positions[0] = TextEngine::Position(
@@ -107,12 +109,12 @@ void Traits3D::Plot3D::draw()
     text_engine_p->draw(positions, colors);
 }
 
-void Traits3D::Plot3D::setBackgroundColor(Color const &val)
+void Plot3D::setBackgroundColor(Color const &val)
 {
     bgcolor_ = val;
 }
 
-bool Traits3D::Plot3D::initializeGL()
+bool Plot3D::initializeGL()
 {
     if (
         !ExtGLWidget::initializeGL()
@@ -133,18 +135,20 @@ bool Traits3D::Plot3D::initializeGL()
 /*!
 Set style of coordinate system
 */
-void Traits3D::Plot3D::setCoordinateStyle(Traits3D::COORDINATESTYLE st)
+void Plot3D::setCoordinateStyle(COORDINATESTYLE st)
 {
     coordinates_p->setStyle(st);
 }
 
-void Traits3D::Plot3D::setTitle(std::string const &val)
+void Plot3D::setTitle(std::string const &val)
 {
     if (text_engine_p->setTexts(std::vector<std::string>(1, val), std::vector<FontInfo>(1, FontInfo("OpenSans Italic", 24))))
         title_ = val;
 }
 
-void Traits3D::Plot3D::setTitleColor(Traits3D::Color const &val)
+void Plot3D::setTitleColor(Color const &val)
 {
     title_color_ = val;
 }
+
+} // ns

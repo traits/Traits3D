@@ -8,7 +8,10 @@
 #include "traits3d/glbase/shader.h"
 #include "traits3d/textengine/textengine_std.h"
 
-class Traits3D::StandardTextEngine::FontAtlas
+namespace traits3d
+{
+
+class StandardTextEngine::FontAtlas
 {
 public:
     GLuint texture_atlas;
@@ -18,9 +21,9 @@ public:
 };
 
 
-Traits3D::StandardTextEngine::~StandardTextEngine() = default;
+StandardTextEngine::~StandardTextEngine() = default;
 
-Traits3D::StandardTextEngine::StandardTextEngine()
+StandardTextEngine::StandardTextEngine()
     : VertexCode_(
           #ifdef GL_ES_VERSION_3_0
           "#version 300 es\n"
@@ -53,19 +56,19 @@ Traits3D::StandardTextEngine::StandardTextEngine()
 {
 }
 
-bool Traits3D::StandardTextEngine::initializeGL()
+bool StandardTextEngine::initializeGL()
 {
-    shader_ = std::make_unique<GL::Shader>();
+    shader_ = std::make_unique<gl::Shader>();
 
     if (!shader_->create(VertexCode_, FragmentCode_))
         return false;
 
-    vao_ = std::make_unique<GL::VAO>();
-    vbo_ = std::make_unique<GL::VBO>(vao_.get(), 4);
+    vao_ = std::make_unique<gl::VAO>();
+    vbo_ = std::make_unique<gl::VBO>(vao_.get(), 4);
     return vbo_->bindAttribute(shader_->programId(), "coord");
 }
 
-bool Traits3D::StandardTextEngine::setText(std::string const &text, size_t index /*= 0*/)
+bool StandardTextEngine::setText(std::string const &text, size_t index /*= 0*/)
 {
     if (index >= quadded_texts_.size())
         return false;
@@ -77,7 +80,7 @@ bool Traits3D::StandardTextEngine::setText(std::string const &text, size_t index
     return createQuaddedText(quadded_texts_[index], text, quadded_texts_[index].font_info);
 }
 
-bool Traits3D::StandardTextEngine::createQuaddedText(QuaddedText &qt, std::string const &text, FontInfo const &font_info)
+bool StandardTextEngine::createQuaddedText(QuaddedText &qt, std::string const &text, FontInfo const &font_info)
 {
     if (text.empty())
         return false;
@@ -132,7 +135,7 @@ bool Traits3D::StandardTextEngine::createQuaddedText(QuaddedText &qt, std::strin
     return true;
 }
 
-bool Traits3D::StandardTextEngine::setTexts(std::vector<std::string> const &texts, std::vector<FontInfo> const &font_info)
+bool StandardTextEngine::setTexts(std::vector<std::string> const &texts, std::vector<FontInfo> const &font_info)
 {
     if (texts.size() != font_info.size())
         return false;
@@ -163,7 +166,7 @@ bool Traits3D::StandardTextEngine::setTexts(std::vector<std::string> const &text
     return true;
 }
 
-bool Traits3D::StandardTextEngine::appendText(std::string const &text, FontInfo const &font_info)
+bool StandardTextEngine::appendText(std::string const &text, FontInfo const &font_info)
 {
     QuaddedText qt;
 
@@ -175,9 +178,9 @@ bool Traits3D::StandardTextEngine::appendText(std::string const &text, FontInfo 
     return true;
 }
 
-bool Traits3D::StandardTextEngine::draw(
+bool StandardTextEngine::draw(
     std::vector<TextEngine::Position> const &positions,
-    std::vector<Traits3D::Color> const &colors)
+    std::vector<Color> const &colors)
 {
     if (quadded_texts_.empty())
         return true;
@@ -216,13 +219,13 @@ bool Traits3D::StandardTextEngine::draw(
     GLint oldactivetex = 0;
     glGetIntegerv(GL_ACTIVE_TEXTURE, &oldactivetex);
     glActiveTexture(GL_TEXTURE0);
-    GL::State blend(GL_BLEND, GL_TRUE), depth_test(GL_DEPTH_TEST, GL_FALSE);
+    gl::State blend(GL_BLEND, GL_TRUE), depth_test(GL_DEPTH_TEST, GL_FALSE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //if (wireframe)
     //{
     //  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     //}
-    glm::ivec4 viewport = GL::viewPort();
+    glm::ivec4 viewport = gl::viewPort();
     size_t sidx = 0;
     size_t step = 0;
     glm::vec2 tpos;
@@ -297,13 +300,13 @@ bool Traits3D::StandardTextEngine::draw(
     return true;
 }
 
-void Traits3D::StandardTextEngine::clear()
+void StandardTextEngine::clear()
 {
     quadded_texts_.clear();
     data_changed_ = true;
 }
 
-bool Traits3D::StandardTextEngine::requestFontTexture(size_t &index, std::string const &font_name, size_t glyph_cnt, size_t font_height)
+bool StandardTextEngine::requestFontTexture(size_t &index, std::string const &font_name, size_t glyph_cnt, size_t font_height)
 {
     auto it = std::find_if(font_atlases_.begin(), font_atlases_.end(),
                            [&font_name, font_height](std::shared_ptr<FontAtlas> e)
@@ -355,3 +358,5 @@ bool Traits3D::StandardTextEngine::requestFontTexture(size_t &index, std::string
     glBindTexture(GL_TEXTURE_2D, oldtex);
     return true;
 }
+
+} // ns

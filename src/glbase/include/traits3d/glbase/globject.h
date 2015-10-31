@@ -2,9 +2,9 @@
 
 #include "traits3d/glbase/vao.h"
 
-namespace Traits3D
+namespace traits3d
 {
-namespace GL
+namespace gl
 {
 class Shader;
 class Transformation;

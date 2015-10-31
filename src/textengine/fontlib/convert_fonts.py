@@ -11,7 +11,7 @@ s = '''#pragma once
 
 #include "traits3d/fonts/font.h"
 
-namespace Traits3D
+namespace traits3d
 {
   class Font::StandardFonts  
   {
@@ -60,11 +60,11 @@ s = '''
     {
 '''
 hfile.write(s)
-
+cfile.write('namespace traits3d\n{\n\n')
 for i in range(len(basenames)):
     hfile.write('      Font::appendFont(&' + basenames[i] + ');\n')
-    cfile.write('const Traits3D::Font Traits3D::Font::StandardFonts::' + basenames[i] + 
-    ' = Traits3D::Font((const unsigned char*)' + basenames[i] + anonsuffix + ', ' + 
+    cfile.write('const Font Font::StandardFonts::' + basenames[i] + 
+    ' = Font((const unsigned char*)' + basenames[i] + anonsuffix + ', ' + 
     basenames[i] + sizesuffix + ', "' + caption[i] + '");\n')        
 
 s = '''    }
@@ -73,4 +73,5 @@ s = '''    }
 '''    
 hfile.write(s)
 hfile.close()  
+cfile.write('\n} // ns')
 cfile.close()    

@@ -7,6 +7,6 @@
 
 #include "colormapreader.h"
 
-using namespace Traits3D;
+using namespace traits3d;
 using namespace std;
 

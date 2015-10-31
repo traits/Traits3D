@@ -3,9 +3,9 @@
 #include "traits3d/glbase/ibo.h"
 
 
-namespace Traits3D
+namespace traits3d
 {
-namespace GL
+namespace gl
 {
 
 IBO::IBO(VAO *vao)
@@ -96,11 +96,11 @@ bool IBO::draw()
     return true; //todo
 }
 
-void IBO::setData(Traits3D::GL::IndexMaker::LinearizedContainer const &indexes, bool primitive_restart)
+void IBO::setData(IndexMaker::LinearizedContainer const &indexes, bool primitive_restart)
 {
     indexmaker_.setRestartBehavior(
-        primitive_restart ? Traits3D::GL::IndexMaker::RestartType::PrimitiveRestart
-        : Traits3D::GL::IndexMaker::RestartType::None
+        primitive_restart ? IndexMaker::RestartType::PrimitiveRestart
+        : IndexMaker::RestartType::None
         , std::numeric_limits <IndexMaker::IndexType>::max());
     indexmaker_.setRawData(indexes);
 }

@@ -8,19 +8,19 @@
 #include "traits3d/fonts/fontinfo.h"
 #include "traits3d/textengine/textengine.h"
 
-namespace Traits3D
+namespace traits3d
 {
 class TextEngine;
 
-namespace GL
+namespace gl
 {
-class AxisObject : public GL::Object
+class AxisObject : public Object
 {
 public:
     AxisObject();
 
-    void draw(GL::Transformation const &matrices) override;
-    bool setValues(Traits3D::Triple const &begin, Traits3D::Triple const &end,
+    void draw(Transformation const &matrices) override;
+    bool setValues(Triple const &begin, Triple const &end,
                    std::vector<Triple> const &majors, std::vector<Triple> const &minors,
                    std::vector<double> const &major_values);
 
@@ -31,14 +31,14 @@ public:
     void setColor(Color const &val);
 
     void showLabel(bool val);
-    void setLabelFont(Traits3D::FontInfo const &font_info);
+    void setLabelFont(FontInfo const &font_info);
     void setLabelText(std::string const &val);
     void setLabelPosition(Triple const &pos, TextEngine::Anchor a);
     void setLabelColor(Color const &val);
     void adjustLabel(int val);
 
     void showNumbers(bool val);
-    void setNumberFont(Traits3D::FontInfo const &font_info);
+    void setNumberFont(FontInfo const &font_info);
     void setNumberColor(Color const &val);
     void setNumberAnchor(TextEngine::Anchor a)
     {
@@ -48,9 +48,9 @@ public:
 
 
 private:
-    GL::Shader shader_;
-    Traits3D::TripleF begin_;
-    Traits3D::TripleF end_;
+    Shader shader_;
+    TripleF begin_;
+    TripleF end_;
     std::vector<TripleF> majors_;
     std::vector<TripleF> minors_;
     std::vector<double> major_values_;

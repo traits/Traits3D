@@ -2,9 +2,9 @@
 #include "traits3d/glbase/vao.h"
 #include "traits3d/glbase/vbo.h"
 
-namespace Traits3D
+namespace traits3d
 {
-namespace GL
+namespace gl
 {
 
 VBO::VBO(VAO *vao, char layout_components)

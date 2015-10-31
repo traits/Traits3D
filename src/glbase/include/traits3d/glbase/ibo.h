@@ -5,10 +5,10 @@
 #include "traits3d/glbase/glhelper.h"
 #include "traits3d/glbase/indexmaker.h"
 
-namespace Traits3D
+namespace traits3d
 {
 //! Projects GL namespace
-namespace GL
+namespace gl
 {
 class VAO;
 

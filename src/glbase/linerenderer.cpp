@@ -3,8 +3,12 @@
 #include "traits3d/glbase/shader_std.h"
 #include "traits3d/glbase/linerenderer.h"
 
+namespace traits3d
+{
+namespace gl
+{
 
-const char *Traits3D::GL::LineRenderer::VertexCodeSingleColor =
+const char *LineRenderer::VertexCodeSingleColor =
 {
     #ifdef GL_ES_VERSION_3_0
     "#version 300 es\n"
@@ -24,7 +28,7 @@ const char *Traits3D::GL::LineRenderer::VertexCodeSingleColor =
     "}"
 };
 
-const char *Traits3D::GL::LineRenderer::VertexCodeColorField =
+const char *LineRenderer::VertexCodeColorField =
 {
     #ifdef GL_ES_VERSION_3_0
     "#version 300 es\n"
@@ -44,7 +48,7 @@ const char *Traits3D::GL::LineRenderer::VertexCodeColorField =
     "}"
 };
 
-const char *Traits3D::GL::LineRenderer::FragmentCode =
+const char *LineRenderer::FragmentCode =
 {
     #ifdef GL_ES_VERSION_3_0
     "#version 300 es\n"
@@ -59,7 +63,7 @@ const char *Traits3D::GL::LineRenderer::FragmentCode =
     "}"
 };
 
-Traits3D::GL::LineRenderer::LineRenderer()
+LineRenderer::LineRenderer()
 {
     if (!single_color_shader_.create(VertexCodeSingleColor, FragmentCode))
         return; //todo throw
@@ -71,7 +75,7 @@ Traits3D::GL::LineRenderer::LineRenderer()
     color_vbo_ = std::make_unique<VBO>(&vao_p, 4);
 }
 
-bool Traits3D::GL::LineRenderer::createGrid(
+bool LineRenderer::createGrid(
     std::vector<TripleF> const &start_u, std::vector<TripleF> const &stop_u,
     std::vector<TripleF> const &start_v, std::vector<TripleF> const &stop_v)
 {
@@ -108,20 +112,20 @@ bool Traits3D::GL::LineRenderer::createGrid(
     return false;
 }
 
-bool Traits3D::GL::LineRenderer::createStripes(std::vector<std::vector<TripleF>> const &stripes,
-        std::vector<ColorVector> const &colors /*= std::vector<ColorVector>()*/)
+bool LineRenderer::createStripes(std::vector<std::vector<TripleF>> const &stripes,
+                                 std::vector<ColorVector> const &colors /*= std::vector<ColorVector>()*/)
 {
     if (stripes.empty())
         return false;
 
     if (colors.empty())
         single_color_ = true;
-    else if (!Traits3D::equalSizes(stripes, colors, true))
+    else if (!equalSizes(stripes, colors, true))
         return false;
     else
         single_color_ = false;
 
-    size_t len = Traits3D::addSizes(stripes);
+    size_t len = addSizes(stripes);
     position_vbo_data_.resize(len);
 
     if (!single_color_)
@@ -152,7 +156,7 @@ bool Traits3D::GL::LineRenderer::createStripes(std::vector<std::vector<TripleF>>
     return false;
 }
 
-bool Traits3D::GL::LineRenderer::createStripe(std::vector<TripleF> const &stripe, ColorVector const &colors /*= ColorVector()*/)
+bool LineRenderer::createStripe(std::vector<TripleF> const &stripe, ColorVector const &colors /*= ColorVector()*/)
 {
     std::vector<std::vector<TripleF>> ts(1, stripe);
     std::vector<ColorVector> tc(1, colors);
@@ -163,7 +167,7 @@ bool Traits3D::GL::LineRenderer::createStripe(std::vector<TripleF> const &stripe
     return createStripes(ts, tc);
 }
 
-void Traits3D::GL::LineRenderer::draw(Transformation const &matrices)
+void LineRenderer::draw(Transformation const &matrices)
 {
     if (Type::None == type_)
         return;
@@ -173,8 +177,8 @@ void Traits3D::GL::LineRenderer::draw(Transformation const &matrices)
         if (!single_color_shader_.use())
             return;
 
-        position_vbo_->bindAttribute(single_color_shader_.programId(), GL::ShaderCode::Var::v_coordinates);
-        single_color_shader_.setUniformVec4(color_, GL::ShaderCode::Var::v_in_color);
+        position_vbo_->bindAttribute(single_color_shader_.programId(), shadercode::Var::v_coordinates);
+        single_color_shader_.setUniformVec4(color_, shadercode::Var::v_in_color);
         setStdMatrices(single_color_shader_, matrices);
         position_vbo_->draw(GL_LINES);
     }
@@ -183,9 +187,12 @@ void Traits3D::GL::LineRenderer::draw(Transformation const &matrices)
         if (!color_field_shader_.use())
             return;
 
-        position_vbo_->bindAttribute(color_field_shader_.programId(), GL::ShaderCode::Var::v_coordinates);
-        color_vbo_->bindAttribute(color_field_shader_.programId(), GL::ShaderCode::Var::v_in_color);
+        position_vbo_->bindAttribute(color_field_shader_.programId(), shadercode::Var::v_coordinates);
+        color_vbo_->bindAttribute(color_field_shader_.programId(), shadercode::Var::v_in_color);
         setStdMatrices(color_field_shader_, matrices);
         position_vbo_->draw(GL_LINE_STRIP);
     }
 }
+
+} // ns
+} // ns

@@ -4,7 +4,7 @@
 
 #include "traits3d/fonts/font.h"
 
-namespace Traits3D
+namespace traits3d
 {
   class Font::StandardFonts  
   {

@@ -6,19 +6,23 @@
 #include "traits3d/glbase/shader_std.h"
 #include "traits3d/dataobject.h"
 
+namespace traits3d
+{
+namespace gl
+{
 
-Traits3D::GL::DataObject::DataObject()
-    : GL::Object()
+DataObject::DataObject()
+    : Object()
 {
     initShader();
     vbos_[VBOindex::Positions] = std::make_unique<VBO>(&vao_p, 3);
     vbos_[VBOindex::Normals] = std::make_unique<VBO>(&vao_p, 3);
     vbos_[VBOindex::DataColors] = std::make_unique<VBO>(&vao_p, 4);
-    vbos_[VBOindex::DataColors]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), GL::ShaderCode::Var::v_in_color);
+    vbos_[VBOindex::DataColors]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), shadercode::Var::v_in_color);
 
     for (auto &s : shader_)
     {
-        if (!vbos_[VBOindex::Positions]->bindAttribute(s.second.programId(), GL::ShaderCode::Var::v_coordinates))
+        if (!vbos_[VBOindex::Positions]->bindAttribute(s.second.programId(), shadercode::Var::v_coordinates))
             return;
     }
 
@@ -26,19 +30,19 @@ Traits3D::GL::DataObject::DataObject()
     ibos_[IBOindex::Mesh] = std::make_unique<IBO>(&vao_p);
 }
 
-bool Traits3D::GL::DataObject::initShader()
+bool DataObject::initShader()
 {
-    GL::Shader s;
+    Shader s;
 
-    if (!s.create(GL::ShaderCode::Vertex::Line, GL::ShaderCode::Fragment::Simple))
+    if (!s.create(shadercode::Vertex::Line, shadercode::Fragment::Simple))
         return false;
 
     shader_[ShaderIndex::Lines] = s;
 
-    //if (!s.create(GL::ShaderCode::Vertex::TriangleStrip, GL::ShaderCode::Fragment::Simple))
+    //if (!s.create(GL::shadercode::Vertex::TriangleStrip, GL::shadercode::Fragment::Simple))
     //  return false;
 
-    if (!s.create(GL::ShaderCode::Vertex::Blinn, GL::ShaderCode::Fragment::Blinn))
+    if (!s.create(shadercode::Vertex::Blinn, shadercode::Fragment::Blinn))
         return false;
 
     shader_[ShaderIndex::TriangleStrip] = s;
@@ -48,8 +52,8 @@ bool Traits3D::GL::DataObject::initShader()
 /* Create VBO, IBO and VAO objects for the heightmap geometry and bind them to
 * the specified program object
 */
-bool Traits3D::GL::DataObject::setPositionData(std::vector<TripleF> const &data,
-        size_t xsize, size_t ysize)
+bool DataObject::setPositionData(std::vector<TripleF> const &data,
+                                 size_t xsize, size_t ysize)
 {
     vertices_.modified = true;
 
@@ -65,19 +69,19 @@ bool Traits3D::GL::DataObject::setPositionData(std::vector<TripleF> const &data,
     return true;
 }
 
-bool Traits3D::GL::DataObject::setPositionData(TripleVector const &data,
-        size_t xsize, size_t ysize)
+bool DataObject::setPositionData(TripleVector const &data,
+                                 size_t xsize, size_t ysize)
 {
     std::vector<TripleF> fdata = convert(data);
     return setPositionData(fdata, xsize, ysize);
 }
 
-bool Traits3D::GL::DataObject::setPositionData(MatrixF const &data)
+bool DataObject::setPositionData(MatrixF const &data)
 {
     return setPositionData(data.linearBuffer(), data.xSize(), data.ySize());
 }
 
-bool Traits3D::GL::DataObject::updatePositionData(std::vector<TripleF> const &data)
+bool DataObject::updatePositionData(std::vector<TripleF> const &data)
 {
     if (!vertices_.value.setData(data, vertices_.value.xSize(), vertices_.value.ySize()))
         return false;
@@ -90,28 +94,28 @@ bool Traits3D::GL::DataObject::updatePositionData(std::vector<TripleF> const &da
     return vbos_[VBOindex::Positions]->setData(vertices_.value.linearBuffer());
 }
 
-bool Traits3D::GL::DataObject::updatePositionData(TripleVector const &data)
+bool DataObject::updatePositionData(TripleVector const &data)
 {
     std::vector<TripleF> fdata = convert(data);
     return updatePositionData(fdata);
 }
 
-void Traits3D::GL::DataObject::setColor(ColorVector const &data)
+void DataObject::setColor(ColorVector const &data)
 {
     colors_ = data;
 }
 
-bool Traits3D::GL::DataObject::setMeshColor(Color const &data)
+bool DataObject::setMeshColor(Color const &data)
 {
-    return shader_[ShaderIndex::Lines].setUniformVec4(data, GL::ShaderCode::Var::v_in_color);
+    return shader_[ShaderIndex::Lines].setUniformVec4(data, shadercode::Var::v_in_color);
 }
 
-void Traits3D::GL::DataObject::draw(Transformation const &matrices)
+void DataObject::draw(Transformation const &matrices)
 {
-    vbos_[VBOindex::DataColors]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), GL::ShaderCode::Var::v_in_color);
-    vbos_[VBOindex::Positions]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), GL::ShaderCode::Var::v_coordinates);
+    vbos_[VBOindex::DataColors]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), shadercode::Var::v_in_color);
+    vbos_[VBOindex::Positions]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), shadercode::Var::v_coordinates);
     //if (maintain_normals_)
-    vbos_[VBOindex::Normals]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), GL::ShaderCode::Var::v_normals);
+    vbos_[VBOindex::Normals]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), shadercode::Var::v_normals);
 
     if (vertices_.modified)
     {
@@ -128,7 +132,7 @@ void Traits3D::GL::DataObject::draw(Transformation const &matrices)
 
     if (colors_.modified)
     {
-        ColorVector colors = Traits3D::ColorTable::createColors(vertices_.value.linearBuffer(), colors_.value);
+        ColorVector colors = ColorTable::createColors(vertices_.value.linearBuffer(), colors_.value);
 
         if (colors.size() != vertices_.value.linearBuffer().size() || !vbos_[VBOindex::DataColors]->setData(colors))
             return;
@@ -142,7 +146,7 @@ void Traits3D::GL::DataObject::draw(Transformation const &matrices)
                  hull().minVertex.z + 2 * (hull().maxVertex.z - hull().minVertex.z));
     bulb.setPosition(bpos);
     TripleF lightpos_eye_space = glm::vec3(matrices.lightMatrix() * glm::vec4(bulb.position(), 1.0));
-    shader_[ShaderIndex::TriangleStrip].setUniformVec3(lightpos_eye_space, ShaderCode::Var::light_position);
+    shader_[ShaderIndex::TriangleStrip].setUniformVec3(lightpos_eye_space, shadercode::Var::light_position);
     // polygons
     glEnable(GL_POLYGON_OFFSET_FILL);
     glPolygonOffset(1, -1);
@@ -165,7 +169,7 @@ void Traits3D::GL::DataObject::draw(Transformation const &matrices)
     ibos_[IBOindex::Mesh]->draw();
 }
 
-void Traits3D::GL::DataObject::setDrawType(GLenum val)
+void DataObject::setDrawType(GLenum val)
 {
     vbos_[VBOindex::Positions]->setDrawType(val);
     vbos_[VBOindex::DataColors]->setDrawType(val);
@@ -178,7 +182,7 @@ void Traits3D::GL::DataObject::setDrawType(GLenum val)
         vertices_.modified = true;
 }
 
-bool Traits3D::GL::DataObject::maintainNormals(bool val)
+bool DataObject::maintainNormals(bool val)
 {
     if (val == maintain_normals_)
         return true;
@@ -187,12 +191,12 @@ bool Traits3D::GL::DataObject::maintainNormals(bool val)
     {
         if (val)
         {
-            if (!vbos_[VBOindex::Normals]->bindAttribute(s.second.programId(), GL::ShaderCode::Var::v_normals))
+            if (!vbos_[VBOindex::Normals]->bindAttribute(s.second.programId(), shadercode::Var::v_normals))
                 return false;
         }
         else
         {
-            if (!vbos_[VBOindex::Normals]->unbindAttribute(s.second.programId(), GL::ShaderCode::Var::v_normals))
+            if (!vbos_[VBOindex::Normals]->unbindAttribute(s.second.programId(), shadercode::Var::v_normals))
                 return false;
         }
     }
@@ -201,7 +205,7 @@ bool Traits3D::GL::DataObject::maintainNormals(bool val)
     return true;
 }
 
-bool Traits3D::GL::DataObject::calculateNormals(Matrix<TripleF> &result, MatrixF const &positions)
+bool DataObject::calculateNormals(Matrix<TripleF> &result, MatrixF const &positions)
 {
     result.resize(positions.xSize(), positions.ySize());
 
@@ -225,10 +229,10 @@ bool Traits3D::GL::DataObject::calculateNormals(Matrix<TripleF> &result, MatrixF
         {
             for (y = 1; y < positions.ySize() - 1; ++y)
             {
-                q[0] = nc(1,  0,  0,  1);
-                q[1] = nc(0,  1, -1,  0);
-                q[2] = nc(-1,  0,  0, -1);
-                q[3] = nc(0, -1,  1,  0);
+                q[0] = nc(1, 0, 0, 1);
+                q[1] = nc(0, 1, -1, 0);
+                q[2] = nc(-1, 0, 0, -1);
+                q[3] = nc(0, -1, 1, 0);
                 result(x, y) = glm::normalize(std::accumulate(q.begin(), q.end(), TripleF(0, 0, 0)));
             }
         }
@@ -241,13 +245,13 @@ bool Traits3D::GL::DataObject::calculateNormals(Matrix<TripleF> &result, MatrixF
     {
         // lower boundary
         y = 0;
-        q[0] = nc(1, 0,  0, 1);
+        q[0] = nc(1, 0, 0, 1);
         q[1] = nc(0, 1, -1, 0);
         result(x, y) = glm::normalize(std::accumulate(q.begin(), q.end(), TripleF(0, 0, 0)));
         // upper boundary
         y = positions.ySize() - 1;
-        q[0] = nc(-1,  0, 0, -1);
-        q[1] = nc(0, -1, 1,  0);
+        q[0] = nc(-1, 0, 0, -1);
+        q[1] = nc(0, -1, 1, 0);
         result(x, y) = glm::normalize(std::accumulate(q.begin(), q.end(), TripleF(0, 0, 0)));
     }
 
@@ -256,7 +260,7 @@ bool Traits3D::GL::DataObject::calculateNormals(Matrix<TripleF> &result, MatrixF
         // left boundary
         x = 0;
         q[0] = nc(0, -1, 1, 0);
-        q[1] = nc(1,  0, 0, 1);
+        q[1] = nc(1, 0, 0, 1);
         result(x, y) = glm::normalize(std::accumulate(q.begin(), q.end(), TripleF(0, 0, 0)));
         // right boundary
         x = positions.xSize() - 1;
@@ -268,10 +272,10 @@ bool Traits3D::GL::DataObject::calculateNormals(Matrix<TripleF> &result, MatrixF
     // corners
     x = 0;
     y = 0;
-    result(x, y) = nc(1,  0,  0,  1);
+    result(x, y) = nc(1, 0, 0, 1);
     x = positions.xSize() - 1;
     y = 0;
-    result(x, y) = nc(0,  1, -1,  0);
+    result(x, y) = nc(0, 1, -1, 0);
     x = positions.xSize() - 1;
     y = positions.ySize() - 1;
     result(x, y) = nc(-1, 0, 0, -1);
@@ -280,3 +284,6 @@ bool Traits3D::GL::DataObject::calculateNormals(Matrix<TripleF> &result, MatrixF
     result(x, y) = nc(0, -1, 1, 0);
     return true;
 }
+
+} // ns
+} // ns

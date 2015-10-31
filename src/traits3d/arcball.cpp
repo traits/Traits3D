@@ -5,14 +5,17 @@
 //Radius is         1.0f
 //Radius squared is 1.0f
 
+namespace traits3d
+{
+
 //Create/Destroy
-Traits3D::ArcBall::ArcBall(GLfloat width /*= 1.1f*/, GLfloat height /*= 1.1f*/)
+ArcBall::ArcBall(GLfloat width /*= 1.1f*/, GLfloat height /*= 1.1f*/)
 {
     //Set initial bounds
     setBounds(width, height);
 }
 
-glm::vec3 Traits3D::ArcBall::mapToSphere(glm::vec2 const &pos2d) const
+glm::vec3 ArcBall::mapToSphere(glm::vec2 const &pos2d) const
 {
     glm::vec2 tmp = pos2d;
     // adjusting point coordinates and scaling down into [-1,1]
@@ -35,7 +38,7 @@ glm::vec3 Traits3D::ArcBall::mapToSphere(glm::vec2 const &pos2d) const
     }
 }
 
-void Traits3D::ArcBall::matrix4fSetRotationScaleFromMatrix4f(glm::mat4 &NewObj, const glm::mat4 &m1)
+void ArcBall::matrix4fSetRotationScaleFromMatrix4f(glm::mat4 &NewObj, const glm::mat4 &m1)
 {
     NewObj[0][0] = m1[0][0];
     NewObj[1][0] = m1[1][0];
@@ -48,7 +51,7 @@ void Traits3D::ArcBall::matrix4fSetRotationScaleFromMatrix4f(glm::mat4 &NewObj, 
     NewObj[2][2] = m1[2][2];
 }
 
-GLfloat Traits3D::ArcBall::Matrix4fSVD(const glm::mat4 &NewObj)
+GLfloat ArcBall::Matrix4fSVD(const glm::mat4 &NewObj)
 {
     //Matrix3fT rot3; //todo
     //Matrix4fT rot4;
@@ -115,7 +118,7 @@ GLfloat Traits3D::ArcBall::Matrix4fSVD(const glm::mat4 &NewObj)
     return s;
 }
 
-void Traits3D::ArcBall::matrix4fSetRotationScaleFromMatrix3f(glm::mat4 &NewObj, const glm::mat3 &m1)
+void ArcBall::matrix4fSetRotationScaleFromMatrix3f(glm::mat4 &NewObj, const glm::mat3 &m1)
 {
     NewObj[0][0] = m1[0][0];
     NewObj[1][0] = m1[1][0];
@@ -128,7 +131,7 @@ void Traits3D::ArcBall::matrix4fSetRotationScaleFromMatrix3f(glm::mat4 &NewObj, 
     NewObj[2][2] = m1[2][2];
 }
 
-void Traits3D::ArcBall::matrix4fMulRotationScale(glm::mat4 &NewObj, GLfloat scale)
+void ArcBall::matrix4fMulRotationScale(glm::mat4 &NewObj, GLfloat scale)
 {
     NewObj[0][0] *= scale;
     NewObj[1][0] *= scale;
@@ -141,7 +144,7 @@ void Traits3D::ArcBall::matrix4fMulRotationScale(glm::mat4 &NewObj, GLfloat scal
     NewObj[2][2] *= scale;
 }
 
-void Traits3D::ArcBall::setBounds(GLfloat width, GLfloat height)
+void ArcBall::setBounds(GLfloat width, GLfloat height)
 {
     assert((width > 1.0f) && (height > 1.0f));
     //Set adjustment factor for width/height
@@ -150,16 +153,16 @@ void Traits3D::ArcBall::setBounds(GLfloat width, GLfloat height)
 }
 
 //Mouse down
-void Traits3D::ArcBall::start(glm::vec2 const &pos2d)
+void ArcBall::start(glm::vec2 const &pos2d)
 {
     start_position_ = mapToSphere(pos2d);
 }
 
 //Mouse dragged to pos2d, calculate rotation quaternion
-glm::quat Traits3D::ArcBall::quaternion(glm::vec2 const &pos2d)
+glm::quat ArcBall::quaternion(glm::vec2 const &pos2d)
 {
     //Map the point to the sphere
-    glm::vec3 current_pos =  mapToSphere(pos2d);
+    glm::vec3 current_pos = mapToSphere(pos2d);
     //Return the quaternion equivalent to the rotation
     //Compute the vector perpendicular to the begin and end vectors
     glm::vec3 cp = glm::cross(start_position_, current_pos);
@@ -178,7 +181,7 @@ glm::quat Traits3D::ArcBall::quaternion(glm::vec2 const &pos2d)
     }
 }
 
-glm::mat3 Traits3D::ArcBall::rotationMatrix(const glm::quat &q1)
+glm::mat3 ArcBall::rotationMatrix(const glm::quat &q1)
 {
     glm::mat3 ret;
     GLfloat n, s;
@@ -212,7 +215,7 @@ glm::mat3 Traits3D::ArcBall::rotationMatrix(const glm::quat &q1)
     return ret;
 }
 
-void Traits3D::ArcBall::setRotationalComponent(glm::mat4 &NewObj, const glm::mat3 &m1)
+void ArcBall::setRotationalComponent(glm::mat4 &NewObj, const glm::mat3 &m1)
 {
     GLfloat scale;
     scale = Matrix4fSVD(NewObj/*, NULL, NULL*/);
@@ -220,3 +223,4 @@ void Traits3D::ArcBall::setRotationalComponent(glm::mat4 &NewObj, const glm::mat
     matrix4fMulRotationScale(NewObj, scale);
 }
 
+} // ns

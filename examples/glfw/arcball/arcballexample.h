@@ -31,7 +31,7 @@ public:
 
 private:
     std::shared_ptr<Example::Window> window_;
-    Traits3D::ArcBall    arcBall;                     // ArcBall Instance
+    traits3d::ArcBall    arcBall;                     // ArcBall Instance
     bool        isDragging = false;                   // Dragging The Mouse?
     glm::mat4   Transform;        // Final Transform
     glm::mat3   lastRot;          // Last Rotation
@@ -40,8 +40,8 @@ private:
     void setupSphere(int NumMajor, int NumMinor, float Radius);
     void Torus(float MinorRadius, float MajorRadius);         // Draw A Torus With Normals
 
-    std::unique_ptr<Traits3D::GL::Shader> shader_;
-    std::unique_ptr<Traits3D::GL::VAO> vao_;
-    std::unique_ptr<Traits3D::GL::VBO> vbo_torus_;
-    std::unique_ptr<Traits3D::GL::VBO> vbo_sphere_;
+    std::unique_ptr<traits3d::gl::Shader> shader_;
+    std::unique_ptr<traits3d::gl::VAO> vao_;
+    std::unique_ptr<traits3d::gl::VBO> vbo_torus_;
+    std::unique_ptr<traits3d::gl::VBO> vbo_sphere_;
 };

@@ -2,11 +2,11 @@
 
 #include "traits3d/glbase/shader_std.h"
 
-namespace Traits3D
+namespace traits3d
 {
-namespace GL
+namespace gl
 {
-namespace ShaderCode
+namespace shadercode
 {
 
 const std::string Var::f_out_color = "f_out_color";
@@ -288,6 +288,6 @@ const char* Vertex::TriangleStripXYZ =
   "}\n"
 };
 
-} // ShaderCode
-} // GL
-} // Traits3D
+} // shadercode
+} // gl
+} // traits3d

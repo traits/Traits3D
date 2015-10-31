@@ -55,7 +55,7 @@
 //    } Matrix4fT;     //A single precision floating point 4 by 4 matrix.
 
 
-namespace Traits3D
+namespace traits3d
 {
 class TRAITS3D_EXPORT ArcBall
 {

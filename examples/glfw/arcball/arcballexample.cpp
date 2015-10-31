@@ -3,6 +3,8 @@
 #include "traits3d/glbase/shader_std.h"
 #include "arcballexample.h"
 
+using namespace traits3d;
+
 ExampleArcBall::ExampleArcBall()
 {
     Transform = glm::mat4(1);
@@ -25,14 +27,14 @@ bool ExampleArcBall::initializeGL() // Any GL Init Code
     //glEnable(GL_LIGHT0);
     //glEnable(GL_LIGHTING);
     //glEnable(GL_COLOR_MATERIAL);
-    shader_ = std::make_unique<Traits3D::GL::Shader>();
+    shader_ = std::make_unique<gl::Shader>();
 
-    if (!shader_->create(Traits3D::GL::ShaderCode::Vertex::Line, Traits3D::GL::ShaderCode::Fragment::Simple))
+    if (!shader_->create(gl::shadercode::Vertex::Line, gl::shadercode::Fragment::Simple))
         return false;
 
-    vao_ = std::make_unique<Traits3D::GL::VAO>();
-    vbo_torus_ = std::make_unique<Traits3D::GL::VBO>(vao_.get(), 3);
-    vbo_sphere_ = std::make_unique<Traits3D::GL::VBO>(vao_.get(), 3);
+    vao_ = std::make_unique<gl::VAO>();
+    vbo_torus_ = std::make_unique<gl::VBO>(vao_.get(), 3);
+    vbo_sphere_ = std::make_unique<gl::VBO>(vao_.get(), 3);
     return true;
 }
 
@@ -53,7 +55,7 @@ void ExampleArcBall::update() // Perform Motion Updates Here
     {
         lastRot = glm::mat3(1);               // Reset Rotation
         thisRot = glm::mat3(1);               // Reset Rotation
-        Traits3D::ArcBall::setRotationalComponent(Transform, thisRot);    // Reset Rotation
+        ArcBall::setRotationalComponent(Transform, thisRot);    // Reset Rotation
     }
 
     if (!isDragging)
@@ -70,9 +72,9 @@ void ExampleArcBall::update() // Perform Motion Updates Here
         if (window_->leftMouseButtonPressed())                // Still Clicked, So Still Dragging
         {
             glm::quat quat = arcBall.quaternion(pos);           // Update End Vector And Get Rotation As Quaternion
-            thisRot = Traits3D::ArcBall::rotationMatrix(quat);  // Convert Quaternion Into Matrix3fT
+            thisRot = ArcBall::rotationMatrix(quat);  // Convert Quaternion Into Matrix3fT
             thisRot *= lastRot;                                 // Accumulate Last Rotation Into This One
-            Traits3D::ArcBall::setRotationalComponent(Transform, thisRot);  // Set Our Final Transform's Rotation From This One
+            ArcBall::setRotationalComponent(Transform, thisRot);  // Set Our Final Transform's Rotation From This One
         }
         else                            // No Longer Dragging
             isDragging = false;
@@ -86,7 +88,7 @@ void ExampleArcBall::setupSphere(int NumMajor, int NumMinor, float radius)
     float x, y, z0, z1;
     majorStep = PI2 / 2 / NumMajor;
     minorStep = PI2 / NumMinor;
-    std::vector<Traits3D::TripleF> pos(2 * (NumMinor + 1) * (NumMajor + 1));
+    std::vector<TripleF> pos(2 * (NumMinor + 1) * (NumMajor + 1));
     int curr = 0;
 
     for (int i = 0; i <= NumMajor; ++i)
@@ -105,10 +107,10 @@ void ExampleArcBall::setupSphere(int NumMajor, int NumMinor, float radius)
             y = std::sin(c);
             //glNormal3f((x * r0) / radius, (y * r0) / radius, z0 / radius);
             //glVertex3f(x * r0, y * r0, z0);
-            pos[curr++] = Traits3D::TripleF(x * r0, y * r0, z0);
+            pos[curr++] = TripleF(x * r0, y * r0, z0);
             //glNormal3f((x * r1) / radius, (y * r1) / radius, z1 / radius);
             //glVertex3f(x * r1, y * r1, z1);
-            pos[curr++] = Traits3D::TripleF(x * r1, y * r1, z1);
+            pos[curr++] = TripleF(x * r1, y * r1, z1);
         }
     }
 
@@ -118,7 +120,7 @@ void ExampleArcBall::setupSphere(int NumMajor, int NumMinor, float radius)
 void ExampleArcBall::Torus(float MinorRadius, float MajorRadius) // Draw A Torus With Normals
 {
     const int size = 30;
-    std::vector<Traits3D::TripleF> pos(2 * size * (size + 1));
+    std::vector<TripleF> pos(2 * size * (size + 1));
     int curr = 0;
 
     for (int i = 0; i < size; ++i)                    // Stacks
@@ -132,10 +134,10 @@ void ExampleArcBall::Torus(float MinorRadius, float MajorRadius) // Draw A Torus
             float r = MajorRadius + MinorRadius * cosphi;
             //glNormal3f(float(sin(PI2*(i % size + wrapFrac) / (float)size))*cosphi, sinphi, float(cos(PI2*(i % size + wrapFrac) / (float)size))*cosphi);
             //glVertex3f(float(sin(PI2*(i % size + wrapFrac) / (float)size))*r, MinorRadius*sinphi, float(cos(PI2*(i % size + wrapFrac) / (float)size))*r);
-            pos[curr++] = Traits3D::TripleF(float(sin(PI2 * (i % size + wrapFrac) / (float)size)) * r, MinorRadius * sinphi, float(cos(PI2 * (i % size + wrapFrac) / (float)size)) * r);
+            pos[curr++] = TripleF(float(sin(PI2 * (i % size + wrapFrac) / (float)size)) * r, MinorRadius * sinphi, float(cos(PI2 * (i % size + wrapFrac) / (float)size)) * r);
             //glNormal3f(float(sin(PI2*(i + 1 % size + wrapFrac) / (float)size))*cosphi, sinphi, float(cos(PI2*(i + 1 % size + wrapFrac) / (float)size))*cosphi);
             //glVertex3f(float(sin(PI2*(i + 1 % size + wrapFrac) / (float)size))*r, MinorRadius*sinphi, float(cos(PI2*(i + 1 % size + wrapFrac) / (float)size))*r);
-            pos[curr++] = Traits3D::TripleF(float(sin(PI2 * (i + 1 % size + wrapFrac) / (float)size)) * r, MinorRadius * sinphi, float(cos(PI2 * (i + 1 % size + wrapFrac) / (float)size)) * r);
+            pos[curr++] = TripleF(float(sin(PI2 * (i + 1 % size + wrapFrac) / (float)size)) * r, MinorRadius * sinphi, float(cos(PI2 * (i + 1 % size + wrapFrac) / (float)size)) * r);
         }
     }
 
@@ -146,20 +148,20 @@ void ExampleArcBall::draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);       // Clear Screen And Depth Buffer
     glm::mat4 proj = glm::perspectiveFov(45.0f, 1280.0f, 960.0f, 1.0f, 100.0f);
-    shader_->setUniformMatrix(proj, Traits3D::GL::ShaderCode::Var::proj_matrix);
+    shader_->setUniformMatrix(proj, gl::shadercode::Var::proj_matrix);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glm::mat4 mv = glm::mat4(1);
     mv = glm::translate(mv, glm::vec3(-1.5f, 0.0f, -6.0f));
     mv = mv * Transform;
-    shader_->setUniformMatrix(mv, Traits3D::GL::ShaderCode::Var::mv_matrix);
-    vbo_torus_->bindAttribute(shader_->programId(), Traits3D::GL::ShaderCode::Var::v_coordinates);
-    shader_->setUniformVec4(glm::vec4(0.35f, 0.35f, 1.0f, 1.0f), Traits3D::GL::ShaderCode::Var::v_in_color);
+    shader_->setUniformMatrix(mv, gl::shadercode::Var::mv_matrix);
+    vbo_torus_->bindAttribute(shader_->programId(), gl::shadercode::Var::v_coordinates);
+    shader_->setUniformVec4(glm::vec4(0.35f, 0.35f, 1.0f, 1.0f), gl::shadercode::Var::v_in_color);
     vbo_torus_->draw(GL_TRIANGLE_STRIP);
     mv = glm::mat4(1);
     mv = glm::translate(mv, glm::vec3(1.5f, 0.0f, -6.0f));
     mv = mv * Transform;
-    shader_->setUniformMatrix(mv, Traits3D::GL::ShaderCode::Var::mv_matrix);
-    vbo_sphere_->bindAttribute(shader_->programId(), Traits3D::GL::ShaderCode::Var::v_coordinates);
-    shader_->setUniformVec4(glm::vec4(1.0f, 0.35f, 0.35f, 1.0f), Traits3D::GL::ShaderCode::Var::v_in_color);
+    shader_->setUniformMatrix(mv, gl::shadercode::Var::mv_matrix);
+    vbo_sphere_->bindAttribute(shader_->programId(), gl::shadercode::Var::v_coordinates);
+    shader_->setUniformVec4(glm::vec4(1.0f, 0.35f, 0.35f, 1.0f), gl::shadercode::Var::v_in_color);
     vbo_sphere_->draw(GL_TRIANGLE_STRIP);
 }

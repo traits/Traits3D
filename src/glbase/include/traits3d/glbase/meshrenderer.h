@@ -8,11 +8,11 @@
 #include "traits3d/glbase/shader.h"
 #include "traits3d/glbase/globject.h"
 
-namespace Traits3D
+namespace traits3d
 {
-namespace GL
+namespace gl
 {
-class MeshRenderer : public GL::Object
+class MeshRenderer : public Object
 {
 public:
     static const char *VertexCoreCode;

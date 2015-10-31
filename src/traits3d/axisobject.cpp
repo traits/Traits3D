@@ -6,12 +6,16 @@
 #include "traits3d/axisobject.h"
 
 
-Traits3D::GL::AxisObject::AxisObject()
-    : GL::Object()
+namespace traits3d
 {
-    shader_.create(GL::ShaderCode::Vertex::Line, GL::ShaderCode::Fragment::Simple);
+namespace gl
+{
+AxisObject::AxisObject()
+    : Object()
+{
+    shader_.create(shadercode::Vertex::Line, shadercode::Fragment::Simple);
     vbo_ = std::make_unique<VBO>(&vao_p, 3);
-    vbo_->bindAttribute(shader_.programId(), GL::ShaderCode::Var::v_coordinates);
+    vbo_->bindAttribute(shader_.programId(), shadercode::Var::v_coordinates);
     te_ = std::make_shared<StandardTextEngine>();
     te_->initializeGL();
 }
@@ -20,20 +24,20 @@ Traits3D::GL::AxisObject::AxisObject()
 //{
 //  vbo_->create(axes_, GL_STATIC_DRAW); //todo (could be dynamic)
 //
-//  shader_.bindAttribute(*vbo_, GL::ShaderCode::Var::v_coordinates);
-//  shader_.setUniformVec4(Color(0.0f, 0.5f, 0.0f, 1.0f), GL::ShaderCode::Var::v_in_color);
+//  shader_.bindAttribute(*vbo_, GL::shadercode::Var::v_coordinates);
+//  shader_.setUniformVec4(Color(0.0f, 0.5f, 0.0f, 1.0f), GL::shadercode::Var::v_in_color);
 //
 //  return true;
 //}
 
-void Traits3D::GL::AxisObject::draw(GL::Transformation const &matrices)
+void AxisObject::draw(Transformation const &matrices)
 {
     if (!shader_.initialized())
         return;
 
     //todo
     updateData();
-    shader_.setUniformVec4(axis_color_, GL::ShaderCode::Var::v_in_color);
+    shader_.setUniformVec4(axis_color_, shadercode::Var::v_in_color);
     shader_.use();
     setStdMatrices(shader_, matrices);
     vbo_->draw(GL_LINES);
@@ -45,7 +49,7 @@ void Traits3D::GL::AxisObject::draw(GL::Transformation const &matrices)
     std::vector<FontInfo> finfo;
     std::vector<Color> colors;
     std::vector<TextEngine::Position> positions_2d;
-    glm::ivec4 vp = GL::viewPort(); // call this one sparingly
+    glm::ivec4 vp = viewPort(); // call this one sparingly
 
     if (show_label_)
     {
@@ -58,7 +62,7 @@ void Traits3D::GL::AxisObject::draw(GL::Transformation const &matrices)
         float label_height = 15;
         float rap = (max_label_width + label_gap_ + label_height) / (ticend - center).length();
         TripleF pos = center - majorticlength_ * orientation_ * (1 + rap);
-        pos = GL::World2ViewPort(pos, matrices.mv(), matrices.proj(), vp);
+        pos = World2ViewPort(pos, matrices.mv(), matrices.proj(), vp);
         positions_2d.push_back(TextEngine::Position(TupleF(pos.x, pos.y), number_anchor_));
         TextEngine::adjustPosition(positions_2d[0], static_cast<float>(label_gap_ + number_gap_));
     }
@@ -75,7 +79,7 @@ void Traits3D::GL::AxisObject::draw(GL::Transformation const &matrices)
         for (size_t i = 0; i != majors_.size(); ++i)
         {
             // opposite to tic orientation
-            TripleF pos = GL::World2ViewPort(majors_[i] - majorticlength_ * orientation_, matrices.mv(), matrices.proj(), vp);
+            TripleF pos = World2ViewPort(majors_[i] - majorticlength_ * orientation_, matrices.mv(), matrices.proj(), vp);
             positions_2d[i + idx] = TextEngine::Position(TupleF(pos.x, pos.y), number_anchor_);
             TextEngine::adjustPosition(positions_2d[i + idx], static_cast<float>(number_gap_));
             texts[i + idx] = te_->double2text(major_values_[i]);
@@ -88,9 +92,9 @@ void Traits3D::GL::AxisObject::draw(GL::Transformation const &matrices)
     te_->draw(positions_2d, colors);
 }
 
-bool Traits3D::GL::AxisObject::setValues(
-    Traits3D::Triple const &begin,
-    Traits3D::Triple const &end,
+bool AxisObject::setValues(
+    Triple const &begin,
+    Triple const &end,
     std::vector<Triple> const &majors, std::vector<Triple> const &minors,
     std::vector<double> const &major_values)
 {
@@ -120,7 +124,7 @@ bool Traits3D::GL::AxisObject::setValues(
     return true;
 }
 
-void Traits3D::GL::AxisObject::setTicOrientation(Triple const &val)
+void AxisObject::setTicOrientation(Triple const &val)
 {
     // for safety, add the normalization step
     TripleF tmp = static_cast<TripleF>(glm::normalize(val));
@@ -132,7 +136,7 @@ void Traits3D::GL::AxisObject::setTicOrientation(Triple const &val)
     modified_ = true;
 }
 
-void Traits3D::GL::AxisObject::setSymmetricTics(bool val)
+void AxisObject::setSymmetricTics(bool val)
 {
     if (val == symtics_)
         return;
@@ -141,7 +145,7 @@ void Traits3D::GL::AxisObject::setSymmetricTics(bool val)
     modified_ = true;
 }
 
-bool Traits3D::GL::AxisObject::updateData()
+bool AxisObject::updateData()
 {
     if (!modified_)
         return true;
@@ -174,7 +178,7 @@ bool Traits3D::GL::AxisObject::updateData()
     return true;
 }
 
-void Traits3D::GL::AxisObject::setTicLength(double majorticlen, double minorticlen)
+void AxisObject::setTicLength(double majorticlen, double minorticlen)
 {
     if (majorticlen == majorticlength_ && minorticlen == minorticlength_)
         return;
@@ -184,53 +188,53 @@ void Traits3D::GL::AxisObject::setTicLength(double majorticlen, double minorticl
     modified_ = true;
 }
 
-void Traits3D::GL::AxisObject::setNumberFont(Traits3D::FontInfo const &font_info)
+void AxisObject::setNumberFont(FontInfo const &font_info)
 {
     number_font_info_ = font_info;
 }
 
-void Traits3D::GL::AxisObject::setLabelFont(Traits3D::FontInfo const &font_info)
+void AxisObject::setLabelFont(FontInfo const &font_info)
 {
     label_font_info_ = font_info;
 }
 
-void Traits3D::GL::AxisObject::setColor(Traits3D::Color const &val)
+void AxisObject::setColor(Color const &val)
 {
     axis_color_ = val;
 }
 
-void Traits3D::GL::AxisObject::setLabelText(std::string const &val)
+void AxisObject::setLabelText(std::string const &val)
 {
     label_text_ = val;
 }
 
-void Traits3D::GL::AxisObject::setLabelPosition(Traits3D::Triple const &pos, Traits3D::TextEngine::Anchor a)
+void AxisObject::setLabelPosition(Triple const &pos, TextEngine::Anchor a)
 {
     label_position_ = pos;
     label_anchor_ = a;
 }
 
-void Traits3D::GL::AxisObject::setLabelColor(Traits3D::Color const &val)
+void AxisObject::setLabelColor(Color const &val)
 {
     label_color_ = val;
 }
 
-void Traits3D::GL::AxisObject::adjustLabel(int val)
+void AxisObject::adjustLabel(int val)
 {
     label_gap_ = val;
 }
 
-void Traits3D::GL::AxisObject::setNumberColor(Traits3D::Color const &val)
+void AxisObject::setNumberColor(Color const &val)
 {
     number_color_ = val;
 }
 
-void Traits3D::GL::AxisObject::adjustNumbers(int val)
+void AxisObject::adjustNumbers(int val)
 {
     number_gap_ = val;
 }
 
-void Traits3D::GL::AxisObject::showTics(bool val)
+void AxisObject::showTics(bool val)
 {
     if (val != show_tics_)
         modified_ = true;
@@ -238,7 +242,7 @@ void Traits3D::GL::AxisObject::showTics(bool val)
     show_tics_ = val;
 }
 
-void Traits3D::GL::AxisObject::showLabel(bool val)
+void AxisObject::showLabel(bool val)
 {
     if (val != show_label_)
         modified_ = true;
@@ -246,10 +250,13 @@ void Traits3D::GL::AxisObject::showLabel(bool val)
     show_label_ = val;
 }
 
-void Traits3D::GL::AxisObject::showNumbers(bool val)
+void AxisObject::showNumbers(bool val)
 {
     if (val != show_numbers_)
         modified_ = true;
 
     show_numbers_ = val;
 }
+
+} // ns
+} // ns

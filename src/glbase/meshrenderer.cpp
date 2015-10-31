@@ -2,11 +2,16 @@
 #include "traits3d/glbase/shader_std.h"
 #include "traits3d/glbase/meshrenderer.h"
 
-const std::string Traits3D::GL::MeshRenderer::v_core_delta_ = "v_core_delta";
-const std::string Traits3D::GL::MeshRenderer::v_seam_delta_ = "v_seam_delta";
+namespace traits3d
+{
+namespace gl
+{
+
+const std::string MeshRenderer::v_core_delta_ = "v_core_delta";
+const std::string MeshRenderer::v_seam_delta_ = "v_seam_delta";
 
 
-const char *Traits3D::GL::MeshRenderer::VertexCoreCode =
+const char *MeshRenderer::VertexCoreCode =
 {
     #ifdef GL_ES_VERSION_3_0
     "#version 300 es\n"
@@ -26,7 +31,7 @@ const char *Traits3D::GL::MeshRenderer::VertexCoreCode =
     "}"
 };
 
-const char *Traits3D::GL::MeshRenderer::VertexSeamCode =
+const char *MeshRenderer::VertexSeamCode =
 {
     #ifdef GL_ES_VERSION_3_0
     "#version 300 es\n"
@@ -46,7 +51,7 @@ const char *Traits3D::GL::MeshRenderer::VertexSeamCode =
     "}"
 };
 
-const char *Traits3D::GL::MeshRenderer::FragmentCode =
+const char *MeshRenderer::FragmentCode =
 {
     #ifdef GL_ES_VERSION_3_0
     "#version 300 es\n"
@@ -61,7 +66,7 @@ const char *Traits3D::GL::MeshRenderer::FragmentCode =
     "}"
 };
 
-Traits3D::GL::MeshRenderer::MeshRenderer()
+MeshRenderer::MeshRenderer()
 {
     if (!core_shader_.create(VertexCoreCode, FragmentCode))
         return; //todo throw
@@ -76,7 +81,7 @@ Traits3D::GL::MeshRenderer::MeshRenderer()
     seam_ibo_ = std::make_unique<IBO>(&vao_p); // Saum
 }
 
-void Traits3D::GL::MeshRenderer::createData2(std::vector<TripleF> const &mesh_data, IndexMaker::IndexType xsize, IndexMaker::IndexType ysize)
+void MeshRenderer::createData2(std::vector<TripleF> const &mesh_data, IndexMaker::IndexType xsize, IndexMaker::IndexType ysize)
 {
     if (mesh_data.empty() || mesh_data.size() != xsize * ysize)
         return;
@@ -107,7 +112,7 @@ void Traits3D::GL::MeshRenderer::createData2(std::vector<TripleF> const &mesh_da
     //}
 }
 
-void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const &mesh_data, IndexMaker::IndexType xsize, IndexMaker::IndexType ysize)
+void MeshRenderer::createData(std::vector<TripleF> const &mesh_data, IndexMaker::IndexType xsize, IndexMaker::IndexType ysize)
 {
     if (mesh_data.empty() || mesh_data.size() != xsize * ysize)
         return;
@@ -163,7 +168,7 @@ void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const &mesh_dat
 
     Color core_color(0, 0.8f, 0, 1);
     Color seam_color(0, 0.8f, 0, 0);
-    Traits3D::ColorVector seam_colors(5 * len_data - 4 * xsize);
+    ColorVector seam_colors(5 * len_data - 4 * xsize);
     // core
     std::fill(begin(seam_colors), begin(seam_colors) + 3 * len_data - 2 * xsize, core_color);
     // seam
@@ -246,21 +251,24 @@ void Traits3D::GL::MeshRenderer::createData(std::vector<TripleF> const &mesh_dat
     seam_ibo_->setData(midata, true);
 }
 
-void Traits3D::GL::MeshRenderer::draw(Transformation const &matrices)
+void MeshRenderer::draw(Transformation const &matrices)
 {
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     Color color(0, 0.8f, 0, 1);
     core_shader_.use();
-    core_vbo_->bindAttribute(core_shader_.programId(), GL::ShaderCode::Var::v_coordinates);
-    core_shader_.setUniformVec4(color, GL::ShaderCode::Var::v_in_color);
+    core_vbo_->bindAttribute(core_shader_.programId(), shadercode::Var::v_coordinates);
+    core_shader_.setUniformVec4(color, shadercode::Var::v_in_color);
     //core_shader_.setProjectionMatrix(proj_matrix);
     setStdMatrices(core_shader_, matrices);
     core_ibo_->draw();
-    GL::State blend(GL_BLEND, GL_TRUE);
+    gl::State blend(GL_BLEND, GL_TRUE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     seam_shader_.use();
-    core_vbo_->bindAttribute(seam_shader_.programId(), GL::ShaderCode::Var::v_coordinates);
-    seam_color_vbo_->bindAttribute(seam_shader_.programId(), GL::ShaderCode::Var::v_in_color);
+    core_vbo_->bindAttribute(seam_shader_.programId(), shadercode::Var::v_coordinates);
+    seam_color_vbo_->bindAttribute(seam_shader_.programId(), shadercode::Var::v_in_color);
     setStdMatrices(seam_shader_, matrices);
     seam_ibo_->draw();
 }
+
+} // ns
+} // ns

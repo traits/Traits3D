@@ -4,11 +4,11 @@
 
 #include <string>
 
-namespace Traits3D
+namespace traits3d
 {
-  namespace GL
+  namespace gl
   {
-    namespace ShaderCode
+    namespace shadercode
     {
       // shader variables
       struct Var
@@ -52,6 +52,6 @@ namespace Traits3D
         static const char* TriangleStripXYZ;
       };
 
-    } // ShaderCode
-  } // GL
-} // Traits3D
+    } // shadercode
+  } // gl
+} // traits3d
