@@ -27,7 +27,7 @@ class Converter(object):
   # static config section
 
   __touch_warning = '// generated file - don\'t touch\n\n'
-  __namespace = ['traits3d', 'gl', 'shadercode']
+  __namespace = ['glb', 'shadercode']
 
 
   # The key is used as a variable (e.g. $proj_matrix) in input shader templates

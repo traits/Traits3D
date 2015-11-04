@@ -4,54 +4,51 @@
 
 #include <string>
 
-namespace traits3d
+namespace glb
 {
-  namespace gl
+  namespace shadercode
   {
-    namespace shadercode
+    // shader variables
+    struct Var
     {
-      // shader variables
-      struct Var
-      {
-        static const std::string f_out_color;
-        static const std::string light_position;
-        static const std::string light_position2;
-        static const std::string mv_matrix;
-        static const std::string normal_matrix;
-        static const std::string proj_matrix;
-        static const std::string v_coordinates;
-        static const std::string v_in_color;
-        static const std::string v_normals;
-        static const std::string v_out_color;
-      };
+      static const std::string f_out_color;
+      static const std::string light_position;
+      static const std::string light_position2;
+      static const std::string mv_matrix;
+      static const std::string normal_matrix;
+      static const std::string proj_matrix;
+      static const std::string v_coordinates;
+      static const std::string v_in_color;
+      static const std::string v_normals;
+      static const std::string v_out_color;
+    };
 
-      // Fragment shader 
-      class Fragment
-      {
-      public:
-        static const char* Blinn;
-        static const char* BlinnPhong;
-        static const char* Simple;
-      };
+    // Fragment shader 
+    class Fragment
+    {
+    public:
+      static const char* Blinn;
+      static const char* BlinnPhong;
+      static const char* Simple;
+    };
 
-      // Subroutine shader 
-      class Subroutine
-      {
-      public:
-      };
+    // Subroutine shader 
+    class Subroutine
+    {
+    public:
+    };
 
-      // Vertex shader 
-      class Vertex
-      {
-      public:
-        static const char* Blinn;
-        static const char* BlinnPhong;
-        static const char* Line;
-        static const char* LineXYZ;
-        static const char* TriangleStrip;
-        static const char* TriangleStripXYZ;
-      };
+    // Vertex shader 
+    class Vertex
+    {
+    public:
+      static const char* Blinn;
+      static const char* BlinnPhong;
+      static const char* Line;
+      static const char* LineXYZ;
+      static const char* TriangleStrip;
+      static const char* TriangleStripXYZ;
+    };
 
-    } // shadercode
-  } // gl
-} // traits3d
+  } // shadercode
+} // glb

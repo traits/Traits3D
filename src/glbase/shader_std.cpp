@@ -2,9 +2,7 @@
 
 #include "traits3d/glbase/shader_std.h"
 
-namespace traits3d
-{
-namespace gl
+namespace glb
 {
 namespace shadercode
 {
@@ -289,5 +287,4 @@ const char* Vertex::TriangleStripXYZ =
 };
 
 } // shadercode
-} // gl
-} // traits3d
+} // glb
