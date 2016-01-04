@@ -181,7 +181,7 @@ void Axis::setScale(SCALETYPE val)
     }
 }
 
-void Axis::draw(gl::Transformation const &matrices)
+void Axis::draw(glb::Transformation const &matrices)
 {
     //todo performance!
     recalculateTics();

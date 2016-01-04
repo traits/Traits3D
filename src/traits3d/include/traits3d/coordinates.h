@@ -5,6 +5,7 @@
 
 namespace traits3d
 {
+
 namespace gl
 {
 class LineRenderer;
@@ -72,7 +73,7 @@ public:
         return autodecoration_;
     }
 
-    void draw(gl::Transformation const &matrices);
+    void draw(glb::Transformation const &matrices);
 
     //! Defines whether a grid between the major and/or minor tics should be drawn
     void setGridLines(bool majors, bool minors, int sides = NOSIDEGRID);
@@ -90,12 +91,12 @@ private:
     Triple first_, second_;
     COORDINATESTYLE style_;
 
-    void chooseAxes(gl::Transformation const &matrices, glm::ivec4 const &viewport);
+    void chooseAxes(glb::Transformation const &matrices, glm::ivec4 const &viewport);
     void autoDecorateExposedAxis(Axis &ax, Triple const &projected_ax, bool left);
-    void drawMajorGridLines(gl::Transformation const &matrices); //!< Draws a grid between the major tics on the site
-    void drawMinorGridLines(gl::Transformation const &matrices); //!< Draws a grid between the minor tics on the site
-    void drawMajorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b1, gl::Transformation const &matrices); //! Helper
-    void drawMinorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b1, gl::Transformation const &matrices); //! Helper
+    void drawMajorGridLines(glb::Transformation const &matrices); //!< Draws a grid between the major tics on the site
+    void drawMinorGridLines(glb::Transformation const &matrices); //!< Draws a grid between the minor tics on the site
+    void drawMajorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b1, glb::Transformation const &matrices); //! Helper
+    void drawMinorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b1, glb::Transformation const &matrices); //! Helper
 
     bool autodecoration_;
     bool majorgridlines_, minorgridlines_;

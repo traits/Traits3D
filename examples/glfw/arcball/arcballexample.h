@@ -2,9 +2,9 @@
 
 #include <memory>
 
-#include "traits3d/glbase/shader.h"
-#include "traits3d/glbase/vao.h"
-#include "traits3d/glbase/vbo.h"
+#include "glb/shader.h"
+#include "glb/vao.h"
+#include "glb/vbo.h"
 
 #include "Window/Window.h"
 #include "traits3d/arcball.h"
@@ -40,8 +40,8 @@ private:
     void setupSphere(int NumMajor, int NumMinor, float Radius);
     void Torus(float MinorRadius, float MajorRadius);         // Draw A Torus With Normals
 
-    std::unique_ptr<traits3d::gl::Shader> shader_;
-    std::unique_ptr<traits3d::gl::VAO> vao_;
-    std::unique_ptr<traits3d::gl::VBO> vbo_torus_;
-    std::unique_ptr<traits3d::gl::VBO> vbo_sphere_;
+    std::unique_ptr<glb::Shader> shader_;
+    std::unique_ptr<glb::VAO> vao_;
+    std::unique_ptr<glb::VBO> vbo_torus_;
+    std::unique_ptr<glb::VBO> vbo_sphere_;
 };

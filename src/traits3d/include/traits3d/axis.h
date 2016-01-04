@@ -1,6 +1,6 @@
 #pragma once
 
-#include "traits3d/glbase/glhelper.h"
+#include "glb/glhelper.h"
 #include "traits3d/scale.h"
 #include "traits3d/autoscaler.h"
 #include "traits3d/axisobject.h"
@@ -22,7 +22,7 @@ public:
     virtual ~Axis(); // dtor
 
     virtual bool initializeGL();
-    void draw(gl::Transformation const &matrices);
+    void draw(glb::Transformation const &matrices);
 
     /**
     Used to tag the axis as a z-axis. This information is used to draw correct labels.

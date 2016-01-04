@@ -1,6 +1,6 @@
 #include <glm/gtc/type_ptr.hpp>
-#include "traits3d/glbase/transformation.h"
-#include "traits3d/glbase/linerenderer.h"
+#include "glb/transformation.h"
+#include "glb/linerenderer.h"
 #include "traits3d/helper.h"
 #include "traits3d/coordinates.h"
 
@@ -107,7 +107,7 @@ void Coordinates::setTicLength(double major, double minor)
         a.setTicLength(major, minor);
 }
 
-void Coordinates::draw(gl::Transformation const &matrices)
+void Coordinates::draw(glb::Transformation const &matrices)
 {
     //GL::StateBewarer sb(GL_LINE_SMOOTH, true);
     //
@@ -115,7 +115,7 @@ void Coordinates::draw(gl::Transformation const &matrices)
     //  sb.turnOff();
     //
     if (autoDecoration())
-        chooseAxes(matrices, gl::viewPort());
+        chooseAxes(matrices, glb::viewPort());
 
     for (auto it : aidx_)
         axes[it].draw(matrices);
@@ -133,7 +133,7 @@ void Coordinates::draw(gl::Transformation const &matrices)
 
 //! build convex hull (6 axes: 2 x, 2 y, 2 z) and choose one of them at a time for scales, labels etc.
 void Coordinates::chooseAxes(
-    gl::Transformation const &matrices, glm::ivec4 const &viewport)
+    glb::Transformation const &matrices, glm::ivec4 const &viewport)
 {
     TripleVector beg(axes.size());
     TripleVector end(axes.size());
@@ -148,8 +148,8 @@ void Coordinates::chooseAxes(
         if (style() != NOCOORDINATES)
             attach(i);
 
-        beg[i] = gl::World2ViewPort(axes[i].begin(), mv_matrix, proj_matrix, viewport);
-        end[i] = gl::World2ViewPort(axes[i].end(), mv_matrix, proj_matrix, viewport);
+        beg[i] = glb::World2ViewPort(axes[i].begin(), mv_matrix, proj_matrix, viewport);
+        end[i] = glb::World2ViewPort(axes[i].end(), mv_matrix, proj_matrix, viewport);
         src[i] = Tuple(beg[i].x, beg[i].y);
         src[axes.size() + i] = Tuple(end[i].x, end[i].y);
         axes[i].showTics(false);
@@ -446,7 +446,7 @@ void Coordinates::setGridLines(bool majors, bool minors, int sides)
     minorgridlines_ = minors;
 }
 
-void Coordinates::drawMajorGridLines(gl::Transformation const &matrices)
+void Coordinates::drawMajorGridLines(glb::Transformation const &matrices)
 {
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //setLineWidth(axes[X1].majLineWidth());
@@ -471,7 +471,7 @@ void Coordinates::drawMajorGridLines(gl::Transformation const &matrices)
         drawMajorGridLines(X3, X4, Z4, Z1, matrices);
 }
 
-void Coordinates::drawMinorGridLines(gl::Transformation const &matrices)
+void Coordinates::drawMinorGridLines(glb::Transformation const &matrices)
 {
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //setLineWidth(axes[X1].minLineWidth());
@@ -496,7 +496,7 @@ void Coordinates::drawMinorGridLines(gl::Transformation const &matrices)
         drawMinorGridLines(X3, X4, Z4, Z1, matrices);
 }
 
-void Coordinates::drawMajorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b1, gl::Transformation const &matrices)
+void Coordinates::drawMajorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b1, glb::Transformation const &matrices)
 {
     std::vector<TripleF> ub = convert(axes[a0].majorPositions()); //todo convert (check double values)
     std::vector<TripleF> ue = convert(axes[a1].majorPositions());
@@ -506,7 +506,7 @@ void Coordinates::drawMajorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b1, gl::Tra
     grid_renderer_->draw(matrices);
 }
 
-void Coordinates::drawMinorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b1, gl::Transformation const &matrices)
+void Coordinates::drawMinorGridLines(AXIS a0, AXIS a1, AXIS b0, AXIS b1, glb::Transformation const &matrices)
 {
     std::vector<TripleF> ub = convert(axes[a0].minorPositions());
     std::vector<TripleF> ue = convert(axes[a1].minorPositions());

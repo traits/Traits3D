@@ -1,11 +1,11 @@
-#include "traits3d/glbase/glhelper.h"
+#include "glb/glhelper.h"
 
 #define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
 #include "traits3d/textengine/stb_truetype.h"
 
-#include "traits3d/glbase/vao.h"
-#include "traits3d/glbase/vbo.h"
-#include "traits3d/glbase/shader.h"
+#include "glb/vao.h"
+#include "glb/vbo.h"
+#include "glb/shader.h"
 #include "traits3d/textengine/textengine_std.h"
 
 namespace traits3d
@@ -58,13 +58,13 @@ StandardTextEngine::StandardTextEngine()
 
 bool StandardTextEngine::initializeGL()
 {
-    shader_ = std::make_unique<gl::Shader>();
+    shader_ = std::make_unique<glb::Shader>();
 
     if (!shader_->create(VertexCode_, FragmentCode_))
         return false;
 
-    vao_ = std::make_unique<gl::VAO>();
-    vbo_ = std::make_unique<gl::VBO>(vao_.get(), 4);
+    vao_ = std::make_unique<glb::VAO>();
+    vbo_ = std::make_unique<glb::VBO>(vao_.get(), 4);
     return vbo_->bindAttribute(shader_->programId(), "coord");
 }
 
@@ -219,13 +219,13 @@ bool StandardTextEngine::draw(
     GLint oldactivetex = 0;
     glGetIntegerv(GL_ACTIVE_TEXTURE, &oldactivetex);
     glActiveTexture(GL_TEXTURE0);
-    gl::State blend(GL_BLEND, GL_TRUE), depth_test(GL_DEPTH_TEST, GL_FALSE);
+    glb::State blend(GL_BLEND, GL_TRUE), depth_test(GL_DEPTH_TEST, GL_FALSE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //if (wireframe)
     //{
     //  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     //}
-    glm::ivec4 viewport = gl::viewPort();
+    glm::ivec4 viewport = glb::viewPort();
     size_t sidx = 0;
     size_t step = 0;
     glm::vec2 tpos;

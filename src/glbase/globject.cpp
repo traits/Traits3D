@@ -1,11 +1,9 @@
-#include "traits3d/glbase/shader_std.h"
-#include "traits3d/glbase/shader.h"
-#include "traits3d/glbase/transformation.h"
-#include "traits3d/glbase/globject.h"
+#include "glb/shader_std.h"
+#include "glb/shader.h"
+#include "glb/transformation.h"
+#include "glb/globject.h"
 
-namespace traits3d
-{
-namespace gl
+namespace glb
 {
 bool Object::setStdMatrices(Shader &s, Transformation const &t)
 {
@@ -16,6 +14,5 @@ bool Object::setStdMatrices(Shader &s, Transformation const &t)
         &&
         s.setUniformMatrix(t.normalMatrix(), shadercode::Var::normal_matrix);
 }
-} // ns
 } // ns
 

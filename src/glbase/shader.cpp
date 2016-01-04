@@ -1,11 +1,9 @@
 #include <vector>
 #include <fstream>
 #include <string>
-#include "traits3d/glbase/shader.h"
+#include "glb/shader.h"
 
-namespace traits3d
-{
-namespace gl
+namespace glb
 {
 
 Shader::Shader()
@@ -221,6 +219,18 @@ GLint Shader::getUniform(std::string const &name)
     return loc;
 }
 
+bool Shader::setUniformFloat(float val, std::string const &name)
+{
+    GLint loc = getUniform(name);
+
+    if (-1 == loc)
+        return false;
+
+    glUniform1f(loc, val);
+    return (GL_NO_ERROR == logGlError()) ? true : false;
+}
+
+
 bool Shader::setUniformMatrix(glm::mat3 const &mat, std::string const &name)
 {
     GLint loc = getUniform(name);
@@ -328,5 +338,4 @@ bool Shader::inUse() const
     return static_cast<GLuint>(currprog) == program_id_;
 }
 
-} // ns
 } // ns

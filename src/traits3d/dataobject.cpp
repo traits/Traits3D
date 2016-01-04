@@ -1,9 +1,9 @@
 #include <glm/gtc/matrix_transform.hpp>
-#include "traits3d/glbase/transformation.h"
+#include "glb/transformation.h"
 #include "traits3d/helper.h"
 #include "traits3d/colortable.h"
 #include "traits3d/light.h"
-#include "traits3d/glbase/shader_std.h"
+#include "glb/shader_std.h"
 #include "traits3d/dataobject.h"
 
 namespace traits3d
@@ -15,26 +15,26 @@ DataObject::DataObject()
     : Object()
 {
     initShader();
-    vbos_[VBOindex::Positions] = std::make_unique<VBO>(&vao_p, 3);
-    vbos_[VBOindex::Normals] = std::make_unique<VBO>(&vao_p, 3);
-    vbos_[VBOindex::DataColors] = std::make_unique<VBO>(&vao_p, 4);
-    vbos_[VBOindex::DataColors]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), shadercode::Var::v_in_color);
+    vbos_[VBOindex::Positions] = std::make_unique<glb::VBO>(&vao_p, 3);
+    vbos_[VBOindex::Normals] = std::make_unique<glb::VBO>(&vao_p, 3);
+    vbos_[VBOindex::DataColors] = std::make_unique<glb::VBO>(&vao_p, 4);
+    vbos_[VBOindex::DataColors]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), glb::shadercode::Var::v_in_color);
 
     for (auto &s : shader_)
     {
-        if (!vbos_[VBOindex::Positions]->bindAttribute(s.second.programId(), shadercode::Var::v_coordinates))
+        if (!vbos_[VBOindex::Positions]->bindAttribute(s.second.programId(), glb::shadercode::Var::v_coordinates))
             return;
     }
 
-    ibos_[IBOindex::Polygons] = std::make_unique<IBO>(&vao_p);
-    ibos_[IBOindex::Mesh] = std::make_unique<IBO>(&vao_p);
+    ibos_[IBOindex::Polygons] = std::make_unique<glb::IBO>(&vao_p);
+    ibos_[IBOindex::Mesh] = std::make_unique<glb::IBO>(&vao_p);
 }
 
 bool DataObject::initShader()
 {
-    Shader s;
+    glb::Shader s;
 
-    if (!s.create(shadercode::Vertex::Line, shadercode::Fragment::Simple))
+    if (!s.create(glb::shadercode::Vertex::Line, glb::shadercode::Fragment::Simple))
         return false;
 
     shader_[ShaderIndex::Lines] = s;
@@ -42,7 +42,7 @@ bool DataObject::initShader()
     //if (!s.create(GL::shadercode::Vertex::TriangleStrip, GL::shadercode::Fragment::Simple))
     //  return false;
 
-    if (!s.create(shadercode::Vertex::Blinn, shadercode::Fragment::Blinn))
+    if (!s.create(glb::shadercode::Vertex::Blinn, glb::shadercode::Fragment::Blinn))
         return false;
 
     shader_[ShaderIndex::TriangleStrip] = s;
@@ -107,15 +107,15 @@ void DataObject::setColor(ColorVector const &data)
 
 bool DataObject::setMeshColor(Color const &data)
 {
-    return shader_[ShaderIndex::Lines].setUniformVec4(data, shadercode::Var::v_in_color);
+    return shader_[ShaderIndex::Lines].setUniformVec4(data, glb::shadercode::Var::v_in_color);
 }
 
-void DataObject::draw(Transformation const &matrices)
+void DataObject::draw(glb::Transformation const &matrices)
 {
-    vbos_[VBOindex::DataColors]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), shadercode::Var::v_in_color);
-    vbos_[VBOindex::Positions]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), shadercode::Var::v_coordinates);
+    vbos_[VBOindex::DataColors]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), glb::shadercode::Var::v_in_color);
+    vbos_[VBOindex::Positions]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), glb::shadercode::Var::v_coordinates);
     //if (maintain_normals_)
-    vbos_[VBOindex::Normals]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), shadercode::Var::v_normals);
+    vbos_[VBOindex::Normals]->bindAttribute(shader_[ShaderIndex::TriangleStrip].programId(), glb::shadercode::Var::v_normals);
 
     if (vertices_.modified)
     {
@@ -146,7 +146,7 @@ void DataObject::draw(Transformation const &matrices)
                  hull().minVertex.z + 2 * (hull().maxVertex.z - hull().minVertex.z));
     bulb.setPosition(bpos);
     TripleF lightpos_eye_space = glm::vec3(matrices.lightMatrix() * glm::vec4(bulb.position(), 1.0));
-    shader_[ShaderIndex::TriangleStrip].setUniformVec3(lightpos_eye_space, shadercode::Var::light_position);
+    shader_[ShaderIndex::TriangleStrip].setUniformVec3(lightpos_eye_space, glb::shadercode::Var::light_position);
     // polygons
     glEnable(GL_POLYGON_OFFSET_FILL);
     glPolygonOffset(1, -1);
@@ -191,12 +191,12 @@ bool DataObject::maintainNormals(bool val)
     {
         if (val)
         {
-            if (!vbos_[VBOindex::Normals]->bindAttribute(s.second.programId(), shadercode::Var::v_normals))
+            if (!vbos_[VBOindex::Normals]->bindAttribute(s.second.programId(), glb::shadercode::Var::v_normals))
                 return false;
         }
         else
         {
-            if (!vbos_[VBOindex::Normals]->unbindAttribute(s.second.programId(), shadercode::Var::v_normals))
+            if (!vbos_[VBOindex::Normals]->unbindAttribute(s.second.programId(), glb::shadercode::Var::v_normals))
                 return false;
         }
     }

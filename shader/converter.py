@@ -6,7 +6,7 @@ class Converter(object):
 
   def __init__(self):
     self.__input_dir = 'input'
-    self.__hout = '..' + os.sep + 'src' + os.sep + 'glbase' + os.sep + 'include'  + os.sep + 'traits3d' + os.sep + 'glbase'
+    self.__hout = '..' + os.sep + 'src' + os.sep + 'glbase' + os.sep + 'include'  + os.sep + 'glb'
     self.__cppout = '..' + os.sep + 'src' + os.sep + 'glbase'
     self.__shout = 'generated_glsl'
     self.__insert = ''
@@ -50,9 +50,9 @@ class Converter(object):
 
   # filename suffix indicates shader type 
   __shader_type = { 
-    'Vertex'     : {'tsuffix' :'.vsht', 'osuffix' :'.vsh'},
-    'Fragment'   : {'tsuffix' :'.fsht', 'osuffix' :'.fsh'},
-    'Subroutine' : {'tsuffix' :'.rsht', 'osuffix' :'.rsh'},
+    'Vertex'     : {'tsuffix' :'.vert_t', 'osuffix' :'.vert'},
+    'Fragment'   : {'tsuffix' :'.frag_t', 'osuffix' :'.frag'},
+    'Subroutine' : {'tsuffix' :'.geom_t', 'osuffix' :'.geom'},
   }
   __variables_struct = 'Var'
 
@@ -72,7 +72,7 @@ class Converter(object):
 #endif
 '''
 
-  __h_rel_path = 'traits3d/glbase'
+  __h_rel_path = 'glb'
   __h_preamble = \
     '#pragma once\n\n' \
     + __touch_warning \

@@ -3,19 +3,19 @@
 #include <memory>
 #include <map>
 #include "traits3d/matrix.h"
-#include "traits3d/glbase/meshrenderer.h"
-#include "traits3d/glbase/globject.h"
+#include "glb/meshrenderer.h"
+#include "glb/globject.h"
 
 namespace traits3d
 {
 namespace gl
 {
-class DataObject : public Object
+class DataObject : public glb::Object
 {
 public:
     DataObject();
 
-    void draw(Transformation const &matrices) override;
+    void draw(glb::Transformation const &matrices) override;
     void setDrawType(GLenum val);
 
     bool setPositionData(MatrixF const &data);
@@ -63,9 +63,9 @@ private:
         TriangleStrip
     };
 
-    std::map<ShaderIndex, Shader> shader_;
-    std::map<VBOindex, std::unique_ptr<VBO>> vbos_;
-    std::map<IBOindex, std::unique_ptr<IBO>> ibos_;
+    std::map<ShaderIndex, glb::Shader> shader_;
+    std::map<VBOindex, std::unique_ptr<glb::VBO>> vbos_;
+    std::map<IBOindex, std::unique_ptr<glb::IBO>> ibos_;
 
     bool initShader();
     bool calculateNormals(Matrix<TripleF> &result, MatrixF const &positions);

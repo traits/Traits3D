@@ -20,9 +20,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace traits3d
-{
-namespace gl
+namespace glb
 {
 
 inline GLenum logGlError()
@@ -163,5 +161,35 @@ private:
     const GLboolean enabled_at_start_;
     GLboolean current_state_;
 };
-}
+
+
+template <typename T>
+class StateEntity
+{
+public:
+    StateEntity()
+    {
+        modified = true;
+    }
+
+    StateEntity(StateEntity const &);
+    void operator=(StateEntity const &);
+
+    StateEntity(T const &other)
+    {
+        value = other;
+        modified = true;
+    }
+
+    StateEntity &operator=(T const &other)
+    {
+        value = other;
+        modified = true;
+        return *this;
+    }
+
+    T value;
+    bool modified;
+};
+
 }

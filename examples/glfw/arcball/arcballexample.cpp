@@ -1,6 +1,7 @@
-#include "traits3d/glbase/transformation.h"
 #include <glm\gtc\matrix_transform.hpp>
-#include "traits3d/glbase/shader_std.h"
+#include "glb/transformation.h"
+#include "glb/shader_std.h"
+#include "traits3d/types.h"
 #include "arcballexample.h"
 
 using namespace traits3d;
@@ -27,14 +28,14 @@ bool ExampleArcBall::initializeGL() // Any GL Init Code
     //glEnable(GL_LIGHT0);
     //glEnable(GL_LIGHTING);
     //glEnable(GL_COLOR_MATERIAL);
-    shader_ = std::make_unique<gl::Shader>();
+    shader_ = std::make_unique<glb::Shader>();
 
-    if (!shader_->create(gl::shadercode::Vertex::Line, gl::shadercode::Fragment::Simple))
+    if (!shader_->create(glb::shadercode::Vertex::Line, glb::shadercode::Fragment::Simple))
         return false;
 
-    vao_ = std::make_unique<gl::VAO>();
-    vbo_torus_ = std::make_unique<gl::VBO>(vao_.get(), 3);
-    vbo_sphere_ = std::make_unique<gl::VBO>(vao_.get(), 3);
+    vao_ = std::make_unique<glb::VAO>();
+    vbo_torus_ = std::make_unique<glb::VBO>(vao_.get(), 3);
+    vbo_sphere_ = std::make_unique<glb::VBO>(vao_.get(), 3);
     return true;
 }
 
@@ -148,20 +149,20 @@ void ExampleArcBall::draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);       // Clear Screen And Depth Buffer
     glm::mat4 proj = glm::perspectiveFov(45.0f, 1280.0f, 960.0f, 1.0f, 100.0f);
-    shader_->setUniformMatrix(proj, gl::shadercode::Var::proj_matrix);
+    shader_->setUniformMatrix(proj, glb::shadercode::Var::proj_matrix);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glm::mat4 mv = glm::mat4(1);
     mv = glm::translate(mv, glm::vec3(-1.5f, 0.0f, -6.0f));
     mv = mv * Transform;
-    shader_->setUniformMatrix(mv, gl::shadercode::Var::mv_matrix);
-    vbo_torus_->bindAttribute(shader_->programId(), gl::shadercode::Var::v_coordinates);
-    shader_->setUniformVec4(glm::vec4(0.35f, 0.35f, 1.0f, 1.0f), gl::shadercode::Var::v_in_color);
+    shader_->setUniformMatrix(mv, glb::shadercode::Var::mv_matrix);
+    vbo_torus_->bindAttribute(shader_->programId(), glb::shadercode::Var::v_coordinates);
+    shader_->setUniformVec4(glm::vec4(0.35f, 0.35f, 1.0f, 1.0f), glb::shadercode::Var::v_in_color);
     vbo_torus_->draw(GL_TRIANGLE_STRIP);
     mv = glm::mat4(1);
     mv = glm::translate(mv, glm::vec3(1.5f, 0.0f, -6.0f));
     mv = mv * Transform;
-    shader_->setUniformMatrix(mv, gl::shadercode::Var::mv_matrix);
-    vbo_sphere_->bindAttribute(shader_->programId(), gl::shadercode::Var::v_coordinates);
-    shader_->setUniformVec4(glm::vec4(1.0f, 0.35f, 0.35f, 1.0f), gl::shadercode::Var::v_in_color);
+    shader_->setUniformMatrix(mv, glb::shadercode::Var::mv_matrix);
+    vbo_sphere_->bindAttribute(shader_->programId(), glb::shadercode::Var::v_coordinates);
+    shader_->setUniformVec4(glm::vec4(1.0f, 0.35f, 0.35f, 1.0f), glb::shadercode::Var::v_in_color);
     vbo_sphere_->draw(GL_TRIANGLE_STRIP);
 }

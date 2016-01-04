@@ -1,14 +1,14 @@
-#include "traits3d/glbase/indexmaker.h"
+#include "glb/indexmaker.h"
 
-namespace traits3d
+namespace glb
 {
 
-gl::IndexMaker::IndexMaker()
+IndexMaker::IndexMaker()
     : restart_placeholder_(std::numeric_limits<IndexType>::max())
 {
 }
 
-bool gl::IndexMaker::create(IndexType xsize, IndexType ysize, GLenum primitive_type)
+bool IndexMaker::create(IndexType xsize, IndexType ysize, GLenum primitive_type)
 {
     if (2 > xsize || 2 > ysize /*|| xsize * ysize > ( (GLushort)-1)*/) // path. cases
     {
@@ -50,7 +50,7 @@ bool gl::IndexMaker::create(IndexType xsize, IndexType ysize, GLenum primitive_t
     return false;
 }
 
-bool gl::IndexMaker::createLineStrips(Container &result, IndexType xsize, IndexType ysize)
+bool IndexMaker::createLineStrips(Container &result, IndexType xsize, IndexType ysize)
 {
     result.resize(xsize + ysize);
 
@@ -79,7 +79,7 @@ bool gl::IndexMaker::createLineStrips(Container &result, IndexType xsize, IndexT
     return true;
 }
 
-bool gl::IndexMaker::createRestartLineStrips(LinearizedContainer &result, IndexType xsize, IndexType ysize)
+bool IndexMaker::createRestartLineStrips(LinearizedContainer &result, IndexType xsize, IndexType ysize)
 {
     IndexType k = 0;
     IndexType ph_count = xsize + ysize - 1; // necessary restart placeholders between strips
@@ -111,7 +111,7 @@ bool gl::IndexMaker::createRestartLineStrips(LinearizedContainer &result, IndexT
     return true;
 }
 
-bool gl::IndexMaker::createTriangleStrips(LinearizedContainer &result, IndexType xsize, IndexType ysize)
+bool IndexMaker::createTriangleStrips(LinearizedContainer &result, IndexType xsize, IndexType ysize)
 {
     // a single stripe needs 2*xsize describing indexes
     const IndexType stripesize = 2 * xsize;
@@ -144,7 +144,7 @@ bool gl::IndexMaker::createTriangleStrips(LinearizedContainer &result, IndexType
 }
 
 
-bool gl::IndexMaker::createRestartTriangleStrips(LinearizedContainer &result, IndexType xsize, IndexType ysize)
+bool IndexMaker::createRestartTriangleStrips(LinearizedContainer &result, IndexType xsize, IndexType ysize)
 {
     // a single stripe needs 2*xsize describing indexes
     const IndexType stripesize = 2 * xsize;
@@ -171,7 +171,7 @@ bool gl::IndexMaker::createRestartTriangleStrips(LinearizedContainer &result, In
     return true;
 }
 
-void gl::IndexMaker::setRestartBehavior(RestartType rtype, IndexType placeholder /*= 0*/)
+void IndexMaker::setRestartBehavior(RestartType rtype, IndexType placeholder /*= 0*/)
 {
     restart_type_ = rtype;
     restart_placeholder_ = placeholder;

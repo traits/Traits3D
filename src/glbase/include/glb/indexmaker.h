@@ -1,11 +1,9 @@
 #pragma once
 
 #include <vector>
-#include "traits3d/glbase/glhelper.h"
+#include "glb/glhelper.h"
 
-namespace traits3d
-{
-namespace gl
+namespace glb
 {
 
 class IndexMaker
@@ -65,5 +63,4 @@ private:
     bool createRestartTriangleStrips(LinearizedContainer &result, IndexType xsize, IndexType ysize);
 };
 
-}
 }

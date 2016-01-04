@@ -1,11 +1,11 @@
 #include <stdexcept>
-#include "traits3d/glbase/vao.h"
-#include "traits3d/glbase/ibo.h"
+#include "glb/vao.h"
+#include "glb/ibo.h"
 
 
-namespace traits3d
-{
-namespace gl
+
+
+namespace glb
 {
 
 IBO::IBO(VAO *vao)
@@ -105,5 +105,4 @@ void IBO::setData(IndexMaker::LinearizedContainer const &indexes, bool primitive
     indexmaker_.setRawData(indexes);
 }
 
-} // ns
 } // ns

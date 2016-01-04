@@ -1,10 +1,8 @@
 #include <stdexcept>
-#include "traits3d/glbase/vao.h"
-#include "traits3d/glbase/vbo.h"
+#include "glb/vao.h"
+#include "glb/vbo.h"
 
-namespace traits3d
-{
-namespace gl
+namespace glb
 {
 
 VBO::VBO(VAO *vao, char layout_components)
@@ -13,6 +11,8 @@ VBO::VBO(VAO *vao, char layout_components)
     if (!vao_)
         throw std::domain_error(__FUNCTION__ ": VBO construction error");
 
+    bsize_ = 0;
+    primitive_size_ = 1;
     draw_type_ = GL_STATIC_DRAW;
     logGlError(); //todo temp reset for gl error flag
     glGenBuffers(1, &id_);
@@ -110,5 +110,4 @@ bool VBO::setData(std::vector<glm::vec4> const &data)
     return setData<glm::vec4>(data);
 }
 
-} // ns
 } // ns

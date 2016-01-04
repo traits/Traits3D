@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "traits3d/helper.h"
-#include "traits3d/glbase/shader_std.h"
-#include "traits3d/glbase/linerenderer.h"
+#include "glb/shader_std.h"
+#include "glb/linerenderer.h"
 
 namespace traits3d
 {
@@ -71,8 +71,8 @@ LineRenderer::LineRenderer()
     if (!color_field_shader_.create(VertexCodeColorField, FragmentCode))
         return; //todo throw
 
-    position_vbo_ = std::make_unique<VBO>(&vao_p, 3);
-    color_vbo_ = std::make_unique<VBO>(&vao_p, 4);
+    position_vbo_ = std::make_unique<glb::VBO>(&vao_p, 3);
+    color_vbo_ = std::make_unique<glb::VBO>(&vao_p, 4);
 }
 
 bool LineRenderer::createGrid(
@@ -167,7 +167,7 @@ bool LineRenderer::createStripe(std::vector<TripleF> const &stripe, ColorVector 
     return createStripes(ts, tc);
 }
 
-void LineRenderer::draw(Transformation const &matrices)
+void LineRenderer::draw(glb::Transformation const &matrices)
 {
     if (Type::None == type_)
         return;
@@ -177,8 +177,8 @@ void LineRenderer::draw(Transformation const &matrices)
         if (!single_color_shader_.use())
             return;
 
-        position_vbo_->bindAttribute(single_color_shader_.programId(), shadercode::Var::v_coordinates);
-        single_color_shader_.setUniformVec4(color_, shadercode::Var::v_in_color);
+        position_vbo_->bindAttribute(single_color_shader_.programId(), glb::shadercode::Var::v_coordinates);
+        single_color_shader_.setUniformVec4(color_, glb::shadercode::Var::v_in_color);
         setStdMatrices(single_color_shader_, matrices);
         position_vbo_->draw(GL_LINES);
     }
@@ -187,8 +187,8 @@ void LineRenderer::draw(Transformation const &matrices)
         if (!color_field_shader_.use())
             return;
 
-        position_vbo_->bindAttribute(color_field_shader_.programId(), shadercode::Var::v_coordinates);
-        color_vbo_->bindAttribute(color_field_shader_.programId(), shadercode::Var::v_in_color);
+        position_vbo_->bindAttribute(color_field_shader_.programId(), glb::shadercode::Var::v_coordinates);
+        color_vbo_->bindAttribute(color_field_shader_.programId(), glb::shadercode::Var::v_in_color);
         setStdMatrices(color_field_shader_, matrices);
         position_vbo_->draw(GL_LINE_STRIP);
     }

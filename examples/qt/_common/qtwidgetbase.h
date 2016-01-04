@@ -2,7 +2,7 @@
 
 #include <memory>
 #include "global.h"
-#include "traits3d/glbase/glhelper.h"
+#include "glb/glhelper.h"
 #include <QOpenGLWidget>
 #include "inputdevice.h"
 #include "traits3d/types.h"

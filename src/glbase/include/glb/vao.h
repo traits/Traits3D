@@ -1,11 +1,9 @@
 #pragma once
 
 #include <vector>
-#include "traits3d/glbase/glhelper.h"
+#include "glb/glhelper.h"
 
-namespace traits3d
-{
-namespace gl
+namespace glb
 {
 
 //! Unifies buffer handling the VAO way
@@ -36,10 +34,9 @@ public:
     };
 
 private:
-    GLuint id_ = 0;
+    GLuint id_;
     void bind();
     void unbind();
 };
 
-}
 } // ns

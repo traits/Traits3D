@@ -1,6 +1,6 @@
 #pragma once
 
-#include "traits3d/glbase/transformation.h"
+#include "glb/transformation.h"
 #include "traits3d/colortable.h"
 #include "traits3d/coordinates.h"
 #include "traits3d/dataobject.h"
@@ -50,7 +50,7 @@ protected:
     // labels
     std::shared_ptr<TextEngine> text_engine_p;
 
-    gl::Transformation matrices_p;
+    glb::Transformation matrices_p;
 
 private:
     Color bgcolor_;

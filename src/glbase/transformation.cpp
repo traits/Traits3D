@@ -1,23 +1,32 @@
 #include <glm/gtc/matrix_transform.hpp>
 //#include <glm/gtc/matrix_inverse.hpp>
-#include "traits3d/glbase/transformation.h"
+#include "glb/transformation.h"
 
-namespace traits3d
-{
-namespace gl
+namespace glb
 {
 
 Transformation::Transformation()
 {
-    // dummy
+    ortho_ = true;
+    p_l_ = 0.0f;
+    p_r_ = 0.0f;
+    p_b_ = 0.0f;
+    p_t_ = 0.0f;
+    p_n_ = 0.0f;
+    p_f_ = 0.0f;
 }
 
 /**
- \param mv The model-view matrix to set
- */
-void Transformation::setModelView(glm::mat4 const &mv)
+\param mv The model-view matrix to set
+*/
+void Transformation::setModelView(glm::vec3 const &translation, glm::mat4 const &rotation, glm::vec3 const &scale)
 {
-    mv_ = mv;
+    translation_ = translation;
+    rotation_ = rotation;
+    scale_ = scale;
+    glm::mat4 mscale = glm::scale(glm::mat4(1.0f), scale_);
+    glm::mat4 mtranslate = glm::translate(glm::mat4(1.0f), translation_);
+    mv_ = mtranslate * rotation_ * mscale;
 }
 
 /**
@@ -56,5 +65,4 @@ void Transformation::setProjection(
             : glm::frustum(l, r, b, t, n, f);
 }
 
-} // ns
 } // ns

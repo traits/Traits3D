@@ -1,9 +1,9 @@
 #pragma once
 
 #include <memory>
-#include "traits3d/glbase/vbo.h"
-#include "traits3d/glbase/shader.h"
-#include "traits3d/glbase/globject.h"
+#include "glb/vbo.h"
+#include "glb/shader.h"
+#include "glb/globject.h"
 #include "traits3d/types.h"
 #include "traits3d/fonts/fontinfo.h"
 #include "traits3d/textengine/textengine.h"
@@ -14,12 +14,12 @@ class TextEngine;
 
 namespace gl
 {
-class AxisObject : public Object
+class AxisObject : public glb::Object
 {
 public:
     AxisObject();
 
-    void draw(Transformation const &matrices) override;
+    void draw(glb::Transformation const &matrices) override;
     bool setValues(Triple const &begin, Triple const &end,
                    std::vector<Triple> const &majors, std::vector<Triple> const &minors,
                    std::vector<double> const &major_values);
@@ -48,7 +48,7 @@ public:
 
 
 private:
-    Shader shader_;
+    glb::Shader shader_;
     TripleF begin_;
     TripleF end_;
     std::vector<TripleF> majors_;
@@ -61,7 +61,7 @@ private:
     double excess_ = 0.0; // becomes > 1 for axes outside float range
     bool modified_ = true;
 
-    std::unique_ptr<VBO> vbo_;
+    std::unique_ptr<glb::VBO> vbo_;
     std::shared_ptr<TextEngine> te_;
 
     bool updateData();

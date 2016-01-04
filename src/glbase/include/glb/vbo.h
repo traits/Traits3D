@@ -1,13 +1,10 @@
 #pragma once
 
 #include <vector>
-#include "traits3d/types.h"
-#include "traits3d/glbase/glhelper.h"
-#include "traits3d/glbase/vao.h"
+#include "glb/glhelper.h"
+#include "glb/vao.h"
 
-namespace traits3d
-{
-namespace gl
+namespace glb
 {
 
 //! Vertex Buffer Objects
@@ -49,7 +46,7 @@ public:
     };
 
     explicit VBO(VAO *vao, char layout_components);
-    virtual ~VBO() = default;
+    virtual ~VBO() {}
     void setLayout(Layout const &val)
     {
         layout_ = Layout(val);
@@ -80,8 +77,8 @@ public:
 private:
     GLuint id_;
     Layout layout_;
-    size_t bsize_ = 0; //buffer size in byte
-    size_t primitive_size_ = 1;
+    size_t bsize_; //buffer size in byte
+    size_t primitive_size_;
     GLuint program_;
     std::string attr_name_;
     VAO *vao_; // non-owning pointer
@@ -124,6 +121,5 @@ bool VBO::setData(std::vector<PRIMITIVE> const &data)
     return true;
 }
 
-} // ns
 } // ns
 

@@ -7,14 +7,15 @@
 #include "traits3d/fonts/fontinfo.h"
 #include "traits3d/textengine/textengine.h"
 
-namespace traits3d
-{
-namespace gl
+namespace glb
 {
 class VAO;
 class VBO;
 class Shader;
 }
+
+namespace traits3d
+{
 
 class StandardTextEngine : public TextEngine
 {
@@ -37,9 +38,9 @@ private:
     const std::string VertexCode_;
     const std::string FragmentCode_;
 
-    std::unique_ptr<gl::Shader> shader_;
-    std::unique_ptr<gl::VAO> vao_;
-    std::unique_ptr<gl::VBO> vbo_;
+    std::unique_ptr<glb::Shader> shader_;
+    std::unique_ptr<glb::VAO> vao_;
+    std::unique_ptr<glb::VBO> vbo_;
 
     class FontAtlas; // pimple stb stuff
     std::vector<std::shared_ptr <FontAtlas>> font_atlases_;

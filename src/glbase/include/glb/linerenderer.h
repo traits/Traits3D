@@ -3,15 +3,15 @@
 #include <memory>
 #include <map>
 #include "traits3d/types.h"
-#include "traits3d/glbase/vbo.h"
-#include "traits3d/glbase/shader.h"
-#include "traits3d/glbase/globject.h"
+#include "glb/vbo.h"
+#include "glb/shader.h"
+#include "glb/globject.h"
 
 namespace traits3d
 {
 namespace gl
 {
-class LineRenderer : public Object
+class LineRenderer : public glb::Object
 {
 public:
     LineRenderer();
@@ -33,7 +33,7 @@ public:
         std::vector<TripleF> const &stripe,
         ColorVector const &colors = ColorVector());
 
-    void draw(Transformation const &matrices) override;
+    void draw(glb::Transformation const &matrices) override;
 
 private:
     enum class Type
@@ -50,11 +50,11 @@ private:
     static const char *VertexCodeColorField;
     static const char *FragmentCode;
 
-    Shader single_color_shader_;
-    Shader color_field_shader_;
-    std::unique_ptr<VBO> position_vbo_;
+    glb::Shader single_color_shader_;
+    glb::Shader color_field_shader_;
+    std::unique_ptr<glb::VBO> position_vbo_;
     std::vector<TripleF> position_vbo_data_;
-    std::unique_ptr<VBO> color_vbo_;
+    std::unique_ptr<glb::VBO> color_vbo_;
     ColorVector color_vbo_data_;
     Color color_ = Color(0, 0, 0, 1);
 };

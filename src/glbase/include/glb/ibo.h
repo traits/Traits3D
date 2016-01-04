@@ -2,13 +2,10 @@
 
 #include <vector>
 #include "traits3d/types.h"
-#include "traits3d/glbase/glhelper.h"
-#include "traits3d/glbase/indexmaker.h"
+#include "glb/glhelper.h"
+#include "glb/indexmaker.h"
 
-namespace traits3d
-{
-//! Projects GL namespace
-namespace gl
+namespace glb
 {
 class VAO;
 
@@ -40,9 +37,9 @@ private:
     IndexMaker indexmaker_;
     GLenum primitive_type_ = GL_TRIANGLE_STRIP;
     VAO *vao_;
-    StateEntity<GLenum> draw_type_; // GL_STATIC_DRAW or GL_DYNAMIC_DRAW
+    traits3d::StateEntity<GLenum> draw_type_; // GL_STATIC_DRAW or GL_DYNAMIC_DRAW
 
     bool bindData();
 };
 } // ns
-} // ns
+

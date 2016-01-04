@@ -2,9 +2,7 @@
 
 #include "glm/glm.hpp"
 
-namespace traits3d
-{
-namespace gl
+namespace glb
 {
 
 //! Index Buffer Objects
@@ -12,11 +10,23 @@ class Transformation
 {
 public:
     Transformation();
-    ~Transformation() = default;
+    virtual ~Transformation() {}
 
     glm::mat4 const &mv() const
     {
         return mv_;
+    }
+    glm::mat4 const &rotation() const
+    {
+        return rotation_;
+    }
+    glm::vec3 const &scale() const
+    {
+        return scale_;
+    }
+    glm::vec3 const &translation() const
+    {
+        return translation_;
     }
     glm::mat4 const &proj() const
     {
@@ -31,8 +41,8 @@ public:
         return light_mat_;
     }
 
-    //! Set model-view
-    void setModelView(glm::mat4 const &mv);
+    //! Set model-view as combination of scaling, rotation and translation
+    void setModelView(glm::vec3 const &translation, glm::mat4 const &rotation, glm::vec3 const &scale);
     //! Set normal matrix
     void setNormal(glm::mat3 const &n);
     //! Set light matrix
@@ -52,17 +62,20 @@ public:
 
 private:
     glm::mat4 mv_;
+    glm::mat4 rotation_;
+    glm::vec3 translation_;
+    glm::vec3 scale_;
     glm::mat4 proj_;
     glm::mat3 normal_mat_;
     glm::mat4 light_mat_;
 
-    bool ortho_ = true;
-    float p_l_ = 0.0f;
-    float p_r_ = 0.0f;
-    float p_b_ = 0.0f;
-    float p_t_ = 0.0f;
-    float p_n_ = 0.0f;
-    float p_f_ = 0.0f;
+
+    bool ortho_;
+    float p_l_;
+    float p_r_;
+    float p_b_;
+    float p_t_;
+    float p_n_;
+    float p_f_;
 };
-}
 } // ns

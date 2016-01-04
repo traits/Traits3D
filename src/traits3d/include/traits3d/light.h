@@ -1,5 +1,5 @@
 #include "traits3d/types.h"
-#include "traits3d/glbase/glhelper.h"
+#include "glb/glhelper.h"
 
 namespace traits3d
 {

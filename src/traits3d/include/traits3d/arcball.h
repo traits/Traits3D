@@ -1,6 +1,6 @@
 #pragma once
 
-#include "traits3d/glbase/glhelper.h"
+#include "glb/glhelper.h"
 #include "traits3d/global.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>

@@ -1,11 +1,9 @@
 #pragma once
 
 #include <map>
-#include "traits3d/glbase/glhelper.h"
+#include "glb/glhelper.h"
 
-namespace traits3d
-{
-namespace gl
+namespace glb
 {
 
 class Transformation;
@@ -55,6 +53,7 @@ public:
     //! calls glUseProgram if not yet used for valid shader
     bool use();
 
+    bool setUniformFloat(float, std::string const &name);
     bool setUniformVec2(glm::vec2 const &vec, std::string const &name);
     bool setUniformVec3(glm::vec3 const &vec, std::string const &name);
     bool setUniformVec4(glm::vec4 const &vec, std::string const &name);
@@ -78,7 +77,7 @@ private:
     GLint getUniform(std::string const &name);
 };
 } // ns
-} // ns
+
 
 
 

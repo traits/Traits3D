@@ -1,6 +1,6 @@
 #include <algorithm>
-#include "traits3d/glbase/shader_std.h"
-#include "traits3d/glbase/meshrenderer.h"
+#include "glb/shader_std.h"
+#include "glb/meshrenderer.h"
 
 namespace traits3d
 {
@@ -74,19 +74,19 @@ MeshRenderer::MeshRenderer()
     if (!seam_shader_.create(VertexSeamCode, FragmentCode))
         return; //todo throw
 
-    core_vbo_ = std::make_unique<VBO>(&vao_p, 3);
-    seam_color_vbo_ = std::make_unique<VBO>(&vao_p, 4);
-    core_ibo_ = std::make_unique<IBO>(&vao_p);
-    offset_vbo_ = std::make_unique<VBO>(&vao_p, 3);
-    seam_ibo_ = std::make_unique<IBO>(&vao_p); // Saum
+    core_vbo_ = std::make_unique<glb::VBO>(&vao_p, 3);
+    seam_color_vbo_ = std::make_unique<glb::VBO>(&vao_p, 4);
+    core_ibo_ = std::make_unique<glb::IBO>(&vao_p);
+    offset_vbo_ = std::make_unique<glb::VBO>(&vao_p, 3);
+    seam_ibo_ = std::make_unique<glb::IBO>(&vao_p); // Saum
 }
 
-void MeshRenderer::createData2(std::vector<TripleF> const &mesh_data, IndexMaker::IndexType xsize, IndexMaker::IndexType ysize)
+void MeshRenderer::createData2(std::vector<TripleF> const &mesh_data, glb::IndexMaker::IndexType xsize, glb::IndexMaker::IndexType ysize)
 {
     if (mesh_data.empty() || mesh_data.size() != xsize * ysize)
         return;
 
-    const IndexMaker::IndexType len_data = mesh_data.size();
+    const glb::IndexMaker::IndexType len_data = mesh_data.size();
     // mesh data
     std::vector<TripleF> mdata(len_data - xsize);
     std::copy(mesh_data.begin() + xsize, mesh_data.end(), mdata.begin());
@@ -112,12 +112,12 @@ void MeshRenderer::createData2(std::vector<TripleF> const &mesh_data, IndexMaker
     //}
 }
 
-void MeshRenderer::createData(std::vector<TripleF> const &mesh_data, IndexMaker::IndexType xsize, IndexMaker::IndexType ysize)
+void MeshRenderer::createData(std::vector<TripleF> const &mesh_data, glb::IndexMaker::IndexType xsize, glb::IndexMaker::IndexType ysize)
 {
     if (mesh_data.empty() || mesh_data.size() != xsize * ysize)
         return;
 
-    const IndexMaker::IndexType len_data = xsize * ysize;
+    const glb::IndexMaker::IndexType len_data = xsize * ysize;
     float delta[] = { 0.01f, 0.004f };
     std::vector<TripleF> mdata(5 * len_data - 4 * xsize + 4 * len_data - 4 * ysize);
     // original data
@@ -178,7 +178,7 @@ void MeshRenderer::createData(std::vector<TripleF> const &mesh_data, IndexMaker:
         return;
 
     // indexes
-    std::vector<IndexMaker::IndexType> midata(8 * len_data);
+    std::vector<glb::IndexMaker::IndexType> midata(8 * len_data);
     i = 0;
     start = len_data; // top core data start
 
@@ -192,7 +192,7 @@ void MeshRenderer::createData(std::vector<TripleF> const &mesh_data, IndexMaker:
             midata[i++] = start + row + x;
         }
 
-        midata[i++] = std::numeric_limits<IndexMaker::IndexType>::max();
+        midata[i++] = std::numeric_limits<glb::IndexMaker::IndexType>::max();
     }
 
     start = 2 * len_data - xsize; // bottom core data start
@@ -207,7 +207,7 @@ void MeshRenderer::createData(std::vector<TripleF> const &mesh_data, IndexMaker:
             midata[i++] = row + xsize + x;
         }
 
-        midata[i++] = std::numeric_limits<IndexMaker::IndexType>::max();
+        midata[i++] = std::numeric_limits<glb::IndexMaker::IndexType>::max();
     }
 
     midata.resize(i - 1);
@@ -228,7 +228,7 @@ void MeshRenderer::createData(std::vector<TripleF> const &mesh_data, IndexMaker:
             midata[i++] = start1 + row + x;
         }
 
-        midata[i++] = std::numeric_limits<IndexMaker::IndexType>::max();
+        midata[i++] = std::numeric_limits<glb::IndexMaker::IndexType>::max();
     }
 
     start0 = 2 * len_data - xsize; // lower core
@@ -244,28 +244,28 @@ void MeshRenderer::createData(std::vector<TripleF> const &mesh_data, IndexMaker:
             midata[i++] = start0 + row + x;
         }
 
-        midata[i++] = std::numeric_limits<IndexMaker::IndexType>::max();
+        midata[i++] = std::numeric_limits<glb::IndexMaker::IndexType>::max();
     }
 
     midata.resize(i - 1);
     seam_ibo_->setData(midata, true);
 }
 
-void MeshRenderer::draw(Transformation const &matrices)
+void MeshRenderer::draw(glb::Transformation const &matrices)
 {
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     Color color(0, 0.8f, 0, 1);
     core_shader_.use();
-    core_vbo_->bindAttribute(core_shader_.programId(), shadercode::Var::v_coordinates);
-    core_shader_.setUniformVec4(color, shadercode::Var::v_in_color);
+    core_vbo_->bindAttribute(core_shader_.programId(), glb::shadercode::Var::v_coordinates);
+    core_shader_.setUniformVec4(color, glb::shadercode::Var::v_in_color);
     //core_shader_.setProjectionMatrix(proj_matrix);
     setStdMatrices(core_shader_, matrices);
     core_ibo_->draw();
-    gl::State blend(GL_BLEND, GL_TRUE);
+    glb::State blend(GL_BLEND, GL_TRUE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     seam_shader_.use();
-    core_vbo_->bindAttribute(seam_shader_.programId(), shadercode::Var::v_coordinates);
-    seam_color_vbo_->bindAttribute(seam_shader_.programId(), shadercode::Var::v_in_color);
+    core_vbo_->bindAttribute(seam_shader_.programId(), glb::shadercode::Var::v_coordinates);
+    seam_color_vbo_->bindAttribute(seam_shader_.programId(), glb::shadercode::Var::v_in_color);
     setStdMatrices(seam_shader_, matrices);
     seam_ibo_->draw();
 }

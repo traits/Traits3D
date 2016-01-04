@@ -1,7 +1,7 @@
 #pragma once
 
 #include "traits3d/types.h"
-#include "traits3d/glbase/glhelper.h"
+#include "glb/glhelper.h"
 #include "traits3d/light.h"
 
 namespace traits3d

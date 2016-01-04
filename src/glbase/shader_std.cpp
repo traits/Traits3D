@@ -1,6 +1,6 @@
 // generated file - don't touch
 
-#include "traits3d/glbase/shader_std.h"
+#include "glb/shader_std.h"
 
 namespace glb
 {
@@ -22,7 +22,7 @@ const std::string Var::v_out_color = "v_out_color";
 // Fragment shader
 
 
-// Blinn.fsht
+// Blinn.frag_t
 const char* Fragment::Blinn = 
 {
 #ifdef GL_ES_VERSION_3_0
@@ -65,7 +65,7 @@ const char* Fragment::Blinn =
 
 
 
-// BlinnPhong.fsht
+// BlinnPhong.frag_t
 const char* Fragment::BlinnPhong = 
 {
 #ifdef GL_ES_VERSION_3_0
@@ -107,7 +107,7 @@ const char* Fragment::BlinnPhong =
 
 
 
-// Simple.fsht
+// Simple.frag_t
 const char* Fragment::Simple = 
 {
 #ifdef GL_ES_VERSION_3_0
@@ -131,7 +131,7 @@ const char* Fragment::Simple =
 // Vertex shader
 
 
-// Blinn.vsht
+// Blinn.vert_t
 const char* Vertex::Blinn = 
 {
 #ifdef GL_ES_VERSION_3_0
@@ -162,7 +162,7 @@ const char* Vertex::Blinn =
 
 
 
-// BlinnPhong.vsht
+// BlinnPhong.vert_t
 const char* Vertex::BlinnPhong = 
 {
 #ifdef GL_ES_VERSION_3_0
@@ -194,7 +194,7 @@ const char* Vertex::BlinnPhong =
 
 
 
-// Line.vsht
+// Line.vert_t
 const char* Vertex::Line = 
 {
 #ifdef GL_ES_VERSION_3_0
@@ -217,7 +217,7 @@ const char* Vertex::Line =
 
 
 
-// LineXYZ.vsht
+// LineXYZ.vert_t
 const char* Vertex::LineXYZ = 
 {
 #ifdef GL_ES_VERSION_3_0
@@ -241,7 +241,7 @@ const char* Vertex::LineXYZ =
 
 
 
-// TriangleStrip.vsht
+// TriangleStrip.vert_t
 const char* Vertex::TriangleStrip = 
 {
 #ifdef GL_ES_VERSION_3_0
@@ -264,7 +264,7 @@ const char* Vertex::TriangleStrip =
 
 
 
-// TriangleStripXYZ.vsht
+// TriangleStripXYZ.vert_t
 const char* Vertex::TriangleStripXYZ = 
 {
 #ifdef GL_ES_VERSION_3_0

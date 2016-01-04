@@ -1,12 +1,11 @@
-#include "traits3d/glbase/vao.h"
+#include "glb/vao.h"
 
-namespace traits3d
-{
-namespace gl
+namespace glb
 {
 
 VAO::VAO()
 {
+    id_ = 0;
     glGenVertexArrays(1, &id_);
 }
 
@@ -34,5 +33,4 @@ void VAO::unbind()
         glBindVertexArray(0);
 }
 
-} // ns
 } // ns

@@ -1,7 +1,7 @@
 #include <glm/gtc/matrix_transform.hpp>
-#include "traits3d/glbase/transformation.h"
+#include "glb/transformation.h"
 #include "traits3d/helper.h"
-#include "traits3d/glbase/shader_std.h"
+#include "glb/shader_std.h"
 #include "traits3d/textengine/textengine_std.h"
 #include "traits3d/axisobject.h"
 
@@ -13,9 +13,9 @@ namespace gl
 AxisObject::AxisObject()
     : Object()
 {
-    shader_.create(shadercode::Vertex::Line, shadercode::Fragment::Simple);
-    vbo_ = std::make_unique<VBO>(&vao_p, 3);
-    vbo_->bindAttribute(shader_.programId(), shadercode::Var::v_coordinates);
+    shader_.create(glb::shadercode::Vertex::Line, glb::shadercode::Fragment::Simple);
+    vbo_ = std::make_unique<glb::VBO>(&vao_p, 3);
+    vbo_->bindAttribute(shader_.programId(), glb::shadercode::Var::v_coordinates);
     te_ = std::make_shared<StandardTextEngine>();
     te_->initializeGL();
 }
@@ -30,14 +30,14 @@ AxisObject::AxisObject()
 //  return true;
 //}
 
-void AxisObject::draw(Transformation const &matrices)
+void AxisObject::draw(glb::Transformation const &matrices)
 {
     if (!shader_.initialized())
         return;
 
     //todo
     updateData();
-    shader_.setUniformVec4(axis_color_, shadercode::Var::v_in_color);
+    shader_.setUniformVec4(axis_color_, glb::shadercode::Var::v_in_color);
     shader_.use();
     setStdMatrices(shader_, matrices);
     vbo_->draw(GL_LINES);
@@ -49,7 +49,7 @@ void AxisObject::draw(Transformation const &matrices)
     std::vector<FontInfo> finfo;
     std::vector<Color> colors;
     std::vector<TextEngine::Position> positions_2d;
-    glm::ivec4 vp = viewPort(); // call this one sparingly
+    glm::ivec4 vp = glb::viewPort(); // call this one sparingly
 
     if (show_label_)
     {
@@ -62,7 +62,7 @@ void AxisObject::draw(Transformation const &matrices)
         float label_height = 15;
         float rap = (max_label_width + label_gap_ + label_height) / (ticend - center).length();
         TripleF pos = center - majorticlength_ * orientation_ * (1 + rap);
-        pos = World2ViewPort(pos, matrices.mv(), matrices.proj(), vp);
+        pos = glb::World2ViewPort(pos, matrices.mv(), matrices.proj(), vp);
         positions_2d.push_back(TextEngine::Position(TupleF(pos.x, pos.y), number_anchor_));
         TextEngine::adjustPosition(positions_2d[0], static_cast<float>(label_gap_ + number_gap_));
     }
@@ -79,7 +79,7 @@ void AxisObject::draw(Transformation const &matrices)
         for (size_t i = 0; i != majors_.size(); ++i)
         {
             // opposite to tic orientation
-            TripleF pos = World2ViewPort(majors_[i] - majorticlength_ * orientation_, matrices.mv(), matrices.proj(), vp);
+            TripleF pos = glb::World2ViewPort(majors_[i] - majorticlength_ * orientation_, matrices.mv(), matrices.proj(), vp);
             positions_2d[i + idx] = TextEngine::Position(TupleF(pos.x, pos.y), number_anchor_);
             TextEngine::adjustPosition(positions_2d[i + idx], static_cast<float>(number_gap_));
             texts[i + idx] = te_->double2text(major_values_[i]);

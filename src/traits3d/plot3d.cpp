@@ -99,7 +99,7 @@ void Plot3D::draw()
     //aux_a.setColor(Color(1,0,0,1));
     //aux_a.draw(matrices_p);
     //todo
-    glm::ivec4 vp = gl::viewPort();
+    glm::ivec4 vp = glb::viewPort();
     setTitle(title_);
     std::vector<TextEngine::Position> positions(1);
     positions[0] = TextEngine::Position(
