@@ -9,6 +9,3 @@ Operating Systems:
 
 * Windows
 * Linux
-* Android
-    
-[Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
